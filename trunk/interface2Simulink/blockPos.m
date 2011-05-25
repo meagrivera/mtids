@@ -1,5 +1,5 @@
 % blockPosition.m 
-% get x,y of bock canvas
+% get x,y of block canvas
 
 function pos = blockPos(canvas)
 
