@@ -27,7 +27,7 @@ x=xy(:,1);
 y=xy(:,2);
 
 graphCenter= [nodeNumber+2 nodeNumber-2] ;
-nodePosRadius= sqrt( x(1)^2 + y(1)^2) + 2;
+nodePosRadius= 2*sqrt( x(1)^2 + y(1)^2) + 2;
 
 for i=1:nodeNumber
 

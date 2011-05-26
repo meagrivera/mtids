@@ -136,7 +136,23 @@ function newnode_Callback(hObject, eventdata, handles)
 global g;
 new_vertex = nv(g) + 1;
 resize(g, new_vertex);
-label(g,new_vertex, get(handles.newnodelabel,'String')); 
+labs = get_label(g);
+lab_string =  get(handles.newnodelabel,'String');
+00
+if(strmatch(lab_string,labs,'exact'))
+    for i=1:nv(g)
+    
+        if(strmatch(strcat(lab_string, '_', num2str(i)),labs,'exact'))
+        continue;
+        else
+           lab_string = strcat(lab_string, '_', num2str(i));
+           break;
+        end
+
+    end
+end
+
+label(g, new_vertex, lab_string); 
 
 refresh_graph(0, eventdata, handles)
 
@@ -762,7 +778,18 @@ function import_from_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g;
 
+[filename, pathname] = uigetfile( ...
+{'*.mdl','Simulink Model (*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Import Simulink model');
+
+
+ file = strcat(pathname, filename);
+
+ 
+refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
 function export_to_simulink_Callback(hObject, eventdata, handles)
@@ -775,8 +802,8 @@ A  = double(matrix(g));
 xy = getxy(g);
 labs = get_label(g);
 name =	'untitled';
-template =	'LTI'; 
-exportSimulink(name,template,A, xy, labs);
+%% template =	'LTI'; 
+exportSimulink2(name,A, xy, labs);
 
 
 
