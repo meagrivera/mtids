@@ -6,7 +6,7 @@ open_system(template);
 
 % degrre of subsystem (number of outs and ins)
 
-set_param('template/Mux','Inputs',num2str(nodeNumber));
+set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
 
 
 % get position of ins and outs

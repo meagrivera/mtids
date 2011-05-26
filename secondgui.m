@@ -52,7 +52,7 @@ end
 % --- Executes just before secondgui is made visible.
 function secondgui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-addpath(strcat(pwd,'/matgraph'));
+%addpath(strcat(pwd,'/matgraph'));
 graph_init;
 global g;
 global gui_handle;

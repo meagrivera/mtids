@@ -47,13 +47,13 @@ add_block('built-in/Subsystem',[sys ['/' labs{i}]] , 'position', blockCanvas(nod
 %modify template of subsystem call a function
 
 
-Simulink.BlockDiagram.copyContentsToSubSystem('template', [sys ['/' labs{i}]]);
+Simulink.BlockDiagram.copyContentsToSubSystem(template, [sys ['/' labs{i}]]);
 
 %close template
 
 
 end
-close_system('template',0)
+close_system(template,0)
 
 
 %% Connect Subsystems
