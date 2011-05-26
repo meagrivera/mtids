@@ -769,6 +769,15 @@ function export_to_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g;
+addpath(strcat(pwd,'/interface2Simulink'));
+A  = double(matrix(g));
+xy = getxy(g);
+labs = get_label(g);
+name =	'untitled';
+template =	'LTI'; 
+exportSimulink(name,template,A, xy, labs);
+
 
 
 % --- Executes on button press in add_multiple_nodes.
