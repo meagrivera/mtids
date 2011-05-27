@@ -14,7 +14,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.1"
+    ComputedModelVersion    "1.2"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -33,9 +33,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 25 15:51:51 2011"
-  RTWModifiedTimeStamp	  228239502
-  ModelVersionFormat	  "1.%<AutoIncrement:1>"
+  LastModifiedDate	  "Fri May 27 17:07:15 2011"
+  RTWModifiedTimeStamp	  228416830
+  ModelVersionFormat	  "1.%<AutoIncrement:2>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -736,7 +736,7 @@ Model {
       Name		      "State-Space"
       SID		      4
       Position		      [245, 103, 305, 137]
-      A			      "Anode"
+      A			      "A"
       B			      "B"
       C			      "C"
       D			      "D"
