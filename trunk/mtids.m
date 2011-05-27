@@ -842,9 +842,9 @@ name =	'untitled';
  
 exportSimulink(name,template,A, xy, labs);
 
- if nv(g) > 200
+ if nv(g) > 50
     disp('Done exporting');
-    msgbox('Done exporting','Export to Simulink');
+   %msgbox('Done exporting','Export to Simulink');
  else   
      disp('Done exporting');
  end
