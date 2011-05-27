@@ -2,12 +2,12 @@
 %model to put 
 function [] = templateModify(nodeNumber,template)
 
-open_system(template);
+load_system(template);
 
 % degrre of subsystem (number of outs and ins)
 
 set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
-
+set_param( [template '/Mux'],'DisplayOption','bar');
 
 % get position of ins and outs
 %  get_param('template/In1','position')

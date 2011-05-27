@@ -15,12 +15,15 @@ function[] =exportSimulink(name,template,A, xy, labs)
 %% Create the model
 sys = name;
 new_system(sys) 
-open_system(sys) 
 
-%% open template and modify it
+
+%% open template and modify it do not visulize if number of nodes to high
 nodeNumber= size(A,1);
 templateModify(nodeNumber,template)
-
+% NO VISULAISATION FOR LARGE NUMBER OF NODES
+if(nodeNumber<=25)
+open_system(sys) 
+end
 
 %% Arrange Subsystems and build them accourding to template
 
@@ -73,4 +76,16 @@ for i=1:nodeNumber
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
-%save_system(sys);
+if(nodeNumber>25)
+ [filename, pathname] = uiputfile( ...
+{'*.mdl','Simulink Model (*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Save model');
+
+ file = strcat(pathname, filename);
+
+    
+    
+save_system(sys,filename);
+close_system('untitled',0)
+end
