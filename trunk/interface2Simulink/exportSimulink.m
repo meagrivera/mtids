@@ -27,10 +27,7 @@ new_system(sys)
 %% open template and modify it do not visulize if number of nodes to high
 nodeNumber= size(A,1);
 templateModify(nodeNumber,template)
-% NO VISULAISATION FOR LARGE NUMBER OF NODES
-if(nodeNumber<=vizMaxNodeNumber)
-open_system(sys) 
-end
+
 
 %% Arrange Subsystems and build them accourding to template
 
@@ -75,11 +72,18 @@ for i=1:nodeNumber
     
     %if i~=j  % make all nodes connect
     if A(i,j)~=0
-   add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')
+   %add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')
+    add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)])
     end
  
     
     end   
+end
+
+%% open system
+% NO VISULAISATION FOR LARGE NUMBER OF NODES
+if(nodeNumber<=vizMaxNodeNumber)
+open_system(sys) 
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
