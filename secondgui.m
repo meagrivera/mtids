@@ -52,7 +52,7 @@ end
 % --- Executes just before secondgui is made visible.
 function secondgui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-%addpath(strcat(pwd,'/matgraph'));
+addpath(strcat(pwd,'/tools/matgraph'));
 graph_init;
 global g;
 global gui_handle;
@@ -138,7 +138,7 @@ new_vertex = nv(g) + 1;
 resize(g, new_vertex);
 labs = get_label(g);
 lab_string =  get(handles.newnodelabel,'String');
-00
+
 if(strmatch(lab_string,labs,'exact'))
     for i=1:nv(g)
     
@@ -802,8 +802,8 @@ A  = double(matrix(g));
 xy = getxy(g);
 labs = get_label(g);
 name =	'untitled';
-%% template =	'LTI'; 
-exportSimulink2(name,A, xy, labs);
+ template =	'LTI'; 
+exportSimulink(name,template,A, xy, labs);
 
 
 

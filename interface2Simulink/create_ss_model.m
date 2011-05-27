@@ -2,7 +2,7 @@ function create_ss_model(system_name, model_name, n_inputs, n_outputs, n_states)
 %
 % create_ss_model.m:
 %
-% Authors: Francisco Llobet, José Rivera
+% Authors: Francisco Llobet, Jose Rivera
 % Project: MTIDS
 % Created: 26/5/2011
 % This function creates a (state-space) block which has a defined number of inputs,

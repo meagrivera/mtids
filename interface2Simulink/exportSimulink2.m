@@ -1,4 +1,4 @@
-function[] =exportSimulink2(name, A, xy, labs)
+function[] =exportSimulink2(name, Adj, xy, labs)
 
 % exportSimulink2.m :      
 %                       input: name: mname of model that will be produced
@@ -15,10 +15,15 @@ function[] =exportSimulink2(name, A, xy, labs)
 %% Create the model
 sys = name;
 new_system(sys) 
-open_system(sys) 
+
 
 %% open template and modify it
-nodeNumber= size(A,1);
+nodeNumber= size(Adj,1);
+
+% NO VISULAISATION FOR LARGE NUMBER OF NODES
+if(nodeNumber<=25)
+open_system(sys) 
+end
 % templateModify(nodeNumber,template)
 
 %% Arrange Subsystems and build them accourding to template
@@ -49,10 +54,11 @@ create_ss_model(name, labs{i}, nodeNumber, 1, 2);
 
 %Simulink.BlockDiagram.copyContentsToSubSystem('template', [sys ['/' labs{i}]]);
 
-%close template
+
 
 
 end
+%close template
 %close_system('template',0)
 
 
@@ -64,7 +70,7 @@ for i=1:nodeNumber
     for j=1:nodeNumber
     
     %if i~=j  % make all nodes connect
-    if A(i,j)~=0
+    if Adj(i,j)~=0
    add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')
     end
  
@@ -73,4 +79,16 @@ for i=1:nodeNumber
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
-%save_system(sys);
+if(nodeNumber>25)
+ [filename, pathname] = uiputfile( ...
+{'*.mdl','Simulink Model (*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Save model');
+
+ file = strcat(pathname, filename);
+
+    
+    
+save_system(sys,filename);
+close_system(sys,0)
+end
