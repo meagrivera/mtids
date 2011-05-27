@@ -1,16 +1,23 @@
 function[] =exportSimulink(name,template,A, xy, labs)
-
-% importSimulink.m :      
-%                        input: name: mname of model that will be produced
-%                               template: template used to generate subsystems
-%                               A: Adjacense matrix,
-%                               xy: Position of the nodes
-%                               labs: cell with the names of the nodes
+% exportSimulink.m 
+%
+% Authors: Jose Rivera, Francisco Llobet 
+% Project: MTIDS
+% Created: 27/5/2011
+%      
+%                      inputs: -name: mname of model that will be produced
+%                              -template: template used to generate subsystems
+%                              -A: Adjacense matrix,
+%                              -xy: Position of the nodes
+%                              -labs: cell with the names of the nodes
 %                      
 %                      output: no output, produces a simulink model save manually !!
 % 
 % This function takes the data produced in mtids and generates an interconnected 
 % dynamical system in simulink. The system is generated as a circle formation.
+
+%% options
+vizMaxNodeNumber=50;    % maximal number of nodes where SImulink opens
 
 %% Create the model
 sys = name;
@@ -21,7 +28,7 @@ new_system(sys)
 nodeNumber= size(A,1);
 templateModify(nodeNumber,template)
 % NO VISULAISATION FOR LARGE NUMBER OF NODES
-if(nodeNumber<=25)
+if(nodeNumber<=vizMaxNodeNumber)
 open_system(sys) 
 end
 
@@ -30,9 +37,9 @@ end
 x=xy(:,1);
 y=xy(:,2);
 
-graphCenter= [nodeNumber+2 nodeNumber-2] ;
-nodePosRadius= sqrt( x(1)^2 + y(1)^2) + 2;
 
+nodePosRadius= sqrt( x(1)^2 + y(1)^2) + nodeNumber/2;
+graphCenter= [nodePosRadius+4 nodePosRadius+2] ;
 for i=1:nodeNumber
 
     if x(i)>0
@@ -76,16 +83,18 @@ for i=1:nodeNumber
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
-if(nodeNumber>25)
+if(nodeNumber>vizMaxNodeNumber)
  [filename, pathname] = uiputfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
    'Save model');
 
- file = strcat(pathname, filename);
-
-    
-    
+ %file = strcat(pathname, filename);
+try
 save_system(sys,filename);
+catch
+   close_system('untitled',0) 
+end
+
 close_system('untitled',0)
 end
