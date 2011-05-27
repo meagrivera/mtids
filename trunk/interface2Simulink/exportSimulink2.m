@@ -88,7 +88,11 @@ if(nodeNumber>25)
  file = strcat(pathname, filename);
 
     
-    
+
+try    
 save_system(sys,filename);
+catch ME
+    close_system(sys,0)
+end
 close_system(sys,0)
 end
