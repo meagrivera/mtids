@@ -835,15 +835,17 @@ labs = get_label(g);
 name =	'untitled';
  template =	'LTI'; 
  if nv(g) > 200
-    disp('Exporting...may take come time...get some coffee...');
+    disp('Exporting...may take some time...get some coffee...');
  else   
      disp('Exporting...');
  end
+     disp('  ');
  
-exportSimulink(name,template,A, xy, labs);
+    exportSimulink(name,template,A, xy, labs);
 
  if nv(g) > 50
     disp('Done exporting');
+    disp(' ');
    %msgbox('Done exporting','Export to Simulink');
  else   
      disp('Done exporting');
