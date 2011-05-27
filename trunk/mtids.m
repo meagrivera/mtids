@@ -27,7 +27,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 27-May-2011 15:39:53
+% Last Modified by GUIDE v2.5 27-May-2011 17:55:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,8 +56,9 @@ addpath(strcat(pwd,'/tools/matgraph'));
 graph_init;
 global g;
 global gui_handle;
+global graph_refresh;
 
-
+graph_refresh = 1;
 g = graph; %% Creating a graph
 resize(g,0);
 grid on;
@@ -134,6 +135,7 @@ function newnode_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global graph_refresh;
 new_vertex = nv(g) + 1;
 resize(g, new_vertex);
 labs = get_label(g);
@@ -154,7 +156,9 @@ end
 
 label(g, new_vertex, lab_string); 
 
-refresh_graph(0, eventdata, handles)
+if graph_refresh == 1
+    refresh_graph(0, eventdata, handles)
+end
 
 guidata(hObject, handles);
 
@@ -841,16 +845,18 @@ function add_multiple_nodes_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 global g;
-
+global graph_refresh;
 n_nodes = str2num(get(handles.number_of_nodes,'String'));
+
+graph_refresh = 0;
 
 for i=1:n_nodes
    newnode_Callback(hObject, eventdata, handles); 
 end
 
+graph_refresh = 1;
 
-
-
+refresh_graph(0, eventdata, handles);
 
 
 % --------------------------------------------------------------------
@@ -905,3 +911,12 @@ function number_button_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of number_button
 set(handles.label_button,'Value', 0);
 set(handles.number_button,'Value', 1);
+
+
+% --- Executes on button press in checkbox2.
+function checkbox2_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox2
