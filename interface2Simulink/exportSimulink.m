@@ -19,10 +19,31 @@ function[] =exportSimulink(name,template,A, xy, labs)
 %% options
 vizMaxNodeNumber=50;    % maximal number of nodes where SImulink opens
 
-%% Create the model
-sys = name;
+%% Create the model 
+
+
+try
+    sys = name;
 new_system(sys) 
 
+catch  % if subsystem already exist then look for an availible name
+
+    for i=1:100
+        newsys= [sys num2str(i)];
+        try
+          new_system(newsys) ;
+          sys=newsys;
+          break;
+       catch
+         
+       
+       end
+       
+   
+    end
+    
+
+end
 
 %% open template and modify it do not visulize if number of nodes to high
 nodeNumber= size(A,1);
@@ -97,8 +118,8 @@ if(nodeNumber>vizMaxNodeNumber)
 try
 save_system(sys,filename);
 catch
-   close_system('untitled',0) 
+   close_system(sys,0) 
 end
 
-close_system('untitled',0)
+close_system(sys,0)
 end
