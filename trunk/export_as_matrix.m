@@ -81,7 +81,9 @@ function varargout = export_as_matrix_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
+
 varargout{1} = handles.output;
+uiresume(handles.output);
 
 
 % --- Executes on button press in export_to_workplace.
@@ -111,6 +113,7 @@ end
         assignin(workspace, varname, matrix);
 
     %    close(handles.export_as_matrix)
+   uiresume(handles.output);
       close(handles.output);
     
 function edit_workplace_Callback(hObject, eventdata, handles)

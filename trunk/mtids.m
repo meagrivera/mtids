@@ -27,7 +27,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 30-May-2011 14:46:22
+% Last Modified by GUIDE v2.5 30-May-2011 23:33:41
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -52,11 +52,18 @@ end
 % --- Executes just before mtids is made visible.
 function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 
-addpath(strcat(pwd,'/tools/matgraph'));
+addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
+addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
+addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
+
 graph_init;
 global g;
 global gui_handle;
 global graph_refresh;
+global templates;
+templates = cell(0,2);
+templates{1,1} = 'LTI';
+templates{1,2} = strcat(pwd,'/templates/LTI.mdl');
 
 graph_refresh = 1;
 g = graph; %% Creating a graph
@@ -819,9 +826,6 @@ global g;
 
  file = strcat(pathname, filename);
 
-
- addpath(strcat(pwd,'/interface2Simulink'));
- 
  addpath(pathname);
  
  [pathname, model, ext] = fileparts(file);
@@ -849,7 +853,7 @@ function export_to_simulink_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
-addpath(strcat(pwd,'/interface2Simulink'));
+
 A  = double(matrix(g));
 xy = getxy(g);
 labs = get_label(g);
@@ -966,11 +970,81 @@ function export_to_workplace_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global g;
 
-while export_as_matrix(laplacian(g))
-end
+uiwait( export_as_matrix(laplacian(g)));
+
 
 % --------------------------------------------------------------------
 function import_from_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function add_mdl_template_Callback(hObject, eventdata, handles)
+% hObject    handle to add_mdl_template (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global templates;
+oldFolder = cd(strcat(pwd,'/templates'));
+
+[filename, pathname] = uigetfile( ...
+{'*.mdl','Simulink model template(*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Import Simulink model templates', ...
+   'MultiSelect', 'on');
+
+if filename == 0
+    
+else
+    
+[a, b] = size(filename);
+
+if not(iscell(filename))
+    b=1;
+end
+
+for i=1:b
+
+    if not(iscell(filename))
+     file = strcat(pathname, filename);
+    else    
+     file = strcat(pathname, filename{i});
+    end
+
+ 
+     [path, template, ext] = fileparts(file);
+
+if strcmp('.mdl', ext)
+
+    if strmatch(template, templates, 'exact')
+        %warndlg(strcat('A template with the name "', template, '" was already imported!') , 'Template import warning', 'modal');
+        disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
+        continue;
+    else
+    
+    [ny, nx] = size(templates);
+    templates{ny+1,1} = template;
+    templates{ny+1,2} = file;
+
+    end 
+
+else
+    if not(iscell(filename))
+    disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
+    
+    else    
+    disp(strcat('ERROR: "',filename{i}, '" is not a Simulink model'));
+    
+    end
+    continue;
+end
+
+end
+
+end
+cd(oldFolder);
+
+ 
+
+
