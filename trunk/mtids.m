@@ -27,7 +27,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 27-May-2011 17:55:40
+% Last Modified by GUIDE v2.5 30-May-2011 14:46:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -833,7 +833,7 @@ global g;
  resize(g,0);
  
  elist = adj_to_elist(A);
- S = [nverts, nedges; elist; xy];
+ S = [nverts, nedges; elist; xy]
  sgf(g, S);
  
  for i=1:nverts
@@ -901,7 +901,7 @@ function exit_to_matlab_Callback(hObject, eventdata, handles)
 % hObject    handle to exit_to_matlab (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-close;
+close(handles.output);
 
 
 
@@ -957,3 +957,20 @@ function checkbox2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox2
+
+
+% --------------------------------------------------------------------
+function export_to_workplace_Callback(hObject, eventdata, handles)
+% hObject    handle to export_to_workplace (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global g;
+
+while export_as_matrix(laplacian(g))
+end
+
+% --------------------------------------------------------------------
+function import_from_workplace_Callback(hObject, eventdata, handles)
+% hObject    handle to import_from_workplace (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
