@@ -17,7 +17,7 @@ function[A, nverts, nedges, xy, labs ] = importSimulink(model)
 
 %% get subsystem handles of open model 
 %sys=model;
-open_system(model) 
+load_system(model);
 subsystemBlk = find_system(model, 'regexp', 'on', 'blocktype', 'SubSystem');
 
 % number of vertices
@@ -68,6 +68,6 @@ for j= 1: length(conPort)
 end
 end
 nedges= nedges/2;
-close_system(model,0)
+close_system(model,0);
 
 

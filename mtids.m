@@ -819,6 +819,27 @@ global g;
 
  file = strcat(pathname, filename);
 
+
+ addpath(strcat(pwd,'/interface2Simulink'));
+ 
+ addpath(pathname);
+ 
+ [pathname, model, ext] = fileparts(file);
+ 
+ 
+ [A, nverts, nedges, xy, labs ] = importSimulink(model);
+ 
+ % Delete graph!
+ resize(g,0);
+ 
+ elist = adj_to_elist(A);
+ S = [nverts, nedges; elist; xy];
+ sgf(g, S);
+ 
+ for i=1:nverts
+    label(g,i,labs{i});
+ end
+ 
  
 refresh_graph(0, eventdata, handles);
 
@@ -835,7 +856,7 @@ labs = get_label(g);
 name =	'untitled';
  template =	'LTI'; 
  if nv(g) > 200
-    disp('Exporting...may take some time...get some coffee...');
+    disp('Exporting...may take some time...go get some coffee...');
  else   
      disp('Exporting...');
  end
