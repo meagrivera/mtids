@@ -1,6 +1,3 @@
-
-
-
 function varargout = mtids(varargin)
 % MTIDS M-file for mtids.fig
 %      MTIDS, by itself, creates a new MTIDS or raises the existing
@@ -27,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 30-May-2011 23:33:41
+% Last Modified by GUIDE v2.5 31-May-2011 21:27:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,10 +57,13 @@ graph_init;
 global g;
 global gui_handle;
 global graph_refresh;
+global template_list;
 global templates;
+template_list = cell(0,2);
 templates = cell(0,2);
-templates{1,1} = 'LTI';
-templates{1,2} = strcat(pwd,'/templates/LTI.mdl');
+
+template_list{1,1} = 'LTI';
+template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
 
 graph_refresh = 1;
 g = graph; %% Creating a graph
@@ -143,6 +143,9 @@ function newnode_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global g;
 global graph_refresh;
+global templates;
+global template_list;
+
 new_vertex = nv(g) + 1;
 resize(g, new_vertex);
 labs = get_label(g);
@@ -162,6 +165,11 @@ if(strmatch(lab_string,labs,'exact'))
 end
 
 label(g, new_vertex, lab_string); 
+
+n_template = get(handles.selector_dynamic, 'Value');
+
+templates{nv(g),1}=template_list{n_template,1};
+templates{nv(g),2}=template_list{n_template,2};
 
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles)
@@ -343,12 +351,16 @@ function removenode_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global templates;
 
-a = str2num(get(handles.remnode,'String'));
+    a = str2num(get(handles.remnode,'String'));
+if nv(g) && (a <= nv(g))
+    templates(a,:) = []; % Deleting a template
 
-delete(g,a);
+    delete(g,a);
 
-refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles)
+end
 
 guidata(hObject, handles);
 
@@ -445,8 +457,10 @@ function Newgraph_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global templates;
 
 resize(g,0);
+templates = cell(0,2);
 refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
@@ -985,7 +999,7 @@ function add_mdl_template_Callback(hObject, eventdata, handles)
 % hObject    handle to add_mdl_template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global templates;
+global template_list;
 oldFolder = cd(strcat(pwd,'/templates'));
 
 [filename, pathname] = uigetfile( ...
@@ -994,57 +1008,120 @@ oldFolder = cd(strcat(pwd,'/templates'));
    'Import Simulink model templates', ...
    'MultiSelect', 'on');
 
-if filename == 0
+if iscell(filename)
     
-else
-    
-[a, b] = size(filename);
+    [a, b] = size(filename);
 
-if not(iscell(filename))
-    b=1;
+    for i=1:b
+       file = strcat(pathname, filename{i});
+       [path, template, ext] = fileparts(file);
+       
+       if strcmp('.mdl', ext)
+
+            if strmatch(template, template_list, 'exact')
+             disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
+             continue;
+            else
+             [ny, nx] = size(template_list);
+             template_list{ny+1,1} = template;
+             template_list{ny+1,2} = file;
+            end 
+
+        else
+            disp(strcat('ERROR: "',filename{i}, '" is not a Simulink model'));
+        end
+        end % End del for
+        
+elseif filename %filename is not a cell (it's a string) and not 0
+    file = strcat(pathname, filename);
+    [path, template, ext] = fileparts(file);
+     
+    if strcmp('.mdl', ext)
+
+            if strmatch(template, template_list, 'exact')
+             disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
+            else
+             [ny, nx] = size(template_list);
+             template_list{ny+1,1} = template;
+             template_list{ny+1,2} = file;
+            end 
+
+        else
+            disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
+        end
+    
 end
 
-for i=1:b
-
-    if not(iscell(filename))
-     file = strcat(pathname, filename);
-    else    
-     file = strcat(pathname, filename{i});
-    end
-
- 
-     [path, template, ext] = fileparts(file);
-
-if strcmp('.mdl', ext)
-
-    if strmatch(template, templates, 'exact')
-        %warndlg(strcat('A template with the name "', template, '" was already imported!') , 'Template import warning', 'modal');
-        disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
-        continue;
-    else
-    
-    [ny, nx] = size(templates);
-    templates{ny+1,1} = template;
-    templates{ny+1,2} = file;
-
-    end 
-
-else
-    if not(iscell(filename))
-    disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
-    
-    else    
-    disp(strcat('ERROR: "',filename{i}, '" is not a Simulink model'));
-    
-    end
-    continue;
-end
-
-end
-
-end
 cd(oldFolder);
 
+refresh_dynamics(eventdata, handles); 
  
 
 
+
+
+% --- Executes on selection change in selector_dynamic.
+function selector_dynamic_Callback(hObject, eventdata, handles)
+% hObject    handle to selector_dynamic (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from selector_dynamic
+
+%get(hObject,'Value')
+
+% --- Executes during object creation, after setting all properties.
+function selector_dynamic_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to selector_dynamic (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+global g;
+global template_list;
+
+[ny, nx] = size(template_list);
+
+
+for i=1:ny
+    if i == 1
+        drop_string = template_list{1,1};
+    elseif i == ny
+        drop_string = strcat(drop_string,'|',template_list{i,1});
+    else        
+        drop_string = strcat(drop_string,'|',template_list{i,1});
+    end
+end
+
+set(hObject, 'String', drop_string);
+%set(handles.selector_dynamic, 'String', drop_string);
+
+
+
+function refresh_dynamics(eventdata, handles)
+% This function refreshes the graph window
+
+global g;
+global template_list;
+
+[ny, nx] = size(template_list);
+
+
+for i=1:ny
+    if i == 1
+        drop_string = template_list{1,1};
+    elseif i == ny
+        drop_string = strcat(drop_string,'|',template_list{i,1});
+    else        
+        drop_string = strcat(drop_string,'|',template_list{i,1});
+    end
+end
+
+set(handles.selector_dynamic, 'String', drop_string);
+ 
