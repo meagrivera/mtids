@@ -7,6 +7,8 @@ function[] =exportSimulink(name,template,templateList,A, xy, labs)
 %      
 %                      inputs: -name: mname of model that will be produced
 %                              -template: template used to generate subsystems
+%                              - templateList: List of templates that are
+%                                 availible in mtids
 %                              -A: Adjacense matrix,
 %                              -xy: Position of the nodes
 %                              -labs: cell with the names of the nodes
@@ -49,7 +51,9 @@ end
 nodeNumber= size(A,1);
 
 for i=1:size(templateList,1)
- templateModify(nodeNumber,templateList{i}) 
+    if any(strcmp(templateList{i},template))
+    templateModify(nodeNumber,templateList{i})
+    end
 end
 
 
