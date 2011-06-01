@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 31-May-2011 21:27:55
+% Last Modified by GUIDE v2.5 01-Jun-2011 15:22:37
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,11 +59,11 @@ global gui_handle;
 global graph_refresh;
 global template_list;
 global templates;
-template_list = cell(0,2);
+template_list = cell(0,1);
 templates = cell(0,1);
 
 template_list{1,1} = 'LTI';
-template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
+%template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
 
 graph_refresh = 1;
 g = graph; %% Creating a graph
@@ -871,6 +871,7 @@ function export_to_simulink_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global g;
 global templates;
+global template_list;
 
 A  = double(matrix(g));
 xy = getxy(g);
@@ -884,7 +885,7 @@ name =	'untitled';
  end
      disp('  ');
  
-    exportSimulink(name,templates,A, xy, labs);
+    exportSimulink(name,templates,template_list,A, xy, labs);
 
  if nv(g) > 50
     disp('Done exporting');
@@ -1028,7 +1029,7 @@ if iscell(filename)
             else
              [ny, nx] = size(template_list);
              template_list{ny+1,1} = template;
-             template_list{ny+1,2} = file;
+             %template_list{ny+1,2} = file;
             end 
 
         else
@@ -1047,7 +1048,7 @@ elseif filename %filename is not a cell (it's a string) and not 0
             else
              [ny, nx] = size(template_list);
              template_list{ny+1,1} = template;
-             template_list{ny+1,2} = file;
+             %template_list{ny+1,2} = file;
             end 
 
         else
@@ -1129,3 +1130,23 @@ end
 
 set(handles.selector_dynamic, 'String', drop_string);
  
+
+
+% --- Executes on button press in circular_graph.
+function circular_graph_Callback(hObject, eventdata, handles)
+% hObject    handle to circular_graph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global g;
+
+for i=1:(nv(g)-1)
+    add(g,i,i+1);
+end
+    add(g,nv(g),1)
+
+refresh_graph(0, eventdata, handles);
+
+
+
+
+
