@@ -60,7 +60,7 @@ global graph_refresh;
 global template_list;
 global templates;
 template_list = cell(0,2);
-templates = cell(0,2);
+templates = cell(0,1);
 
 template_list{1,1} = 'LTI';
 template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
@@ -166,10 +166,10 @@ end
 
 label(g, new_vertex, lab_string); 
 
-n_template = get(handles.selector_dynamic, 'Value');
+n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
 
 templates{nv(g),1}=template_list{n_template,1};
-templates{nv(g),2}=template_list{n_template,2};
+% templates{nv(g),2}=template_list{n_template,2};
 
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles)
@@ -460,7 +460,7 @@ global g;
 global templates;
 
 resize(g,0);
-templates = cell(0,2);
+templates = cell(0,1);
 refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
@@ -848,11 +848,14 @@ global g;
  [A, nverts, nedges, xy, labs ] = importSimulink(model);
  
  % Delete graph!
- resize(g,0);
  
  elist = adj_to_elist(A);
- S = [nverts, nedges; elist; xy]
- sgf(g, S);
+
+ free(g);
+ 
+ g = graph(elist);
+ 
+ embed(g,xy); 
  
  for i=1:nverts
     label(g,i,labs{i});
@@ -867,6 +870,7 @@ function export_to_simulink_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global templates;
 
 A  = double(matrix(g));
 xy = getxy(g);
@@ -880,7 +884,7 @@ name =	'untitled';
  end
      disp('  ');
  
-    exportSimulink(name,template,A, xy, labs);
+    exportSimulink(name,templates,A, xy, labs);
 
  if nv(g) > 50
     disp('Done exporting');
