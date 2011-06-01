@@ -480,6 +480,19 @@ global g;
  file = strcat(pathname, filename);
  load(g, file);
  
+ templates = cell(0,1);
+ 
+ % Temporary code...
+ n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+
+for i=1:nv(g)
+   templates{i,1}=template_list{n_template,1};
+end
+
+ 
+ 
+ 
+ 
 refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
@@ -997,6 +1010,35 @@ function import_from_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g;
+global templates;
+global template_list;
+prompt = {'Workspace:','Variable name:'};
+dlg_title = 'Inport matrix from workspace';
+num_lines = 1;
+def = {'base','matrix'};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+
+if isempty(answer)
+
+else
+    M = evalin(answer{1},answer{2});
+
+elist = any_matrix_to_elist(M);
+
+g = graph(elist);
+
+templates = cell(0,1);
+
+n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+
+for i=1:nv(g)
+   
+    templates{i,1}=template_list{n_template,1};
+end
+end
+
+refresh_graph(0, eventdata, handles);
 
 
 % --------------------------------------------------------------------
