@@ -1,4 +1,4 @@
-function[] =exportSimulink(name,template,A, xy, labs)
+function[] =exportSimulink(name,template,templateList,A, xy, labs)
 % exportSimulink.m 
 %
 % Authors: Jose Rivera, Francisco Llobet 
@@ -17,7 +17,7 @@ function[] =exportSimulink(name,template,A, xy, labs)
 % dynamical system in simulink. The system is generated as a circle formation.
 
 %% options
-vizMaxNodeNumber=50;    % maximal number of nodes where SImulink opens
+vizMaxNodeNumber=50;    % maximal number of nodes where Simulink opens
 
 %% Create the model 
 
@@ -47,7 +47,11 @@ end
 
 %% open template and modify it do not visulize if number of nodes to high
 nodeNumber= size(A,1);
-templateModify(nodeNumber,template)
+
+for i=1:size(templateList,1)
+ templateModify(nodeNumber,templateList{i}) 
+end
+
 
 
 %% Arrange Subsystems and build them accourding to template
@@ -75,14 +79,16 @@ add_block('built-in/Subsystem',[sys ['/' labs{i}]] , 'position', blockCanvas(nod
 %modify template of subsystem call a function
 
 
-Simulink.BlockDiagram.copyContentsToSubSystem(template, [sys ['/' labs{i}]]);
+Simulink.BlockDiagram.copyContentsToSubSystem(template{i}, [sys ['/' labs{i}]]);
 
 %close template
 
 
 end
-close_system(template,0)
 
+for i=1:size(templateList,1)
+close_system(templateList{i},0)
+end
 
 %% Connect Subsystems
 

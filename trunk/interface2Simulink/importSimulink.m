@@ -1,6 +1,11 @@
 function[A, nverts, nedges, xy, labs ] = importSimulink(model)
 
-% importSimulink.m :  input: modelName as a string 'model'
+% importSimulink.m :  
+% Authors: Jose Rivera, Francisco Llobet 
+% Project: MTIDS
+% Created: 27/5/2011
+% 
+%                        input: modelName as a string 'model'
 %                     output: A: Adjacense matrix,
 %                             nverts: Number of vertices (Nodes)
 %                             nedges: Number of edges (branches/links)
