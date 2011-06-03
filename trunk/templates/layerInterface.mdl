@@ -24,7 +24,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.7"
+    ComputedModelVersion    "1.8"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -43,9 +43,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Jun  3 14:38:59 2011"
-  RTWModifiedTimeStamp	  229012719
-  ModelVersionFormat	  "1.%<AutoIncrement:7>"
+  LastModifiedDate	  "Fri Jun  3 14:53:48 2011"
+  RTWModifiedTimeStamp	  229013625
+  ModelVersionFormat	  "1.%<AutoIncrement:8>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -786,7 +786,7 @@ Model {
     }
     Line {
       Name		      "PLEASE EDIT ME"
-      Labels		      [0, 0]
+      Labels		      [1, 1]
       SrcBlock		      "layerIn"
       SrcPort		      1
       DstBlock		      "layerOut"
