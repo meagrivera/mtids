@@ -59,17 +59,16 @@ end
 
 % modify interface node
 templateModify(nodeNumber,'layerInterface')
-%open_system('layerInterface')
-
 %% Arrange Subsystems and build them accourding to template
 
 x=xy(:,1);
 y=xy(:,2);
 
-
+% Define reference frame
 nodePosRadius= sqrt( x(1)^2 + y(1)^2) + nodeNumber/2;
 graphCenter= [nodePosRadius+12 nodePosRadius+2] ;
 
+% add input
 add_block('built-in/Inport',[sys '/In1' ] , 'position', blockCanvas([1 graphCenter(2) ]) );
 inPos= get_param([sys '/In1'],'position');
 % add mux
@@ -79,13 +78,15 @@ set_param( [sys '/Mux' ],'DisplayOption','bar');
 
 % add out
 add_block('built-in/Outport',[sys '/Out1' ] , 'position', blockCanvas([graphCenter(1)+nodePosRadius+5  graphCenter(2) ]) );
-add_line(sys,'In1/1', 'Mux/1','autorouting','on')
+
+%add interface node
 add_block('built-in/Subsystem',[sys '/Interface'] , 'position', blockCanvas([7 graphCenter(2) ]) );
-
 Simulink.BlockDiagram.copyContentsToSubSystem('layerInterface', [sys '/Interface' ]);
-add_line(sys,'Mux/1', 'Interface/1','autorouting','on')
 
- open_system(sys) 
+%connect things
+add_line(sys,'Mux/1', 'Interface/1','autorouting','on')
+add_line(sys,'In1/1', 'Mux/1','autorouting','on')
+
 for i=1:nodeNumber-1
     
 %if i~=nodeNumber
@@ -148,7 +149,7 @@ for i=1:nodeNumber-1
     add_line(sys,[labs{i} '/1'], ['Interface/' num2str(i+1)])
 end
 
-% connect to output
+% interface connect to output
 
 add_line(sys,'Interface/1', 'Out1/1','autorouting','on')
 
@@ -158,7 +159,7 @@ if(nodeNumber<=vizMaxNodeNumber)
 open_system(sys) 
 end
 
-%% save model ....if model exist the whole thing gives an error (need unique name for model)
+%% save model ....
 if(nodeNumber>vizMaxNodeNumber)
  [filename, pathname] = uiputfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
