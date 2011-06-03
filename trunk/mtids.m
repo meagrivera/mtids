@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 03-Jun-2011 11:38:36
+% Last Modified by GUIDE v2.5 03-Jun-2011 12:32:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1145,6 +1145,7 @@ end
 global g;
 global template_list;
 
+
 [ny, nx] = size(template_list);
 
 
@@ -1312,3 +1313,24 @@ end
    
 
 
+
+
+% --------------------------------------------------------------------
+function Untitled_13_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Untitled_14_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function export_as_layer_Callback(hObject, eventdata, handles)
+% hObject    handle to export_as_layer (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
