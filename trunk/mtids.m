@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 01-Jun-2011 15:22:37
+% Last Modified by GUIDE v2.5 03-Jun-2011 11:38:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -49,6 +49,8 @@ end
 % --- Executes just before mtids is made visible.
 function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 
+%clf;
+
 addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
 addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
@@ -59,6 +61,15 @@ global gui_handle;
 global graph_refresh;
 global template_list;
 global templates;
+global botton_down;
+global move_index;
+global start_index;
+
+botton_down = 0;
+add_connection = 0;
+start_index = 0;
+g = graph;
+
 template_list = cell(0,1);
 templates = cell(0,1);
 
@@ -68,9 +79,10 @@ template_list{1,1} = 'LTI';
 graph_refresh = 1;
 g = graph; %% Creating a graph
 resize(g,0);
-grid on;
-zoom on;
+%grid on;
+%zoom on;
 set(handles.numberview,'Check','on');
+refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
 
 % This function has no output args, see OutputFcn.
@@ -1190,5 +1202,113 @@ refresh_graph(0, eventdata, handles);
 
 
 
+
+
+
+
+% --- Executes on mouse press over figure background, over a disabled or
+% --- inactive control, or over an axes background.
+function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global g;
+global botton_down;
+global add_connection;
+global move_index;
+global start_index;
+
+
+CP = get(handles.axes1, 'CurrentPoint');
+x_c = CP(1,1);
+y_c = CP(1,2);
+
+XY = getxy(g);
+x = XY(:,1);
+y = XY(:,2);
+
+d_x = x-x_c;
+d_y = y-y_c;
+
+radius = d_x.*d_x+d_y.*d_y;
+[C,I] = min(radius);
+if C <= 0.05; % Hardcoded value!
+ 
+    
+    if strcmp(get(handles.output, 'SelectionType'), 'normal')
+ %  disp(I);
+    move_index = I;
+    botton_down = 1;
+    start_index = 0; % Reset starting index
+
+elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
+    if start_index
+    add(g,start_index,I);
+    start_index = 0;
+    cla;
+    ndraw(g);
+    else
+    start_index = I;
+    end
+    
+elseif strcmp(get(handles.output, 'SelectionType'), 'open')
+    % Ver para modificar nodo
+    
+end
+
+else
+  
+end
+
+ 
+    if strcmp(get(handles.output, 'SelectionType'), 'extend')
+    start_button = 0;
+    button_down = 0;
+    
+    newnode_Callback(hObject, eventdata, handles);
+    
+    XY(nv(g),1) = x_c;
+    XY(nv(g),2) = y_c;
+    embed(g,XY);
+    cla;
+    ndraw(g);
+   end
+
+
+
+
+% --- Executes on mouse press over figure background, over a disabled or
+% --- inactive control, or over an axes background.
+function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global botton_down;
+global g;
+
+botton_down = 0;
+
+% --- Executes on mouse motion over figure - except title and menu.
+function figure1_WindowButtonMotionFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global botton_down;
+global move_index;
+global g;
+
+
+if botton_down
+    CP = get(handles.axes1, 'CurrentPoint');
+    x_c = CP(1,1);
+    y_c = CP(1,2);
+    XY = getxy(g);
+    XY(move_index,1) = x_c;
+    XY(move_index,2) = y_c;
+    embed(g,XY);
+    cla;
+    ndraw(g);
+end
+   
 
 
