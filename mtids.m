@@ -1334,3 +1334,29 @@ function export_as_layer_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g;
+global templates;
+global template_list;
+
+A  = double(matrix(g));
+xy = getxy(g);
+labs = get_label(g);
+name =	'untitled';
+ template =	'LTI'; 
+ if nv(g) > 200
+    disp('Exporting...may take some time...go get some coffee...');
+ else   
+     disp('Exporting...');
+ end
+     disp('  ');
+ 
+    exportLayer(name,templates,template_list,A, xy, labs);
+
+ if nv(g) > 50
+    disp('Done exporting');
+    disp(' ');
+   %msgbox('Done exporting','Export to Simulink');
+ else   
+     disp('Done exporting');
+ end
+
