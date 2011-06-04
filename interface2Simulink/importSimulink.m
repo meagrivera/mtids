@@ -24,12 +24,33 @@ function[A, nverts, nedges, xy, labs ] = importSimulink(model)
 %sys=model;
 load_system(model);
 subsystemBlk = find_system(model, 'regexp', 'on', 'blocktype', 'SubSystem');
-
+subsystemBlk = find_system(subsystemBlk,'parent',model);
 % number of vertices
 nverts = length(subsystemBlk); % vertices
 
-%name 
+% sorting cell array
+temp= subsystemBlk(1:2) ;
+for i=1:floor(nverts/10-1)
+   if i== floor(nverts/10-1)
+       temp={temp{:} subsystemBlk{2+i+i*10 :end}};
+   else
+    temp={temp{:} subsystemBlk{2+i+i*10}};
+   end
+    
+end
 
+for i=1:length(subsystemBlk)
+    
+    new= subsystemBlk{i};
+    if all(strcmp(new,temp)==0)
+        
+   temp={temp{:}   subsystemBlk{i}};
+    end
+    
+end
+
+% end of sorting the array 
+subsystemBlk=temp;
  nameList= get_param(subsystemBlk,'Name') ;
  labs=nameList';
 
