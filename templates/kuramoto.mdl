@@ -15,7 +15,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.11"
+    ComputedModelVersion    "1.16"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -35,9 +35,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Jun  2 09:55:39 2011"
-  RTWModifiedTimeStamp	  228909331
-  ModelVersionFormat	  "1.%<AutoIncrement:11>"
+  LastModifiedDate	  "Sat Jun  4 16:16:17 2011"
+  RTWModifiedTimeStamp	  229104971
+  ModelVersionFormat	  "1.%<AutoIncrement:16>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -795,7 +795,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    22
+    SIDHighWatermark	    23
     Block {
       BlockType		      Inport
       Name		      "In1"
@@ -892,6 +892,24 @@ Model {
 	ListType		AxesTitles
 	axes1			"%<SignalLabel>"
       }
+      DataFormat	      "StructureWithTime"
+      SampleTime	      "0"
+    }
+    Block {
+      BlockType		      Scope
+      Name		      "Scope1"
+      SID		      23
+      Ports		      [1]
+      Position		      [770, 94, 800, 126]
+      Floating		      off
+      Location		      [188, 390, 512, 629]
+      Open		      off
+      NumInputPorts	      "1"
+      List {
+	ListType		AxesTitles
+	axes1			"%<SignalLabel>"
+      }
+      SaveName		      "ScopeData1"
       DataFormat	      "StructureWithTime"
       SampleTime	      "0"
     }
@@ -1071,7 +1089,7 @@ Model {
       Name		      "rho0"
       SID		      21
       Position		      [480, 20, 510, 50]
-      Value		      "rand(1)*10"
+      Value		      "rho0+rand(1)*var"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
     }
@@ -1111,11 +1129,6 @@ Model {
 	DstPort			2
       }
       Branch {
-	Points			[0, -130]
-	DstBlock		"flash"
-	DstPort			1
-      }
-      Branch {
 	Points			[15, 0]
 	Branch {
 	  DstBlock		  "Out1"
@@ -1152,8 +1165,24 @@ Model {
       Labels		      [0, 0]
       SrcBlock		      "Add"
       SrcPort		      1
-      DstBlock		      "Integrator"
-      DstPort		      1
+      Points		      [35, 0]
+      Branch {
+	DstBlock		"Integrator"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, -55]
+	Branch {
+	  Points		  [0, -75]
+	  DstBlock		  "flash"
+	  DstPort		  1
+	}
+	Branch {
+	  Points		  [205, 0]
+	  DstBlock		  "Scope1"
+	  DstPort		  1
+	}
+      }
     }
     Line {
       SrcBlock		      "Trigonometric\nFunction"

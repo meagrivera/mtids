@@ -5,7 +5,6 @@ Model {
   GraphicalInterface {
     NumRootInports	    2
     Inport {
-      SignalName	      "PLEASE EDIT ME"
       Name		      "layerIn"
     }
     Inport {
@@ -15,7 +14,6 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
-      SignalName	      "PLEASE EDIT ME"
       Name		      "layerOut"
     }
     Outport {
@@ -24,7 +22,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.8"
+    ComputedModelVersion    "1.13"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -43,9 +41,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Jun  3 14:53:48 2011"
-  RTWModifiedTimeStamp	  229013625
-  ModelVersionFormat	  "1.%<AutoIncrement:8>"
+  LastModifiedDate	  "Sat Jun  4 13:39:01 2011"
+  RTWModifiedTimeStamp	  229095526
+  ModelVersionFormat	  "1.%<AutoIncrement:13>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -678,10 +676,29 @@ Model {
       OutputWhenDisabled      "held"
       InitialOutput	      "[]"
     }
+    Block {
+      BlockType		      Sum
+      IconShape		      "rectangular"
+      Inputs		      "++"
+      CollapseMode	      "All dimensions"
+      CollapseDim	      "1"
+      InputSameDT	      on
+      AccumDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Same as first input"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
+      OutDataTypeStr	      "Inherit: Same as first input"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+    }
   }
   System {
     Name		    "layerInterface"
-    Location		    [473, 221, 1053, 481]
+    Location		    [504, 148, 1084, 408]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -695,7 +712,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    12
+    SIDHighWatermark	    16
     Block {
       BlockType		      Inport
       Name		      "layerIn"
@@ -704,12 +721,6 @@ Model {
       IconDisplay	      "Port number"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
-      Port {
-	PortNumber		1
-	Name			"PLEASE EDIT ME"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-      }
     }
     Block {
       BlockType		      Inport
@@ -724,8 +735,25 @@ Model {
     Block {
       BlockType		      Gain
       Name		      "Gain"
-      SID		      4
-      Position		      [320, 100, 350, 130]
+      SID		      15
+      Position		      [395, 65, 425, 95]
+      Gain		      "1/N"
+      ParameterDataTypeMode   "Inherit via internal rule"
+      ParameterDataType	      "fixdt(1, 16)"
+      ParameterScaling	      "2^0"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain1"
+      SID		      16
+      Position		      [400, 20, 430, 50]
+      Gain		      "1/N"
       ParameterDataTypeMode   "Inherit via internal rule"
       ParameterDataType	      "fixdt(1, 16)"
       ParameterScaling	      "2^0"
@@ -745,6 +773,34 @@ Model {
       ShowName		      off
       Inputs		      "2"
       DisplayOption	      "bar"
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum of\nElements"
+      SID		      13
+      Ports		      [1, 1]
+      Position		      [260, 100, 290, 130]
+      Inputs		      "+"
+      InputSameDT	      off
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^-10"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Sum
+      Name		      "Sum of\nElements1"
+      SID		      14
+      Ports		      [1, 1]
+      Position		      [260, 20, 290, 50]
+      Inputs		      "+"
+      InputSameDT	      off
+      OutDataTypeMode	      "Inherit via internal rule"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^-10"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
     }
     Block {
       BlockType		      Outport
@@ -769,7 +825,7 @@ Model {
     Line {
       SrcBlock		      "Mux"
       SrcPort		      1
-      DstBlock		      "Gain"
+      DstBlock		      "Sum of\nElements"
       DstPort		      1
     }
     Line {
@@ -779,15 +835,34 @@ Model {
       DstPort		      1
     }
     Line {
+      SrcBlock		      "Sum of\nElements"
+      SrcPort		      1
+      Points		      [65, 0; 0, -80]
+      DstBlock		      "Gain1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "layerIn"
+      SrcPort		      1
+      DstBlock		      "Sum of\nElements1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Sum of\nElements1"
+      SrcPort		      1
+      Points		      [25, 0; 0, 45]
+      DstBlock		      "Gain"
+      DstPort		      1
+    }
+    Line {
       SrcBlock		      "Gain"
       SrcPort		      1
+      Points		      [35, 0]
       DstBlock		      "Out1"
       DstPort		      1
     }
     Line {
-      Name		      "PLEASE EDIT ME"
-      Labels		      [1, 1]
-      SrcBlock		      "layerIn"
+      SrcBlock		      "Gain1"
       SrcPort		      1
       DstBlock		      "layerOut"
       DstPort		      1
