@@ -15,13 +15,12 @@ function elist = adj_to_elist(A)
 %
 
 
-nv = mean(size(A));
+nv = size(A,1);
 ne = 0;
 
 for i=1:nv
    for j=i:nv
-      
-       if A(i,j)
+      if A(i,j)
           ne = ne + 1;
           elist(ne ,1) = i;
           elist(ne ,2) = j;
@@ -30,4 +29,8 @@ for i=1:nv
        
    end
       
+end
+
+if ne == 0
+   elist = 0; 
 end
