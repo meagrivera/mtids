@@ -48,8 +48,13 @@ end
 
 % --- Executes just before mtids is made visible.
 function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
-
+disp(' ');
+disp('MTIDS');
+disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
+disp(' ');
+%disp(mfilename);
 %clf;
+
 
 addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
@@ -158,10 +163,50 @@ global graph_refresh;
 global templates;
 global template_list;
 
-new_vertex = nv(g) + 1;
-resize(g, new_vertex);
-labs = get_label(g);
-lab_string =  get(handles.newnodelabel,'String');
+% Visualization creator
+if nv(g) == 0;
+    x_n = 2;
+    y_n = 0;
+    
+else    
+        XY = getxy(g);
+
+        x = XY(:,1)';
+        y = XY(:,2)'; 
+        d = x.*x + y.*y;
+        R = 2;
+        N = 12;
+   
+       
+        run_loop = 1;
+   
+     while run_loop
+        for i = 0:N-1
+        phi = i*2*pi/N;
+        x_n = R*cos(phi);
+        y_n = R*sin(phi);
+   
+        dx1 = x - x_n;
+        dy1 = y - y_n;
+        dd  = dx1.*dx1 + dy1.*dy1;
+ 
+            if min(dd) > 0.05
+                run_loop = 0;
+                break;
+            end
+        end
+        
+        R = 2*R;
+        N = 2*N;
+        end
+        
+  end
+   
+
+    new_vertex = nv(g) + 1;
+    resize(g, new_vertex);
+    labs = get_label(g);
+    lab_string =  get(handles.newnodelabel,'String');
 
 if(strmatch(lab_string,labs,'exact'))
     for i=1:nv(g)
@@ -175,6 +220,11 @@ if(strmatch(lab_string,labs,'exact'))
 
     end
 end
+
+XY(new_vertex,1) = x_n;
+XY(new_vertex,2) = y_n;
+
+embed(g,XY);
 
 label(g, new_vertex, lab_string); 
 
@@ -473,7 +523,7 @@ global templates;
 
 resize(g,0);
 templates = cell(0,1);
-refresh_graph(0, eventdata, handles);
+refresh_graph(1, eventdata, handles);
 
 % --------------------------------------------------------------------
 function loadgraph_Callback(hObject, eventdata, handles)
@@ -617,7 +667,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.colorview,'Check','off');
     set(handles.labelview,'Check','on');
     set(handles.numberview,'Check','off');
-        set(handles.blankview,'Check','off');
+    set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles)
 end
 
@@ -637,7 +687,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.colorview,'Check','on');
     set(handles.labelview,'Check','off');
     set(handles.numberview,'Check','off');
-        set(handles.blankview,'Check','off');
+    set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles)
 end
 
@@ -722,15 +772,24 @@ checknumber = get(handles.numberview,'Check');
  checkcolor = get(handles.colorview,'Check');
  checkblank = get(handles.blankview,'Check');
  
-rmxy(g);
+% rmxy(g);
 cla;
 
-if (reset >= 0.99) && (ne(g) > 0)
-    distxy(g);
+if reset == 1
+    rmxy(g);
 end
 
 if(ne(g)>0)
     basic_stats(eventdata, handles);
+else
+    set(handles.connected_graphs,'String', '0');
+    set(handles.graph_density,'String', '0');
+    set(handles.average_degree,'String', '0');
+    set(handles.median_degree,'String', '0');
+    set(handles.minimum_degree,'String', '0');
+    set(handles.maximum_degree,'String', '0');
+    set(handles.graph_heterogenity,'String', '0');
+    set(handles.algebraic_connectivity,'String', '0');
 end
 
 
@@ -785,11 +844,11 @@ A = D - L; % Adjacency matrix
  
  null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
                             %Gives us number of connected (sub) graphs
-set(handles.connected_graphs,'String', num2str(null_L));
+set(handles.connected_graphs,'String', num2str(null_L,'%d'));
 graph_density = mean(degree_vector)/(dim_L-1); %(1)
-set(handles.graph_density,'String', num2str(graph_density));
+set(handles.graph_density,'String', num2str(graph_density, '%1.3f'));
 graph_average_degree = mean(degree_vector);
-set(handles.average_degree,'String', num2str(graph_average_degree));
+set(handles.average_degree,'String', num2str(graph_average_degree, '%3.2f'));
 graph_median_degree = median(degree_vector);
 set(handles.median_degree,'String', num2str(graph_median_degree));
 graph_min_degree = min(degree_vector);
@@ -798,7 +857,7 @@ graph_max_degree = max(degree_vector);
 set(handles.maximum_degree,'String', num2str(graph_max_degree));
 %graph_density = 2*NEdges/(NVertex*(NVertex-1)); % Segun Wikipedia
 graph_heterogenity = sqrt(var(degree_vector))/mean(degree_vector);
-set(handles.graph_heterogenity,'String', num2str(graph_heterogenity));
+set(handles.graph_heterogenity,'String', num2str(graph_heterogenity,'%1.3f'));
 [Eigen_Matrix_L, Eigen_Values_L] = eig(L);
 [Eigen_Matrix_A, Eigen_Values_A] = eig(A);
 
@@ -899,7 +958,15 @@ global templates;
 global template_list;
 
 A  = double(matrix(g));
+
+% Makes the graph a circle
+rmxy(g);
+embed(g);
+%
+
 xy = getxy(g);
+
+
 labs = get_label(g);
 name =	'untitled';
  template =	'LTI'; 
@@ -1246,8 +1313,7 @@ elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
     if start_index
     add(g,start_index,I);
     start_index = 0;
-    cla;
-    ndraw(g);
+    refresh_graph(0, eventdata, handles);
     else
     start_index = I;
     end
@@ -1271,8 +1337,7 @@ end
     XY(nv(g),1) = x_c;
     XY(nv(g),2) = y_c;
     embed(g,XY);
-    cla;
-    ndraw(g);
+    refresh_graph(0, eventdata, handles);
    end
 
 
@@ -1307,8 +1372,7 @@ if botton_down
     XY(move_index,1) = x_c;
     XY(move_index,2) = y_c;
     embed(g,XY);
-    cla;
-    ndraw(g);
+    refresh_graph(0, eventdata, handles);
 end
    
 
@@ -1339,7 +1403,16 @@ global templates;
 global template_list;
 
 A  = double(matrix(g));
+
+%
+rmxy(g);
+embed(g);
+
+%
 xy = getxy(g);
+
+
+
 labs = get_label(g);
 name =	'untitled';
  template =	'LTI'; 
