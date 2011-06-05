@@ -22,6 +22,22 @@ function[] =exportLayer(name,template,templateList,A, xy, labs)
 %% options
 vizMaxNodeNumber=50;    % maximal number of nodes where Simulink opens
 
+%% Ask for interface template
+oldFolder = cd(strcat(pwd,'/templates'));
+[filename, pathname] = uigetfile( ...
+{'*.mdl','Simulink Model (*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Select Interface node template ');
+
+
+ file = strcat(pathname, filename);
+
+ addpath(pathname);
+ 
+ [pathname, interface, ext] = fileparts(file);
+
+cd(oldFolder);
+
 %% Create the model 
 
 
@@ -58,7 +74,7 @@ for i=1:size(templateList,1)
 end
 
 % modify interface node
-templateModify(nodeNumber,'layerInterface')
+templateModify(nodeNumber,interface)
 %% Arrange Subsystems and build them accourding to template
 
 x=xy(:,1);
@@ -81,7 +97,7 @@ add_block('built-in/Outport',[sys '/Out1' ] , 'position', blockCanvas([graphCent
 
 %add interface node
 add_block('built-in/Subsystem',[sys '/Interface'] , 'position', blockCanvas([7 graphCenter(2) ]) );
-Simulink.BlockDiagram.copyContentsToSubSystem('layerInterface', [sys '/Interface' ]);
+Simulink.BlockDiagram.copyContentsToSubSystem(interface, [sys '/Interface' ]);
 
 %connect things
 add_line(sys,'Mux/1', 'Interface/1','autorouting','on')
@@ -118,7 +134,7 @@ end
 for i=1:size(templateList,1)
 close_system(templateList{i},0)
 end
-close_system('layerInterface',0)
+close_system(interface,0)
 %% Connect Subsystems
 
 
@@ -175,3 +191,4 @@ end
 
 close_system(sys,0)
 end
+%rmpath(pathname)
