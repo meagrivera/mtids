@@ -1371,6 +1371,8 @@ global botton_down;
 global add_connection;
 global move_index;
 global start_index;
+global templates;
+global template_list;
 
 
 CP = get(handles.axes1, 'CurrentPoint');
@@ -1409,8 +1411,46 @@ elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
     end
     
 elseif strcmp(get(handles.output, 'SelectionType'), 'open')
-    % Ver para modificar nodo
+    % Opens node modification dialog
+
+   [s1,nodenumber,nodelabel,template,neighbours,destroy] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
+  
+   if destroy == 0
+            label(g,I, nodelabel);
+            templates{I} = template;
+            e_delete = g(I);
+            size_ne = size(e_delete,2);
+                         
+            neighbours = eval(neighbours);
+            
+            for i=1:size_ne
+               delete(g,I,e_delete(i)); 
+            end
+            
+            size_ne = size(neighbours,2);
+           
+            if ~strcmp(neighbours, '[]')
+                for i=1:size_ne
+                    add(g,I,neighbours(i)); 
+                end
+            end
+                
+            
+            refresh_graph(0, eventdata, handles)
+            
+       
+   elseif destroy == 1
+            if nv(g) && (I <= nv(g))
+            templates(I,:) = []; % Deleting a template
+
+            delete(g,I);
+
+            refresh_graph(0, eventdata, handles)
+            end
+       
+   end
     
+   
 end
 
 else
