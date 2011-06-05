@@ -163,7 +163,8 @@ global graph_refresh;
 global templates;
 global template_list;
 
-% Visualization creator
+%/ Visualization creator
+%{
 if nv(g) == 0;
     x_n = 2;
     y_n = 0;
@@ -202,7 +203,12 @@ else
         
   end
    
+XY(new_vertex,1) = x_n;
+XY(new_vertex,2) = y_n;
 
+embed(g,XY);
+%}
+    rmxy(g);
     new_vertex = nv(g) + 1;
     resize(g, new_vertex);
     labs = get_label(g);
@@ -221,10 +227,7 @@ if(strmatch(lab_string,labs,'exact'))
     end
 end
 
-XY(new_vertex,1) = x_n;
-XY(new_vertex,2) = y_n;
 
-embed(g,XY);
 
 label(g, new_vertex, lab_string); 
 
