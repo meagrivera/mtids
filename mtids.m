@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 03-Jun-2011 12:32:08
+% Last Modified by GUIDE v2.5 05-Jun-2011 20:51:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -379,7 +379,7 @@ end
 delete(g,n1(1), n2(1));
 
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles);
 
 guidata(hObject, handles);
 
@@ -534,6 +534,8 @@ function loadgraph_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global templates;
+global template_list;
 
 [filename, pathname] = uigetfile( ...
 {'*.mat;*.gr;','Graph/Network Files';
@@ -542,22 +544,51 @@ global g;
    '*.*',  'All Files (*.*)'}, ...
    'Open');
 
- file = strcat(pathname, filename);
- load(g, file);
- 
- templates = cell(0,1);
- 
- % Temporary code...
- n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+if filename
+     
+    
+    file = strcat(pathname, filename);
+    [pathname, filename, ext] = fileparts(file);
 
-for i=1:nv(g)
-   templates{i,1}=template_list{n_template,1};
+    free(g);
+    
+     if strcmp(ext, '.mat') 
+    S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list') ;
+    
+    nverts = S.nverts;
+    adj_matrix = S.adj_matrix;
+    XY = S.XY;
+    labs = S.labs;
+    templates = S.templates;
+    template_list = S.template_list;
+  
+   g = graph(nverts);
+    
+    for i=1:nverts
+    label(g,i,labs{i});
+    for j=1:nverts
+      if adj_matrix(i,j)
+         add(g,i,j);
+         adj_matrix(j,i) = 0;
+      end            
+    end
+ end
+
+embed(g,XY);
+    
+    elseif strcmp(ext, '.gr')
+        load(g, file);
+        templates = cell(0,1);
+        % Temporary code...
+        n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+
+        for i=1:nv(g)
+            templates{i,1}=template_list{n_template,1};
+        end
+    end
 end
 
- 
- 
- 
- 
+refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
@@ -573,16 +604,35 @@ function savegraphas_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global templates;
+global template_list;
 
 [filename, pathname] = uiputfile( ...
 {'*.mat;*.gr;','Graph/Network Files';
-   '*.mat','MAT-files (*.mat)'; ...
+   '*.mat','MAT-files [Prefered] (*.mat)'; ...
    '*.gr','Matgraph file (*.gr)'; ...
    '*.*',  'All Files (*.*)'}, ...
    'Save');
 
+if filename
  file = strcat(pathname, filename);
- save(g, file);
+[pathname, filename, ext] = fileparts(file);
+ %save(g, file);
+ 
+ adj_matrix = double(matrix(g));
+ labs = get_label(g);
+ XY = getxy(g);
+ nverts = nv(g);
+ nedges = ne(g);
+ 
+ if strcmp(ext, '.mat') 
+    save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list') ;
+    disp(strcat('Saved graph as binary .mat file ("', file,'")'));
+ elseif strcmp(ext, '.gr')
+    save(g, file);
+    disp(strcat('Saved graph as Matgraph file ("', file,'")'));       
+ end
+end
  
 refresh_graph(0, eventdata, handles);
 
@@ -938,7 +988,7 @@ global templates;
 
  % Delete graph!
   
- elist = adj_to_elist(A);
+ % Deprecated! elist = adj_to_elist(A);
 
  free(g);
  
@@ -1136,6 +1186,23 @@ for i=1:nv(g)
 end
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 refresh_graph(0, eventdata, handles);
 
 
@@ -1330,8 +1397,12 @@ if C <= 0.05; % Hardcoded value!
 
 elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
     if start_index
-    add(g,start_index,I);
-    start_index = 0;
+        if has(g, start_index, I) 
+            delete(g,start_index, I);
+        else
+            add(g,start_index,I);
+        end
+        start_index = 0;
     refresh_graph(0, eventdata, handles);
     else
     start_index = I;
@@ -1451,4 +1522,24 @@ name =	'untitled';
  else   
      disp('Done exporting');
  end
+
+
+
+% --- Executes on key press with focus on figure1 and none of its controls.
+function figure1_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  structure with the following fields (see FIGURE)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in update_graph_button.
+function update_graph_button_Callback(hObject, eventdata, handles)
+% hObject    handle to update_graph_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+refresh_graph(1, eventdata, handles);
 
