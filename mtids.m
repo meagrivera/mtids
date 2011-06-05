@@ -1416,7 +1416,25 @@ elseif strcmp(get(handles.output, 'SelectionType'), 'open')
    [s1,nodenumber,nodelabel,template,neighbours,destroy] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
   
    if destroy == 0
+       if ~strcmp(nodelabel, get_label(g,I))
+       
+            if(strmatch(nodelabel,get_label(g),'exact'))
+                for i=1:nv(g)
+    
+                if(strmatch(strcat(nodelabel, num2str(i)),get_label(g),'exact'))
+                continue;
+                else
+                nodelabel = strcat(nodelabel, num2str(i));
+                break;
+                end
+
+                end
+                end
+       end
+       
+       
             label(g,I, nodelabel);
+            
             templates{I} = template;
             e_delete = g(I);
             size_ne = size(e_delete,2);
