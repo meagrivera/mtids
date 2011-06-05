@@ -918,6 +918,8 @@ function import_from_simulink_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global template_list;
+global templates;
 
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
@@ -933,22 +935,31 @@ global g;
  
  
  [A, nverts, nedges, xy, labs ] = importSimulink(model);
- 
+
  % Delete graph!
- 
+  
  elist = adj_to_elist(A);
 
  free(g);
  
- g = graph(elist);
- 
- embed(g,xy); 
- 
- for i=1:nverts
+ g = graph(nverts); 
+  
+% Preliminary template import 
+n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+
+for i=1:nverts
     label(g,i,labs{i});
+    templates{i,1}=template_list{n_template,1};
+    for j=1:nverts
+      if A(i,j)
+         add(g,i,j);
+         A(j,i) = 0;
+      end            
+    end
  end
- 
- 
+
+embed(g,xy); 
+
 refresh_graph(0, eventdata, handles);
 
 % --------------------------------------------------------------------
@@ -1107,8 +1118,13 @@ else
     M = evalin(answer{1},answer{2});
 
 elist = any_matrix_to_elist(M);
-
-g = graph(elist);
+ 
+%Corrects the problem posed by a zero-adj-matrix!
+ if ( elist == zeros(2)  )
+ g = graph( size(A,1) );
+ else    
+ g = graph(elist);
+ end
 
 templates = cell(0,1);
 
