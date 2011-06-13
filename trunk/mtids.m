@@ -1102,8 +1102,10 @@ function number_of_nodes_CreateFcn(hObject, eventdata, handles)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+if ispc
     set(hObject,'BackgroundColor','white');
+else
+    set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
 
 
@@ -1297,7 +1299,9 @@ end
 
 global g;
 global template_list;
+%global drop_string;% = cell(0,0);
 
+drop_string = cell(0,0);
 
 [ny, nx] = size(template_list);
 
