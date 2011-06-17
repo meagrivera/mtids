@@ -15,7 +15,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.16"
+    ComputedModelVersion    "1.19"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -35,9 +35,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sat Jun  4 16:16:17 2011"
-  RTWModifiedTimeStamp	  229104971
-  ModelVersionFormat	  "1.%<AutoIncrement:16>"
+  LastModifiedDate	  "Mon Jun  6 11:32:38 2011"
+  RTWModifiedTimeStamp	  229260750
+  ModelVersionFormat	  "1.%<AutoIncrement:19>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -678,6 +678,24 @@ Model {
       ContinuousStateAttributes	"''"
     }
     Block {
+      BlockType		      Math
+      Operator		      "exp"
+      OutputSignalType	      "auto"
+      SampleTime	      "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeMode	      "Same as first input"
+      OutDataType	      "fixdt(1,16,0)"
+      OutScaling	      "[]"
+      OutDataTypeStr	      "Inherit: Same as first input"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      IntermediateResultsDataTypeStr "Inherit: Inherit via internal rule"
+      AlgorithmType	      "Newton-Raphson"
+      Iterations	      "3"
+    }
+    Block {
       BlockType		      Mux
       Inputs		      "4"
       DisplayOption	      "none"
@@ -795,7 +813,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    23
+    SIDHighWatermark	    28
     Block {
       BlockType		      Inport
       Name		      "In1"
@@ -869,6 +887,16 @@ Model {
       }
     }
     Block {
+      BlockType		      Math
+      Name		      "Math\nFunction"
+      SID		      24
+      Ports		      [2, 1]
+      Position		      [710, 312, 740, 343]
+      Operator		      "mod"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
       BlockType		      Mux
       Name		      "Mux"
       SID		      3
@@ -897,10 +925,10 @@ Model {
     }
     Block {
       BlockType		      Scope
-      Name		      "Scope1"
-      SID		      23
+      Name		      "Scope2"
+      SID		      25
       Ports		      [1]
-      Position		      [770, 94, 800, 126]
+      Position		      [825, 309, 855, 341]
       Floating		      off
       Location		      [188, 390, 512, 629]
       Open		      off
@@ -909,7 +937,7 @@ Model {
 	ListType		AxesTitles
 	axes1			"%<SignalLabel>"
       }
-      SaveName		      "ScopeData1"
+      SaveName		      "ScopeData2"
       DataFormat	      "StructureWithTime"
       SampleTime	      "0"
     }
@@ -930,8 +958,9 @@ Model {
     Block {
       BlockType		      Constant
       Name		      "Threshold"
-      SID		      20
-      Position		      [650, 40, 680, 70]
+      SID		      27
+      Position		      [480, 435, 510, 465]
+      BlockMirror	      on
       Value		      "threshold"
       OutDataType	      "fixdt(1, 16)"
       OutScaling	      "2^0"
@@ -955,9 +984,10 @@ Model {
     Block {
       BlockType		      SubSystem
       Name		      "flash"
-      SID		      19
+      SID		      28
       Ports		      [2, 1]
-      Position		      [710, 19, 780, 66]
+      Position		      [360, 379, 430, 426]
+      BlockMirror	      on
       LibraryVersion	      "1.30"
       PermitHierarchicalResolution "ExplicitOnly"
       MinAlgLoopOccurrences   off
@@ -992,7 +1022,7 @@ Model {
 	ShowPageBoundaries	off
 	ZoomFactor		"100"
 	SIDHighWatermark	10
-	SIDPrevWatermark	5
+	SIDPrevWatermark	10
 	Block {
 	  BlockType		  Inport
 	  Name			  "u"
@@ -1086,6 +1116,15 @@ Model {
     }
     Block {
       BlockType		      Constant
+      Name		      "period"
+      SID		      26
+      Position		      [550, 316, 600, 354]
+      Value		      "2*pi"
+      OutDataType	      "fixdt(1, 16)"
+      OutScaling	      "2^0"
+    }
+    Block {
+      BlockType		      Constant
       Name		      "rho0"
       SID		      21
       Position		      [480, 20, 510, 50]
@@ -1135,9 +1174,16 @@ Model {
 	  DstPort		  1
 	}
 	Branch {
-	  Points		  [0, 85]
-	  DstBlock		  "Scope"
-	  DstPort		  1
+	  Points		  [0, 85; 20, 0]
+	  Branch {
+	    DstBlock		    "Scope"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 75]
+	    DstBlock		    "Math\nFunction"
+	    DstPort		    1
+	  }
 	}
       }
     }
@@ -1165,24 +1211,8 @@ Model {
       Labels		      [0, 0]
       SrcBlock		      "Add"
       SrcPort		      1
-      Points		      [35, 0]
-      Branch {
-	DstBlock		"Integrator"
-	DstPort			1
-      }
-      Branch {
-	Points			[0, -55]
-	Branch {
-	  Points		  [0, -75]
-	  DstBlock		  "flash"
-	  DstPort		  1
-	}
-	Branch {
-	  Points		  [205, 0]
-	  DstBlock		  "Scope1"
-	  DstPort		  1
-	}
-      }
+      DstBlock		      "Integrator"
+      DstPort		      1
     }
     Line {
       SrcBlock		      "Trigonometric\nFunction"
@@ -1197,16 +1227,37 @@ Model {
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Threshold"
-      SrcPort		      1
-      DstBlock		      "flash"
-      DstPort		      2
-    }
-    Line {
       SrcBlock		      "rho0"
       SrcPort		      1
       Points		      [20, 0; 0, 140]
       DstBlock		      "Integrator"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "period"
+      SrcPort		      1
+      DstBlock		      "Math\nFunction"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Math\nFunction"
+      SrcPort		      1
+      Points		      [30, 0; 0, -5; 5, 0]
+      Branch {
+	DstBlock		"Scope2"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 65]
+	DstBlock		"flash"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Threshold"
+      SrcPort		      1
+      Points		      [-30, 0]
+      DstBlock		      "flash"
       DstPort		      2
     }
   }
@@ -1230,7 +1281,7 @@ Stateflow {
   chart {
     id			    2
     name		    "flash"
-    windowPosition	    [300.6 338.917 200.25 189.75]
+    windowPosition	    [315.6 323.917 200.25 189.75]
     viewLimits		    [0 156.75 0 153.75]
     screen		    [1 1 1280 800 1.25]
     treeNode		    [0 3 0 0]
@@ -1239,6 +1290,8 @@ Stateflow {
     viewObj		    2
     machine		    1
     toolbarMode		    LIBRARY_TOOLBAR
+    subviewS {
+    }
     ssIdHighWaterMark	    6
     decomposition	    CLUSTER_CHART
     type		    EML_CHART

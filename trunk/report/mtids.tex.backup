@@ -109,9 +109,12 @@ Submitted &  04.07.2011 \\
 \pagenumbering{arabic}
 \phantom{u}
 \begin{abstract}
-The goal of this project was to develop a test rig for large-scale and interconnected dynamical systems. The result was 
-MTIDS or Matlab Toolbox for Interconnected Dynamical Systems, which is a mashup that wraps different toolboxes used for graph analysis and 
-dynamical symulations together. MTIDS a 
+The goal of this project was to develop a test rig for large-scale and interconnected dynamical systems. The result is
+MTIDS or Matlab Toolbox for Interconnected Dynamical Systems, which is a mash-up that wraps different toolboxes used for graph analysis and 
+dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assign to it. 
+The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
+possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general desciption 
+of MTIDS and intructions for its use.    
 %\vspace{2cm}
 % \begin{center}
 % \normalsize \textbf{Zusammenfassung}\\
@@ -146,40 +149,89 @@ dynamical symulations together. MTIDS a
 %_________Einleitung__________________________________
 \chapter{Introduction} \label{chapter1}
 
+In this first Chapter the motivation behind the MTIDS project is explained and the project's goal and framework is presented.
+
+\section{Motivaion}
+Large-scale interconnected dynamical system are everywhere: biological systems, power and water systems, the brain neurons, 
+social interaction networks, economic markets, etc. In a cononical form all of this systems can be thought as a bunch of nodes with local dynamics 
+that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
+large scale interconnected systems can be seen in Figure \ref{largePic}. 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/complex.eps}
-\caption[write text]{write text}
-\label{modelNormal1}
+\caption[Example of large-scale systems]{Visualization of various large scale systems using the sfdp algorithm $\copyright$ Dr. Yifan Hu of AT\&T Labs}
+\label{largePic}
 \end{figure}
 
+There are many tools available for the analysis of interconnected dynamical systems, for example in power systems you have PSSE and Power Factory. However,
+this simulation programs are normally very system specific and in most cases it takes a long time to learn how to use them correctly. 
+The difficulties are specially noticed while
+testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation set up. 
+You may actually end up spending the most of your time in the implementation of a simulation. A more general and 
+easy to use solution for the simulation of interconnected dynamical systems is needed.
+
+
+
+
+\section{Idea and Goal}
+
+\textbf{MTIDS} (Matlab Toolbox for Interconnected Dynamical Systems) is a project that aims to design an easy 
+to use and flexible toolbox to make the simulation of large scale dynamical systems easier for students and researchers. 
+The \textbf{goal} is to produce a mash-up that wraps different toolboxes used for graph analysis and 
+dynamic systems simulation together into a framework.  
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/mtidsstructure.eps}
-\caption[write text]{write text}
-\label{modelNormal1}
+\caption[MTIDS idea]{MTIDS: Matlab Toolbox for Interconnected Dynamical Systems}
+\label{mtidsFig}
 \end{figure}
 
+As we can see in Figure \ref{mtidsFig} MTIDS runs in the MATLAB enviroment and is basically a GUI that allows the interaction of tools used in graph theory 
+and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the John Hopkins University and for dynamical simulations
+we use Simulink. 
 
+\section{Framework}
+
+The current framework of MTID is made out of three basic composnents. A GUI (\textbf{mtids.m}) an export to simulink function (\textbf{exportSimulink.m}) and
+an inport from Simulink function (\textbf{importSimulink.m}).\\
+
+ 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/uml.eps}
-\caption[write text]{write text}
-\label{modelNormal1}
+\caption[MTIDS components]{MTIDS: Components diagram}
+\label{componentsFig}
 \end{figure}
 
-\chapter{Graphic Theory Tools}\label{chapter2}
+In Figure \ref{componentsFig} we can see that the most important component is the user, specially its head. The better you are at producing templates
+and interacting with matlab and simulink the more functional MTIDS is going to be for you.
+In a nutshell MTIDS works as fallows:
+\begin{itemize}
+\item GUI (mtids.m) runs inside Matlab
+\item GUI interacts with Matgraph: create, modify and visualize graphs  
+\item System Inteconnector (SI): exportSimulink.m and importSimulink.m called from GUI to interact with Simulink
+\item Templates done by User in Matlab/Simulink.
+\item Simulations done in Simulink
+\end{itemize}
+%  
+% 
+% The GUI (mtids.m) runs inside matlab. The UI interacts 
+% with Matgraph to create, modify and visualize graphs. The ystem Inteconnector (SI) compose of the functions exportSimulink.m and importSimulink.m are
+% called from GUI to interact with Simulink. The user can define the nodes dynamic by building custom templates in Matlab/Simulink. The simulations are
+% ultimately done in Simulink.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	CONCLUSION	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAPH
+\chapter{Graphic Theory}\label{chapter2}
 
 
-%______________________________________
-\chapter{System Theory Tools}\label{chapter3}
+
+%_%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SYSTEM_____________________________________
+\chapter{System Theory}\label{chapter3}
 
 
 

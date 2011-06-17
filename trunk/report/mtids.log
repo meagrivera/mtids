@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  15 JUN 2011 18:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  17 JUN 2011 19:50
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
@@ -235,14 +235,7 @@ File: pdfmark.def 2009/10/09 v6.79a Hyperref definitions for pdfmark specials
 \f@ncyO@erf=\skip49
 \f@ncyO@olf=\skip50
 \f@ncyO@orf=\skip51
-) (./mtids.aux
-
-LaTeX Warning: Label `modelNormal1' multiply defined.
-
-
-LaTeX Warning: Label `modelNormal1' multiply defined.
-
-)
+) (./mtids.aux)
 \openout1 = `mtids.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
@@ -260,7 +253,8 @@ LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 Package hyperref Info: Link coloring ON on input line 56.
- (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
@@ -289,14 +283,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [1
 
 ] [1] [1]
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 138.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 143.
 
  (/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 
 LaTeX Font Warning: Font shape `OT1/phv/a/n' undefined
-(Font)              using `OT1/phv/m/n' instead on input line 138.
+(Font)              using `OT1/phv/m/n' instead on input line 143.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -316,44 +310,55 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 Chapter 1.
 File: pics/complex.eps Graphic file (type eps)
 <pics/complex.eps>
-File: pics/mtidsstructure.eps Graphic file (type eps)
- <pics/mtidsstructure.eps>
-File: pics/uml.eps Graphic file (type eps)
- <pics/uml.eps> [5] [6]
-Chapter 2.
-[7
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 164.
 
-] [8
+ (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 164.
+ [5]
+File: pics/mtidsstructure.eps Graphic file (type eps)
+
+<pics/mtidsstructure.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
+
+ []
+
+[6]
+File: pics/uml.eps Graphic file (type eps)
+ <pics/uml.eps> [7] [8
 
 ]
-Chapter 3.
+Chapter 2.
 [9] [10
 
 ]
-Chapter 4.
+Chapter 3.
 [11] [12
+
+]
+Chapter 4.
+[13] [14
 
 ] (./mtids.lof)
 \tf@lof=\write6
 \openout6 = `mtids.lof'.
 
- [13
+ [15
 
 ] (./mtids.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
  ) 
 Here is how much of TeX's memory you used:
- 4537 strings out of 495062
- 65990 string characters out of 1182644
+ 4561 strings out of 495062
+ 66364 string characters out of 1182644
  135788 words of memory out of 3000000
- 7636 multiletter control sequences out of 15000+50000
+ 7657 multiletter control sequences out of 15000+50000
  9715 words of font info for 33 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,11n,43p,269b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (15 pages, 20512 bytes).
+Output written on mtids.dvi (17 pages, 29952 bytes).
