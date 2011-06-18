@@ -1,11 +1,12 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  17 JUN 2011 19:50
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.6.18)  18 JUN 2011 18:14
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
 (./mtids.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
+yphenation, ngerman, german, german-x-2009-06-19, ngerman-x-2009-06-19, spanish
+, galician, catalan, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/report.cls
 Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size12.clo
@@ -318,9 +319,9 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 164.
  [5]
-File: pics/mtidsstructure.eps Graphic file (type eps)
+File: pics/mtidsStructure.eps Graphic file (type eps)
 
-<pics/mtidsstructure.eps>
+<pics/mtidsStructure.eps>
 Underfull \hbox (badness 10000) in paragraph at lines 199--201
 
  []
@@ -339,13 +340,27 @@ Chapter 3.
 
 ]
 Chapter 4.
-[13] [14
+[13]
+Overfull \hbox (17.9479pt too wide) in paragraph at lines 268--269
+\OT1/cmr/m/n/12 Nodes can be dragged and repo-si-tioned on the screen by hold-i
+ng down the []\OT1/cmtt/m/n/12 <Left click>
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14]
+[15] [16
+
+]
+Chapter 5.
+[17] [18
 
 ] (./mtids.lof)
 \tf@lof=\write6
 \openout6 = `mtids.lof'.
 
- [15
+ [19
 
 ] (./mtids.aux)
 
@@ -353,12 +368,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 4561 strings out of 495062
- 66364 string characters out of 1182644
- 135788 words of memory out of 3000000
- 7657 multiletter control sequences out of 15000+50000
- 9715 words of font info for 33 fonts, out of 3000000 for 9000
- 28 hyphenation exceptions out of 8191
- 38i,11n,43p,269b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 4585 strings out of 494963
+ 66738 string characters out of 1179328
+ 137896 words of memory out of 3000000
+ 7700 multiletter control sequences out of 15000+50000
+ 10538 words of font info for 36 fonts, out of 3000000 for 9000
+ 54 hyphenation exceptions out of 8191
+ 38i,11n,45p,269b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (17 pages, 29952 bytes).
+Output written on mtids.dvi (21 pages, 52140 bytes).
