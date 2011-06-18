@@ -77,10 +77,10 @@ Systems}\\
 					    \vspace{0.4cm} & \vspace{0.4cm} \\
 					 cand. ing. Francisco Llobet& cand. ing. Jose Rivera  \\
 						\vspace{0.5cm} & \vspace{0.5cm}\\
-					born on December 18, 1986 & born on December 18, 1986\\
+					born on July 9, 1985 & born on December 18, 1986\\
 					resident: & resident:\\
-					Amalienstr. 87& Amalienstr. 87\\
-					80799 M\"{u}nchen & 80799 M\"{u}nchen  
+					Briennerstr. 39& Amalienstr. 87\\
+					80333 M\"{u}nchen & 80799 M\"{u}nchen  
 					\end{tabular}
 
 					                           
@@ -151,7 +151,7 @@ of MTIDS and intructions for its use.
 
 In this first Chapter the motivation behind the MTIDS project is explained and the project's goal and framework is presented.
 
-\section{Motivaion}
+\section{Motivation}
 Large-scale interconnected dynamical system are everywhere: biological systems, power and water systems, the brain neurons, 
 social interaction networks, economic markets, etc. In a cononical form all of this systems can be thought as a bunch of nodes with local dynamics 
 that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
@@ -185,7 +185,7 @@ dynamic systems simulation together into a framework.
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/mtidsstructure.eps}
+\includegraphics[width=0.5\textwidth]{pics/mtidsStructure.eps}
 \caption[MTIDS idea]{MTIDS: Matlab Toolbox for Interconnected Dynamical Systems}
 \label{mtidsFig}
 \end{figure}
@@ -226,16 +226,79 @@ In a nutshell MTIDS works as fallows:
 % ultimately done in Simulink.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAPH
-\chapter{Graphic Theory}\label{chapter2}
+\chapter{Graph Theory}\label{chapter2}
 
 
 
 %_%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SYSTEM_____________________________________
 \chapter{System Theory}\label{chapter3}
 
+\chapter{MTIDS User Manual}
+
+\section{MTIDS Concepts}
+\subsection{Nodes and connections}
+\subsubsection{Node:}
+Each node represents a subsystem . Each node has to have a unique label, Removing or adding a node changes the numbering of a node. 
+\subsubsection{Connections:}
+Any connection made inside MTIDS is bidirectional and unweighted. Removing a node removes all connections coming from and to it.
+
+\subsection{Node dynamics and mdl-templates}
+Node dynamics are implemented as Simulink model files, this allows for implementation of systems which are not only limited to the traditional linear state-space models, but also to nonlinear and switching dynamics.
+\subsubsection{The MTIDS-Format for templates}
+
+\subsection{Layering and clustering}
+
+
+\section{User Interface}
+\subsubsection{Opening MTIDS}
+Inside Matlab, change the current directory to the one which contains the \emph{mtids.m} script
+Run the \emph{mtids.m} script
+
+\subsection{Menu overview}
+\subsubsection{File}
+\subsubsection{View}
+\subsubsection{Dynamics}
+\subsubsection{Simulation}
+\subsubsection{About}
+
+\subsection{Drag-and-Drop operations}
+\subsubsection{Adding nodes}
+Nodes are added using \verb|<Shift>-<Left click>|. This adds a new node with label and dynamics as selected on the ``node creation`` section. 
+\subsubsection{Drag nodes}
+Nodes can be dragged and repositioned on the screen by holding down the \verb|<Left click>| buttom on the mouse. 
+\subsubsection{Add/remove connections}
+Connections are added or removed using \verb|<Ctrl>-<Left click>| on both nodes. If a connection doesn't exist, it will be created, otherwise it will remove this connection. 
+\subsection{Access node properties}
+The node properties window is accessed by a \verb|<Double Left click>| on the corresponding node. 
+
+
+
+\subsection{Add mdl-templates}
+\subsection{Adding and removing nodes}
+\subsection{Adding and removing connections}
+
+\subsection{Editting node properties}
+
+
+
+\section{Interacting with Simulink}
+\subsection{Exporting to Simulink}
+\subsection{Creating and modifying templates}
+\subsection{Layering}
+\subsection{Simulation}
+
+
+\section{Interacting with Matlab}
+\subsection{Linear Algebra}
+\subsection{Eigenvector and eigenvalue extraction of matrices}
+\subsubsection{Ranks of matrices and nullspaces}
+\subsection{Control Toolbox functions}
+\subsubsection{Linearizing and testing for controlability}
+
 
 
 \chapter{Conclusion and Future Development}
+
 \section{Conclusion}
 
 

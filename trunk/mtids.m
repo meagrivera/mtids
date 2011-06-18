@@ -538,10 +538,9 @@ global templates;
 global template_list;
 
 [filename, pathname] = uigetfile( ...
-{'*.mat;*.gr;','Graph/Network Files';
+{'*.mat;','Graph/Network Files';
    '*.mat','MAT-files (*.mat)'; ...
-   '*.gr','Matgraph file'; ...
-   '*.*',  'All Files (*.*)'}, ...
+    '*.*',  'All Files (*.*)'}, ...
    'Open');
 
 if filename
@@ -608,9 +607,8 @@ global templates;
 global template_list;
 
 [filename, pathname] = uiputfile( ...
-{'*.mat;*.gr;','Graph/Network Files';
+{'*.mat;','Graph/Network Files';
    '*.mat','MAT-files [Prefered] (*.mat)'; ...
-   '*.gr','Matgraph file (*.gr)'; ...
    '*.*',  'All Files (*.*)'}, ...
    'Save');
 
@@ -1041,29 +1039,7 @@ name =	'untitled';
  end
      disp('  ');
 
-     % in case templates are empty as for them
-     if isempty(templates)
-oldFolder = cd(strcat(pwd,'/templates'));
-         [filename, pathname] = uigetfile( ...
-{'*.mdl','Simulink model template(*.mdl)';
-   '*.*',  'All Files (*.*)'}, ...
-   'Import Simulink model template', ...
-   'MultiSelect', 'on');
- file = strcat(pathname, filename);
-
- addpath(pathname);
- 
- [pathname, model, ext] = fileparts(file);
- 
- template_list={template_list{:} model}
- template=cell(1,nv(g));
- 
- for i=1:nv(g)
-         templates{i}=model; 
- end
- cd(oldFolder);
-     end
-     % end selection of template
+  
      
     exportSimulink(name,templates,template_list,A, xy, labs);
 
