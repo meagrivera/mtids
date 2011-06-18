@@ -113,8 +113,8 @@ The goal of this project was to develop a test rig for large-scale and interconn
 MTIDS or Matlab Toolbox for Interconnected Dynamical Systems, which is a mash-up that wraps different toolboxes used for graph analysis and 
 dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assign to it. 
 The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
-possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general desciption 
-of MTIDS and intructions for its use.    
+possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general description 
+of MTIDS and instructions for its use.    
 %\vspace{2cm}
 % \begin{center}
 % \normalsize \textbf{Zusammenfassung}\\
@@ -153,7 +153,7 @@ In this first Chapter the motivation behind the MTIDS project is explained and t
 
 \section{Motivation}
 Large-scale interconnected dynamical system are everywhere: biological systems, power and water systems, the brain neurons, 
-social interaction networks, economic markets, etc. In a cononical form all of this systems can be thought as a bunch of nodes with local dynamics 
+social interaction networks, economic markets, etc. In a canonical form all of this systems can be thought as a bunch of nodes with local dynamics 
 that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
 large scale interconnected systems can be seen in Figure \ref{largePic}. 
 
@@ -190,14 +190,14 @@ dynamic systems simulation together into a framework.
 \label{mtidsFig}
 \end{figure}
 
-As we can see in Figure \ref{mtidsFig} MTIDS runs in the MATLAB enviroment and is basically a GUI that allows the interaction of tools used in graph theory 
+As we can see in Figure \ref{mtidsFig} MTIDS runs in the MATLAB environment and is basically a GUI that allows the interaction of tools used in graph theory 
 and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the John Hopkins University and for dynamical simulations
 we use Simulink. 
 
 \section{Framework}
 
-The current framework of MTID is made out of three basic composnents. A GUI (\textbf{mtids.m}) an export to simulink function (\textbf{exportSimulink.m}) and
-an inport from Simulink function (\textbf{importSimulink.m}).\\
+The current framework of MTID is made out of three basic components. A GUI (\textbf{mtids.m}) an export to simulink function (\textbf{exportSimulink.m}) and
+an import from Simulink function (\textbf{importSimulink.m}).\\
 
  
 
@@ -210,7 +210,7 @@ an inport from Simulink function (\textbf{importSimulink.m}).\\
 
 In Figure \ref{componentsFig} we can see that the most important component is the user, specially its head. The better you are at producing templates
 and interacting with matlab and simulation the more functional MTIDS is going to be for you.
-In a nutshell MTIDS works as fallows:
+In a nutshell MTIDS works as follows:
 \begin{itemize}
 \item GUI (mtids.m) runs inside Matlab
 \item GUI interacts with Matgraph: create, modify and visualize graphs  
@@ -233,7 +233,7 @@ In a nutshell MTIDS works as fallows:
 %_%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SYSTEM_____________________________________
 \chapter{System Theory}\label{chapter3}
 
-\chapter{MTIDS User Manual}
+In this Chapter we explain the design and simulation capabilities that MTIDS offers for interconnected dynamical systems.
 
 \section{MTIDS Concepts}
 \subsection{Nodes and connections}
@@ -242,59 +242,198 @@ Each node represents a subsystem . Each node has to have a unique label, Removin
 \subsubsection{Connections:}
 Any connection made inside MTIDS is bidirectional and unweighted. Removing a node removes all connections coming from and to it.
 
-\subsection{Node dynamics and mdl-templates}
-Node dynamics are implemented as Simulink model files, this allows for implementation of systems which are not only limited to the traditional linear state-space models, but also to nonlinear and switching dynamics.
-\subsubsection{The MTIDS-Format for templates}
+\section{Export to Simulink}\label{exportToSimulink}
+In order to export the model created in the MTIDS GUI to simulink: \textbf{Simulation $\rightarrow$ Export to Simulink...} (see Figure \ref{exportFig})
 
-\subsection{Layering and clustering}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pics/screenExport.eps}
+\caption[MTIDS export to Simulink]{MTIDS: export model to Simulink. Example is a complete graph with 10 LTI nodes. }
+\label{exportFig}
+\end{figure}
+
+The MTIDS GUI then calls the function exportSimulink.m which builds a Simulink model based with the following information:
+\begin{itemize}
+ \item name: Model name
+ \item template:  list of nodes' dynamics templates 
+\item templateList: List of templates that are availible in mtids
+\item A: Adjacense matrix,
+\item xy: Position of the nodes
+ \item labs: List of nodes' names
+\end{itemize}
+ 
+The result is a Simulink model in the MTIDS format. To adjust the size of the model to the Simulink window size: \textbf{View $\rightarrow$ Fit System To View}
+% 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\textwidth]{pics/screenExportResult.eps}
+\caption[MTIDS exported Simulink model]{Interconnected system Simulink Model. Example is a complete graph with 10 LTI nodes. }
+\label{exportFig}
+\end{figure}
+
+In Figure \ref{exportFig}, the nodes are odered in a circle, the topology of the system defined in MTIDS remains. The circle arrangement is a 
+design descition, made, in order to allow a better acces to the nodes. Each one of the nodes is a subsystem block. The dynamic of the nodes is defined inside
+the subsystem block. Moreover, each node has a single out-port and N in-ports, where N is the number of nodes the whole system has. Each node on the 
+system has its own in-port on each node, compare with a zoom on the first node of our example in Figure \ref{nodeFig}. Notice that the port corresponding to the nodes number
+should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
+In case that a loop of a node with itself is required we recommend doing this inside the subsystem/node. 
+ 
+
+ 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.7\textwidth]{pics/screenNode.eps}
+\caption[MTIDS node in Simulink]{Node inputs and output: Each node has an in-port for every node in the model and an out-port. Example is the first node of a complete graph with 10 LTI nodes. }
+\label{nodeFig}
+\end{figure}
+
+Another important aspect to point out is that when simulating the system, simulink will issue a warning for unconnected in-ports and set their input to the subsystem to 0, this means 
+that an \textbf{unconnected ports enter the subsystem (local dynamics of the node) with a value of zero} during simulations. 
+
+\section{Nodes' Dynamics}
+
+As mentioned in the past section \ref{exportToSimulink} each node defined in MTIDS is exported to simulink as a subsystem. The exportSimulink.m function 
+uses predefined dynamic templates, which are modified accourding to the in MTIDS defined topology. Next we explain how to define your own templates and
+show how to use 2 preloaded templates: the LTI template and the kuramoto template. 
 
 
-\section{User Interface}
-\subsubsection{Opening MTIDS}
-Inside Matlab, change the current directory to the one which contains the \emph{mtids.m} script
-Run the \emph{mtids.m} script
+\subsection{Build your own Template}
+The real power of MTIDS depends on you ability to build templates. 
+\\
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/screenBuildTemplate.eps}
+\caption[MTIDS Dynamics Template]{Scratch template for node's dynamics.}
+\label{templateFig}
+\end{figure}
 
-\subsection{Menu overview}
-\subsubsection{File}
-\subsubsection{View}
-\subsubsection{Dynamics}
-\subsubsection{Simulation}
-\subsubsection{About}
+In Figure \ref{templateFig} we can see the components that each template should have: an in-port connected to a mux and an out-port.
+Between the mux and the outport you can design your own custom dynamics. The imput to the system comes from mux as vector composed by the values
+send from other nodes/subsystems. The output of your system should also be aggregated to a vector and routed to the out-port. The sepparation of the different inputs and outputs 
+is left to the system designers. With a well thought architecture complex systems are very easy to achieve, please refer to the LTI and kuramoto template examples.  
+\\
 
-\subsection{Drag-and-Drop operations}
-\subsubsection{Adding nodes}
-Nodes are added using \verb|<Shift>-<Left click>|. This adds a new node with label and dynamics as selected on the ``node creation`` section. 
-\subsubsection{Drag nodes}
-Nodes can be dragged and repositioned on the screen by holding down the \verb|<Left click>| buttom on the mouse. 
-\subsubsection{Add/remove connections}
-Connections are added or removed using \verb|<Ctrl>-<Left click>| on both nodes. If a connection doesn't exist, it will be created, otherwise it will remove this connection. 
-\subsection{Access node properties}
-The node properties window is accessed by a \verb|<Double Left click>| on the corresponding node. 
+The dynamic of a node can be as simple as a junction that only reroutes the incomming signals or more complicated to include controlers and systems inside of it. It is this feature that allows
+the implementation of clusters or layered systems, see subsection \ref{layering}. 
 
 
+\subsection{The LTI template}
 
-\subsection{Add mdl-templates}
-\subsection{Adding and removing nodes}
-\subsection{Adding and removing connections}
+The LTI template is an example that defines a linear time invariant dynamic for nodes. The mathematical model 
+of a simple interconnected LTI system is written as:
+\begin{eqnarray}
+\left( \begin{array}{c}
+\dot{x_1} \\  
+\vdots \\
+\dot{x_N}
+\end{array} \right)=
+\left( \begin{array}{ccc}
+A_{11} & \cdots & A_{1N} \\  
+\vdots & \ddots & \vdots\\
+A_{N1} & \cdots &A_{NN}
+\end{array} \right) 
+\left( \begin{array}{c}
+x_1 \\  
+\vdots \\
+x_N
+\end{array} \right)+
+\left( \begin{array}{c c c}
+B_{1} & \cdots & B_{N}  
+\end{array} \right) 
+\left( \begin{array}{c}
+u_1 \\  
+\vdots \\
+u_N
+\end{array} \right)       
+\end{eqnarray}
+or
+\begin{equation}
+ \dot{x}=Ax+Bu
+\end{equation}
+The local view of a single subsystem/node (here for the first node) is:
+\begin{eqnarray}
+  \dot{x_1}= 
+\left( \begin{array}{c c c c c c c}
+A_{11} & A_{12} & \cdots & A_{1N} & B_{1} & \cdots & B_{N}  
+\end{array} \right) 
+\left( \begin{array}{c}
+x_1 \\ 
+x_2 \\ 
+\vdots \\
+x_N\\
+u_1 \\  
+\vdots \\
+u_N
+\end{array} \right)    
+\end{eqnarray}
+this can be reformulated  
+\begin{eqnarray} \label{LTIFor}
+ \dot{x_1}= A_{11}x_1 +  
+\left( \begin{array}{c c c c c c c}
+A_{11} & A_{12} & \cdots & A_{1N} & B_{1} & \cdots & B_{N}  
+\end{array} \right) 
+\left( \begin{array}{c}
+0 \\ 
+x_2 \\ 
+\vdots \\
+x_N\\
+u_1 \\  
+\vdots \\
+u_N
+\end{array} \right) 
+\end{eqnarray}
 
-\subsection{Editting node properties}
 
 
 
-\section{Interacting with Simulink}
-\subsection{Exporting to Simulink}
-\subsection{Creating and modifying templates}
-\subsection{Layering}
-\subsection{Simulation}
+
+In order to keep things simple, we define the local output of all nodes as:
+\begin{eqnarray}
+ y_N=  x_N 
+\end{eqnarray}
+
+To implement this dynamic as a template we make use of the State-Space block.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pics/screenLTI.eps}
+\caption[MTIDS LTI Template]{LTI template}
+\label{templateLTIFig}
+\end{figure}
+ 
+This template shown in \ref{templateLTIFig} can be used in MTIDS to create interconnected LTI systems with different topologies. One way to avoid 
+the work of parametrizing the A,B,C and D matrix of every node sepparately is to define the same matrix for all subsystems. One can use the formula 
+\ref{LTIFor} and define the same A, B, C, and D matrix for every node. An example of this is
+\begin{eqnarray}
+ A&=& 1\nonumber\\
+B&=&[1 \cdots 1]^{1\times N}\nonumber\\
+C&=& 1\nonumber\\
+D&=& [0 \cdots 0] ^{1\times N}\nonumber
+\end{eqnarray}
+
+As the in-port corresponding to the node itself is automatically set to zero by Symulink during the simulation, we can define the same matrizes for all 
+nodes without getting any errors.
+\\
+
+For more complicated LTI models we recomend creating many different LTI templates.
+
+\subsection{The Kuramoto Template}
+The kuramoto template is an example for a non-linear dynamic of a node. 
 
 
-\section{Interacting with Matlab}
-\subsection{Linear Algebra}
-\subsection{Eigenvector and eigenvalue extraction of matrices}
-\subsubsection{Ranks of matrices and nullspaces}
-\subsection{Control Toolbox functions}
-\subsubsection{Linearizing and testing for controlability}
+\section{Layering/Clustering Nodes} \label{layering}
 
+
+
+\section{Working in Simuling}
+
+
+
+\section{Import from Simulink}
+
+Beware to define nodes dynamics...
 
 
 \chapter{Conclusion and Future Development}
