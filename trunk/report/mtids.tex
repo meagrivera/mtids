@@ -235,39 +235,34 @@ In a nutshell MTIDS works as follows:
 
 In this Chapter we explain the design and simulation capabilities that MTIDS offers for interconnected dynamical systems.
 
-\section{MTIDS Concepts}
+\section{MTIDS Concepts for Simulink Models} \label{subsystemConcept}
 \subsection{Nodes and connections}
 \subsubsection{Node:}
-Each node represents a subsystem . Each node has to have a unique label, Removing or adding a node changes the numbering of a node. 
+Each node in MTIDS is a subsystem block in Simulink. Each node must have a unique label.
+Each node has an in-port for every node in the graph and an out-port. 
 \subsubsection{Connections:}
-Any connection made inside MTIDS is bidirectional and unweighted. Removing a node removes all connections coming from and to it.
+Any connection made inside MTIDS is bidirectional and unweighted. As Simulink connections are directed, each MTIDS bidirectional connection
+ is represented with two directed connections between nodes. To imlement weighted graphs, weights 
+on branches have to be realized in the node's dynamic model, e.g inside the subsystem. Another option is to define junction nodes.
 
 \section{Export to Simulink}\label{exportToSimulink}
 In order to export the model created in the MTIDS GUI to simulink: \textbf{Simulation $\rightarrow$ Export to Simulink...} (see Figure \ref{exportFig})
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.8\textwidth]{pics/screenExport.eps}
+\includegraphics[width=0.7\textwidth]{pics/screenExport.eps}
 \caption[MTIDS export to Simulink]{MTIDS: export model to Simulink. Example is a complete graph with 10 LTI nodes. }
 \label{exportFig}
 \end{figure}
 
 The MTIDS GUI then calls the function exportSimulink.m which builds a Simulink model based with the following information:
-\begin{itemize}
- \item name: Model name
- \item template:  list of nodes' dynamics templates 
-\item templateList: List of templates that are availible in mtids
-\item A: Adjacense matrix,
-\item xy: Position of the nodes
- \item labs: List of nodes' names
-\end{itemize}
- 
+model name, list of nodes' dynamics templates,list of templates that are availible in mtids, adjacense matrix, position of the nodes ant the nodes' names. 
 The result is a Simulink model in the MTIDS format. To adjust the size of the model to the Simulink window size: \textbf{View $\rightarrow$ Fit System To View}
 % 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.9\textwidth]{pics/screenExportResult.eps}
+\includegraphics[width=0.7\textwidth]{pics/screenExportResult.eps}
 \caption[MTIDS exported Simulink model]{Interconnected system Simulink Model. Example is a complete graph with 10 LTI nodes. }
 \label{exportFig}
 \end{figure}
@@ -275,20 +270,17 @@ The result is a Simulink model in the MTIDS format. To adjust the size of the mo
 In Figure \ref{exportFig}, the nodes are odered in a circle, the topology of the system defined in MTIDS remains. The circle arrangement is a 
 design descition, made, in order to allow a better acces to the nodes. Each one of the nodes is a subsystem block. The dynamic of the nodes is defined inside
 the subsystem block. Moreover, each node has a single out-port and N in-ports, where N is the number of nodes the whole system has. Each node on the 
-system has its own in-port on each node, compare with a zoom on the first node of our example in Figure \ref{nodeFig}. Notice that the port corresponding to the nodes number
-should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
-In case that a loop of a node with itself is required we recommend doing this inside the subsystem/node. 
+system has its own in-port on each node, compare with a zoom on the first node of our example in Figure \ref{nodeFig}. 
  
-
- 
-
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.7\textwidth]{pics/screenNode.eps}
+\includegraphics[width=0.5\textwidth]{pics/screenNode.eps}
 \caption[MTIDS node in Simulink]{Node inputs and output: Each node has an in-port for every node in the model and an out-port. Example is the first node of a complete graph with 10 LTI nodes. }
 \label{nodeFig}
 \end{figure}
-
+Notice that the port corresponding to the nodes number
+should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
+In case that a loop of a node with itself is required we recommend doing this inside the subsystem/node. 
 Another important aspect to point out is that when simulating the system, simulink will issue a warning for unconnected in-ports and set their input to the subsystem to 0, this means 
 that an \textbf{unconnected ports enter the subsystem (local dynamics of the node) with a value of zero} during simulations. 
 
@@ -299,7 +291,7 @@ uses predefined dynamic templates, which are modified accourding to the in MTIDS
 show how to use 2 preloaded templates: the LTI template and the kuramoto template. 
 
 
-\subsection{Build your own Template}
+\subsection{Build your own Template} \label{nodeTemplate}
 The real power of MTIDS depends on you ability to build templates. 
 \\
 \begin{figure}[htb]
@@ -389,9 +381,9 @@ u_N
 
 
 
-In order to keep things simple, we define the local output of all nodes as:
+In order to keep things simple, we define the local output of each node:
 \begin{eqnarray}
- y_N=  x_N 
+ y_i=  x_i,\ i=1,\ldots,N. 
 \end{eqnarray}
 
 To implement this dynamic as a template we make use of the State-Space block.
@@ -408,7 +400,7 @@ the work of parametrizing the A,B,C and D matrix of every node sepparately is to
 \ref{LTIFor} and define the same A, B, C, and D matrix for every node. An example of this is
 \begin{eqnarray}
  A&=& 1\nonumber\\
-B&=&[1 \cdots 1]^{1\times N}\nonumber\\
+B&=&[-1 \cdots -1]^{1\times N}\nonumber\\
 C&=& 1\nonumber\\
 D&=& [0 \cdots 0] ^{1\times N}\nonumber
 \end{eqnarray}
@@ -420,25 +412,177 @@ nodes without getting any errors.
 For more complicated LTI models we recomend creating many different LTI templates.
 
 \subsection{The Kuramoto Template}
-The kuramoto template is an example for a non-linear dynamic of a node. 
+The kuramoto template is an example for a non-linear dynamic of a node. The kuramoto model is used to model the behavior of coupled oscillators. One of the interesting behaviors
+that may occur in this type of systems is synchronisation. The mathematical equation of $N$ coupled oscillators is written for each oscillator $i$ as
+\begin{equation}\label{kuramotoFor}
+ \dot{\theta_i} = \omega_i + \frac{K}{N} \sum_{j=1}^N \sin(\theta_j-\theta_i). 
+\end{equation}
+
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.7\textwidth]{pics/screenKuramoto.eps}
+\caption[MTIDS Kuramoto Template]{Kuramoto template for fireflies synchronisation}
+\label{templateKuramotoFig}
+\end{figure}
+ 
+In Figure \ref{templateKuramotoFig} we see  the MTIDS's kuramoto template after formula \ref{kuramotoFor}. The goal was to produce fireflies synchronisation, thus
+the model has an embedded function that changes the color of the parent block for a defined threshold, this mimics the flashing of a firefly.
+With the right parameters one can build a synchronizing firefly colony using MTIDS. Remember that the kuramoto.mdl template needs to be added in MTIDS:
+Dynamics $\rightarrow$ Add mdl template. You also need to set up the right parameters for synchronisation, an example can be seen in Figure \ref{syncFig}.
+In order to see the blinking in the correct time scale, you need to set up the simalation with a fixed step size in Simulink, more on this in section 
+\ref{workinginsimulink}.
+
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/screenfireflies.eps}
+\caption[MTIDS fireflies synchronisation]{Simulation of 10 fireflies synchronizing. Parameters: K=2, N=10, $\omega=0.314$, $\theta_0=1$, var=100 (variation of starting point), thershhold= $3/4*2\pi$}
+\label{syncFig}
+\end{figure}
+
 
 
 \section{Layering/Clustering Nodes} \label{layering}
 
 
+The \textbf{key} to implement layering and clustering in MTIDS is the \textbf{interface node}. On clustered/layered interconnected systems there is always an interface
+that regulates the data communication of one layer/cluster to other layers/cluster. The interface has acces to all nodes in the current cluster/layer and 
+on most cases does some information processing (compression, principal component extraction, etc). This processed information is used to interact with 
+other clusters/layers. Inside the cluster/layer the interface node acts like a normal node.
+\\
 
-\section{Working in Simuling}
+\subsection{Crate a layer/cluster}
 
+In oder to create a layer/cluster in MTIDS you need to export your subsystem as a layer: \textbf{File $\rightarrow$ Export as a layer}.
+MTIDS will ask you to select a template for the interface node. You may select a customize inteface node created by you or select the MTIDS provided
+interface node : \textbf{layerInterface.mdl}
+The result is a Simulink model that differs from the one that MTIDS normally produced, as it includes the interface node.
+If we look more closely in Figure \ref{layerFig}, we notice that this model also fulfills the requirements needed to build a standard node template, see subsection \ref{nodeTemplate}.
+By saving this model and using it as a node template in MTIDS we build many of this interconnected systems which interact with each other through their 
+interface nodes, see Figure \ref{layersFig}.
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/screenLayer.eps}
+\caption[MTIDS export as layer resulting model]{Resulting layer/cluster when exporting in MTIDS as layer. Example is a complete graph with 10 LTI nodes.}
+\label{layerFig}
+\end{figure}
+
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/screenLayers.eps}
+\caption[MTIDS model of layered/clustered interconnected systems]{Resulting model of layered/clustered interconnected systems. Example uses a complete graph of 3 nodes where each node is an interface/cluster of a complete graph with 10 LTI nodes plus 1 interface node.}
+\label{layersFig}
+\end{figure}
+
+
+
+
+\subsection{Build your own Interface Node Template }
+
+The user may define their own interface node behavior using the interface node template (\textbf{interfaceTemplate.mdl}). 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/interfaceTemplate.eps}
+\caption[MTIDS interface node template]{Interface node template model : \textbf{interfaceTemplate.mdl}.}
+\label{interfaceFig}
+\end{figure}
+ 
+As we see in Figure \ref{interfaceFig} the interface node requires a layer in and out port numbered as one, which interact with other layers/clusters. 
+Moreover it requires the basic of node template (an inport connected to a mux and an outport) in order to interact with the nodes in the cluster/layer.
+MTIDS also come preloaded with a simple aggregating interface template define called \textbf{layerInterface.mdl}.
+ 
+
+
+ 
+
+\section{Working in Simuling}\label{workinginsimulink}
+
+Here we review a couple of basic concepts which you will need to run and analyze the simulation of the interconnected dynamic 
+systems produced by MTIDS. This is only a a refresh, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Simulink Tutorial}
+
+\subsection{Simulation Parameters}
+The parameters of your model can be defined in Simulink by hand. However, a better way is to 
+define the parameters in the Simulink model as variables and give a value to this variables in the Matlab workspace. THis also aloows you to save this parameters
+by saving the workspace as a mat file with the command: \texttt{>> save name.mat}
+
+\subsection{Solver} \label{solver}
+Before runing a simulation you need to define the simulation runtime and the numerical solver that Simulink will use to simulate your model.
+under Simulink: Simulation $\rightarrow$ Configure Parameters, and then going to the solver tab, you may define different types of solver, see Figure \ref{simulink1Fig}.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/screenSim1.eps}
+\caption[Simulink define solver]{Simulink define solver}
+\label{simulink1Fig}
+\end{figure} 
+
+It is important to notice that if you want a correct time scale during simulation runtime, you need to define a fixed step size. This is used for example in the fireflies
+synchronisation demo.
+
+\subsection{Visualize Simulation Data}
+
+The easiest way to visualize data during simulations in Simulink is to use scope blocks. The data can then be seen in real-time during simulation.
+Another way to do this in real-time is to use the 'To FIle' block or the 'To Workspace' block which allow a direct interaction with matlab. Plotting functions can be defined in matlab to interact with the simulation
+and show the progress in real time.
+\\
+
+The other option is to visualize the result at the end of the simulation. For this you can define in Simulink which data should be send to the workspace under:
+Simulation $\rightarrow$ Configure Parameters at the tab of Import/Export, see Figure \ref{simulink2Fig}. Here is useful to export the states which Simulink defines as the 
+values coming out of integrator blocks, but it is also posible to define them by hand.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/screenSim2.eps}
+\caption[Simulink define import/export data]{Simulink define import/export data}
+\label{simulink2Fig}
+\end{figure} 
+
+\subsection{Working with a closed Model}
+
+Simulations can also be run from Matlab without the need to open the simulink model. This is particularly useful for large Simulink models like models of over 100 nodes that
+one may produce with MTIDS. One can write a matlab script that parametrize the simulation runs it and plots the results. An example script could be:
+ 
 
 
 \section{Import from Simulink}
 
-Beware to define nodes dynamics...
+MTIDS also offers the posibility of importing simulink models which were produced by MTIDS or are contructed following the MTIDS format, 
+see section \ref{exportToSimulink}.\\
+\textbf{Notice that the dynamics of the imported will be the one that you have selcted in the MTIDS gui.}
+\\
+ Node labels, position and topology is imported from Simulink to MTIDS.
+To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, see Figure \ref{mtidsImportFig}. Finally, select the model you wish to import.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{pics/mtidsImport.eps}
+\caption[MTIDS import form Simulink]{MTIDS import form Simulink}
+\label{mtidsImportFig}
+\end{figure} 
+
 
 
 \chapter{Conclusion and Future Development}
 
 \section{Conclusion}
+In this project a toolbox for the simulation of interconnected dynamical systems was developed. MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that 
+combines tools used for graph theory analysis (Matgraph) and the simulation of interconnected systems (Simulink) were combine to create a flexible and extendible 
+framework to make the simulation of interconnedted dynamical systems easier for students and researchers.\\
+
+MTIDS offers the following \textbf{features}:
+\begin{itemize}
+ \item Futures
+\end{itemize}
+
+
 
 
 \section{Future Development}
