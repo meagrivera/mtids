@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.7)  19 JUN 2011 17:05
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  20 JUN 2011 11:53
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
@@ -340,28 +340,35 @@ Chapter 2.
 Chapter 3.
 File: pics/screenExport.eps Graphic file (type eps)
 <pics/screenExport.eps>
-File: pics/screenExportResult.eps Graphic file (type eps)
- <pics/screenExportResult.eps> [11]
-File: pics/screenNode.eps Graphic file (type eps)
-
-<pics/screenNode.eps>
-File: pics/screenBuildTemplate.eps Graphic file (type eps)
- <pics/screenBuildTemplate.eps>
-Underfull \vbox (badness 1728) has occurred while \output is active []
-
- [12]
-Underfull \hbox (badness 10000) in paragraph at lines 304--309
+Underfull \hbox (badness 10000) in paragraph at lines 258--261
 
  []
 
-[13]
-Underfull \vbox (badness 2334) has occurred while \output is active []
 
- [14]
+Underfull \hbox (badness 10000) in paragraph at lines 262--264
+
+ []
+
+[11]
+File: pics/screenExportResult.eps Graphic file (type eps)
+ <pics/screenExportResult.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 272--276
+
+ []
+
+[12]
+File: pics/screenNode.eps Graphic file (type eps)
+ <pics/screenNode.eps>
+File: pics/screenBuildTemplate.eps Graphic file (type eps)
+ <pics/screenBuildTemplate.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 307--312
+
+ []
+
+[13] [14]
 File: pics/screenLTI.eps Graphic file (type eps)
-
-<pics/screenLTI.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 408--411
+ <pics/screenLTI.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 411--414
 
  []
 
@@ -370,7 +377,7 @@ File: pics/screenKuramoto.eps Graphic file (type eps)
  <pics/screenKuramoto.eps>
 File: pics/screenfireflies.eps Graphic file (type eps)
  <pics/screenfireflies.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 451--456
+Underfull \hbox (badness 10000) in paragraph at lines 454--459
 
  []
 
@@ -379,16 +386,20 @@ File: pics/screenLayer.eps Graphic file (type eps)
  <pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
  <pics/screenLayers.eps>
-File: pics/interfaceTemplate.eps Graphic file (type eps)
+Underfull \hbox (badness 10000) in paragraph at lines 492--493
 
-<pics/interfaceTemplate.eps>
+ []
+
+
 Underfull \vbox (badness 4193) has occurred while \output is active []
 
  [17]
-[18]
+File: pics/interfaceTemplate.eps Graphic file (type eps)
+
+<pics/interfaceTemplate.eps> [18]
 File: pics/screenSim1.eps Graphic file (type eps)
  <pics/screenSim1.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 532--536
+Underfull \hbox (badness 10000) in paragraph at lines 535--539
 
  []
 
@@ -399,13 +410,26 @@ Underfull \vbox (badness 1067) has occurred while \output is active []
 File: pics/screenSim2.eps Graphic file (type eps)
 
 <pics/screenSim2.eps>
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 554.
+
+Underfull \hbox (badness 10000) in paragraph at lines 598--600
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 601--603
+
+ []
+
+[20]
 File: pics/mtidsImport.eps Graphic file (type eps)
- <pics/mtidsImport.eps> [20] [21] [22
+ <pics/mtidsImport.eps> [21] [22
 
 ]
 Chapter 4.
 
-Underfull \hbox (badness 10000) in paragraph at lines 576--579
+Underfull \hbox (badness 10000) in paragraph at lines 619--622
 
  []
 
@@ -426,12 +450,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4626 strings out of 495062
- 67431 string characters out of 1182645
+ 4627 strings out of 495062
+ 67447 string characters out of 1182644
  139788 words of memory out of 3000000
- 7708 multiletter control sequences out of 15000+50000
+ 7709 multiletter control sequences out of 15000+50000
  10191 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,14n,43p,299b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (27 pages, 86992 bytes).
+Output written on mtids.dvi (27 pages, 87264 bytes).
