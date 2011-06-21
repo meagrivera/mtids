@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.7)  20 JUN 2011 18:51
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  21 JUN 2011 23:57
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
@@ -365,23 +365,26 @@ Underfull \hbox (badness 10000) in paragraph at lines 307--312
 
  []
 
-[13] [14]
+[13]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14]
 File: pics/screenLTI.eps Graphic file (type eps)
- <pics/screenLTI.eps>
+
+<pics/screenLTI.eps> [15]
 Underfull \hbox (badness 10000) in paragraph at lines 411--414
 
  []
 
-[15]
 File: pics/screenKuramoto.eps Graphic file (type eps)
- <pics/screenKuramoto.eps>
+<pics/screenKuramoto.eps> [16]
 File: pics/screenfireflies.eps Graphic file (type eps)
  <pics/screenfireflies.eps>
 Underfull \hbox (badness 10000) in paragraph at lines 454--459
 
  []
 
-[16]
+[17]
 File: pics/screenLayer.eps Graphic file (type eps)
  <pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
@@ -390,12 +393,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 492--493
 
  []
 
-
-Underfull \vbox (badness 4193) has occurred while \output is active []
-
- [17]
 File: pics/interfaceTemplate.eps Graphic file (type eps)
-
 <pics/interfaceTemplate.eps> [18]
 File: pics/screenSim1.eps Graphic file (type eps)
  <pics/screenSim1.eps>
@@ -403,16 +401,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 535--539
 
  []
 
-
-Underfull \vbox (badness 1067) has occurred while \output is active []
-
- [19]
+[19]
 File: pics/screenSim2.eps Graphic file (type eps)
-
-<pics/screenSim2.eps>
+ <pics/screenSim2.eps>
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 554.
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20]
 Underfull \hbox (badness 10000) in paragraph at lines 598--600
 
  []
@@ -422,14 +419,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 601--603
 
  []
 
-[20]
 File: pics/mtidsImport.eps Graphic file (type eps)
- <pics/mtidsImport.eps> [21] [22
+<pics/mtidsImport.eps> [21] [22
 
 ]
 Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 619--622
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 633--635
 
  []
 
@@ -451,11 +452,11 @@ LaTeX Warning: There were multiply-defined labels.
  ) 
 Here is how much of TeX's memory you used:
  4627 strings out of 495062
- 67447 string characters out of 1182645
- 139788 words of memory out of 3000000
+ 67447 string characters out of 1182644
+ 137788 words of memory out of 3000000
  7709 multiletter control sequences out of 15000+50000
  10191 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,14n,43p,299b,341s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (27 pages, 87704 bytes).
+Output written on mtids.dvi (27 pages, 88316 bytes).
