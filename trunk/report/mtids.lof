@@ -7,14 +7,14 @@
 \contentsline {figure}{\numberline {3.1}{\ignorespaces MTIDS export to Simulink}}{12}{figure.3.1}
 \contentsline {figure}{\numberline {3.2}{\ignorespaces MTIDS exported Simulink model}}{12}{figure.3.2}
 \contentsline {figure}{\numberline {3.3}{\ignorespaces MTIDS node in Simulink}}{13}{figure.3.3}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces MTIDS Dynamics Template}}{14}{figure.3.4}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces MTIDS node's scratch Template}}{14}{figure.3.4}
 \contentsline {figure}{\numberline {3.5}{\ignorespaces MTIDS LTI Template}}{15}{figure.3.5}
 \contentsline {figure}{\numberline {3.6}{\ignorespaces MTIDS Kuramoto Template}}{16}{figure.3.6}
 \contentsline {figure}{\numberline {3.7}{\ignorespaces MTIDS fireflies synchronization}}{17}{figure.3.7}
 \contentsline {figure}{\numberline {3.8}{\ignorespaces MTIDS export as layer resulting model}}{18}{figure.3.8}
 \contentsline {figure}{\numberline {3.9}{\ignorespaces MTIDS model of layered/clustered interconnected systems}}{18}{figure.3.9}
-\contentsline {figure}{\numberline {3.10}{\ignorespaces MTIDS interface node template}}{19}{figure.3.10}
-\contentsline {figure}{\numberline {3.11}{\ignorespaces Simulink define solver}}{19}{figure.3.11}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces MTIDS interface node scratch template}}{19}{figure.3.10}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Simulink define solver}}{20}{figure.3.11}
 \contentsline {figure}{\numberline {3.12}{\ignorespaces Simulink define import/export data}}{20}{figure.3.12}
 \contentsline {figure}{\numberline {3.13}{\ignorespaces MTIDS import form Simulink}}{21}{figure.3.13}
 \addvspace {10\p@ }

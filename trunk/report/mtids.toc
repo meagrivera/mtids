@@ -16,12 +16,12 @@
 \contentsline {section}{\numberline {3.4}Layering/Clustering Nodes}{17}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Crate a layer/cluster}{17}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Build your own Interface Node}{18}{subsection.3.4.2}
-\contentsline {section}{\numberline {3.5}Working in Simulink}{18}{section.3.5}
+\contentsline {section}{\numberline {3.5}Working in Simulink}{19}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}Simulation Parameters}{19}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}Solver}{19}{subsection.3.5.2}
 \contentsline {subsection}{\numberline {3.5.3}Visualize Simulation Data}{20}{subsection.3.5.3}
-\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{20}{subsection.3.5.4}
-\contentsline {section}{\numberline {3.6}Import from Simulink}{20}{section.3.6}
+\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{21}{subsection.3.5.4}
+\contentsline {section}{\numberline {3.6}Import from Simulink}{21}{section.3.6}
 \contentsline {chapter}{\numberline {4}Conclusion and Future Development}{23}{chapter.4}
 \contentsline {section}{\numberline {4.1}Conclusion}{23}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Development}{23}{section.4.2}
