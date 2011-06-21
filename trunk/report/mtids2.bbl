@@ -1,0 +1,24 @@
+\begin{thebibliography}{Mat11}
+
+\bibitem[EH10]{Estrada}
+Ernesto Estrada and Desmond~J. Hirgham.
+\newblock Network properties revealed through matrix functions.
+\newblock {\em SIAM Review}, 52(4), November 2010.
+
+\bibitem[HE11]{NCS}
+Sandra Hirsche and Sebastian Erhart.
+\newblock {\em Lecture Notes for Networked Control Systems}.
+\newblock Lehrstuhl f{\"u}r Steuerungs- und Regelungstechnik TU-M{\"u}nchen,
+  Munich, Germany, 2011.
+
+\bibitem[Mat11]{MatlabDocu}
+Mathworks.
+\newblock {\em Matlab Documentation}.
+\newblock The Mathworks Inc., Natick, USA, 2011.
+
+\bibitem[Sch06]{MatgraphByExample}
+Ed~Scheinerman.
+\newblock {\em Matgraph by Example}.
+\newblock Johns Hopkins University, Baltimore, USA, 2006.
+
+\end{thebibliography}
