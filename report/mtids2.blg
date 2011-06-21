@@ -1,0 +1,45 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: mtids2.aux
+The style file: alpha.bst
+Database file #1: mtids_bibliography.bib.bib
+You've used 4 entries,
+            2543 wiz_defined-function locations,
+            585 strings with 4929 characters,
+and the built_in function-call counts, 1214 in all, are:
+= -- 117
+> -- 54
+< -- 2
++ -- 16
+- -- 16
+* -- 75
+:= -- 219
+add.period$ -- 12
+call.type$ -- 4
+change.case$ -- 19
+chr.to.int$ -- 4
+cite$ -- 4
+duplicate$ -- 54
+empty$ -- 89
+format.name$ -- 22
+if$ -- 240
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 3
+newline$ -- 23
+num.names$ -- 12
+pop$ -- 21
+preamble$ -- 1
+purify$ -- 26
+quote$ -- 0
+skip$ -- 44
+stack$ -- 0
+substring$ -- 28
+swap$ -- 6
+text.length$ -- 2
+text.prefix$ -- 2
+top$ -- 0
+type$ -- 28
+warning$ -- 0
+while$ -- 10
+width$ -- 6
+write$ -- 54
