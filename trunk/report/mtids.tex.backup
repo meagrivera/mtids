@@ -442,7 +442,7 @@ In order to see the blinking in the correct time scale, you need to set up the s
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/screenfireflies.eps}
-\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing. Parameters: K=2, N=10, $\omega=0.314$, $\theta_0=1$, var=100 (variation of starting point), threshold= $3/4*2\pi$}
+\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing. Parameters: K=0.1, N=10, $\omega=0.5$, $\theta_0=10$, var=5 (variation of starting point), threshold= $3/4*2\pi$}
 \label{syncFig}
 \end{figure}
 
@@ -551,7 +551,45 @@ values coming out of integrator blocks, but it is also possible to define them b
 \subsection{Working with a closed Model}
 
 Simulations can also be run from Matlab without the need to open the Simulink model. This is particularly useful for large Simulink models, like models of over 100 nodes that
-one may produce with MTIDS. One can write a Matlab script to parametrize  and run the simulation. An example script could be:
+one may produce with MTIDS. One can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
+% 
+% \begin{verbatim}
+% Simulate the model, vdp, in Rapid Accelerator mode for an absolute tolerance 
+% of 1e-5 and save the states in xoutNew and the output in youtNew.
+% 
+%    1. Specify parameter name-value pairs within the sim command:
+% 
+%       simOut = sim('vdp','SimulationMode','rapid','AbsTol','1e-5',...
+%                   'SaveState','on','StateSaveName','xoutNew',...
+%                   'SaveOutput','on','OutputSaveName','youtNew');
+% 
+%    2. Specify parameter values in a structure, paramNameValStruct:
+% 
+%       paramNameValStruct.SimulationMode = 'rapid';
+%       paramNameValStruct.AbsTol         = '1e-5';
+%       paramNameValStruct.SaveState      = 'on';
+%       paramNameValStruct.StateSaveName  = 'xoutNew';
+%       paramNameValStruct.SaveOutput     = 'on';
+%       paramNameValStruct.OutputSaveName = 'youtNew';
+%       simOut = sim('vdp',paramNameValStruct);
+% 
+%    3. Specify a configuration set containing the parameter values:
+% 
+%       mdl = 'vdp';
+%       load_system(mdl)
+%       simMode = get_param(mdl, 'SimulationMode');
+%       set_param(mdl, 'SimulationMode', 'rapid')
+%       cs = getActiveConfigSet(mdl);
+%       mdl_cs = cs.copy;
+%       set_param(mdl_cs,'AbsTol','1e-5',...
+%                'SaveState','on','StateSaveName','xoutNew',...
+%                'SaveOutput','on','OutputSaveName','youtNew')
+%       simOut = sim(mdl, mdl_cs);
+%       set_param(mdl, 'SimulationMode', simMode)
+% \end{verbatim}
+% 
+% 
+
  
 
 
@@ -560,7 +598,7 @@ one may produce with MTIDS. One can write a Matlab script to parametrize  and ru
 MTIDS also offers the possibility of importing Simulink models which were produced by MTIDS or are constructed following the MTIDS format, 
 see section \ref{exportToSimulink}.\\
 
-\textbf{Notice that the dynamics of the imported will be the one that you have select in the MTIDS gui.}
+\textbf{Notice that the dynamic of the imported system node's will be the one that you have select in the MTIDS GUI.}
 \\
 
  Node labels, position and topology is imported from Simulink to MTIDS.
