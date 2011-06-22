@@ -228,7 +228,7 @@ In a nutshell MTIDS works as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAPH
 \chapter{Graph Theory}\label{chapter2}
 
-Graphs are commonly used to represent networked structures. A graph consists of \textbf{vertices} which may be connected between them by \textbf{edges}.
+Graphs are commonly used to represent networked structures. A graph consists of: 
 \begin{enumerate}
 \item \textbf{Vertices:} Represent nodes, dynamical subsystems and/or agents.
 \item \textbf{Edges:} Represent connections, links or couplings between vertices.
@@ -342,7 +342,49 @@ E(A) = tr(e^{A})
 
 
 \subsection{Building a interconnected system in MTIDS}
+\subsubsection{Adding nodes}
+A node needs to have: A unique label, an assigned dynamic/template
+Nodes added by using the mouse (\verb|<shift>-<left-click>|) are given the last selected node dynamics and node labe.
 
+\subsubsection{Adding multiple nodes}
+Adding multiple nodes at the same time is possible by introducing the number of nodes to be added and by clicking the ``Add multiple nodes'' button.
+These nodes start all with the same name (eg. node1, node2,...) and share the same dynamics.
+\subsubsection{Creating and removing connections}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics{./pics/mtids-ui-connections.eps}
+ % mtids-ui-connections.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 467 157
+ \label{fig:mtids-ui-connections}
+\caption{Connection options}
+\end{figure}
+
+
+Connections can be added or removed using:
+\begin{itemize}
+\item \textbf{Mouse:} By \verb|<Ctrl>-<Left click>| on both nodes. If no connection exists, it will create one, otherwise it will delete this connection. 
+\item \textbf{Connection subwindow:} Connections to be added or removed can be specified by using node label or node number. 
+\item \textbf{``Edit node'' dialog }
+\end{itemize}
+
+
+\subsubsection{Default topologies}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics{./pics/mtids-ui-topologies.eps}
+ % mtids-ui-topologies.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 368 127
+ \caption{The default topologies}
+ \label{fig:mtids-ui-topologies}
+\end{figure}
+
+
+\begin{itemize}
+\item \textbf{Complete graph:} Makes the graph into a complete graph.
+\item \textbf{Remove connections:} Removes all edges inside the graph.
+\item \textbf{Make ring:} Connects all nodes into a ring.
+\item \textbf{Random graph:} Uses the random graph function from Matgraph. It adds random connections between nodes up to a density of ca. 0.5.
+\end{itemize}
 
 \subsection{Node properties}
 \begin{figure}[h!]
@@ -365,7 +407,7 @@ If a template .mdl file is missing or was deleted, the exporting to Simulink fun
 Select the corresponding workplace inside Matlab, variable name and matrix type to export.
 Supported matrices are Laplacian matrix, adjacency matrix and edge list.
 
-
+\subsection{Importing graph matrices into MTIDS}
 
 % End del graph Theory
 
