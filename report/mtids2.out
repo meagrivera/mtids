@@ -13,6 +13,7 @@
 \BOOKMARK [2][-]{subsection.2.2.3}{Node properties}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.4}{Load and Save}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.5}{Exporting matrices to Matlab}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.6}{Importing graph matrices into MTIDS}{section.2.2}
 \BOOKMARK [0][-]{chapter.3}{System Theory}{}
 \BOOKMARK [1][-]{section.3.1}{MTIDS Concepts for Simulink Models}{chapter.3}
 \BOOKMARK [2][-]{subsection.3.1.1}{Nodes and connections}{section.3.1}
@@ -34,4 +35,4 @@
 \BOOKMARK [1][-]{section.4.1}{Conclusion}{chapter.4}
 \BOOKMARK [0][-]{chapter.5}{MTIDS shortcuts}{}
 \BOOKMARK [0][-]{chapter.5}{List of Figures}{}
-\BOOKMARK [0][-]{chapter*.12}{Bibliography}{}
+\BOOKMARK [0][-]{chapter*.16}{Bibliography}{}
