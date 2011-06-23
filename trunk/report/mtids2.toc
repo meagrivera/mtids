@@ -14,15 +14,14 @@
 \contentsline {subsection}{\numberline {2.1.2}Algebraic connectivity and Fiedler vector}{11}{subsection.2.1.2}
 \contentsline {subsubsection}{Algebraic connectivity}{11}{section*.8}
 \contentsline {subsubsection}{Number of connected subgraphs}{11}{section*.9}
-\contentsline {subsection}{\numberline {2.1.3}Estrada Index}{11}{subsection.2.1.3}
 \contentsline {section}{\numberline {2.2}Creating and visualizing systems in MTIDS}{12}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}MTIDS GUI Overview}{12}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Building a interconnected system in MTIDS}{12}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.2}Building an interconnected system in MTIDS}{12}{subsection.2.2.2}
 \contentsline {subsubsection}{Adding nodes}{12}{section*.10}
 \contentsline {subsubsection}{Adding multiple nodes}{12}{section*.11}
-\contentsline {subsubsection}{Creating and removing connections}{12}{section*.12}
+\contentsline {subsubsection}{Creating and removing connections}{13}{section*.12}
 \contentsline {subsubsection}{Default topologies}{13}{section*.13}
-\contentsline {subsection}{\numberline {2.2.3}Node properties}{14}{subsection.2.2.3}
+\contentsline {subsection}{\numberline {2.2.3}Node properties}{13}{subsection.2.2.3}
 \contentsline {subsection}{\numberline {2.2.4}Load and Save}{14}{subsection.2.2.4}
 \contentsline {subsection}{\numberline {2.2.5}Exporting matrices to Matlab}{14}{subsection.2.2.5}
 \contentsline {subsection}{\numberline {2.2.6}Importing graph matrices into MTIDS}{14}{subsection.2.2.6}
@@ -37,16 +36,16 @@
 \contentsline {subsection}{\numberline {3.3.2}The LTI template}{18}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}The Kuramoto Template}{20}{subsection.3.3.3}
 \contentsline {section}{\numberline {3.4}Layering/Clustering Nodes}{21}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Crate a layer/cluster}{21}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.1}Create a layer/cluster}{21}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Build your own Interface Node}{22}{subsection.3.4.2}
-\contentsline {section}{\numberline {3.5}Working in Simulink}{22}{section.3.5}
+\contentsline {section}{\numberline {3.5}Working in Simulink}{23}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}Simulation Parameters}{23}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}Solver}{23}{subsection.3.5.2}
 \contentsline {subsection}{\numberline {3.5.3}Visualize Simulation Data}{24}{subsection.3.5.3}
-\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{24}{subsection.3.5.4}
-\contentsline {section}{\numberline {3.6}Import from Simulink}{24}{section.3.6}
-\contentsline {chapter}{\numberline {4}Conclusion and Future Development}{27}{chapter.4}
-\contentsline {section}{\numberline {4.1}Conclusion}{27}{section.4.1}
-\contentsline {chapter}{\numberline {5}MTIDS shortcuts}{29}{chapter.5}
-\contentsline {chapter}{List of Figures}{31}{chapter.5}
-\contentsline {chapter}{Bibliography}{33}{chapter*.16}
+\contentsline {subsection}{\numberline {3.5.4}Working with a closed model}{25}{subsection.3.5.4}
+\contentsline {section}{\numberline {3.6}Import from Simulink}{25}{section.3.6}
+\contentsline {chapter}{\numberline {4}Future Development and Conclusion}{27}{chapter.4}
+\contentsline {section}{\numberline {4.1}Future Development}{27}{section.4.1}
+\contentsline {section}{\numberline {4.2}Conclusion}{28}{section.4.2}
+\contentsline {chapter}{List of Figures}{29}{section.4.2}
+\contentsline {chapter}{Bibliography}{31}{chapter*.16}
