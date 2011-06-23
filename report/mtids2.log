@@ -1,11 +1,12 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.5.11)  22 JUN 2011 22:05
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.6.18)  23 JUN 2011 22:52
 entering extended mode
  %&-line parsing enabled.
 **mtids2.tex
 (./mtids2.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
+yphenation, ngerman, german, german-x-2009-06-19, ngerman-x-2009-06-19, spanish
+, galician, catalan, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/report.cls
 Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size12.clo
@@ -324,15 +325,22 @@ LaTeX Info: Redefining \pageref on input line 56.
 \AtBeginShipoutBox=\box31
  [1
 
-] [1] [1]
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 143.
+] [1]
+
+LaTeX Warning: Command \ss invalid in math mode on input line 122.
+
+
+LaTeX Warning: Command \ss invalid in math mode on input line 126.
+
+[1]
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 148.
 
  (/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 
 LaTeX Font Warning: Font shape `OT1/phv/a/n' undefined
-(Font)              using `OT1/phv/m/n' instead on input line 143.
+(Font)              using `OT1/phv/m/n' instead on input line 148.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -350,20 +358,20 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 Chapter 1.
 File: pics/complex.eps Graphic file (type eps)
 <pics/complex.eps>
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 164.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 169.
 
  (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 164.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 169.
  [5
 
 ]
 File: pics/mtidsStructure.eps Graphic file (type eps)
 
 <pics/mtidsStructure.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 199--201
+Underfull \hbox (badness 10000) in paragraph at lines 204--206
 
  []
 
@@ -373,41 +381,41 @@ File: pics/uml.eps Graphic file (type eps)
 
 ]
 Chapter 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
+
+ []
+
 [9] [10]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [11]
 File: ./pics/Mtits_UI.eps Graphic file (type eps)
 
-<./pics/Mtits_UI.eps>
-File: ./pics/mtids-ui-connections.eps Graphic file (type eps)
- <./pics/mtids-ui-connections.eps>
-Overfull \hbox (27.90741pt too wide) in paragraph at lines 356--359
- [][] 
- []
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[12]
+<./pics/Mtits_UI.eps> [12]
 File: ./pics/mtids-ui-topologies.eps Graphic file (type eps)
  <./pics/mtids-ui-topologies.eps>
 File: ./pics/Edit_node.eps Graphic file (type eps)
- <./pics/Edit_node.eps> [13]
-Underfull \hbox (badness 10000) in paragraph at lines 401--405
+
+<./pics/Edit_node.eps>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 405--409
 \OT1/cmr/m/n/12 prop-er-ties.
  []
 
-[14]
+[13] [14]
 Chapter 3.
 File: pics/screenExport.eps Graphic file (type eps)
 <pics/screenExport.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 440--443
+Underfull \hbox (badness 10000) in paragraph at lines 444--447
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 444--446
+Underfull \hbox (badness 10000) in paragraph at lines 448--450
 
  []
 
@@ -416,7 +424,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 444--446
 ]
 File: pics/screenExportResult.eps Graphic file (type eps)
  <pics/screenExportResult.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 454--458
+Underfull \hbox (badness 10000) in paragraph at lines 458--462
 
  []
 
@@ -425,93 +433,90 @@ File: pics/screenNode.eps Graphic file (type eps)
  <pics/screenNode.eps>
 File: pics/screenBuildTemplate.eps Graphic file (type eps)
  <pics/screenBuildTemplate.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 489--494
+Underfull \hbox (badness 10000) in paragraph at lines 493--498
 
  []
 
-[17] [18]
+[17]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [18]
 File: pics/screenLTI.eps Graphic file (type eps)
- <pics/screenLTI.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 593--596
+
+<pics/screenLTI.eps> [19]
+Underfull \hbox (badness 10000) in paragraph at lines 597--600
 
  []
 
-[19]
 File: pics/screenKuramoto.eps Graphic file (type eps)
- <pics/screenKuramoto.eps>
+<pics/screenKuramoto.eps> [20]
 File: pics/screenfireflies.eps Graphic file (type eps)
  <pics/screenfireflies.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 636--641
+Underfull \hbox (badness 10000) in paragraph at lines 640--645
 
  []
 
-[20]
+[21]
 File: pics/screenLayer.eps Graphic file (type eps)
  <pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
  <pics/screenLayers.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 674--675
+Underfull \hbox (badness 10000) in paragraph at lines 678--679
 
  []
 
-
-Underfull \vbox (badness 4193) has occurred while \output is active []
-
- [21]
 File: pics/interfaceTemplate.eps Graphic file (type eps)
-
 <pics/interfaceTemplate.eps> [22]
 File: pics/screenSim1.eps Graphic file (type eps)
  <pics/screenSim1.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 717--721
+Underfull \hbox (badness 10000) in paragraph at lines 721--725
 
  []
 
-
-Underfull \vbox (badness 1067) has occurred while \output is active []
-
- [23]
+[23]
 File: pics/screenSim2.eps Graphic file (type eps)
-
-<pics/screenSim2.eps>
+ <pics/screenSim2.eps>
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 736.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 740.
 
-Underfull \hbox (badness 10000) in paragraph at lines 780--782
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 783--785
+ [24]
+Underfull \hbox (badness 10000) in paragraph at lines 784--786
 
  []
 
-[24]
+
+Underfull \hbox (badness 10000) in paragraph at lines 787--789
+
+ []
+
 File: pics/mtidsImport.eps Graphic file (type eps)
- <pics/mtidsImport.eps> [25] [26
+<pics/mtidsImport.eps> [25] [26
 
 ]
 Chapter 4.
-
-Underfull \hbox (badness 10000) in paragraph at lines 801--804
+[27]
+Underfull \hbox (badness 10000) in paragraph at lines 822--831
+\OT1/cmr/m/n/12 worked and dis-tributed con-troller de-sign and many more uses.
 
  []
 
-[27] [28
 
-]
-Chapter 5.
-[29] [30
+Underfull \hbox (badness 10000) in paragraph at lines 822--831
 
-] (./mtids2.lof)
+ []
+
+[28] (./mtids2.lof)
 \tf@lof=\write6
 \openout6 = `mtids2.lof'.
 
- [31
+ [29
 
-] [32
 
-] (./mtids2.bbl) [33
+] [30
+
+] (./mtids2.bbl) [31
 
 ] (./mtids2.aux)
 
@@ -522,12 +527,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5198 strings out of 495062
- 73922 string characters out of 1182644
- 150824 words of memory out of 3000000
- 8260 multiletter control sequences out of 15000+50000
+ 5195 strings out of 494963
+ 73841 string characters out of 1179328
+ 149729 words of memory out of 3000000
+ 8279 multiletter control sequences out of 15000+50000
  11663 words of font info for 41 fonts, out of 3000000 for 9000
- 28 hyphenation exceptions out of 8191
- 38i,14n,48p,300b,369s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 54 hyphenation exceptions out of 8191
+ 38i,14n,46p,300b,357s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids2.dvi (35 pages, 120416 bytes).
+Output written on mtids2.dvi (33 pages, 121516 bytes).

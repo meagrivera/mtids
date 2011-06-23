@@ -115,13 +115,12 @@ dynamic systems simulation together. MTIDS allows the definition and analysis of
 The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
 possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general description 
 of MTIDS and instructions for its use.    
-%\vspace{2cm}
-% \begin{center}
-% \normalsize \textbf{Zusammenfassung}\\
-% \end{center}
-% Dieser Hauptseminar besch\"{a}ftigt sich mit der Methode der getriggerten Optimierung. Dabei wird besonderen Focus auf die m\"{o}glichen Anwendungen f\"{u}r Energiesystemen gesetzt.
-% Als erstes wird eine Analyse der Methode in ihre genaralisierte Form f\"{u}r das NUM (Netzwerk Nutzen Maximirung) Problem durchgef\"{u}hrt. Als zweites wird ihre Anwendung an das OPF (Optimale Leistungsfluss) in Energienetzen evaluiert. Als letztes werden
-% verbesserungs Vorschl\"{a}gen und weitere Anweundungen in Energiesystemen diskutiert.  
+\vspace{2cm}
+\begin{center}
+\normalsize \textbf{Zusammenfassung}\\
+\end{center}
+Ziel dieses Projektes war, einen Prüfstand für grosse und miteinander vernetzte dynamische Systeme zu entwickeln.
+
 \end{abstract}
 %____________________________________________________________
 
@@ -227,17 +226,18 @@ In a nutshell MTIDS works as follows:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAPH
 \chapter{Graph Theory}\label{chapter2}
+ 
+%References for this chapter can be found at \cite{NCS}, \cite{Estrada}, \cite{HivePlots}
 
-Graphs are commonly used to represent networked structures. A graph consists of: 
+\section{Algebraic Graph Theory}
+
+Graphs are a easy way of representing networked structures. A graph consists of: 
 \begin{enumerate}
 \item \textbf{Vertices:} Represent nodes, dynamical subsystems and/or agents.
 \item \textbf{Edges:} Represent connections, links or couplings between vertices.
 \end{enumerate}
 
-In this project, we consider only simple, undirected and unweighted graphs. 
-%References for this chapter can be found at \cite{NCS}, \cite{Estrada}, \cite{HivePlots}
-
-\section{Algebraic Graph Theory}
+In this project, we consider only simple, undirected and unweighted graphs. \linebreak
 
 Algebraic graph theory describes graph properties using numbers (like invariants) and equations.
 It is important first, to convert the graphical representation of a graph into a mathematically sound description like
@@ -315,19 +315,17 @@ From the rank-nullity theorem of linear algebra we know that the rank of a matri
  Rank( {Null}(L) ) = Rank(L) - N_v
 \end{equation} 
 
-\subsection{Estrada Index}
-
-The Estrada index of a vertex i is  \cite{Estrada}
-\begin{equation}
-E(i) = {(e^{A})_{ii}}
-\end{equation} 
-
-The Estrada index of an adjacency matrix is:
-\begin{equation}
-E(A) = tr(e^{A})
-\end{equation} 
-
-
+%\subsection{Estrada Index}
+%
+%The Estrada index of a vertex i is  \cite{Estrada}
+%\begin{equation}
+%E(i) = {(e^{A})_{ii}}
+%\end{equation} 
+%
+%The Estrada index of an adjacency matrix is:
+%\begin{equation}
+%E(A) = tr(e^{A})
+%\end{equation} 
 \pagebreak 
 \section{Creating and visualizing systems in MTIDS}
 \subsection{MTIDS GUI Overview}
@@ -338,29 +336,35 @@ E(A) = tr(e^{A})
  \caption{The MTIDS Graphical User Interface}
  \label{fig:MTIDS-UI}
 \end{figure}
+The MTIDS GUI is divided in two parts: The left side contains the controls that allow for modification of the system and the right side contains the graph and statistics visualization.
 
-
-
-\subsection{Building a interconnected system in MTIDS}
+\subsection{Building an interconnected system in MTIDS}
 \subsubsection{Adding nodes}
-A node needs to have: A unique label, an assigned dynamic/template
-Nodes added by using the mouse (\verb|<shift>-<left-click>|) are given the last selected node dynamics and node labe.
+When adding a node, the User has to assign a unique node label and node dynamics at the ``node creation'' panel
+Nodes can be added with the ``add node'' button or by (\verb|<Shift>-<Left-click>|) with the mouse.
+Nodes added by using the mouse are given the last selected node dynamics and node label.
 
 \subsubsection{Adding multiple nodes}
 Adding multiple nodes at the same time is possible by introducing the number of nodes to be added and by clicking the ``Add multiple nodes'' button.
 These nodes start all with the same name (eg. node1, node2,...) and share the same dynamics.
 \subsubsection{Creating and removing connections}
 
-\begin{figure}[h!]
- \centering
- \includegraphics{./pics/mtids-ui-connections.eps}
- % mtids-ui-connections.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 467 157
- \label{fig:mtids-ui-connections}
-\caption{Connection options}
-\end{figure}
+Connections can be added or removed using:
+\begin{itemize}
+\item \textbf{Mouse:} By \verb|<Ctrl>-<Left click>| on both nodes. If no connection exists, it will create one, otherwise it will delete this connection. 
+\item \textbf{Connection subwindow:} Connections to be added or removed can be specified by using node label or node number. 
+\item \textbf{``Edit node'' dialog:} See Subsection \ref{node_properties}.
+\end{itemize}
 
-Connections can added by use .
-Connections can be also modified on the ``Edit node'' dialoge.
+%\begin{figure}[h!]
+% \centering
+% \includegraphics{./pics/mtids-ui-connections.eps}
+% % mtids-ui-connections.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 467 157
+% \label{fig:mtids-ui-connections}
+%\caption{Connection options}
+%\end{figure}
+
+Connections in MTIDS are bidirectional.
 
 \subsubsection{Default topologies}
 
@@ -372,7 +376,6 @@ Connections can be also modified on the ``Edit node'' dialoge.
  \label{fig:mtids-ui-topologies}
 \end{figure}
 
-
 \begin{itemize}
 \item \textbf{Complete graph:} Makes the graph into a complete graph.
 \item \textbf{Remove connections:} Removes all edges inside the graph.
@@ -380,7 +383,7 @@ Connections can be also modified on the ``Edit node'' dialoge.
 \item \textbf{Random graph:} Uses the random graph function from Matgraph. It adds random connections between nodes up to a density of ca. 0.5.
 \end{itemize}
 
-\subsection{Node properties}
+\subsection{Node properties}\label{node_properties}
 \begin{figure}[h!]
  \centering
  \includegraphics[width=0.6\textwidth]{./pics/Edit_node.eps}
@@ -388,8 +391,9 @@ Connections can be also modified on the ``Edit node'' dialoge.
  \caption{The node properties window}
  \label{fig:Edit_Node}
 \end{figure}
-Node properties can be edited by \verb|double-clicking| a node in the graph window. Following node properties can be changed: Node label, node dynamics (from list) and the connection list in Matlab format.
-                                 
+Node properties can be edited by \verb|<double-clicking>| a node in the graph window. 
+Following node properties can be changed: Node label, node dynamics (from list) and the connection list vector in Matlab format.
+The selected node can also be removed using this window.                         
 
 \subsection{Load and Save}
 A system can be saved by selecting \textbf{File $\rightarrow$ Save As...}. This saves the graph properties (adjacency matrix), node labels, assigned node dynamics and template list into a binary .mat file.
@@ -402,7 +406,7 @@ Select the corresponding workplace inside Matlab, variable name and matrix type 
 Supported matrices are Laplacian matrix, adjacency matrix and edge list.
 
 \subsection{Importing graph matrices into MTIDS}
-
+Graph matrices like Laplacian matrix, adjacency matrix or edge list. The matrix type is automatically detected and replaces the current graph. Node dynamics are assigned based on the last selected template.
 % End del graph Theory
 
 
@@ -431,7 +435,7 @@ In order to export the model created in the MTIDS GUI to simulink: \textbf{Simul
 \label{exportFig}
 \end{figure}
 
-The MTIDS GUI then calls the function exportability.m which builds a Simulink model with the following information:
+The MTIDS GUI then calls the function exportSimulink.m, which builds a Simulink model with the following information:
 model name, list of nodes' dynamics templates, list of templates that are available in mtids, adjacency matrix, position of the nodes and nodes' names. 
 The result is a Simulink model in the MTIDS format. \\
 
@@ -447,7 +451,7 @@ To adjust the size of the model to the Simulink window size: \textbf{View $\righ
 
 In Figure \ref{exportFig}, the nodes are ordered in a circle, the topology of the system defined in MTIDS remains. The circle arrangement is a 
 design decision, made, in order to allow a better access to the nodes. Each one of the nodes is a subsystem block. The dynamic of the nodes is defined inside
-the subsystem block. Moreover, each node has a single out-port and N in-ports, where N is the number of nodes the whole system has. Each node on the 
+the subsystem block. Moreover, each node has a single out-port and N in-ports, where N is the number of nodes on the whole system has. Each node on the 
 system has its own in-port on each node, compare with a zoom on the first node of our example in Figure \ref{nodeFig}. \\
  
 \begin{figure}[htb]
@@ -456,9 +460,9 @@ system has its own in-port on each node, compare with a zoom on the first node o
 \caption[MTIDS node in Simulink]{Node inputs and output: Each node has an in-port for every node in the model and an out-port. Example is the first node of a complete graph with 10 LTI nodes. }
 \label{nodeFig}
 \end{figure}
-Notice that the port corresponding to the nodes number
+Notice that the port corresponding to the node's number
 should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
-In case that a loop of a node with itself is required we recommend doing this inside the subsystem/node. 
+In case that a loop of a node with itself is required, we recommend doing this inside the subsystem/node. 
 Another important aspect to point out is that when simulating the system, Simulink will issue a warning for unconnected in-ports and set their input to the subsystem to 0, this means 
 that an \textbf{unconnected port enters the subsystem (local dynamics of the node) with a value of zero} during simulations. This can be exploited to 
 make the parametrization of the nodes' dynamics easier. 
@@ -467,7 +471,7 @@ make the parametrization of the nodes' dynamics easier.
 
 As mentioned in the past section \ref{exportToSimulink} each node defined in MTIDS is exported to Simulink as a subsystem. The exportSimulink.m function 
 uses predefined dynamic templates, which are modified according to the, in MTIDS, defined topology. Next, we explain how to define your own templates and
-show how to use 2 preloaded templates: the LTI template and the kuramoto template. 
+show how to use 2 preloaded templates: the LTI template and the kuramoto template. This templates can be found in the \textbf{/templates} directory. 
 
 
 \subsection{Build your own Template} \label{nodeTemplate}
@@ -476,14 +480,14 @@ The real power of MTIDS depends on your ability to build templates.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/screenBuildTemplate.eps}
-\caption[MTIDS Dynamics Template]{Scratch template for node's dynamics.}
+\caption[MTIDS node's scratch Template]{Scratch template for node's dynamics (\textbf{interfaceTemplate.mdl}). }
 \label{templateFig}
 \end{figure}
 
 In Figure \ref{templateFig} we can see the components that each template should have: an in-port connected to a mux and an out-port.
-Between the mux and the out-port you can design your own custom dynamics. The input to the system comes from mux as vector, which is composed by the values
+Between the mux and the out-port you can design your own custom dynamics. The input to the system comes from the mux block as vector, which is composed by the values
 entering the node/subsystem. The output of your system should also be aggregated to a vector and routed to the out-port. The separation of the different inputs and outputs 
-is left to the system designer. With a well thought architecture complex systems are very easy to achieve, please refer to the LTI and kuramoto template examples.  
+is left to the system's designer. With a well thought architecture complex systems are very easy to achieve, please refer to the LTI and kuramoto template examples.  
 \\
 
 The dynamic of a node can be as simple as a junction that only reroutes the incoming signals or more complicated to include controllers and systems inside of it. It is this feature that allows
@@ -560,9 +564,9 @@ u_N
 
 
 
-In order to keep things simple, we define the local output of each node:
+In order to keep things simple, we define the local output of each node as
 \begin{eqnarray}
- y_i=  x_i,\ i=1,\ldots,N. 
+ y_i=  x_i,\ \mbox{for}\ i=1,\ldots,N. 
 \end{eqnarray}
 
 To implement this dynamic as a template we make use of the State-Space block.
@@ -574,9 +578,9 @@ To implement this dynamic as a template we make use of the State-Space block.
 \label{templateLTIFig}
 \end{figure}
  
-This template shown in \ref{templateLTIFig} can be used in MTIDS to create interconnected LTI systems with different topologies. One way to avoid 
-the work of parameterizing the A,B,C and D matrix of every node separately is to define the same matrix for all subsystems. One can use the formula 
-\ref{LTIFor} and define the same A, B, C, and D matrix for every node. An example of this is
+The LTI template shown in Figure \ref{templateLTIFig} can be used in MTIDS to create interconnected LTI systems with different topologies. One way to avoid 
+the work of parameterizing the A,B,C and D matrix of every node separately, is to define the same matrix for all subsystems. Using formula 
+(\ref{LTIFor}) we can define an A, B, C, and D matrix for every node. An example can be
 \begin{eqnarray}
  A&=& 1\nonumber\\
 B&=&[-1 \cdots -1]^{1\times N}\nonumber\\
@@ -591,7 +595,7 @@ nodes without getting any errors.
 For more complicated LTI models we recomend creating many different LTI templates.
 
 \subsection{The Kuramoto Template}
-The kuramoto template is an example of a non-linear dynamic for a node. The kuramoto model is used to model the behavior of coupled oscillators. One of the interesting behaviors
+The kuramoto template is an example of a non-linear dynamic for a node. This kuramoto model is used to model the behavior of coupled oscillators. One of the interesting behaviors
 that may occur in this type of systems is synchronization. The mathematical equation of $N$ coupled oscillators is written for each oscillator $i$ as
 \begin{equation}\label{kuramotoFor}
  \dot{\theta_i} = \omega_i + \frac{K}{N} \sum_{j=1}^N \sin(\theta_j-\theta_i). 
@@ -606,19 +610,19 @@ that may occur in this type of systems is synchronization. The mathematical equa
 \label{templateKuramotoFig}
 \end{figure}
  
-In Figure \ref{templateKuramotoFig} we see  the MTIDS's kuramoto template after formula \ref{kuramotoFor}. The goal was to produce fireflies synchronization, thus
+In Figure \ref{templateKuramotoFig} we see  the MTIDS's kuramoto template after formula (\ref{kuramotoFor}). The goal was to model fireflies synchronization, thus
 the model has an embedded function that changes the color of the parent block for a defined threshold, this mimics the flashing of a firefly.
 With the right parameters one can build a synchronizing firefly colony using MTIDS. Remember that the kuramoto.mdl template needs to be added in MTIDS:
 Dynamics $\rightarrow$ Add mdl template. You also need to set up the right parameters for synchronization, an example can be seen in Figure \ref{syncFig}.
 In order to see the blinking in the correct time scale, you need to set up the simulation with a fixed step size in Simulink, more on this in section 
-\ref{workinginsimulink}.
+\ref{workinginsimulink}. An \textbf{example} can be found under \textbf{demos/firefliesTemplate.mdl} with the parameters \textbf{firefliesTemplate.mat}.
 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/screenfireflies.eps}
-\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing. Parameters: K=2, N=10, $\omega=0.314$, $\theta_0=1$, var=100 (variation of starting point), threshold= $3/4*2\pi$}
+\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing. Parameters: K=0.1, N=10, $\omega=0.5$, $\theta_0=10$, var=5 (variation of starting point), threshold= $3/4*2\pi$}
 \label{syncFig}
 \end{figure}
 
@@ -633,15 +637,15 @@ on most cases does some information processing (compression, principal component
 other clusters/layers. Inside the cluster/layer the interface node acts like a normal node.
 \\
 
-\subsection{Crate a layer/cluster}
+\subsection{Create a layer/cluster}
 
 In oder to create a layer/cluster in MTIDS you need to export your system as a layer: \textbf{File $\rightarrow$ Export as a layer}.
-MTIDS will ask you to select a template for the interface node. You may select a customize interface node created by you or select the MTIDS provided
+MTIDS will ask you to select a template for the interface node. You may select an interface node created by you or select the MTIDS provided
 interface node : \textbf{layerInterface.mdl}.\\
 The result is a Simulink model that differs from the one that MTIDS normally produces, as it includes an extra node, the interface node.
 If we look more closely in Figure \ref{layerFig}, we notice that this model also fulfills the requirements needed to build a standard node template, see subsection \ref{nodeTemplate}.
-By saving this model and using it as a node template in MTIDS we build many of this interconnected systems which interact with each other through their 
-interface nodes, see Figure \ref{layersFig}.
+By saving this model and using it as a node template in MTIDS we can build many of this interconnected systems, which interact with each other through their 
+interface nodes, see Figure \ref{layersFig}. An \textbf{example} can be found under \textbf{demos/clusterDemo.mdl} with the parameters \textbf{clusterDemo.mat}.
 
 
 \begin{figure}[htb]
@@ -665,18 +669,18 @@ interface nodes, see Figure \ref{layersFig}.
 
 \subsection{Build your own Interface Node}
 
-The user may define their own interface node behavior using the interface node template (\textbf{interfaceTemplate.mdl}). \\
+The user may define your own interface node template using the interface node scratch template (\textbf{interfaceTemplate.mdl}). \\
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/interfaceTemplate.eps}
-\caption[MTIDS interface node template]{Interface node template model : \textbf{interfaceTemplate.mdl}.}
+\caption[MTIDS interface node scratch template]{Interface node cratch template model : \textbf{interfaceTemplate.mdl}.}
 \label{interfaceFig}
 \end{figure}
  
 As we see in Figure \ref{interfaceFig} the interface node requires a layer in and out port numbered as $1$, which interacts with other layers/clusters. 
 Moreover it requires the basic components of a node template (an in-port connected to a mux and an out-port) in order to interact with the nodes in the cluster/layer.
-MTIDS also comes preloaded with a simple aggregating interface template called \textbf{layerInterface.mdl}.
+MTIDS also comes preloaded with a simple aggregating interface template called \textbf{layerInterface.mdl} found under \textbf{/templates}.
  
 
 
@@ -685,7 +689,7 @@ MTIDS also comes preloaded with a simple aggregating interface template called \
 \section{Working in Simulink}\label{workinginsimulink}
 
 Here we review a couple of basic concepts which you will need to run and analyze the simulation of the interconnected dynamic 
-systems produced by MTIDS. This is only a a refresh, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Simulink Tutorial}.
+systems produced by MTIDS. This is only a quick overview, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Simulink Tutorial}.
 
 \subsection{Simulation Parameters}
 The parameters of your model can be defined in Simulink by hand. However, a better way is to 
@@ -703,18 +707,18 @@ In Simulink: Simulation $\rightarrow$ Configure Parameters, and then going to th
 \label{simulink1Fig}
 \end{figure} 
 
-It is important to notice that if you want a correct time scale during simulation runtime, you need to define a fixed step size. This is used for example in the fireflies
-synchronization demo.
+It is important to notice that if you want a correct time scale during simulation runtime, you need to define a fixed step size. This is used for the demo of fireflies
+synchronization to see the blinking of fireflies in the correct time scale.
 
 \subsection{Visualize Simulation Data}
 
 The easiest way to visualize data during simulations in Simulink is to use scope blocks. The data can then be seen in real-time during simulation.
-Another way to do this in real-time is to use the 'To File' block or the 'To Workspace' block which allow a direct interaction with Matlab. Plotting functions can be defined in Matlab to interact with the simulation
-and show the progress in real time.
+Another way to do this in real-time, is to use the 'To File' block or the 'To Workspace' block, which allow a direct interaction with Matlab. Plotting functions can be defined in Matlab to interact with the simulation
+to show the data in real-time.
 \\
 
-The other option is to visualize the result at the end of the simulation. For this you can define in Simulink which data should be send to the workspace under:
-Simulation $\rightarrow$ Configure Parameters at the tab of Import/Export, see Figure \ref{simulink2Fig}. Here it is useful to export the states, which Simulink defines as the 
+The other option is to visualize the results after the simulation. For this, you can define in Simulink which data should be send to the workspace under:
+Simulation $\rightarrow$ Configure Parameters in the tab of Import/Export, see Figure \ref{simulink2Fig}. Here, it is useful to export the states, which Simulink defines as the 
 values coming out of integrator blocks, but it is also possible to define them by hand.
 
 \begin{figure}[htb]
@@ -724,10 +728,10 @@ values coming out of integrator blocks, but it is also possible to define them b
 \label{simulink2Fig}
 \end{figure} 
 
-\subsection{Working with a closed Model}
+\subsection{Working with a closed model}
 
 Simulations can also be run from Matlab without the need to open the Simulink model. This is particularly useful for large Simulink models, like models of over 100 nodes that
-one may produce with MTIDS. One can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
+you may produce with MTIDS. You can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
 % 
 % \begin{verbatim}
 % Simulate the model, vdp, in Rapid Accelerator mode for an absolute tolerance 
@@ -772,12 +776,12 @@ one may produce with MTIDS. One can write a Matlab script to parametrize  and ru
 \section{Import from Simulink}
 
 MTIDS also offers the possibility of importing Simulink models which were produced by MTIDS or are constructed following the MTIDS format, 
-see section \ref{exportToSimulink}.\\
+see section \ref{subsystemConcept}.\\
 
-\textbf{Notice that the dynamics of the imported will be the one that you have select in the MTIDS gui.}
+\textbf{Notice that the dynamic of the imported system nodes will be the one that you have selected in the MTIDS GUI.}
 \\
 
- Node labels, position and topology is imported from Simulink to MTIDS.
+Node labels, position and topology of the subsytems are imported from Simulink to MTIDS.
 To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, see Figure \ref{mtidsImportFig}. Finally, select the model you wish to import.
 
 \begin{figure}[htb]
@@ -789,32 +793,52 @@ To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, se
 
 
 
-\chapter{Conclusion and Future Development}
+\chapter{Future Development and Conclusion}
+
+
+\section{Future Development}
+
+MTIDS is a toolbox aimed for students and researchers working in the field of large-scale and interconnected dynamical systems. 
+We aim to make this a free and open source tool which can be accessed and improved by the free software community in order to
+ push research on the networked system field forward.\\
+There are still some issues and functions which will improve or be implemented in MTIDS:
+\begin{itemize}
+ \item Support for full import from Simulink.
+ \item Support for switching and random interconnections.
+ \item Export to Simulink ``wizzard``.
+ \item Support for directed graphs.
+ \item GUI for interaction with the Control Toolbox.
+\end{itemize}
+\vspace{5cm} 
+\pagebreak 
 
 \section{Conclusion}
-In this project a toolbox for the simulation of interconnected dynamical systems was developed. MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that 
-combines tools used for graph theory analysis (Matgraph) and the simulation of interconnected systems (Simulink) were combine to create a flexible and extensible 
-framework to make the simulation of interconnected dynamical systems easier for students and researchers.\\
-
-MTIDS offers the following \textbf{features}:
+In this project we developed a fully functioning toolbox which allows for visual creation and simulation of inteconnected dynamical systems.
+MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that combines tools used for graph theory analysis (Matgraph) and 
+for the simulation of interconnected systems (Simulink) to create a flexible and extensible framework.
+As MTIDS is based on a standard tool used by academia and industry, the User doesn't have to leave the familiar and well documented enviroment of Matlab.
+\\ MTIDS capabilities allow for fast setups which makes it an excelent tool for demonstrations (for example in courses on networked systems),
+rapid prototyping for networked and distributed controller design and many more uses.
+\linebreak
+\newline  
+MTIDS features summed up:
 \begin{itemize}
- \item Futures
+ \item Full integration with Matlab and Simulink for simulation and analysis.
+ \item Easy Drag and Drop visual system building and connection.
+ \item Visualization of key graph properties. 
+ \item Nonlinear and switching behavior possible at node level.
+ \item Highly customizable thanks to templates.
+ \item Layering and clustering capabilities.
+ \item Extensible.
 \end{itemize}
+\smallskip 
+MTIDS is available at:
+\begin{center}
+\textbf{ \href{http://code.google.com/p/mtids/}{http://code.google.com/p/mtids/}}
+\end{center}
 
 
-
-
-MTIDS is a toolbox aimed for students and researchers working in large-scale and interconnected dynamical systems. We would like to coform a community 
-around this toolbox that helps push the research on this field forward.
-
-There are still many issues and functions to improve in MTIDS:
-\begin{itemize}
- \item Issues.....
-\end{itemize}
-
-\chapter{MTIDS shortcuts}
-
-
+%
 %_______________________________________________________________
 
 
