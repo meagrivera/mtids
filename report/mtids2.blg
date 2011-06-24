@@ -2,44 +2,44 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: mtids2.aux
 The style file: alpha.bst
 Database file #1: mtids_bibliography.bib.bib
-You've used 3 entries,
+You've used 5 entries,
             2543 wiz_defined-function locations,
-            578 strings with 4808 characters,
-and the built_in function-call counts, 882 in all, are:
-= -- 84
-> -- 35
-< -- 2
-+ -- 10
-- -- 10
-* -- 50
-:= -- 160
-add.period$ -- 9
-call.type$ -- 3
-change.case$ -- 13
-chr.to.int$ -- 3
-cite$ -- 3
-duplicate$ -- 41
-empty$ -- 68
-format.name$ -- 15
-if$ -- 175
+            592 strings with 5079 characters,
+and the built_in function-call counts, 1576 in all, are:
+= -- 146
+> -- 74
+< -- 3
++ -- 24
+- -- 24
+* -- 97
+:= -- 285
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 25
+chr.to.int$ -- 5
+cite$ -- 5
+duplicate$ -- 72
+empty$ -- 118
+format.name$ -- 32
+if$ -- 312
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 2
-newline$ -- 18
-num.names$ -- 9
-pop$ -- 18
+missing$ -- 6
+newline$ -- 28
+num.names$ -- 15
+pop$ -- 35
 preamble$ -- 1
-purify$ -- 19
+purify$ -- 34
 quote$ -- 0
-skip$ -- 30
+skip$ -- 49
 stack$ -- 0
-substring$ -- 21
-swap$ -- 5
-text.length$ -- 2
-text.prefix$ -- 2
+substring$ -- 35
+swap$ -- 7
+text.length$ -- 3
+text.prefix$ -- 3
 top$ -- 0
-type$ -- 20
+type$ -- 28
 warning$ -- 0
-while$ -- 7
-width$ -- 5
-write$ -- 41
+while$ -- 12
+width$ -- 9
+write$ -- 68

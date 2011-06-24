@@ -119,14 +119,13 @@ of MTIDS and instructions for its use.
 \begin{center}
 \normalsize \textbf{Zusammenfassung}\\
 \end{center}
-Ziel dieses Projektes war, einen Pr\"{u}fstand f\"{u}r gro$\ss$e und miteinander vernetzte dynamische Systeme zu entwickeln. Das 
-Ergebnis ist MTIDS oder Matlab-Toolbox for Interconnected Dynamical Systems (Matlab Toolbox f\"{u}r vernetzte dynamische Systeme),
-welches ein Mash-up ist, was verschiedene Toolboxen f\"{u}r Graphenanalyse und Simulation dynamischer Systeme zusammenkn\"{u}pft.
-MTIDS erlaubt die Definition und Analyse von Graphen, wobei jeder Knoten eine bestimmte zugewiesene Dynamik hat. Das auf
-Template basierte Design von Knotendynamiken erlaubt eine gro$\ss$e Flexibilit\"{a}t
-bei der Erstellung von komplexen und vernetzten dynamischen Systemen mit der M\"{o}glichkeit
-der Umsetzung von Clustern und Schichten. MTIDS ist ein Open-Source-Projekt unter der GNU GPL v2 Lizenz. Dieses Dokument
-stellt eine allgemeine Beschreibung von MTIDS und Anweisungen f\"{u}r dessen Verwendung.
+Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r grosse, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
+MTIDS oder Matlab Toolbox for Interconnected Dynamical
+Systems. Diese Toolbox verbindet Toolboxen f\"{u}r die Graphenanalyse mit Toolboxen f\"{u}r die Simulation von dynamischen Systemen. 
+MTIDS erm\"{o}glicht die Definition und Analyse von Graphen, bei denen jeder Knoten eine spezifische dynamische Anweisung ausf\"{u}hrt. 
+Das Template basierte Design der Knotendynamik erlaubt eine gro\ss{}e Flexibilit\"{a}t f\"{u}r die Erstellung von komplexen, gekoppelten dynamischen Systemen. 
+Es besteht beispielsweise die M\"{o}glichkeit Cluster bzw. Layer zu implementieren. MIDS ist ein Open-Source-Projekt unter der GNU GPL v2 Lizenz. 
+Im Rahmen des nachfolgenden Berichts wird eine generelle Beschreibung von MTIDS sowie deren Benutzung gegeben.
 \end{abstract}
 %____________________________________________________________
 
@@ -503,7 +502,7 @@ the implementation of clusters or layered systems, see subsection \ref{layering}
 \subsection{The LTI template}
 
 The LTI template is an example that defines a linear time invariant dynamic for nodes. The mathematical model 
-of a simple interconnected LTI system is written as:
+of a simple interconnected LTI system as explained in \cite{LargeScaleSystems} can be written as:
 \begin{eqnarray}
 \left( \begin{array}{c}
 \dot{x_1} \\  
@@ -643,7 +642,7 @@ on most cases does some information processing (compression, principal component
 other clusters/layers. Inside the cluster/layer the interface node acts like a normal node.
 \\
 
-\subsection{Create a layer/cluster}
+\subsection{Crate a layer/cluster}
 
 In oder to create a layer/cluster in MTIDS you need to export your system as a layer: \textbf{File $\rightarrow$ Export as a layer}.
 MTIDS will ask you to select a template for the interface node. You may select an interface node created by you or select the MTIDS provided
@@ -695,7 +694,7 @@ MTIDS also comes preloaded with a simple aggregating interface template called \
 \section{Working in Simulink}\label{workinginsimulink}
 
 Here we review a couple of basic concepts which you will need to run and analyze the simulation of the interconnected dynamic 
-systems produced by MTIDS. This is only a quick overview, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Simulink Tutorial}.
+systems produced by MTIDS. This is only a quick overview, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Online Simulink Tutorial} or \cite{MatlabBuch}.
 
 \subsection{Simulation Parameters}
 The parameters of your model can be defined in Simulink by hand. However, a better way is to 
@@ -734,7 +733,7 @@ values coming out of integrator blocks, but it is also possible to define them b
 \label{simulink2Fig}
 \end{figure} 
 
-\subsection{Working with a closed model}
+\subsection{Working with a closed Model}
 
 Simulations can also be run from Matlab without the need to open the Simulink model. This is particularly useful for large Simulink models, like models of over 100 nodes that
 you may produce with MTIDS. You can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
@@ -796,8 +795,6 @@ To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, se
 \caption[MTIDS import form Simulink]{MTIDS import form Simulink}
 \label{mtidsImportFig}
 \end{figure} 
-
-
 
 \chapter{Future Development and Conclusion}
 

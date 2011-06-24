@@ -36,13 +36,13 @@
 \contentsline {subsection}{\numberline {3.3.2}The LTI template}{18}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}The Kuramoto Template}{20}{subsection.3.3.3}
 \contentsline {section}{\numberline {3.4}Layering/Clustering Nodes}{21}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Create a layer/cluster}{21}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.1}Crate a layer/cluster}{21}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Build your own Interface Node}{22}{subsection.3.4.2}
 \contentsline {section}{\numberline {3.5}Working in Simulink}{23}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}Simulation Parameters}{23}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}Solver}{23}{subsection.3.5.2}
 \contentsline {subsection}{\numberline {3.5.3}Visualize Simulation Data}{24}{subsection.3.5.3}
-\contentsline {subsection}{\numberline {3.5.4}Working with a closed model}{25}{subsection.3.5.4}
+\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{25}{subsection.3.5.4}
 \contentsline {section}{\numberline {3.6}Import from Simulink}{25}{section.3.6}
 \contentsline {chapter}{\numberline {4}Future Development and Conclusion}{27}{chapter.4}
 \contentsline {section}{\numberline {4.1}Future Development}{27}{section.4.1}

@@ -3,6 +3,16 @@
 \BOOKMARK [1][-]{section.1.2}{Idea and Goal}{chapter.1}
 \BOOKMARK [1][-]{section.1.3}{Framework}{chapter.1}
 \BOOKMARK [0][-]{chapter.2}{Graph Theory}{}
+\BOOKMARK [1][-]{section.2.1}{Algebraic Graph Theory}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.1.1}{Graph matrices}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.2}{Algebraic connectivity and Fiedler vector}{section.2.1}
+\BOOKMARK [1][-]{section.2.2}{Creating and visualizing systems in MTIDS}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.2.1}{MTIDS GUI Overview}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.2}{Building an interconnected system in MTIDS}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.3}{Node properties}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.4}{Load and Save}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.5}{Exporting matrices to Matlab}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.6}{Importing graph matrices into MTIDS}{section.2.2}
 \BOOKMARK [0][-]{chapter.3}{System Theory}{}
 \BOOKMARK [1][-]{section.3.1}{MTIDS Concepts for Simulink Models}{chapter.3}
 \BOOKMARK [2][-]{subsection.3.1.1}{Nodes and connections}{section.3.1}
@@ -20,7 +30,8 @@
 \BOOKMARK [2][-]{subsection.3.5.3}{Visualize Simulation Data}{section.3.5}
 \BOOKMARK [2][-]{subsection.3.5.4}{Working with a closed Model}{section.3.5}
 \BOOKMARK [1][-]{section.3.6}{Import from Simulink}{chapter.3}
-\BOOKMARK [0][-]{chapter.4}{Conclusion and Future Development}{}
-\BOOKMARK [1][-]{section.4.1}{Conclusion}{chapter.4}
-\BOOKMARK [1][-]{section.4.2}{Future Development}{chapter.4}
+\BOOKMARK [0][-]{chapter.4}{Future Development and Conclusion}{}
+\BOOKMARK [1][-]{section.4.1}{Future Development}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Conclusion}{chapter.4}
 \BOOKMARK [0][-]{section.4.2}{List of Figures}{}
+\BOOKMARK [0][-]{chapter*.16}{Bibliography}{}
