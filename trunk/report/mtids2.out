@@ -22,13 +22,13 @@
 \BOOKMARK [2][-]{subsection.3.3.2}{The LTI template}{section.3.3}
 \BOOKMARK [2][-]{subsection.3.3.3}{The Kuramoto Template}{section.3.3}
 \BOOKMARK [1][-]{section.3.4}{Layering/Clustering Nodes}{chapter.3}
-\BOOKMARK [2][-]{subsection.3.4.1}{Create a layer/cluster}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.1}{Crate a layer/cluster}{section.3.4}
 \BOOKMARK [2][-]{subsection.3.4.2}{Build your own Interface Node}{section.3.4}
 \BOOKMARK [1][-]{section.3.5}{Working in Simulink}{chapter.3}
 \BOOKMARK [2][-]{subsection.3.5.1}{Simulation Parameters}{section.3.5}
 \BOOKMARK [2][-]{subsection.3.5.2}{Solver}{section.3.5}
 \BOOKMARK [2][-]{subsection.3.5.3}{Visualize Simulation Data}{section.3.5}
-\BOOKMARK [2][-]{subsection.3.5.4}{Working with a closed model}{section.3.5}
+\BOOKMARK [2][-]{subsection.3.5.4}{Working with a closed Model}{section.3.5}
 \BOOKMARK [1][-]{section.3.6}{Import from Simulink}{chapter.3}
 \BOOKMARK [0][-]{chapter.4}{Future Development and Conclusion}{}
 \BOOKMARK [1][-]{section.4.1}{Future Development}{chapter.4}

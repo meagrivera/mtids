@@ -4,7 +4,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{verbatim} 
 \usepackage{appendix}
-
+\usepackage{amsmath}
 % MY CHANGE
 %\usepackage[bookmarksnumbered=true]{hyperref} 
 
@@ -115,13 +115,17 @@ dynamic systems simulation together. MTIDS allows the definition and analysis of
 The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
 possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general description 
 of MTIDS and instructions for its use.    
-%\vspace{2cm}
-% \begin{center}
-% \normalsize \textbf{Zusammenfassung}\\
-% \end{center}
-% Dieser Hauptseminar besch\"{a}ftigt sich mit der Methode der getriggerten Optimierung. Dabei wird besonderen Focus auf die m\"{o}glichen Anwendungen f\"{u}r Energiesystemen gesetzt.
-% Als erstes wird eine Analyse der Methode in ihre genaralisierte Form f\"{u}r das NUM (Netzwerk Nutzen Maximirung) Problem durchgef\"{u}hrt. Als zweites wird ihre Anwendung an das OPF (Optimale Leistungsfluss) in Energienetzen evaluiert. Als letztes werden
-% verbesserungs Vorschl\"{a}gen und weitere Anweundungen in Energiesystemen diskutiert.  
+\vspace{2cm}
+\begin{center}
+\normalsize \textbf{Zusammenfassung}\\
+\end{center}
+Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r grosse, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
+MTIDS oder Matlab Toolbox for Interconnected Dynamical
+Systems. Diese Toolbox verbindet Toolboxen f\"{u}r die Graphenanalyse mit Toolboxen f\"{u}r die Simulation von dynamischen Systemen. 
+MTIDS erm\"{o}glicht die Definition und Analyse von Graphen, bei denen jeder Knoten eine spezifische dynamische Anweisung ausf\"{u}hrt. 
+Das Template basierte Design der Knotendynamik erlaubt eine gro\ss{}e Flexibilit\"{a}t f\"{u}r die Erstellung von komplexen, gekoppelten dynamischen Systemen. 
+Es besteht beispielsweise die M\"{o}glichkeit Cluster bzw. Layer zu implementieren. MIDS ist ein Open-Source-Projekt unter der GNU GPL v2 Lizenz. 
+Im Rahmen des nachfolgenden Berichts wird eine generelle Beschreibung von MTIDS sowie deren Benutzung gegeben.
 \end{abstract}
 %____________________________________________________________
 
@@ -152,7 +156,7 @@ of MTIDS and instructions for its use.
 In this first Chapter the motivation behind the MTIDS project is explained and the project's goal and framework is presented.
 
 \section{Motivation}
-Large-scale interconnected dynamical system are everywhere: biological systems, power and water systems, the brain neurons, 
+Large-scale interconnected dynamical system are everywhere: biological systems, power and water distribution systems, the brain, 
 social interaction networks, economic markets, etc. In a canonical form all of this systems can be thought as a bunch of nodes with local dynamics 
 that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
 large scale interconnected systems can be seen in Figure \ref{largePic}. 
@@ -165,7 +169,7 @@ large scale interconnected systems can be seen in Figure \ref{largePic}.
 \label{largePic}
 \end{figure}
 
-There are many tools available for the analysis of interconnected dynamical systems, for example in power systems you have PSSE and Power Factory. However,
+There are many tools available for the analysis of interconnected dynamical systems, for example, in power systems you have PSSE and Power Factory. However,
 this simulation programs are normally very system specific and in most cases it takes a long time to learn how to use them correctly. 
 The difficulties are specially noticed while
 testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation set up. 
@@ -191,8 +195,8 @@ dynamic systems simulation together into a framework.
 \end{figure}
 
 As we can see in Figure \ref{mtidsFig} MTIDS runs in the MATLAB environment and is basically a GUI that allows the interaction of tools used in graph theory 
-and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the John Hopkins University and for dynamical simulations
-we use Simulink. 
+and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the John Hopkins University \cite{MatgraphByExample} and for dynamical simulations
+we use Simulink\cite{MatlabDocu}. 
 
 \section{Framework}
 
@@ -209,14 +213,14 @@ an import from Simulink function (\textbf{importSimulink.m}).\\
 \end{figure}
 
 In Figure \ref{componentsFig} we can see that the most important component is the user, specially its head. The better you are at producing templates
-and interacting with matlab and simulation the more functional MTIDS is going to be for you.
+and interacting with Matlab and Simulation the more functional MTIDS is going to be for you.
 In a nutshell MTIDS works as follows:
 \begin{itemize}
-\item GUI (mtids.m) runs inside Matlab
-\item GUI interacts with Matgraph: create, modify and visualize graphs  
-\item System Inteconnector (SI): exportSimulink.m and importSimulink.m called from GUI to interact with Simulink
+\item GUI (mtids.m) runs inside Matlab.
+\item GUI interacts with Matgraph: create, modify and visualize graphs.  
+\item System Inteconnector (SI): exportSimulink.m and importSimulink.m called from GUI to interact with Simulink.
 \item Templates done by User in Matlab/Simulink.
-\item Simulations done in Simulink
+\item Simulations done in Simulink.
 \end{itemize}
 %  
 % 
@@ -227,7 +231,188 @@ In a nutshell MTIDS works as follows:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAPH
 \chapter{Graph Theory}\label{chapter2}
+ 
+%References for this chapter can be found at \cite{NCS}, \cite{Estrada}, \cite{HivePlots}
 
+\section{Algebraic Graph Theory}
+
+Graphs are a easy way of representing networked structures. A graph consists of: 
+\begin{enumerate}
+\item \textbf{Vertices:} Represent nodes, dynamical subsystems and/or agents.
+\item \textbf{Edges:} Represent connections, links or couplings between vertices.
+\end{enumerate}
+
+In this project, we consider only simple, undirected and unweighted graphs. \linebreak
+
+Algebraic graph theory describes graph properties using numbers (like invariants) and equations.
+It is important first, to convert the graphical representation of a graph into a mathematically sound description like
+matrices. Once a the corresponding matrices (like the Laplacian or adjacency matrices) have been derived, we can calculate it's properties \cite{NCS} 
+
+The use of linear algebraic tools like rank, eigenvalue and eigenvector extraction of graph matrices is called \textit{Spectral Graph Theory} 
+
+\subsubsection{Degree of a vertex and degree vector}
+The degree of a vertex is the number of edges that are connected to it.
+The vector whose i-th component is the degree of the i-th vertex is the degree vector $\vec{d}$. 
+The degree vector can analysed using basic statistical tools for for mean, variance, min, max, span, etc.
+
+\subsubsection{Graph heterogenity}
+Graph heterogenity is the quotient between the standard deviation of the degree vector $\vec{d}$ and the mean of the degree vector.
+\begin{equation}
+ H = \frac{\sqrt{ var(\vec{d}) }}{\bar{\vec{d}}} 
+\end{equation}
+It describes the heterogenity between the connections to the nodes.   
+
+\subsubsection{Maximal number of edges and graph density}
+A complete graph is a graph where every vertex is connected to every other vertex. 
+The number of vertices inside a complete graph is:
+\begin{equation}
+ N_{e_{MAX}} = \frac{1}{2} N_v \left( N_v - 1  \right)
+\end{equation}  
+Alternatively:
+\begin{equation}
+ N_{e_{MAX}} = \frac{1}{2} \left( {N_v^2 - N_v } \right)
+\end{equation}  
+Graph density is a number which describes the \textit{completeness} of a graph. It is defined as the
+quotient between the actual number of edges $N_e$ and number of edges of a complete graph $N_{e_{MAX}}$ with the same number of vertices: 
+\begin{equation}
+ D = \frac{N_e}{N_{e_{MAX}}}
+\end{equation} 
+
+\begin{equation}
+ D = 2\frac{N_e}{N_v^2 - N_v}
+\end{equation} 
+
+\subsection{Graph matrices}
+\subsubsection{Adjacency Matrix}
+The adjacency matrix is defined as a $N_v$ x $N_v$ matrix whose $(A)_{ij}$ component is equal to one if there is a connection between vertex $i$ and vertex $j$ or zero if not.
+
+\subsubsection{Degree Matrix}
+A degree matrix is a diagonal matrix whose diagonal $(D)_{ii}$ components are equal to the degree of the i-th vertex.
+All other components for $(D)_{ij}$ $i \ne j$ are zero.
+
+\begin{equation}
+  (D)_{ij} = \left\{ \begin{array}{ll}
+0  & \mbox{if $i \ne j$} \\
+N_v(i) & \mbox{if $i = j$}
+                \end{array} \right. 
+\end{equation}
+
+
+\subsubsection{Laplacian Matrix}
+The Laplacian matrix is defined as the degree matrix $D$ minus the adjacency matrix $A$:
+\begin{equation}
+ L = D - A
+\end{equation} 
+The Laplacian matrix is used to characterize the algebraic connectivity of a graph.
+
+\subsection{Algebraic connectivity and Fiedler vector}
+\subsubsection{Algebraic connectivity}
+For sorted the sorted eigenvalues of the Laplacian matrix
+$ \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_{N_v} $
+we define the algebraic connectivity as the first nonzero eigenvalue. It's corresponding eigenvector is the Fiedler vector.
+The algebraic connectivity is a meassure of how connected a system is. For example, in the consensus problem, the algebraic connectivity describes the rate of convergence of the system to it's final state. 
+
+\subsubsection{Number of connected subgraphs}
+The multiplicity of the zero eigenvalue ot the Laplacian matrix is the number of connected subgraphs inside the system. This is also the rank of the nullspace of the Laplacian matrix
+$Rank( {Null}(L)) $.
+From the rank-nullity theorem of linear algebra we know that the rank of a matrix and the rank of it's nullspace add up to the number of collumns. Therefore for a square matrix, the rank of the nullspace can be calculated using:
+ \begin{equation}
+ Rank( {Null}(L) ) = Rank(L) - N_v
+\end{equation} 
+
+%\subsection{Estrada Index}
+%
+%The Estrada index of a vertex i is  \cite{Estrada}
+%\begin{equation}
+%E(i) = {(e^{A})_{ii}}
+%\end{equation} 
+%
+%The Estrada index of an adjacency matrix is:
+%\begin{equation}
+%E(A) = tr(e^{A})
+%\end{equation} 
+\pagebreak 
+\section{Creating and visualizing systems in MTIDS}
+\subsection{MTIDS GUI Overview}
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width= \textwidth]{./pics/Mtits_UI.eps}
+ % Mtits_UI.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 943 621
+ \caption{The MTIDS Graphical User Interface}
+ \label{fig:MTIDS-UI}
+\end{figure}
+The MTIDS GUI is divided in two parts: The left side contains the controls that allow for modification of the system and the right side contains the graph and statistics visualization.
+
+\subsection{Building an interconnected system in MTIDS}
+\subsubsection{Adding nodes}
+When adding a node, the User has to assign a unique node label and node dynamics at the ``node creation'' panel
+Nodes can be added with the ``add node'' button or by (\verb|<Shift>-<Left-click>|) with the mouse.
+Nodes added by using the mouse are given the last selected node dynamics and node label.
+
+\subsubsection{Adding multiple nodes}
+Adding multiple nodes at the same time is possible by introducing the number of nodes to be added and by clicking the ``Add multiple nodes'' button.
+These nodes start all with the same name (eg. node1, node2,...) and share the same dynamics.
+\subsubsection{Creating and removing connections}
+
+Connections can be added or removed using:
+\begin{itemize}
+\item \textbf{Mouse:} By \verb|<Ctrl>-<Left click>| on both nodes. If no connection exists, it will create one, otherwise it will delete this connection. 
+\item \textbf{Connection subwindow:} Connections to be added or removed can be specified by using node label or node number. 
+\item \textbf{``Edit node'' dialog:} See Subsection \ref{node_properties}.
+\end{itemize}
+
+%\begin{figure}[h!]
+% \centering
+% \includegraphics{./pics/mtids-ui-connections.eps}
+% % mtids-ui-connections.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 467 157
+% \label{fig:mtids-ui-connections}
+%\caption{Connection options}
+%\end{figure}
+
+Connections in MTIDS are bidirectional.
+
+\subsubsection{Default topologies}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics{./pics/mtids-ui-topologies.eps}
+ % mtids-ui-topologies.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 368 127
+ \caption{The default topologies}
+ \label{fig:mtids-ui-topologies}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Complete graph:} Makes the graph into a complete graph.
+\item \textbf{Remove connections:} Removes all edges inside the graph.
+\item \textbf{Make ring:} Connects all nodes into a ring.
+\item \textbf{Random graph:} Uses the random graph function from Matgraph. It adds random connections between nodes up to a density of ca. 0.5.
+\end{itemize}
+
+\subsection{Node properties}\label{node_properties}
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width=0.6\textwidth]{./pics/Edit_node.eps}
+ % Edit_node.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 360 278
+ \caption{The node properties window}
+ \label{fig:Edit_Node}
+\end{figure}
+Node properties can be edited by \verb|<double-clicking>| a node in the graph window. 
+Following node properties can be changed: Node label, node dynamics (from list) and the connection list vector in Matlab format.
+The selected node can also be removed using this window.                         
+
+\subsection{Load and Save}
+A system can be saved by selecting \textbf{File $\rightarrow$ Save As...}. This saves the graph properties (adjacency matrix), node labels, assigned node dynamics and template list into a binary .mat file.
+Loading an already saved system for modification is possible by selecting \textbf{File $\rightarrow$ Load...}. This loads the selected .mat file which contains the system properties. \linebreak
+Remember that a saved system file contains the template names previously imported so reimporting dynamics is not necesary.
+If a template .mdl file is missing or was deleted, the exporting to Simulink functionality will not work correctly.
+
+\subsection{Exporting matrices to Matlab}
+Select the corresponding workplace inside Matlab, variable name and matrix type to export.
+Supported matrices are Laplacian matrix, adjacency matrix and edge list.
+
+\subsection{Importing graph matrices into MTIDS}
+Graph matrices like Laplacian matrix, adjacency matrix or edge list. The matrix type is automatically detected and replaces the current graph. Node dynamics are assigned based on the last selected template.
+% End del graph Theory
 
 
 %_%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SYSTEM_____________________________________
@@ -317,7 +502,7 @@ the implementation of clusters or layered systems, see subsection \ref{layering}
 \subsection{The LTI template}
 
 The LTI template is an example that defines a linear time invariant dynamic for nodes. The mathematical model 
-of a simple interconnected LTI system is written as:
+of a simple interconnected LTI system as explained in \cite{LargeScaleSystems} can be written as:
 \begin{eqnarray}
 \left( \begin{array}{c}
 \dot{x_1} \\  
@@ -509,7 +694,7 @@ MTIDS also comes preloaded with a simple aggregating interface template called \
 \section{Working in Simulink}\label{workinginsimulink}
 
 Here we review a couple of basic concepts which you will need to run and analyze the simulation of the interconnected dynamic 
-systems produced by MTIDS. This is only a quick overview, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Simulink Tutorial}.
+systems produced by MTIDS. This is only a quick overview, for more detail please go to : \href{http://www.mathworks.com/help/toolbox/simulink/simulink_product_page.html}{Mathworks Online Simulink Tutorial} or \cite{MatlabBuch}.
 
 \subsection{Simulation Parameters}
 The parameters of your model can be defined in Simulink by hand. However, a better way is to 
@@ -538,7 +723,7 @@ to show the data in real-time.
 \\
 
 The other option is to visualize the results after the simulation. For this, you can define in Simulink which data should be send to the workspace under:
-Simulation $\rightarrow$ Configure Parameters at the tab of Import/Export, see Figure \ref{simulink2Fig}. Here it is useful to export the states, which Simulink defines as the 
+Simulation $\rightarrow$ Configure Parameters in the tab of Import/Export, see Figure \ref{simulink2Fig}. Here, it is useful to export the states, which Simulink defines as the 
 values coming out of integrator blocks, but it is also possible to define them by hand.
 
 \begin{figure}[htb]
@@ -551,7 +736,7 @@ values coming out of integrator blocks, but it is also possible to define them b
 \subsection{Working with a closed Model}
 
 Simulations can also be run from Matlab without the need to open the Simulink model. This is particularly useful for large Simulink models, like models of over 100 nodes that
-one may produce with MTIDS. One can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
+you may produce with MTIDS. You can write a Matlab script to parametrize  and run the simulation. \textbf{Examples} can be found on the \textbf{help for the \texttt{sim} command}.
 % 
 % \begin{verbatim}
 % Simulate the model, vdp, in Rapid Accelerator mode for an absolute tolerance 
@@ -596,12 +781,12 @@ one may produce with MTIDS. One can write a Matlab script to parametrize  and ru
 \section{Import from Simulink}
 
 MTIDS also offers the possibility of importing Simulink models which were produced by MTIDS or are constructed following the MTIDS format, 
-see section \ref{exportToSimulink}.\\
+see section \ref{subsystemConcept}.\\
 
-\textbf{Notice that the dynamic of the imported system node's will be the one that you have select in the MTIDS GUI.}
+\textbf{Notice that the dynamic of the imported system nodes will be the one that you have selected in the MTIDS GUI.}
 \\
 
- Node labels, position and topology is imported from Simulink to MTIDS.
+Node labels, position and topology of the subsytems are imported from Simulink to MTIDS.
 To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, see Figure \ref{mtidsImportFig}. Finally, select the model you wish to import.
 
 \begin{figure}[htb]
@@ -611,32 +796,50 @@ To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, se
 \label{mtidsImportFig}
 \end{figure} 
 
-
-
-\chapter{Conclusion and Future Development}
-
-\section{Conclusion}
-In this project a toolbox for the simulation of interconnected dynamical systems was developed. MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that 
-combines tools used for graph theory analysis (Matgraph) and the simulation of interconnected systems (Simulink) were combine to create a flexible and extensible 
-framework to make the simulation of interconnected dynamical systems easier for students and researchers.\\
-
-MTIDS offers the following \textbf{features}:
-\begin{itemize}
- \item Futures....
-\end{itemize}
-
-
+\chapter{Future Development and Conclusion}
 
 
 \section{Future Development}
 
-MTIDS is a toolbox aimed for students and researchers working in large-scale and interconnected dynamical systems. We would like to coform a community 
-around this toolbox that helps push the research on this field forward.
-
-There are still many issues and functions to improve in MTIDS:
+MTIDS is a toolbox aimed for students and researchers working in the field of large-scale and interconnected dynamical systems. 
+We aim to make this a free and open source tool which can be accessed and improved by the free software community in order to
+ push research on the networked system field forward.\\
+There are still some issues and functions which will improve or be implemented in MTIDS:
 \begin{itemize}
- \item Issues.....
+ \item Support for full import from Simulink.
+ \item Support for switching and random interconnections.
+ \item Export to Simulink ``wizzard``.
+ \item Support for directed graphs.
+ \item GUI for interaction with the Control Toolbox.
 \end{itemize}
+\vspace{5cm} 
+\pagebreak 
+
+\section{Conclusion}
+In this project we developed a fully functioning toolbox which allows for visual creation and simulation of inteconnected dynamical systems.
+MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that combines tools used for graph theory analysis (Matgraph) and 
+for the simulation of interconnected systems (Simulink) to create a flexible and extensible framework.
+As MTIDS is based on a standard tool used by academia and industry, the User doesn't have to leave the familiar and well documented enviroment of Matlab.
+\\ MTIDS capabilities allow for fast setups which makes it an excelent tool for demonstrations (for example in courses on networked systems),
+rapid prototyping for networked and distributed controller design and many more uses.
+\linebreak
+\newline  
+MTIDS features summed up:
+\begin{itemize}
+ \item Full integration with Matlab and Simulink for simulation and analysis.
+ \item Easy Drag and Drop visual system building and connection.
+ \item Visualization of key graph properties. 
+ \item Nonlinear and switching behavior possible at node level.
+ \item Highly customizable thanks to templates.
+ \item Layering and clustering capabilities.
+ \item Extensible.
+\end{itemize}
+\smallskip 
+MTIDS is available at:
+\begin{center}
+\textbf{ \href{http://code.google.com/p/mtids/}{http://code.google.com/p/mtids/}}
+\end{center}
+
 
 %
 %_______________________________________________________________
@@ -650,10 +853,10 @@ There are still many issues and functions to improve in MTIDS:
 %___________________________________________________________
 % 
 % %_____Literaturverzeichnis_________________________________
-% \cleardoublepage
-% \addcontentsline{toc}{chapter}{Bibliography}
-% \bibliography{bibliography.bib}
-% \bibliographystyle{alpha}
+ \cleardoublepage
+ \addcontentsline{toc}{chapter}{Bibliography}
+ \bibliography{mtids_bibliography.bib}
+ \bibliographystyle{alpha}
 % %__________________________________________________________
 
 

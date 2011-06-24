@@ -119,14 +119,13 @@ of MTIDS and instructions for its use.
 \begin{center}
 \normalsize \textbf{Zusammenfassung}\\
 \end{center}
-Ziel dieses Projektes war, einen Pr\"{u}fstand f\"{u}r gro$\ss$e und miteinander vernetzte dynamische Systeme zu entwickeln. Das 
-Ergebnis ist MTIDS oder Matlab-Toolbox for Interconnected Dynamical Systems (Matlab Toolbox f\"{u}r vernetzte dynamische Systeme),
-welches ein Mash-up ist, was verschiedene Toolboxen f\"{u}r Graphenanalyse und Simulation dynamischer Systeme zusammenkn\"{u}pft.
-MTIDS erlaubt die Definition und Analyse von Graphen, wobei jeder Knoten eine bestimmte zugewiesene Dynamik hat. Das auf
-Template basierte Design von Knotendynamiken erlaubt eine gro$\ss$e Flexibilit\"{a}t
-bei der Erstellung von komplexen und vernetzten dynamischen Systemen mit der M\"{o}glichkeit
-der Umsetzung von Clustern und Schichten. MTIDS ist ein Open-Source-Projekt unter der GNU GPL v2 Lizenz. Dieses Dokument
-stellt eine allgemeine Beschreibung von MTIDS und Anweisungen f\"{u}r dessen Verwendung.
+Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r grosse, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
+MTIDS oder Matlab Toolbox for Interconnected Dynamical
+Systems. Diese Toolbox verbindet Toolboxen f\"{u}r die Graphenanalyse mit Toolboxen f\"{u}r die Simulation von dynamischen Systemen. 
+MTIDS erm\"{o}glicht die Definition und Analyse von Graphen, bei denen jeder Knoten eine spezifische dynamische Anweisung ausf\"{u}hrt. 
+Das Template basierte Design der Knotendynamik erlaubt eine gro\ss{}e Flexibilit\"{a}t f\"{u}r die Erstellung von komplexen, gekoppelten dynamischen Systemen. 
+Es besteht beispielsweise die M\"{o}glichkeit Cluster bzw. Layer zu implementieren. MIDS ist ein Open-Source-Projekt unter der GNU GPL v2 Lizenz. 
+Im Rahmen des nachfolgenden Berichts wird eine generelle Beschreibung von MTIDS sowie deren Benutzung gegeben.
 \end{abstract}
 %____________________________________________________________
 

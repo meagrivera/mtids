@@ -1,4 +1,10 @@
-\begin{thebibliography}{Mat11}
+\begin{thebibliography}{ABRW09}
+
+\bibitem[ABRW09]{MatlabBuch}
+Anne Angermann, Michael Beuschel, Martin Rau, and Ulrich Wohlfarth.
+\newblock {\em Matlab-Simulink-Stateflow}.
+\newblock Oldenbourg Wissenchaftsverlag, Munich, Germany, 6th edtition edition,
+  2009.
 
 \bibitem[HE11]{NCS}
 Sandra Hirsche and Sebastian Erhart.
@@ -15,5 +21,10 @@ Mathworks.
 Ed~Scheinerman.
 \newblock {\em Matgraph by Example}.
 \newblock Johns Hopkins University, Baltimore, USA, 2006.
+
+\bibitem[Sil78]{LargeScaleSystems}
+Dragoslac~D. Siljak.
+\newblock {\em Large-Scale Dynamic Systems}.
+\newblock North-Holland, New York, USA, 1978.
 
 \end{thebibliography}
