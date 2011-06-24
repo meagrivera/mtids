@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 05-Jun-2011 20:51:21
+% Last Modified by GUIDE v2.5 24-Jun-2011 16:00:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1019,6 +1019,8 @@ global g;
 global templates;
 global template_list;
 
+disp('Export mode 1');
+
 A  = double(matrix(g));
 
 % Makes the graph a circle
@@ -1604,4 +1606,49 @@ function update_graph_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 refresh_graph(1, eventdata, handles);
+
+
+
+% --------------------------------------------------------------------
+function export_to_simulink2_Callback(hObject, eventdata, handles)
+% hObject    handle to export_to_simulink2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global g;
+global templates;
+global template_list;
+
+disp('Export mode 2');
+A  = double(matrix(g));
+
+% Makes the graph a circle
+rmxy(g);
+embed(g);
+%
+
+xy = getxy(g);
+
+
+labs = get_label(g);
+name =	'untitled';
+ template =	'LTI'; 
+ if nv(g) > 200
+    disp('Exporting...may take some time...go get some coffee...');
+ else   
+     disp('Exporting...');
+ end
+     disp('  ');
+
+  
+     
+    exportSimulink2(name,templates,template_list,A, xy, labs);
+
+ if nv(g) > 50
+    disp('Done exporting');
+    disp(' ');
+   %msgbox('Done exporting','Export to Simulink');
+ else   
+     disp('Done exporting');
+ end
+
 
