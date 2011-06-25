@@ -14,7 +14,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.4"
+    ComputedModelVersion    "1.5"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -33,9 +33,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "chepeadan"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sat Jun  4 13:46:32 2011"
-  RTWModifiedTimeStamp	  229095987
-  ModelVersionFormat	  "1.%<AutoIncrement:4>"
+  LastModifiedDate	  "Sat Jun 25 07:34:37 2011"
+  RTWModifiedTimeStamp	  230888073
+  ModelVersionFormat	  "1.%<AutoIncrement:5>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -760,7 +760,7 @@ Model {
     Line {
       SrcBlock		      "In1"
       SrcPort		      1
-      Points		      [45, 0; 0, -10]
+      Points		      [65, 0]
       DstBlock		      "Mux"
       DstPort		      1
     }

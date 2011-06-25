@@ -1,7 +1,6 @@
 function[] =exportSimulink(name,template,templateList,A, xy, labs)
 % exportSimulink.m 
 %
-% Authors: Jose Rivera, Francisco Llobet 
 % Project: MTIDS
 % Created: 27/5/2011
 %      
@@ -70,8 +69,10 @@ graphCenter= [nodePosRadius+4 nodePosRadius+2] ;
 for i=1:nodeNumber
 
     load_system(template{i});
-
-    templateModify2(A(i,:)*A(:,i),find(A(:,i)),template{i})
+    
+    nodeConnections= find(A(:,i));
+    
+    templateModify2(length(nodeConnections),nodeConnections,template{i})
    
     if x(i)>0
     nodePosAngle= atan(-y(i)/x(i)) ;

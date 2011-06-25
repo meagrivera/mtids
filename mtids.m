@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 
 % Edit the above text to modify the response to help mtids
 
-% Last Modified by GUIDE v2.5 24-Jun-2011 16:00:27
+% Last Modified by GUIDE v2.5 25-Jun-2011 06:09:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -788,10 +788,46 @@ guidata(hObject, handles);
 
 
 % --------------------------------------------------------------------
-function Untitled_16_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_16 (see GCBO)
+function export_as_layer_2_Callback(hObject, eventdata, handles)
+% hObject    handle to export_as_layer_2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% handles    structure with handles and user data (see GUIDATA)global g;
+
+global g;
+global templates;
+global template_list;
+
+A  = double(matrix(g));
+
+%
+rmxy(g);
+embed(g);
+
+%
+xy = getxy(g);
+
+
+
+labs = get_label(g);
+name =	'untitled';
+ template =	'LTI'; 
+ if nv(g) > 200
+    disp('Exporting...may take some time...go get some coffee...');
+ else   
+     disp('Exporting...');
+ end
+     disp('  ');
+ 
+    exportLayer2(name,templates,template_list,A, xy, labs);
+
+ if nv(g) > 50
+    disp('Done exporting');
+    disp(' ');
+   %msgbox('Done exporting','Export to Simulink');
+ else   
+     disp('Done exporting');
+ end
+
 
 
 % --------------------------------------------------------------------

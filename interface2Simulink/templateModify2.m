@@ -14,6 +14,8 @@ set_param( [template '/Mux'],'DisplayOption','bar');
 inPos= blockPos(get_param([template '/In1'],'position')) ;
 %outPos= blockPos(get_param('template/Out1','position'));
 
+% change name of in-port 1
+set_param( [template '/In1'],'Name',['In' num2str(nodeConnections(1)) ] );
 
 for i=2:nodeNumber
     inPos= [inPos(1) inPos(2)+2];
