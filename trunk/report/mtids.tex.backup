@@ -5,6 +5,7 @@
 \usepackage{verbatim} 
 \usepackage{appendix}
 \usepackage{amsmath}
+\usepackage{subfigure}
 % MY CHANGE
 %\usepackage[bookmarksnumbered=true]{hyperref} 
 
@@ -236,13 +237,13 @@ In a nutshell MTIDS works as follows:
 
 \section{Algebraic Graph Theory}
 
-Graphs are a easy way of representing networked structures. A graph consists of: 
+Graphs are an easy way of representing networked structures. A graph consists of: 
 \begin{enumerate}
 \item \textbf{Vertices:} Represent nodes, dynamical subsystems and/or agents.
 \item \textbf{Edges:} Represent connections, links or couplings between vertices.
 \end{enumerate}
 
-In this project, we consider only simple, undirected and unweighted graphs. \linebreak
+\textbf{In this project, we consider only simple, undirected and unweighted graphs.} \linebreak
 
 Algebraic graph theory describes graph properties using numbers (like invariants) and equations.
 It is important first, to convert the graphical representation of a graph into a mathematically sound description like
@@ -421,22 +422,34 @@ Graph matrices like Laplacian matrix, adjacency matrix or edge list. The matrix 
 In this Chapter we explain the design and simulation capabilities that MTIDS offers for interconnected dynamical systems.
 
 \section{MTIDS Concepts for Simulink Models} \label{subsystemConcept}
+MTIDS has two different concepts for building Simulink models. The difference relies on the amount of inputs that each node has.
+\\
+
+In the first concept, \textbf{concept 1}, each node has the same amount of inputs as there are nodes on the graph, even if the input is not connected. This concept is very efficient 
+for matrix based description of system dynamics, where you describe the whole system at once,  like with LTI modeling.  \\
+
+In \textbf{concept 2}, each node has only an input for the nodes that are connected to it. This is very efficient for agent or subsystem based descriptions, 
+where the dynamics of each node may differ to much to allow a matrix based description for the  whole system. This description is used for the examples of 
+concensus and fireflies synchronization.     
+
 \subsection{Nodes and connections}
 \subsubsection{Node:}
 Each node in MTIDS is a subsystem block in Simulink. Each node must have a unique label.
-Each node has an in-port for every node in the graph and an out-port. 
+In \textbf{concept 1} each node has an in-port for every node in the graph and a single out-port. In \textbf{concept 2} each node has an in-port only 
+for nodes connected to it and a single out-port.
 \subsubsection{Connections:}
 Any connection made inside MTIDS is bidirectional and unweighted. As Simulink connections are directed, each MTIDS bidirectional connection
  is represented with two directed connections between nodes. To implement weighted graphs, weights 
 on branches have to be realized in the node's dynamic model, e.g inside the subsystem. Another option is to define junction nodes.
 
 \section{Export to Simulink}\label{exportToSimulink}
-In order to export the model created in the MTIDS GUI to simulink: \textbf{Simulation $\rightarrow$ Export to Simulink...} (see Figure \ref{exportFig})
+In order to export the model created in the MTIDS GUI to simulink: \textbf{Simulation $\rightarrow$ Export to Simulink 1...} for  \textbf{concept 1} 
+or \textbf{Simulation $\rightarrow$ Export to Simulink 2...} for \textbf{ concept 2} (see Figure \ref{exportFig}).
 \\
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.7\textwidth]{pics/screenExport.eps}
-\caption[MTIDS export to Simulink]{MTIDS: export model to Simulink. Example is a complete graph with 10 LTI nodes. }
+\includegraphics[width=0.7\textwidth]{pics/screenExport2.eps}
+\caption[MTIDS export to Simulink]{MTIDS: export model to Simulink in the MTIDS format 1. Example is a complete graph with 10 LTI nodes.  }
 \label{exportFig}
 \end{figure}
 
@@ -456,15 +469,18 @@ To adjust the size of the model to the Simulink window size: \textbf{View $\righ
 
 In Figure \ref{exportFig}, the nodes are ordered in a circle, the topology of the system defined in MTIDS remains. The circle arrangement is a 
 design decision, made, in order to allow a better access to the nodes. Each one of the nodes is a subsystem block. The dynamic of the nodes is defined inside
-the subsystem block. Moreover, each node has a single out-port and N in-ports, where N is the number of nodes on the whole system has. Each node on the 
-system has its own in-port on each node, compare with a zoom on the first node of our example in Figure \ref{nodeFig}. \\
+the subsystem block. Moreover, depending on the MTIDS export concept choosen, the number of inputs of a node will be different, compare with a zoom 
+of the first node for our example in Figure \ref{nodeFig}. \\
  
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/screenNode.eps}
-\caption[MTIDS node in Simulink]{Node inputs and output: Each node has an in-port for every node in the model and an out-port. Example is the first node of a complete graph with 10 LTI nodes. }
+\mbox{\subfigure[Node for concept 1]{\includegraphics[width=.5 \textwidth]{pics/screenNode.eps} }\quad
+\subfigure[Node for concept 2]{\includegraphics[width=.5\textwidth]{pics/screenConcept2.eps}  }}
+\caption[MTIDS node in Simulink]{Node inputs and output: (a) Each node has an in-port for every node in the model and a single out-port. 
+(b) Each node has an in-port for nodes connected to it and a single out-port. Example is the first node of a complete graph with 10 LTI nodes. }
 \label{nodeFig}
 \end{figure}
+
 Notice that the port corresponding to the node's number
 should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
 In case that a loop of a node with itself is required, we recommend doing this inside the subsystem/node. 
@@ -679,7 +695,7 @@ The user may define your own interface node template using the interface node sc
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/interfaceTemplate.eps}
-\caption[MTIDS interface node scratch template]{Interface node cratch template model : \textbf{interfaceTemplate.mdl}.}
+\caption[MTIDS interface node scratch template]{Interface node, scratch template model : \textbf{interfaceTemplate.mdl}.}
 \label{interfaceFig}
 \end{figure}
  
@@ -802,8 +818,9 @@ To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, se
 \section{Future Development}
 
 MTIDS is a toolbox aimed for students and researchers working in the field of large-scale and interconnected dynamical systems. 
-We aim to make this a free and open source tool which can be accessed and improved by the free software community in order to
- push research on the networked system field forward.\\
+We aim to make this a free and open source tool which can be accessed and improved by the open-source software community in order to
+ push research on the field of networked control system forward.\\
+
 There are still some issues and functions which will improve or be implemented in MTIDS:
 \begin{itemize}
  \item Support for full import from Simulink.
@@ -819,8 +836,10 @@ There are still some issues and functions which will improve or be implemented i
 In this project we developed a fully functioning toolbox which allows for visual creation and simulation of inteconnected dynamical systems.
 MTIDS (Matlab Toolbox of Interconnected Dynamical Systems) is a wrapper that combines tools used for graph theory analysis (Matgraph) and 
 for the simulation of interconnected systems (Simulink) to create a flexible and extensible framework.
-As MTIDS is based on a standard tool used by academia and industry, the User doesn't have to leave the familiar and well documented enviroment of Matlab.
-\\ MTIDS capabilities allow for fast setups which makes it an excelent tool for demonstrations (for example in courses on networked systems),
+\\
+
+As MTIDS is based on standard tools used by academia and industry, the User doesn't have to leave the familiar and well documented enviroment of Matlab.
+\\ MTIDS capabilities allow for fast setups which makes it an excelent tool for demonstrations (for example in courses on networked control systems),
 rapid prototyping for networked and distributed controller design and many more uses.
 \linebreak
 \newline  

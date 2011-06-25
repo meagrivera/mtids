@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  24 JUN 2011 11:55
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  25 JUN 2011 19:51
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
@@ -153,6 +153,26 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
+(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip46
+\subfigcapskip=\skip47
+\subfigcaptopadj=\dimen114
+\subfigbottomskip=\skip48
+\subfigcapmargin=\dimen115
+\subfiglabelskip=\skip49
+\c@subfigure=\count106
+\c@lofdepth=\count107
+\c@subtable=\count108
+\c@lotdepth=\count109
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip50
+\subfig@bottom=\skip51
+)
 (/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
 
@@ -174,9 +194,9 @@ O)
 (/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
 Package: xcolor-patch 2009/10/02 xcolor patch
 ))
-\@linkdim=\dimen114
-\Hy@linkcounter=\count106
-\Hy@pagecounter=\count107
+\@linkdim=\dimen116
+\Hy@linkcounter=\count110
+\Hy@pagecounter=\count111
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
@@ -243,9 +263,9 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 )))
-\Fld@menulength=\count108
-\Field@Width=\dimen115
-\Fld@charsize=\dimen116
+\Fld@menulength=\count112
+\Field@Width=\dimen117
+\Fld@charsize=\dimen118
 \Field@toks=\toks26
 Package hyperref Info: Hyper figures OFF on input line 4377.
 Package hyperref Info: Link nesting OFF on input line 4382.
@@ -258,9 +278,9 @@ Package hyperref Info: PDF/A mode OFF on input line 4407.
 (/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
 Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 )
-\Hy@abspage=\count109
-\c@Item=\count110
-\c@Hfootnote=\count111
+\Hy@abspage=\count113
+\c@Item=\count114
+\c@Hfootnote=\count115
 )
 *hyperref using default driver hdvips*
 (/usr/share/texmf-texlive/tex/latex/hyperref/hdvips.def
@@ -272,18 +292,18 @@ File: pdfmark.def 2009/10/09 v6.79a Hyperref definitions for pdfmark specials
 \pdf@box=\box30
 \pdf@toks=\toks28
 \pdf@defaulttoks=\toks29
-\Fld@listcount=\count112
+\Fld@listcount=\count116
 ))
 (/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
-\fancy@headwidth=\skip46
-\f@ncyO@elh=\skip47
-\f@ncyO@erh=\skip48
-\f@ncyO@olh=\skip49
-\f@ncyO@orh=\skip50
-\f@ncyO@elf=\skip51
-\f@ncyO@erf=\skip52
-\f@ncyO@olf=\skip53
-\f@ncyO@orf=\skip54
+\fancy@headwidth=\skip52
+\f@ncyO@elh=\skip53
+\f@ncyO@erh=\skip54
+\f@ncyO@olh=\skip55
+\f@ncyO@orh=\skip56
+\f@ncyO@elf=\skip57
+\f@ncyO@erf=\skip58
+\f@ncyO@olf=\skip59
+\f@ncyO@orf=\skip60
 ) (./mtids.aux
 
 LaTeX Warning: Label `exportFig' multiply defined.
@@ -291,31 +311,31 @@ LaTeX Warning: Label `exportFig' multiply defined.
 )
 \openout1 = `mtids.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-Package hyperref Info: Link coloring ON on input line 56.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 57.
+LaTeX Font Info:    ... okay on input line 57.
+Package hyperref Info: Link coloring ON on input line 57.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count113
+\c@section@level=\count117
 )
-LaTeX Info: Redefining \ref on input line 56.
-LaTeX Info: Redefining \pageref on input line 56.
+LaTeX Info: Redefining \ref on input line 57.
+LaTeX Info: Redefining \pageref on input line 57.
  (./mtids.out)
 (./mtids.out)
 \@outlinefile=\write4
@@ -325,14 +345,14 @@ LaTeX Info: Redefining \pageref on input line 56.
  [1
 
 ] [1] [1]
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 147.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 148.
 
  (/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 
 LaTeX Font Warning: Font shape `OT1/phv/a/n' undefined
-(Font)              using `OT1/phv/m/n' instead on input line 147.
+(Font)              using `OT1/phv/m/n' instead on input line 148.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -350,20 +370,20 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 Chapter 1.
 File: pics/complex.eps Graphic file (type eps)
 <pics/complex.eps>
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 168.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 169.
 
  (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 168.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 169.
  [5
 
 ]
 File: pics/mtidsStructure.eps Graphic file (type eps)
 
 <pics/mtidsStructure.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 203--205
+Underfull \hbox (badness 10000) in paragraph at lines 204--206
 
  []
 
@@ -374,12 +394,12 @@ File: pics/uml.eps Graphic file (type eps)
 ]
 Chapter 2.
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--246
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
 \OT1/cmr/bx/n/12 graphs.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--246
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
 
  []
 
@@ -399,92 +419,115 @@ File: ./pics/Edit_node.eps Graphic file (type eps)
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 404--408
+Underfull \hbox (badness 10000) in paragraph at lines 405--409
 \OT1/cmr/m/n/12 prop-er-ties.
  []
 
 [13] [14]
 Chapter 3.
-File: pics/screenExport.eps Graphic file (type eps)
-<pics/screenExport.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 443--446
+
+Underfull \hbox (badness 10000) in paragraph at lines 425--427
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 447--449
+Underfull \hbox (badness 10000) in paragraph at lines 428--430
 
  []
 
 [15
 
 ]
-File: pics/screenExportResult.eps Graphic file (type eps)
- <pics/screenExportResult.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 457--461
+File: pics/screenExport2.eps Graphic file (type eps)
+ <pics/screenExport2.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 456--459
 
  []
 
-[16]
+
+Underfull \hbox (badness 10000) in paragraph at lines 460--462
+
+ []
+
+File: pics/screenExportResult.eps Graphic file (type eps)
+<pics/screenExportResult.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 470--474
+
+ []
+
 File: pics/screenNode.eps Graphic file (type eps)
- <pics/screenNode.eps>
+<pics/screenNode.eps>
+File: pics/screenConcept2.eps Graphic file (type eps)
+ <pics/screenConcept2.eps>
+Overfull \hbox (19.58311pt too wide) in paragraph at lines 478--480
+ [][] 
+ []
+
+[16] [17]
 File: pics/screenBuildTemplate.eps Graphic file (type eps)
  <pics/screenBuildTemplate.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 492--497
+Underfull \hbox (badness 10000) in paragraph at lines 508--513
 
  []
 
-[17]
+[18]
+File: pics/screenLTI.eps Graphic file (type eps)
+ <pics/screenLTI.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 612--615
+
+ []
+
+[19]
+File: pics/screenKuramoto.eps Graphic file (type eps)
+ <pics/screenKuramoto.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 630--630
+[]\OT1/cmr/m/n/12 Figure 3.6: [][][][][][]  Ku-ramoto tem-plate for fire-flies 
+syn-chro-niza-tion, \OT1/cmr/bx/n/12 /tem-
+ []
+
+File: pics/screenfireflies.eps Graphic file (type eps)
+<pics/screenfireflies.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 653--658
+
+ []
+
+[20]
+Underfull \hbox (badness 10000) in paragraph at lines 661--663
+
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [18]
-File: pics/screenLTI.eps Graphic file (type eps)
-
-<pics/screenLTI.eps> [19]
-Underfull \hbox (badness 10000) in paragraph at lines 596--599
-
- []
-
-File: pics/screenKuramoto.eps Graphic file (type eps)
-<pics/screenKuramoto.eps> [20]
-File: pics/screenfireflies.eps Graphic file (type eps)
- <pics/screenfireflies.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 639--644
-
- []
-
-[21]
+ [21]
 File: pics/screenLayer.eps Graphic file (type eps)
- <pics/screenLayer.eps>
+
+<pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
  <pics/screenLayers.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 677--678
+Underfull \hbox (badness 10000) in paragraph at lines 693--694
 
  []
 
 File: pics/interfaceTemplate.eps Graphic file (type eps)
 <pics/interfaceTemplate.eps> [22]
 File: pics/screenSim1.eps Graphic file (type eps)
- <pics/screenSim1.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 720--724
+ <pics/screenSim1.eps> [23]
+Underfull \hbox (badness 10000) in paragraph at lines 736--740
 
  []
 
-[23]
 File: pics/screenSim2.eps Graphic file (type eps)
- <pics/screenSim2.eps>
+<pics/screenSim2.eps> [24]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 739.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 755.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [24]
-Underfull \hbox (badness 10000) in paragraph at lines 783--785
+Underfull \hbox (badness 10000) in paragraph at lines 799--801
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 786--788
+Underfull \hbox (badness 10000) in paragraph at lines 802--804
 
  []
 
@@ -494,23 +537,23 @@ File: pics/mtidsImport.eps Graphic file (type eps)
 ]
 Chapter 4.
 
-Underfull \hbox (badness 10000) in paragraph at lines 804--807
+Underfull \hbox (badness 10000) in paragraph at lines 822--825
 
  []
 
 [27]
-Underfull \hbox (badness 10000) in paragraph at lines 820--824
+Underfull \hbox (badness 10000) in paragraph at lines 838--842
 
  []
 
 
-Underfull \hbox (badness 7012) in paragraph at lines 825--831
+Underfull \hbox (badness 7012) in paragraph at lines 843--849
 \OT1/cmr/m/n/12 for net-worked and dis-tributed con-troller de-sign and many mo
 re uses.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 825--831
+Underfull \hbox (badness 10000) in paragraph at lines 843--849
 
  []
 
@@ -534,12 +577,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5197 strings out of 495062
- 73853 string characters out of 1182644
- 149786 words of memory out of 3000000
- 8260 multiletter control sequences out of 15000+50000
+ 5350 strings out of 495062
+ 75969 string characters out of 1182644
+ 154689 words of memory out of 3000000
+ 8406 multiletter control sequences out of 15000+50000
  11663 words of font info for 41 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,14n,46p,299b,357s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (33 pages, 122896 bytes).
+Output written on mtids.dvi (33 pages, 124932 bytes).
