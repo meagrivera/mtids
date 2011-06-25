@@ -1,7 +1,6 @@
 function[] =exportSimulink(name,template,templateList,A, xy, labs)
 % exportSimulink.m 
 %
-% Authors: Jose Rivera, Francisco Llobet 
 % Project: MTIDS
 % Created: 27/5/2011
 %      
