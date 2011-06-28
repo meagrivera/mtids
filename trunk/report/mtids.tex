@@ -320,7 +320,7 @@ From the rank-nullity theorem of linear algebra we know that the rank of a matri
  \begin{equation}
  Rank( {Null}(L) ) = Rank(L) - N_v
 \end{equation} 
-
+\vspace{10cm}
 %\subsection{Estrada Index}
 %
 %The Estrada index of a vertex i is  \cite{Estrada}
@@ -645,8 +645,80 @@ In order to see the blinking in the correct time scale, you need to set up the s
 \label{syncFig}
 \end{figure}
 
+\subsection{The Consensus Problem Templates}
+
+The consensus or rendevous problem is a classic formulation where we see how a distributed hostless algorithm with simple
+local interactions can achieve a well understood and studied global interaction.
+
+A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink mode 2} 
 
 
+\subsubsection{Follower node:}
+The consensus follower template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
+ This model is the realization of the local (decoupled) model is (as in \cite{NCS}):
+\begin{equation}
+\dot{x}_i = - \gamma \sum_{j=1}^{N_v(i)}(x_i - x_j)
+\end{equation}
+Every internal integrator state is initialized on random before the simulation.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_template.eps}
+\caption[MTIDS Consensus Template]{Consensus template, \textbf{/templates/consensus.mdl}}
+\label{templateConsensusFig}
+\end{figure}
+As an example we built in MTIDS a graph containing 6 consensus follower nodes as shown on Figure \ref{ConsensusGraphFig}.
+The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. It is easily recognizable that all nodes tend to a common state.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_graph.eps}
+\caption[Consensus Graph Example]{Consensus Graph Example}
+\label{ConsensusGraphFig}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_fig.eps}
+\caption[Consensus State Plot]{Consensus State Plot}
+\label{ConsensusStatePlotFig}
+\end{figure}
+\pagebreak
+
+\subsubsection{Static Leader:}
+
+A static leader node is a node which stays on a specific point in state-space.
+It has following dynamics:
+
+\begin{equation}
+\dot{x}_i = 0
+\end{equation}
+
+\begin{equation}
+  x_i(t) = x_0
+\end{equation}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_leader_template.eps}
+\caption[MTIDS Consensus Leader Template]{Consensus leader template, \textbf{/templates/consensus leader.mdl}}
+\label{templateConsensusLeaderFig}
+\end{figure}
+
+\subsubsection{linmod() Example with the Consensus Problem:}
+Matlab function linmod() extracts a continuos linearized state-space model of a system around the operating point.
+Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
+Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
+
+We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
+The output of linmod() can be used as a LTI-system which to be analysed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{pics/Consensus_linmod.eps}
+\caption[linmod() Example Output]{linmod() example output}
+\label{ConsensusLinmodFig}
+\end{figure}
+
+\pagebreak
 \section{Layering/Clustering Nodes} \label{layering}
 
 
@@ -656,7 +728,7 @@ on most cases does some information processing (compression, principal component
 other clusters/layers. Inside the cluster/layer the interface node acts like a normal node.
 \\
 
-\subsection{Crate a layer/cluster}
+\subsection{Create a layer/cluster}
 
 In oder to create a layer/cluster in MTIDS you need to export your system as a layer: \textbf{File $\rightarrow$ Export as a layer 1} for concept 1 or
 \textbf{File $\rightarrow$ Export as a layer 2} for concept 2.\\
@@ -809,8 +881,8 @@ Sometimes the nodes are imported in a different order, to correct this click on 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/mtidsImport.eps}
-\caption[MTIDS import form Simulink]{MTIDS import form Simulink}
+\includegraphics[width=\textwidth]{pics/mtidsImport.eps}
+\caption[MTIDS import from Simulink]{MTIDS import from Simulink}
 \label{mtidsImportFig}
 \end{figure} 
 
