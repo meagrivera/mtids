@@ -1,29 +1,29 @@
 function varargout = mtids(varargin)
-% MTIDS M-file for mtids.fig
-%      MTIDS, by itself, creates a new MTIDS or raises the existing
-%      singleton*.
 %
-%      H = MTIDS returns the handle to a new MTIDS or the handle to
-%      the existing singleton*.
+%      MTIDS 1.0
+%      (C) 2011 The MTIDS Project (http://code.google.com/p/mtids)
+%      Matlab Toolbox for Interconnected Dynamical Systems
+%      Test Rig for Large-Scale Interconnected Systems.
 %
-%      MTIDS('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in MTIDS.M with the given input arguments.
+%      MTIDS uses and redistributes Matgraph (C) 2005 Ed Scheinermann (http://www.ams.jhu.edu/~ers/matgraph/)
 %
-%      MTIDS('Property','Value',...) creates a new MTIDS or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before secondgui_OpeningFunction gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to mtids_OpeningFcn via varargin.
+%      This program is free software; you can redistribute it and/or
+%      modify it under the terms of the GNU General Public License
+%      as published by the Free Software Foundation; either version 2
+%      of the License, or (at your option) any later version.
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
+%      This program is distributed in the hope that it will be useful,
+%      but WITHOUT ANY WARRANTY; without even the implied warranty of
+%      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%      GNU General Public License for more details.
 %
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Copyright 2002-2003 The MathWorks, Inc.
-
-% Edit the above text to modify the response to help mtids
-
+%      You should have received a copy of the GNU General Public License
+%      along with this program; if not, write to the Free Software
+%      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+%
+%       A copy of the GNU GPL v2 Licence is available at the LICENCE.txt
+%       file.
+%
 % Last Modified by GUIDE v2.5 25-Jun-2011 06:09:12
 
 % Begin initialization code - DO NOT EDIT
@@ -49,12 +49,24 @@ end
 % --- Executes just before mtids is made visible.
 function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 disp(' ');
-disp('MTIDS');
+disp('MTIDS 1.0');
 disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
+disp('<a href="http://code.google.com/p/mtids">http://code.google.com/p/mtids</a>');
 disp(' ');
-%disp(mfilename);
-%clf;
-
+disp('This program is free software; you can redistribute it and/or');
+disp('modify it under the terms of the GNU General Public License');
+disp('as published by the Free Software Foundation; either version 2');
+disp('of the License, or (at your option) any later version.');
+disp('This program is distributed in the hope that it will be useful,');
+disp('but WITHOUT ANY WARRANTY; without even the implied warranty of');
+disp('MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the');
+disp('GNU General Public License for more details.');
+disp(' ');
+disp('You should have received a copy of the GNU General Public License');
+disp('along with this program; if not, write to the Free Software');
+disp('Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.');
+disp(' ');
+disp(' ');
 
 addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
@@ -681,7 +693,7 @@ function aboutmtids_Callback(hObject, eventdata, handles)
 % hObject    handle to aboutmtids (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+about_mtids();
 
 % --------------------------------------------------------------------
 function about_Callback(hObject, eventdata, handles)
