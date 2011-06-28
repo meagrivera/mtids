@@ -14,7 +14,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.9"
+    ComputedModelVersion    "1.10"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -33,9 +33,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "francisco"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Jun 24 14:34:35 2011"
-  RTWModifiedTimeStamp	  230826868
-  ModelVersionFormat	  "1.%<AutoIncrement:9>"
+  LastModifiedDate	  "Tue Jun 28 18:43:29 2011"
+  RTWModifiedTimeStamp	  231187401
+  ModelVersionFormat	  "1.%<AutoIncrement:10>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -704,7 +704,7 @@ Model {
   }
   System {
     Name		    "consensus"
-    Location		    [0, 50, 1024, 569]
+    Location		    [182, 258, 887, 512]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -723,14 +723,14 @@ Model {
       BlockType		      Inport
       Name		      "In1"
       SID		      1
-      Position		      [90, 113, 120, 127]
+      Position		      [65, 98, 95, 112]
       IconDisplay	      "Port number"
     }
     Block {
       BlockType		      Gain
       Name		      "Gain"
       SID		      8
-      Position		      [410, 105, 440, 135]
+      Position		      [385, 90, 415, 120]
       ParameterDataTypeMode   "Inherit via internal rule"
       ParameterDataType	      "fixdt(1, 16)"
       ParameterScaling	      "2^0"
@@ -746,7 +746,7 @@ Model {
       Name		      "Integrator"
       SID		      9
       Ports		      [1, 1]
-      Position		      [480, 105, 510, 135]
+      Position		      [455, 90, 485, 120]
       InitialCondition	      "100*(rand()-0.5)"
     }
     Block {
@@ -754,7 +754,7 @@ Model {
       Name		      "Mux"
       SID		      2
       Ports		      [2, 1]
-      Position		      [205, 101, 210, 139]
+      Position		      [180, 86, 185, 124]
       ShowName		      off
       Inputs		      "2"
       DisplayOption	      "bar"
@@ -764,7 +764,7 @@ Model {
       Name		      "Sum"
       SID		      7
       Ports		      [2, 1]
-      Position		      [265, 110, 285, 130]
+      Position		      [240, 95, 260, 115]
       ShowName		      off
       IconShape		      "round"
       Inputs		      "|+-"
@@ -780,7 +780,7 @@ Model {
       Name		      "Sum of\nElements"
       SID		      6
       Ports		      [1, 1]
-      Position		      [330, 105, 360, 135]
+      Position		      [305, 90, 335, 120]
       Inputs		      "+"
       InputSameDT	      off
       OutDataTypeMode	      "Inherit via internal rule"
@@ -793,7 +793,7 @@ Model {
       BlockType		      Outport
       Name		      "Out1"
       SID		      5
-      Position		      [610, 113, 640, 127]
+      Position		      [585, 98, 615, 112]
       IconDisplay	      "Port number"
     }
     Line {

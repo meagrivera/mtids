@@ -320,7 +320,7 @@ From the rank-nullity theorem of linear algebra we know that the rank of a matri
  \begin{equation}
  Rank( {Null}(L) ) = Rank(L) - N_v
 \end{equation} 
-
+\vspace{10cm}
 %\subsection{Estrada Index}
 %
 %The Estrada index of a vertex i is  \cite{Estrada}
@@ -429,8 +429,8 @@ In the first concept, \textbf{concept 1}, each node has the same amount of input
 for matrix based description of system dynamics, where you describe the whole system at once,  like with LTI modeling.  \\
 
 In \textbf{concept 2}, each node has only an input for the nodes that are connected to it. This is very efficient for agent or subsystem based descriptions, 
-where the dynamics of each node may differ to much to allow a matrix based description for the  whole system. This description is used for the examples of 
-concensus and fireflies synchronization.     
+where the dynamics of each node may not allow a matrix based description of the  whole system. This concept is used for the examples of 
+consensus and fireflies synchronization.     
 
 \subsection{Nodes and connections}
 \subsubsection{Node:}
@@ -481,8 +481,8 @@ of the first node for our example in Figure \ref{nodeFig}. \\
 \label{nodeFig}
 \end{figure}
 
-Notice that the port corresponding to the node's number
-should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. 
+Notice that for concept 1 the port corresponding to the node's number
+should always be free, e.g. the first node has an unconnected in-port 1, the second node an unconnected in-port 2, etc. For concept 2 all in-port are always connected. 
 In case that a loop of a node with itself is required, we recommend doing this inside the subsystem/node. 
 Another important aspect to point out is that when simulating the system, Simulink will issue a warning for unconnected in-ports and set their input to the subsystem to 0, this means 
 that an \textbf{unconnected port enters the subsystem (local dynamics of the node) with a value of zero} during simulations. This can be exploited to 
@@ -595,13 +595,13 @@ To implement this dynamic as a template we make use of the State-Space block.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.8\textwidth]{pics/screenLTI.eps}
-\caption[MTIDS LTI Template]{LTI template}
+\caption[MTIDS LTI Template]{LTI template,  \textbf{/templates/LTI.mdl}}
 \label{templateLTIFig}
 \end{figure}
  
 The LTI template shown in Figure \ref{templateLTIFig} can be used in MTIDS to create interconnected LTI systems with different topologies. One way to avoid 
 the work of parameterizing the A,B,C and D matrix of every node separately, is to define the same matrix for all subsystems. Using formula 
-(\ref{LTIFor}) we can define an A, B, C, and D matrix for every node. An example can be
+(\ref{LTIFor}) and exporting with \textbf{concept 1} we can define an A, B, C, and D matrix for every node. An example can be
 \begin{eqnarray}
  A&=& 1\nonumber\\
 B&=&[-1 \cdots -1]^{1\times N}\nonumber\\
@@ -626,8 +626,8 @@ that may occur in this type of systems is synchronization. The mathematical equa
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.7\textwidth]{pics/screenKuramoto.eps}
-\caption[MTIDS Kuramoto Template]{Kuramoto template for fireflies synchronization}
+\includegraphics[width=0.6\textwidth]{pics/screenKuramoto.eps}
+\caption[MTIDS Kuramoto Template]{Kuramoto template for fireflies synchronization, \textbf{/templates/kuramoto.mdl}}
 \label{templateKuramotoFig}
 \end{figure}
  
@@ -638,16 +638,84 @@ Dynamics $\rightarrow$ Add mdl template. You also need to set up the right param
 In order to see the blinking in the correct time scale, you need to set up the simulation with a fixed step size in Simulink, more on this in section 
 \ref{workinginsimulink}. An \textbf{example} can be found under \textbf{demos/firefliesTemplate.mdl} with the parameters \textbf{firefliesTemplate.mat}.
 
-
-
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/screenfireflies.eps}
-\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing. Parameters: K=0.1, N=10, $\omega=0.5$, $\theta_0=10$, var=5 (variation of starting point), threshold= $3/4*2\pi$}
+\includegraphics[width=0.4\textwidth]{pics/screenfireflies.eps}
+\caption[MTIDS fireflies synchronization]{Simulation of 10 fireflies synchronizing, exported using concept 2. Parameters: K=0.1, N=10, $\omega=0.3$, $\theta_0=10$, var=5 (variation of starting point), threshold= $3/4*2\pi$}
 \label{syncFig}
 \end{figure}
 
+\subsection{The Consensus Problem Templates}
 
+The consensus or rendevous problem is a classic formulation where we see how a distributed 'hostless' algorithm with simple
+local interactions 
+
+A graph built using MTIDS should be exported using the \textbf{Export to Simulink mode 2} 
+
+
+\subsubsection{Follower node:}
+The consensus follower template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
+ This model is the realization of the local (decoupled) model is (as in \cite{NCS}):
+\begin{equation}
+\dot{x}_i = - \gamma \sum_{j=1}^{N_v(i)}(x_i - x_j)
+\end{equation}
+Every internal integrator state is initialized on random before the simulation.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_template.eps}
+\caption[MTIDS Consensus Template]{Consensus template, \textbf{/templates/consensus.mdl}}
+\label{templateConsensusFig}
+\end{figure}
+As an example we built in MTIDS a graph containing 6 consensus follower nodes as shown on Figure \ref{ConsensusGraphFig}.
+The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. It is easily recognizable that all nodes tend to a common state.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_graph.eps}
+\caption[Consensus Graph Example]{Consensus Graph Example}
+\label{ConsensusGraphFig}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_fig.eps}
+\caption[Consensus State Plot]{Consensus State Plot}
+\label{ConsensusStatePlotFig}
+\end{figure}
+
+\subsubsection{Static Leader:}
+
+A static leader node is a node which stays on a specific point in state-space.
+It has following dynamics:
+
+\begin{equation}
+\dot{x}_i = 0
+\end{equation}
+
+\begin{equation}
+  x_i(t) = x_0
+\end{equation}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/consensus_leader_template.eps}
+\caption[MTIDS Consensus Leader Template]{Consensus leader template, \textbf{/templates/consensus_leader.mdl}}
+\label{templateConsensusLeaderFig}
+\end{figure}
+
+\subsubsection{linmod() Example with the Consensus Problem:}
+Matlab function linmod() extracts a continuos linearized state-space model of a system around the operating point.
+Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
+Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
+
+We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
+The output of linmod() can be used as a LTI-system which to be analysed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{pics/Consensus_linmod.eps}
+\caption[linmod() example]{linmod() Example}
+\label{ConsensusLinmodFig}
+\end{figure}
 
 \section{Layering/Clustering Nodes} \label{layering}
 
@@ -658,9 +726,11 @@ on most cases does some information processing (compression, principal component
 other clusters/layers. Inside the cluster/layer the interface node acts like a normal node.
 \\
 
-\subsection{Crate a layer/cluster}
+\subsection{Create a layer/cluster}
 
-In oder to create a layer/cluster in MTIDS you need to export your system as a layer: \textbf{File $\rightarrow$ Export as a layer}.
+In oder to create a layer/cluster in MTIDS you need to export your system as a layer: \textbf{File $\rightarrow$ Export as a layer 1} for concept 1 or
+\textbf{File $\rightarrow$ Export as a layer 2} for concept 2.\\
+
 MTIDS will ask you to select a template for the interface node. You may select an interface node created by you or select the MTIDS provided
 interface node : \textbf{layerInterface.mdl}.\\
 The result is a Simulink model that differs from the one that MTIDS normally produces, as it includes an extra node, the interface node.
@@ -672,7 +742,7 @@ interface nodes, see Figure \ref{layersFig}. An \textbf{example} can be found un
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/screenLayer.eps}
-\caption[MTIDS export as layer resulting model]{Resulting layer/cluster when exporting in MTIDS as layer. Example is a complete graph with 10 LTI nodes.}
+\caption[MTIDS export as layer resulting model]{Resulting layer/cluster when exporting in MTIDS as layer. Example is a complete graph with 10 LTI nodes, build using concept 1.}
 \label{layerFig}
 \end{figure}
 
@@ -804,6 +874,8 @@ see section \ref{subsystemConcept}.\\
 
 Node labels, position and topology of the subsytems are imported from Simulink to MTIDS.
 To do this in MTIDS: \textbf{Simulation $\rightarrow$ Import from Simulink }, see Figure \ref{mtidsImportFig}. Finally, select the model you wish to import.
+
+Sometimes the nodes are imported in a different order, to correct this click on the \textbf{Circular Visualization} button. 
 
 \begin{figure}[htb]
 \centering

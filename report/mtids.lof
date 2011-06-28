@@ -16,10 +16,15 @@
 \contentsline {figure}{\numberline {3.5}{\ignorespaces MTIDS LTI Template}}{20}{figure.3.5}
 \contentsline {figure}{\numberline {3.6}{\ignorespaces MTIDS Kuramoto Template}}{21}{figure.3.6}
 \contentsline {figure}{\numberline {3.7}{\ignorespaces MTIDS fireflies synchronization}}{21}{figure.3.7}
-\contentsline {figure}{\numberline {3.8}{\ignorespaces MTIDS export as layer resulting model}}{22}{figure.3.8}
-\contentsline {figure}{\numberline {3.9}{\ignorespaces MTIDS model of layered/clustered interconnected systems}}{23}{figure.3.9}
-\contentsline {figure}{\numberline {3.10}{\ignorespaces MTIDS interface node scratch template}}{23}{figure.3.10}
-\contentsline {figure}{\numberline {3.11}{\ignorespaces Simulink define solver}}{24}{figure.3.11}
-\contentsline {figure}{\numberline {3.12}{\ignorespaces Simulink define import/export data}}{24}{figure.3.12}
-\contentsline {figure}{\numberline {3.13}{\ignorespaces MTIDS import form Simulink}}{25}{figure.3.13}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces MTIDS Consensus Template}}{22}{figure.3.8}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Consensus Graph Example}}{22}{figure.3.9}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Consensus State Plot}}{23}{figure.3.10}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces MTIDS Consensus Leader Template}}{23}{figure.3.11}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces linmod() Example Output}}{24}{figure.3.12}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces MTIDS export as layer resulting model}}{25}{figure.3.13}
+\contentsline {figure}{\numberline {3.14}{\ignorespaces MTIDS model of layered/clustered interconnected systems}}{26}{figure.3.14}
+\contentsline {figure}{\numberline {3.15}{\ignorespaces MTIDS interface node scratch template}}{26}{figure.3.15}
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Simulink define solver}}{27}{figure.3.16}
+\contentsline {figure}{\numberline {3.17}{\ignorespaces Simulink define import/export data}}{28}{figure.3.17}
+\contentsline {figure}{\numberline {3.18}{\ignorespaces MTIDS import from Simulink}}{29}{figure.3.18}
 \addvspace {10\p@ }
