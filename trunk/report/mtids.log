@@ -1,12 +1,11 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.6.18)  29 JUN 2011 00:41
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.11)  29 JUN 2011 09:03
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
 (./mtids.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, ngerman, german, german-x-2009-06-19, ngerman-x-2009-06-19, spanish
-, galician, catalan, loaded.
+yphenation, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/report.cls
 Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size12.clo
@@ -495,7 +494,7 @@ File: pics/consensus_graph.eps Graphic file (type eps)
 <pics/consensus_graph.eps>
 File: pics/consensus_fig.eps Graphic file (type eps)
  <pics/consensus_fig.eps>
-Underfull \vbox (badness 4518) has occurred while \output is active []
+Underfull \vbox (badness 4954) has occurred while \output is active []
 
  [22]
 File: pics/consensus_leader_template.eps Graphic file (type eps)
@@ -503,86 +502,86 @@ File: pics/consensus_leader_template.eps Graphic file (type eps)
 <pics/consensus_leader_template.eps>
 File: pics/Consensus_linmod.eps Graphic file (type eps)
  <pics/Consensus_linmod.eps> [23]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [24]
-Underfull \hbox (badness 10000) in paragraph at lines 725--730
+Underfull \hbox (badness 10000) in paragraph at lines 724--729
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 733--735
+Underfull \hbox (badness 10000) in paragraph at lines 732--734
 
  []
 
+[24]
 File: pics/screenLayer.eps Graphic file (type eps)
-<pics/screenLayer.eps>
+ <pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
  <pics/screenLayers.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 765--766
+Underfull \hbox (badness 10000) in paragraph at lines 764--765
 
  []
 
-[25]
 File: pics/interfaceTemplate.eps Graphic file (type eps)
- <pics/interfaceTemplate.eps> [26]
+<pics/interfaceTemplate.eps> [25]
 File: pics/screenSim1.eps Graphic file (type eps)
  <pics/screenSim1.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 808--812
+Underfull \hbox (badness 10000) in paragraph at lines 807--811
 
  []
 
-[27]
+[26]
 File: pics/screenSim2.eps Graphic file (type eps)
  <pics/screenSim2.eps>
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 827.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 826.
 
-Underfull \hbox (badness 10000) in paragraph at lines 871--873
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [27]
+Underfull \hbox (badness 10000) in paragraph at lines 870--872
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 874--876
+Underfull \hbox (badness 10000) in paragraph at lines 873--875
 
  []
 
 File: pics/mtidsImport.eps Graphic file (type eps)
-<pics/mtidsImport.eps> [28] [29] [30
-
-]
+<pics/mtidsImport.eps> [28]
 Chapter 4.
 
-Underfull \hbox (badness 10000) in paragraph at lines 894--897
+Underfull \hbox (badness 10000) in paragraph at lines 893--896
 
  []
 
-[31]
-Underfull \hbox (badness 10000) in paragraph at lines 910--914
+[29
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 909--913
 
  []
 
 
-Underfull \hbox (badness 7012) in paragraph at lines 915--921
+Underfull \hbox (badness 7012) in paragraph at lines 914--920
 \OT1/cmr/m/n/12 for net-worked and dis-tributed con-troller de-sign and many mo
 re uses.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 915--921
+Underfull \hbox (badness 10000) in paragraph at lines 914--920
 
  []
 
-[32] (./mtids.lof)
+[30] (./mtids.lof)
 \tf@lof=\write6
 \openout6 = `mtids.lof'.
 
- [33
+ [31
 
 
-] [34
+] [32
 
-] (./mtids.bbl) [35
+] (./mtids.bbl) [33
 
 ] (./mtids.aux)
 
@@ -593,12 +592,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5366 strings out of 494963
- 76338 string characters out of 1179328
- 155092 words of memory out of 3000000
- 8438 multiletter control sequences out of 15000+50000
+ 5366 strings out of 495062
+ 76338 string characters out of 1182644
+ 155072 words of memory out of 3000000
+ 8417 multiletter control sequences out of 15000+50000
  11663 words of font info for 41 fonts, out of 3000000 for 9000
- 54 hyphenation exceptions out of 8191
+ 28 hyphenation exceptions out of 8191
  38i,14n,48p,299b,357s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (37 pages, 138044 bytes).
+Output written on mtids.dvi (35 pages, 136696 bytes).

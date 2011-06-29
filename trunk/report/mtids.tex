@@ -376,7 +376,7 @@ Connections in MTIDS are bidirectional.
 
 \begin{figure}[h!]
  \centering
- \includegraphics{./pics/mtids-ui-topologies.eps}
+ \includegraphics[width= 0.7\textwidth]{./pics/mtids-ui-topologies.eps}
  % mtids-ui-topologies.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 368 127
  \caption{The default topologies}
  \label{fig:mtids-ui-topologies}
@@ -647,10 +647,10 @@ In order to see the blinking in the correct time scale, you need to set up the s
 
 \subsection{The Consensus Problem Templates}
 
-The consensus or rendevous problem is a classic formulation where we see how a distributed hostless algorithm with simple
+The consensus or rendezvous problem is a classic formulation where a distributed host-less algorithm with simple
 local interactions can achieve a well understood and studied global interaction.
 
-A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink mode 2} 
+A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink 2...}. 
 
 
 \subsubsection{Follower node:}
@@ -659,15 +659,15 @@ The consensus follower template (/templates/consensus.mdl) contains a simple loc
 \begin{equation}
 \dot{x}_i = - \gamma \sum_{j=1}^{N_v(i)}(x_i - x_j)
 \end{equation}
-Every internal integrator state is initialized on random before the simulation.
+Every internal integrator state is initialized randomly before the simulation.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/consensus_template.eps}
 \caption[MTIDS Consensus Template]{Consensus template, \textbf{/templates/consensus.mdl}}
 \label{templateConsensusFig}
 \end{figure}
-As an example we built in MTIDS a graph containing 6 consensus follower nodes as shown on Figure \ref{ConsensusGraphFig}.
-The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. It is easily recognizable that all nodes tend to a common state.
+MTIDS comes with a build in example of 6 consensus follower nodes, shown in Figure \ref{ConsensusGraphFig}.
+The results of the simulation are shown in Figure \ref{ConsensusStatePlotFig}. As we can see all nodes tend to a common state.
 
 \begin{figure}[htb]
 \centering
@@ -687,7 +687,7 @@ The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. I
 \subsubsection{Static Leader:}
 
 A static leader node is a node which stays on a specific point in state-space.
-It has following dynamics:
+It has the following dynamic:
 
 \begin{equation}
 \dot{x}_i = 0
@@ -705,20 +705,19 @@ It has following dynamics:
 \end{figure}
 
 \subsubsection{linmod() Example with the Consensus Problem:}
-Matlab function linmod() extracts a continuos linearized state-space model of a system around the operating point.
+Matlab function linmod() extracts a continuous linearized state-space model of a system around the operating point.
 Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
 Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
 
 We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
-The output of linmod() can be used as a LTI-system which to be analysed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
+The output of linmod() can be used as a LTI-system which can be analyzed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\textwidth]{pics/Consensus_linmod.eps}
+\includegraphics[width=0.7\textwidth]{pics/Consensus_linmod.eps}
 \caption[linmod() Example Output]{linmod() example output}
 \label{ConsensusLinmodFig}
 \end{figure}
 
-\pagebreak
 \section{Layering/Clustering Nodes} \label{layering}
 
 
@@ -881,7 +880,7 @@ Sometimes the nodes are imported in a different order, to correct this click on 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\textwidth]{pics/mtidsImport.eps}
+\includegraphics[width=0.7\textwidth]{pics/mtidsImport.eps}
 \caption[MTIDS import from Simulink]{MTIDS import from Simulink}
 \label{mtidsImportFig}
 \end{figure} 
