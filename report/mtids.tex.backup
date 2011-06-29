@@ -647,10 +647,10 @@ In order to see the blinking in the correct time scale, you need to set up the s
 
 \subsection{The Consensus Problem Templates}
 
-The consensus or rendevous problem is a classic formulation where we see how a distributed 'hostless' algorithm with simple
-local interactions 
+The consensus or rendevous problem is a classic formulation where we see how a distributed hostless algorithm with simple
+local interactions can achieve a well understood and studied global interaction.
 
-A graph built using MTIDS should be exported using the \textbf{Export to Simulink mode 2} 
+A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink mode 2} 
 
 
 \subsubsection{Follower node:}
@@ -682,6 +682,7 @@ The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. I
 \caption[Consensus State Plot]{Consensus State Plot}
 \label{ConsensusStatePlotFig}
 \end{figure}
+\pagebreak
 
 \subsubsection{Static Leader:}
 
@@ -699,7 +700,7 @@ It has following dynamics:
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/consensus_leader_template.eps}
-\caption[MTIDS Consensus Leader Template]{Consensus leader template, \textbf{/templates/consensus_leader.mdl}}
+\caption[MTIDS Consensus Leader Template]{Consensus leader template, \textbf{/templates/consensus leader.mdl}}
 \label{templateConsensusLeaderFig}
 \end{figure}
 
@@ -713,10 +714,11 @@ The output of linmod() can be used as a LTI-system which to be analysed using th
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{pics/Consensus_linmod.eps}
-\caption[linmod() example]{linmod() Example}
+\caption[linmod() Example Output]{linmod() example output}
 \label{ConsensusLinmodFig}
 \end{figure}
 
+\pagebreak
 \section{Layering/Clustering Nodes} \label{layering}
 
 
@@ -879,8 +881,8 @@ Sometimes the nodes are imported in a different order, to correct this click on 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/mtidsImport.eps}
-\caption[MTIDS import form Simulink]{MTIDS import form Simulink}
+\includegraphics[width=\textwidth]{pics/mtidsImport.eps}
+\caption[MTIDS import from Simulink]{MTIDS import from Simulink}
 \label{mtidsImportFig}
 \end{figure} 
 
