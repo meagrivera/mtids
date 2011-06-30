@@ -21,7 +21,7 @@ function varargout = mtids(varargin)
 %      along with this program; if not, write to the Free Software
 %      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 %
-%       A copy of the GNU GPL v2 Licence is available at the LICENCE.txt
+%       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
 % Last Modified by GUIDE v2.5 25-Jun-2011 06:09:12
