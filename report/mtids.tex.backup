@@ -112,7 +112,7 @@ Submitted &  04.07.2011 \\
 \begin{abstract}
 The goal of this project was to develop a test rig for large-scale and interconnected dynamical systems. The result is
 MTIDS or Matlab Toolbox for Interconnected Dynamical Systems, which is a mash-up that wraps different toolboxes used for graph analysis and 
-dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assign to it. 
+dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assigned to it. 
 The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
 possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general description 
 of MTIDS and instructions for its use.    
@@ -120,7 +120,7 @@ of MTIDS and instructions for its use.
 \begin{center}
 \normalsize \textbf{Zusammenfassung}\\
 \end{center}
-Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r grosse, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
+Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r gro$\ss$e, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
 MTIDS oder Matlab Toolbox for Interconnected Dynamical
 Systems. Diese Toolbox verbindet Toolboxen f\"{u}r die Graphenanalyse mit Toolboxen f\"{u}r die Simulation von dynamischen Systemen. 
 MTIDS erm\"{o}glicht die Definition und Analyse von Graphen, bei denen jeder Knoten eine spezifische dynamische Anweisung ausf\"{u}hrt. 
@@ -160,21 +160,21 @@ In this first Chapter the motivation behind the MTIDS project is explained and t
 Large-scale interconnected dynamical system are everywhere: biological systems, power and water distribution systems, the brain, 
 social interaction networks, economic markets, etc. In a canonical form all of this systems can be thought as a bunch of nodes with local dynamics 
 that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
-large scale interconnected systems can be seen in Figure \ref{largePic}. 
+large-scale interconnected systems can be seen in Figure \ref{largePic}. 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/complex.eps}
-\caption[Example of large-scale systems]{Visualization of various large scale systems using the sfdp algorithm $\copyright$ Dr. Yifan Hu of AT\&T Labs}
+\caption[Example of large-scale systems]{Visualization of various large-scale systems using the sfdp algorithm\footnote{\href{http://www2.research.att.com/~yifanhu/}{http://www2.research.att.com/~yifanhu/}}\cite{LargeGraphs}}
 \label{largePic}
 \end{figure}
 
 There are many tools available for the analysis of interconnected dynamical systems, for example, in power systems you have PSSE and Power Factory. However,
 this simulation programs are normally very system specific and in most cases it takes a long time to learn how to use them correctly. 
-The difficulties are specially noticed while
-testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation set up. 
-You may actually end up spending the most of your time in the implementation of a simulation. A more general and 
+The difficulties are especially noticed while
+testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation setup. 
+You may actually end up spending the most of your time on the implementation of a simulation. A more general and 
 easy to use solution for the simulation of interconnected dynamical systems is needed.
 
 
@@ -201,7 +201,7 @@ we use Simulink\cite{MatlabDocu}.
 
 \section{Framework}
 
-The current framework of MTID is made out of three basic components. A GUI (\textbf{mtids.m}) an export to simulink function (\textbf{exportSimulink.m}) and
+The current framework of MTID is made out of three basic components. A GUI function (\textbf{mtids.m}), an export to Simulink function (\textbf{exportSimulink.m}) and
 an import from Simulink function (\textbf{importSimulink.m}).\\
 
  
@@ -213,7 +213,7 @@ an import from Simulink function (\textbf{importSimulink.m}).\\
 \label{componentsFig}
 \end{figure}
 
-In Figure \ref{componentsFig} we can see that the most important component is the user, specially its head. The better you are at producing templates
+In Figure \ref{componentsFig} we can see that the most important component is the user, especially his/her head. The better you are at producing templates
 and interacting with Matlab and Simulation the more functional MTIDS is going to be for you.
 In a nutshell MTIDS works as follows:
 \begin{itemize}
@@ -246,7 +246,7 @@ Graphs are an easy way of representing networked structures. A graph consists of
 \textbf{In this project, we consider only simple, undirected and unweighted graphs.} \linebreak
 
 Algebraic graph theory describes graph properties using numbers (like invariants) and equations.
-It is important first, to convert the graphical representation of a graph into a mathematically sound description like
+It is important first, to convert the graphical representation of a graph into mathematically sound description like
 matrices. Once a the corresponding matrices (like the Laplacian or adjacency matrices) have been derived, we can calculate it's properties \cite{NCS} 
 
 The use of linear algebraic tools like rank, eigenvalue and eigenvector extraction of graph matrices is called \textit{Spectral Graph Theory} 
@@ -265,7 +265,7 @@ It describes the heterogenity between the connections to the nodes.
 
 \subsubsection{Maximal number of edges and graph density}
 A complete graph is a graph where every vertex is connected to every other vertex. 
-The number of vertices inside a complete graph is:
+The number of edges inside a complete graph is:
 \begin{equation}
  N_{e_{MAX}} = \frac{1}{2} N_v \left( N_v - 1  \right)
 \end{equation}  
@@ -376,7 +376,7 @@ Connections in MTIDS are bidirectional.
 
 \begin{figure}[h!]
  \centering
- \includegraphics{./pics/mtids-ui-topologies.eps}
+ \includegraphics[width= 0.7\textwidth]{./pics/mtids-ui-topologies.eps}
  % mtids-ui-topologies.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=14 14 368 127
  \caption{The default topologies}
  \label{fig:mtids-ui-topologies}
@@ -647,10 +647,10 @@ In order to see the blinking in the correct time scale, you need to set up the s
 
 \subsection{The Consensus Problem Templates}
 
-The consensus or rendevous problem is a classic formulation where we see how a distributed hostless algorithm with simple
+The consensus or rendezvous problem is a classic formulation where a distributed algorithm with simple
 local interactions can achieve a well understood and studied global interaction.
 
-A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink mode 2} 
+A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink 2...}. 
 
 
 \subsubsection{Follower node:}
@@ -659,15 +659,15 @@ The consensus follower template (/templates/consensus.mdl) contains a simple loc
 \begin{equation}
 \dot{x}_i = - \gamma \sum_{j=1}^{N_v(i)}(x_i - x_j)
 \end{equation}
-Every internal integrator state is initialized on random before the simulation.
+Every internal integrator state is initialized randomly before the simulation.
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/consensus_template.eps}
 \caption[MTIDS Consensus Template]{Consensus template, \textbf{/templates/consensus.mdl}}
 \label{templateConsensusFig}
 \end{figure}
-As an example we built in MTIDS a graph containing 6 consensus follower nodes as shown on Figure \ref{ConsensusGraphFig}.
-The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. It is easily recognizable that all nodes tend to a common state.
+MTIDS comes with a build in example of 6 consensus follower nodes, shown in Figure \ref{ConsensusGraphFig}.
+The results of the simulation are shown in Figure \ref{ConsensusStatePlotFig}. As we can see all nodes tend to a common state.
 
 \begin{figure}[htb]
 \centering
@@ -687,7 +687,7 @@ The results of the simulation are shown on Figure \ref{ConsensusStatePlotFig}. I
 \subsubsection{Static Leader:}
 
 A static leader node is a node which stays on a specific point in state-space.
-It has following dynamics:
+It has the following dynamic:
 
 \begin{equation}
 \dot{x}_i = 0
@@ -704,21 +704,20 @@ It has following dynamics:
 \label{templateConsensusLeaderFig}
 \end{figure}
 
-\subsubsection{linmod() Example with the Consensus Problem:}
-Matlab function linmod() extracts a continuos linearized state-space model of a system around the operating point.
-Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
-Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
+%\subsubsection{linmod() Example with the Consensus Problem:}
+%Matlab function linmod() extracts a continuous linearized state-space model of a system around the operating point.
+%Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
+%Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
+%
+%We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
+%The output of linmod() can be used as a LTI-system which can be analyzed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
+%\begin{figure}[htb]
+%\centering
+%\includegraphics[width=0.7\textwidth]{pics/Consensus_linmod.eps}
+%\caption[linmod() Example Output]{linmod() example output}
+%\label{ConsensusLinmodFig}
+%\end{figure}
 
-We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
-The output of linmod() can be used as a LTI-system which to be analysed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{pics/Consensus_linmod.eps}
-\caption[linmod() Example Output]{linmod() example output}
-\label{ConsensusLinmodFig}
-\end{figure}
-
-\pagebreak
 \section{Layering/Clustering Nodes} \label{layering}
 
 
@@ -881,7 +880,7 @@ Sometimes the nodes are imported in a different order, to correct this click on 
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\textwidth]{pics/mtidsImport.eps}
+\includegraphics[width=0.7\textwidth]{pics/mtidsImport.eps}
 \caption[MTIDS import from Simulink]{MTIDS import from Simulink}
 \label{mtidsImportFig}
 \end{figure} 
@@ -899,7 +898,7 @@ There are still some issues and functions which will improve or be implemented i
 \begin{itemize}
  \item Support for full import from Simulink.
  \item Support for switching and random interconnections.
- \item Export to Simulink ``wizzard``.
+ \item Export to Simulink ``wizard``.
  \item Support for directed graphs.
  \item GUI for interaction with the Control Toolbox.
 \end{itemize}

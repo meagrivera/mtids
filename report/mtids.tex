@@ -112,7 +112,7 @@ Submitted &  04.07.2011 \\
 \begin{abstract}
 The goal of this project was to develop a test rig for large-scale and interconnected dynamical systems. The result is
 MTIDS or Matlab Toolbox for Interconnected Dynamical Systems, which is a mash-up that wraps different toolboxes used for graph analysis and 
-dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assign to it. 
+dynamic systems simulation together. MTIDS allows the definition and analysis of graphs, where each node has a specific dynamic assigned to it. 
 The template based design of nodes' dynamics allows great flexibility for the creation of complex interconnected dynamical systems with the 
 possibility of implementing clusters/layers. MTIDS is an open-source project under the GNU GPL v2 license. This document presents a general description 
 of MTIDS and instructions for its use.    
@@ -120,7 +120,7 @@ of MTIDS and instructions for its use.
 \begin{center}
 \normalsize \textbf{Zusammenfassung}\\
 \end{center}
-Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r grosse, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
+Ziel dieses Projektes war es, eine Testvorrichtung f\"{u}r gro$\ss$e, gekoppelte dynamische Systeme zu entwickeln. Das Ergebnis ist 
 MTIDS oder Matlab Toolbox for Interconnected Dynamical
 Systems. Diese Toolbox verbindet Toolboxen f\"{u}r die Graphenanalyse mit Toolboxen f\"{u}r die Simulation von dynamischen Systemen. 
 MTIDS erm\"{o}glicht die Definition und Analyse von Graphen, bei denen jeder Knoten eine spezifische dynamische Anweisung ausf\"{u}hrt. 
@@ -160,21 +160,21 @@ In this first Chapter the motivation behind the MTIDS project is explained and t
 Large-scale interconnected dynamical system are everywhere: biological systems, power and water distribution systems, the brain, 
 social interaction networks, economic markets, etc. In a canonical form all of this systems can be thought as a bunch of nodes with local dynamics 
 that interact with each other, e.g. a graph. Different topologies of the graph, may lead to different behavior. An example of various 
-large scale interconnected systems can be seen in Figure \ref{largePic}. 
+large-scale interconnected systems can be seen in Figure \ref{largePic}\footnote{\href{http://www2.research.att.com/~yifanhu/}{http://www2.research.att.com/~yifanhu/}} \cite{LargeGraphs}. 
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{pics/complex.eps}
-\caption[Example of large-scale systems]{Visualization of various large scale systems using the sfdp algorithm $\copyright$ Dr. Yifan Hu of AT\&T Labs}
+\caption[Example of large-scale systems]{Visualization of various large-scale systems using the sfdp algorithm\cite{LargeGraphs}}
 \label{largePic}
 \end{figure}
 
 There are many tools available for the analysis of interconnected dynamical systems, for example, in power systems you have PSSE and Power Factory. However,
 this simulation programs are normally very system specific and in most cases it takes a long time to learn how to use them correctly. 
-The difficulties are specially noticed while
-testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation set up. 
-You may actually end up spending the most of your time in the implementation of a simulation. A more general and 
+The difficulties are especially noticed while
+testing control concepts, where small changes on the topology of the grid or control concept could lead to a painful redesign of your simulation setup. 
+You may actually end up spending the most of your time on the implementation of a simulation. A more general and 
 easy to use solution for the simulation of interconnected dynamical systems is needed.
 
 
@@ -183,7 +183,7 @@ easy to use solution for the simulation of interconnected dynamical systems is n
 \section{Idea and Goal}
 
 \textbf{MTIDS} (Matlab Toolbox for Interconnected Dynamical Systems) is a project that aims to design an easy 
-to use and flexible toolbox to make the simulation of large scale dynamical systems easier for students and researchers. 
+to use and flexible toolbox to make the simulation of large-scale dynamical systems easier for students and researchers. 
 The \textbf{goal} is to produce a mash-up that wraps different toolboxes used for graph analysis and 
 dynamic systems simulation together into a framework.  
 
@@ -196,12 +196,12 @@ dynamic systems simulation together into a framework.
 \end{figure}
 
 As we can see in Figure \ref{mtidsFig} MTIDS runs in the MATLAB environment and is basically a GUI that allows the interaction of tools used in graph theory 
-and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the John Hopkins University \cite{MatgraphByExample} and for dynamical simulations
+and control theory.  For graph theory we use Matgraph a toolbox design by Prof. Scheinerman of the Johns Hopkins University \cite{MatgraphByExample} and for dynamical simulations
 we use Simulink\cite{MatlabDocu}. 
 
 \section{Framework}
 
-The current framework of MTID is made out of three basic components. A GUI (\textbf{mtids.m}) an export to simulink function (\textbf{exportSimulink.m}) and
+The current framework of MTID is made out of three basic components. A Matlab GUI function (\textbf{mtids.m}), an export to Simulink function (\textbf{exportSimulink.m}) and
 an import from Simulink function (\textbf{importSimulink.m}).\\
 
  
@@ -213,7 +213,7 @@ an import from Simulink function (\textbf{importSimulink.m}).\\
 \label{componentsFig}
 \end{figure}
 
-In Figure \ref{componentsFig} we can see that the most important component is the user, specially its head. The better you are at producing templates
+In Figure \ref{componentsFig} we can see that the most important component is the user, especially his/her head. The better you are at producing templates
 and interacting with Matlab and Simulation the more functional MTIDS is going to be for you.
 In a nutshell MTIDS works as follows:
 \begin{itemize}
@@ -246,8 +246,8 @@ Graphs are an easy way of representing networked structures. A graph consists of
 \textbf{In this project, we consider only simple, undirected and unweighted graphs.} \linebreak
 
 Algebraic graph theory describes graph properties using numbers (like invariants) and equations.
-It is important first, to convert the graphical representation of a graph into a mathematically sound description like
-matrices. Once a the corresponding matrices (like the Laplacian or adjacency matrices) have been derived, we can calculate it's properties \cite{NCS} 
+It is important first, to convert the graphical representation of a graph into mathematically sound description like
+matrices. Once a the corresponding matrices (like the Laplacian or adjacency matrices) have been derived, we can calculate it's properties \cite{godsil2001algebraic} 
 
 The use of linear algebraic tools like rank, eigenvalue and eigenvector extraction of graph matrices is called \textit{Spectral Graph Theory} 
 
@@ -265,7 +265,7 @@ It describes the heterogenity between the connections to the nodes.
 
 \subsubsection{Maximal number of edges and graph density}
 A complete graph is a graph where every vertex is connected to every other vertex. 
-The number of vertices inside a complete graph is:
+The number of edges inside a complete graph is:
 \begin{equation}
  N_{e_{MAX}} = \frac{1}{2} N_v \left( N_v - 1  \right)
 \end{equation}  
@@ -294,7 +294,7 @@ All other components for $(D)_{ij}$ $i \ne j$ are zero.
 \begin{equation}
   (D)_{ij} = \left\{ \begin{array}{ll}
 0  & \mbox{if $i \ne j$} \\
-N_v(i) & \mbox{if $i = j$}
+ deg(v_i) & \mbox{if $i = j$}
                 \end{array} \right. 
 \end{equation}
 
@@ -304,21 +304,21 @@ The Laplacian matrix is defined as the degree matrix $D$ minus the adjacency mat
 \begin{equation}
  L = D - A
 \end{equation} 
-The Laplacian matrix is used to characterize the algebraic connectivity of a graph.
+The Laplacian matrix is used to derive algebraic graph properties.
 
 \subsection{Algebraic connectivity and Fiedler vector}
 \subsubsection{Algebraic connectivity}
-For sorted the sorted eigenvalues of the Laplacian matrix
+For the sorted eigenvalues of the Laplacian matrix
 $ \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_{N_v} $
-we define the algebraic connectivity as the first nonzero eigenvalue. It's corresponding eigenvector is the Fiedler vector.
-The algebraic connectivity is a meassure of how connected a system is. For example, in the consensus problem, the algebraic connectivity describes the rate of convergence of the system to it's final state. 
+we define the algebraic connectivity as the first nonzero eigenvalue. Its corresponding eigenvector is the Fiedler vector.
+The algebraic connectivity is a meassure of how connected a system is. For example, in the consensus problem, the algebraic connectivity describes the rate of convergence of the system to its final state. 
 
 \subsubsection{Number of connected subgraphs}
-The multiplicity of the zero eigenvalue ot the Laplacian matrix is the number of connected subgraphs inside the system. This is also the rank of the nullspace of the Laplacian matrix
+The multiplicity of the zero eigenvalue ot the Laplacian matrix is the number of connected subgraphs inside the system. This is also the rank of the nullspace of Laplacian matrix
 $Rank( {Null}(L)) $.
-From the rank-nullity theorem of linear algebra we know that the rank of a matrix and the rank of it's nullspace add up to the number of collumns. Therefore for a square matrix, the rank of the nullspace can be calculated using:
+From the rank-nullity theorem of linear algebra we know that the rank of a matrix and the rank of it's nullspace add up to the number of columns. Therefore for a square matrix, the rank of the nullspace can be calculated using:
  \begin{equation}
- Rank( {Null}(L) ) = Rank(L) - N_v
+ Rank( {Null}(L) ) = N_v -  Rank(L)
 \end{equation} 
 \vspace{10cm}
 %\subsection{Estrada Index}
@@ -469,7 +469,7 @@ To adjust the size of the model to the Simulink window size: \textbf{View $\righ
 
 In Figure \ref{exportFig}, the nodes are ordered in a circle, the topology of the system defined in MTIDS remains. The circle arrangement is a 
 design decision, made, in order to allow a better access to the nodes. Each one of the nodes is a subsystem block. The dynamic of the nodes is defined inside
-the subsystem block. Moreover, depending on the MTIDS export concept choosen, the number of inputs of a node will be different, compare with a zoom 
+the subsystem block. Moreover, depending on the MTIDS export concept chosen, the number of inputs of a node will be different, compare with a zoom 
 of the first node for our example in Figure \ref{nodeFig}. \\
  
 \begin{figure}[htb]
@@ -491,8 +491,8 @@ make the parametrization of the nodes' dynamics easier.
 \section{Nodes' Dynamics}
 
 As mentioned in the past section \ref{exportToSimulink} each node defined in MTIDS is exported to Simulink as a subsystem. The exportSimulink.m function 
-uses predefined dynamic templates, which are modified according to the, in MTIDS, defined topology. Next, we explain how to define your own templates and
-show how to use 2 preloaded templates: the LTI template and the kuramoto template. This templates can be found in the \textbf{/templates} directory. 
+uses predefined dynamic templates, which are modified according to the, according to the topology defined in MTIDS. Next, we explain how to define your own templates and
+show how to use 2 preloaded templates: the LTI template and the Kuramoto template. This templates can be found in the \textbf{/templates} directory. 
 
 
 \subsection{Build your own Template} \label{nodeTemplate}
@@ -508,7 +508,7 @@ The real power of MTIDS depends on your ability to build templates.
 In Figure \ref{templateFig} we can see the components that each template should have: an in-port connected to a mux and an out-port.
 Between the mux and the out-port you can design your own custom dynamics. The input to the system comes from the mux block as vector, which is composed by the values
 entering the node/subsystem. The output of your system should also be aggregated to a vector and routed to the out-port. The separation of the different inputs and outputs 
-is left to the system's designer. With a well thought architecture complex systems are very easy to achieve, please refer to the LTI and kuramoto template examples.  
+is left to the system's designer. With a thought out architecture complex systems are very easy to achieve, please refer to the LTI and Kuramoto template examples.  
 \\
 
 The dynamic of a node can be as simple as a junction that only reroutes the incoming signals or more complicated to include controllers and systems inside of it. It is this feature that allows
@@ -616,7 +616,7 @@ nodes without getting any errors.
 For more complicated LTI models we recomend creating many different LTI templates.
 
 \subsection{The Kuramoto Template}
-The kuramoto template is an example of a non-linear dynamic for a node. This kuramoto model is used to model the behavior of coupled oscillators. One of the interesting behaviors
+The Kuramoto template is an example of a non-linear dynamic for a node. This Kuramoto model is used to model the behavior of coupled oscillators. One of the interesting behaviors
 that may occur in this type of systems is synchronization. The mathematical equation of $N$ coupled oscillators is written for each oscillator $i$ as
 \begin{equation}\label{kuramotoFor}
  \dot{\theta_i} = \omega_i + \frac{K}{N} \sum_{j=1}^N \sin(\theta_j-\theta_i). 
@@ -631,7 +631,7 @@ that may occur in this type of systems is synchronization. The mathematical equa
 \label{templateKuramotoFig}
 \end{figure}
  
-In Figure \ref{templateKuramotoFig} we see  the MTIDS's kuramoto template after formula (\ref{kuramotoFor}). The goal was to model fireflies synchronization, thus
+In Figure \ref{templateKuramotoFig} we see  the MTIDS's Kuramoto template after formula (\ref{kuramotoFor}). The goal was to model fireflies synchronization, thus
 the model has an embedded function that changes the color of the parent block for a defined threshold, this mimics the flashing of a firefly.
 With the right parameters one can build a synchronizing firefly colony using MTIDS. Remember that the kuramoto.mdl template needs to be added in MTIDS:
 Dynamics $\rightarrow$ Add mdl template. You also need to set up the right parameters for synchronization, an example can be seen in Figure \ref{syncFig}.
@@ -647,7 +647,7 @@ In order to see the blinking in the correct time scale, you need to set up the s
 
 \subsection{The Consensus Problem Templates}
 
-The consensus or rendezvous problem is a classic formulation where a distributed host-less algorithm with simple
+The consensus or rendezvous problem is a classic formulation where a distributed algorithm with simple
 local interactions can achieve a well understood and studied global interaction.
 
 A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink 2...}. 
@@ -657,7 +657,7 @@ A graph built in MTIDS using consensus nodes should be exported using the \textb
 The consensus follower template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
  This model is the realization of the local (decoupled) model is (as in \cite{NCS}):
 \begin{equation}
-\dot{x}_i = - \gamma \sum_{j=1}^{N_v(i)}(x_i - x_j)
+\dot{x}_i = - \gamma \sum_{j=1}^{N}(x_i - x_j)
 \end{equation}
 Every internal integrator state is initialized randomly before the simulation.
 \begin{figure}[htb]
@@ -704,19 +704,19 @@ It has the following dynamic:
 \label{templateConsensusLeaderFig}
 \end{figure}
 
-\subsubsection{linmod() Example with the Consensus Problem:}
-Matlab function linmod() extracts a continuous linearized state-space model of a system around the operating point.
-Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
-Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
-
-We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
-The output of linmod() can be used as a LTI-system which can be analyzed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.7\textwidth]{pics/Consensus_linmod.eps}
-\caption[linmod() Example Output]{linmod() example output}
-\label{ConsensusLinmodFig}
-\end{figure}
+%\subsubsection{linmod() Example with the Consensus Problem:}
+%Matlab function linmod() extracts a continuous linearized state-space model of a system around the operating point.
+%Every block inside the main system is linearized individually. The outputs of this function are the standard A,B,C,D matrices of an LTI-model.
+%Usage of linmod: \verb|[A,B,C,D] = linmod(sys)|.
+%
+%We see that the result shown in Figure \ref{ConsensusLinmodFig} correspond to the negative of the Laplacian matrix of the graph shown in Figure \ref{ConsensusGraphFig}.
+%The output of linmod() can be used as a LTI-system which can be analyzed using the Matlab Control Toolbox for stability, controller synthesis, etc. 
+%\begin{figure}[htb]
+%\centering
+%\includegraphics[width=0.7\textwidth]{pics/Consensus_linmod.eps}
+%\caption[linmod() Example Output]{linmod() example output}
+%\label{ConsensusLinmodFig}
+%\end{figure}
 
 \section{Layering/Clustering Nodes} \label{layering}
 
@@ -898,7 +898,7 @@ There are still some issues and functions which will improve or be implemented i
 \begin{itemize}
  \item Support for full import from Simulink.
  \item Support for switching and random interconnections.
- \item Export to Simulink ``wizzard``.
+ \item Export to Simulink ``wizard``.
  \item Support for directed graphs.
  \item GUI for interaction with the Control Toolbox.
 \end{itemize}

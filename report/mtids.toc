@@ -38,18 +38,17 @@
 \contentsline {subsection}{\numberline {3.3.4}The Consensus Problem Templates}{21}{subsection.3.3.4}
 \contentsline {subsubsection}{Follower node:}{21}{section*.16}
 \contentsline {subsubsection}{Static Leader:}{23}{section*.17}
-\contentsline {subsubsection}{linmod() Example with the Consensus Problem:}{23}{section*.18}
-\contentsline {section}{\numberline {3.4}Layering/Clustering Nodes}{24}{section.3.4}
+\contentsline {section}{\numberline {3.4}Layering/Clustering Nodes}{23}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Create a layer/cluster}{24}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Build your own Interface Node}{25}{subsection.3.4.2}
-\contentsline {section}{\numberline {3.5}Working in Simulink}{26}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}Simulation Parameters}{26}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.4.2}Build your own Interface Node}{24}{subsection.3.4.2}
+\contentsline {section}{\numberline {3.5}Working in Simulink}{25}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Simulation Parameters}{25}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}Solver}{26}{subsection.3.5.2}
-\contentsline {subsection}{\numberline {3.5.3}Visualize Simulation Data}{27}{subsection.3.5.3}
-\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{28}{subsection.3.5.4}
-\contentsline {section}{\numberline {3.6}Import from Simulink}{28}{section.3.6}
+\contentsline {subsection}{\numberline {3.5.3}Visualize Simulation Data}{26}{subsection.3.5.3}
+\contentsline {subsection}{\numberline {3.5.4}Working with a closed Model}{26}{subsection.3.5.4}
+\contentsline {section}{\numberline {3.6}Import from Simulink}{27}{section.3.6}
 \contentsline {chapter}{\numberline {4}Future Development and Conclusion}{29}{chapter.4}
 \contentsline {section}{\numberline {4.1}Future Development}{29}{section.4.1}
 \contentsline {section}{\numberline {4.2}Conclusion}{30}{section.4.2}
 \contentsline {chapter}{List of Figures}{31}{section.4.2}
-\contentsline {chapter}{Bibliography}{33}{chapter*.19}
+\contentsline {chapter}{Bibliography}{33}{chapter*.18}
