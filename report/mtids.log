@@ -1,12 +1,11 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.6.18)  30 JUN 2011 16:12
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.7)  30 JUN 2011 18:19
 entering extended mode
  %&-line parsing enabled.
 **mtids.tex
 (./mtids.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, ngerman, german, german-x-2009-06-19, ngerman-x-2009-06-19, spanish
-, galician, catalan, loaded.
+yphenation, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/report.cls
 Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size12.clo
@@ -504,12 +503,7 @@ Underfull \vbox (badness 5245) has occurred while \output is active []
  [22]
 File: pics/consensus_leader_template.eps Graphic file (type eps)
 
-<pics/consensus_leader_template.eps>
-Underfull \hbox (badness 10000) in paragraph at lines 724--729
-
- []
-
-[23]
+<pics/consensus_leader_template.eps> [23]
 Underfull \hbox (badness 10000) in paragraph at lines 732--734
 
  []
@@ -518,23 +512,27 @@ File: pics/screenLayer.eps Graphic file (type eps)
 <pics/screenLayer.eps>
 File: pics/screenLayers.eps Graphic file (type eps)
  <pics/screenLayers.eps>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24]
 Underfull \hbox (badness 10000) in paragraph at lines 764--765
 
  []
 
 File: pics/interfaceTemplate.eps Graphic file (type eps)
-<pics/interfaceTemplate.eps> [24] [25]
+<pics/interfaceTemplate.eps> [25]
 File: pics/screenSim1.eps Graphic file (type eps)
  <pics/screenSim1.eps>
 Underfull \hbox (badness 10000) in paragraph at lines 807--811
 
  []
 
+[26]
 File: pics/screenSim2.eps Graphic file (type eps)
-<pics/screenSim2.eps>
+ <pics/screenSim2.eps>
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 826.
- [26]
+
 Underfull \hbox (badness 10000) in paragraph at lines 870--872
 
  []
@@ -590,12 +588,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 5362 strings out of 494963
- 76263 string characters out of 1179328
- 155117 words of memory out of 3000000
- 8435 multiletter control sequences out of 15000+50000
+ 5362 strings out of 495062
+ 76263 string characters out of 1182645
+ 155097 words of memory out of 3000000
+ 8414 multiletter control sequences out of 15000+50000
  11890 words of font info for 42 fonts, out of 3000000 for 9000
- 54 hyphenation exceptions out of 8191
+ 28 hyphenation exceptions out of 8191
  38i,14n,48p,299b,357s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on mtids.dvi (35 pages, 136284 bytes).
+Output written on mtids.dvi (35 pages, 136240 bytes).
