@@ -657,10 +657,11 @@ A graph built in MTIDS using consensus nodes should be exported using the \textb
 
 \subsubsection{Consensus node:}
 The consensus template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
- This model is the realization of the local (decoupled) model is (as in \cite{NCS}):
+ This model is the realization of the local (decoupled) model (as in \cite{NCS}):
 \begin{equation}
-\dot{x}_i = - \gamma \sum_{j=1}^{N}(x_i - x_j)
+\dot{x}_i = - \gamma \sum_{j \in \mathcal{N}_i}(x_i - x_j)
 \end{equation}
+where $\mathcal{N}_i$ is the set of nodes connected to node $i$.
 Every internal integrator state is initialized randomly before the simulation.
 \begin{figure}[htb]
 \centering
