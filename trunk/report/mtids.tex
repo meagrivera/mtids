@@ -474,10 +474,10 @@ of the first node for our example in Figure \ref{nodeFig}. \\
  
 \begin{figure}[htb]
 \centering
-\mbox{\subfigure[Node for concept 1]{\includegraphics[width=.5 \textwidth]{pics/screenNode.eps} }\quad
-\subfigure[Node for concept 2]{\includegraphics[width=.5\textwidth]{pics/screenConcept2.eps}  }}
+\mbox{\subfigure[Node for concept 1: Matrix based description of the whole system, e.g. LTI.]{\includegraphics[width=.45 \textwidth]{pics/screenNode.eps} }\quad
+\subfigure[Node for concept 2: Agent or subsystem based description of each node, e.g. kuramoto, consensus.]{\includegraphics[width=.45\textwidth]{pics/screenConcept2.eps}  }}
 \caption[MTIDS node in Simulink]{Node inputs and output: (a) Each node has an in-port for every node in the model and a single out-port. 
-(b) Each node has an in-port for nodes connected to it and a single out-port. Example is the first node of a complete graph with 10 LTI nodes. }
+(b) Each node has an in-port for nodes connected to it and a single out-port. Example is the first node of a complete graph with 10 LTI nodes. For more detail please refer to section \ref{subsystemConcept}. }
 \label{nodeFig}
 \end{figure}
 
@@ -548,6 +548,7 @@ or
 \begin{equation}
  \dot{x}=Ax+Bu
 \end{equation}
+For simplicity, we suppose that all the subsystems have the same dimension. 
 The local view of a single subsystem/node (here for the first node) is:
 \begin{eqnarray}
   \dot{x_1}= 
@@ -600,8 +601,9 @@ To implement this dynamic as a template we make use of the State-Space block.
 \end{figure}
  
 The LTI template shown in Figure \ref{templateLTIFig} can be used in MTIDS to create interconnected LTI systems with different topologies. One way to avoid 
-the work of parameterizing the A,B,C and D matrix of every node separately, is to define the same matrix for all subsystems. Using formula 
-(\ref{LTIFor}) and exporting with \textbf{concept 1} we can define an A, B, C, and D matrix for every node. An example can be
+the work of parameterizing the A,B,C and D matrix of every LTI node separately, is to define the same matrix for all subsystems. Using formula 
+(\ref{LTIFor}) and exporting with \textbf{concept 1} we can define an $A$, B, C, and D matrix for every node. Here the matrix A, B, C, and D corresnpond to the 
+parameters of the LTI block, in other words the local dynamics of the node. An example for identical nodes can be
 \begin{eqnarray}
  A&=& 1\nonumber\\
 B&=&[-1 \cdots -1]^{1\times N}\nonumber\\
@@ -645,7 +647,7 @@ In order to see the blinking in the correct time scale, you need to set up the s
 \label{syncFig}
 \end{figure}
 
-\subsection{The Consensus Problem Templates}
+\subsection{The Consensus and Leader-Following Problem Templates}
 
 The consensus or rendezvous problem is a classic formulation where a distributed algorithm with simple
 local interactions can achieve a well understood and studied global interaction.
@@ -653,8 +655,8 @@ local interactions can achieve a well understood and studied global interaction.
 A graph built in MTIDS using consensus nodes should be exported using the \textbf{Export to Simulink 2...}. 
 
 
-\subsubsection{Follower node:}
-The consensus follower template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
+\subsubsection{Consensus node:}
+The consensus template (/templates/consensus.mdl) contains a simple local dynamical model using standard Simulink blocks (see Figure \ref{templateConsensusFig}).
  This model is the realization of the local (decoupled) model is (as in \cite{NCS}):
 \begin{equation}
 \dot{x}_i = - \gamma \sum_{j=1}^{N}(x_i - x_j)
@@ -671,20 +673,20 @@ The results of the simulation are shown in Figure \ref{ConsensusStatePlotFig}. A
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.6\textwidth]{pics/consensus_graph.eps}
+\includegraphics[width=0.5\textwidth]{pics/consensus_graph.eps}
 \caption[Consensus Graph Example]{Consensus Graph Example}
 \label{ConsensusGraphFig}
 \end{figure}
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.6\textwidth]{pics/consensus_fig.eps}
+\includegraphics[width=0.5\textwidth]{pics/consensus_fig.eps}
 \caption[Consensus State Plot]{Consensus State Plot}
 \label{ConsensusStatePlotFig}
 \end{figure}
 \pagebreak
 
-\subsubsection{Static Leader:}
+\subsubsection{Static Leader node:}
 
 A static leader node is a node which stays on a specific point in state-space.
 It has the following dynamic:
@@ -699,8 +701,8 @@ It has the following dynamic:
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.6\textwidth]{pics/consensus_leader_template.eps}
-\caption[MTIDS Consensus Leader Template]{Consensus leader template, \textbf{/templates/consensus leader.mdl}}
+\includegraphics[width=0.5\textwidth]{pics/consensus_leader_template.eps}
+\caption[MTIDS static Leader Template]{Static leader template, \textbf{/templates/consensus leader.mdl}}
 \label{templateConsensusLeaderFig}
 \end{figure}
 
@@ -717,7 +719,7 @@ It has the following dynamic:
 %\caption[linmod() Example Output]{linmod() example output}
 %\label{ConsensusLinmodFig}
 %\end{figure}
-
+\pagebreak
 \section{Layering/Clustering Nodes} \label{layering}
 
 
@@ -765,7 +767,7 @@ The user may define your own interface node template using the interface node sc
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{pics/interfaceTemplate.eps}
+\includegraphics[width=0.45\textwidth]{pics/interfaceTemplate.eps}
 \caption[MTIDS interface node scratch template]{Interface node, scratch template model : \textbf{interfaceTemplate.mdl}.}
 \label{interfaceFig}
 \end{figure}
