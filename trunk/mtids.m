@@ -878,7 +878,7 @@ if reset == 1
     rmxy(g);
 end
 
-if(ne(g)>0)
+if(ne(g)>0) %check if there are vertices in the current graph
     basic_stats(eventdata, handles);
 else
     set(handles.connected_graphs,'String', '0');
@@ -891,7 +891,7 @@ else
     set(handles.algebraic_connectivity,'String', '0');
 end
 
-
+% check for choice of vertex-layout
 if strcmp(checklabel, 'on')
     ldraw(g);
 elseif strcmp(checkcolor, 'on')
