@@ -1,4 +1,4 @@
-function add(g,i,j)
+function add(g,i,j,dir)
 % add --- add edge(s) to the graph
 % add(g,i,j) --- adds the edge ij
 % add(g,elist) --- adds edges specified in elist to the graph
@@ -9,6 +9,19 @@ function add(g,i,j)
 global GRAPH_MAGIC
 n = nv(g);
 
+if nargin == 4 %switch to directed graphs, interpret i as the node, from which an edge should be directed to j
+    if (i==j) || (i<1) || (j<1) 
+        return
+    end
+    
+    %maxij = max(i,j);
+    %if maxij > n
+    %    resize(g,maxij)
+    %end
+    
+    GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 1;
+    
+end
 
 if nargin == 3
     if (i==j) || (i<1) || (j<1) 
