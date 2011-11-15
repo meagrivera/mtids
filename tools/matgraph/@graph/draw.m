@@ -26,8 +26,8 @@ xy = getxy(g);
 
 elist = edges(g);
 for j=1:ne(g)
-    u = elist(j,1);
-    v = elist(j,2);
+    u = elist(j,1); %from u ...
+    v = elist(j,2); % ... to v
     x = xy([u,v],1);
     y = xy([u,v],2);
     line(x,y,'Color', edge_color,'LineStyle',line_style);
