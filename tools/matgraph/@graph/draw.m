@@ -1,20 +1,27 @@
-function draw(g,line_style)
+function draw(g,dir,line_style)
 % draw(g) --- draw g in a figure window
-% draw(g,line_style) --- lines have given line_style
+% draw(g,dir) --- interpret g as a directed graph
+% draw(g,dir,line_style) --- lines have given line_style
 % see also ndraw, ldraw, and cdraw
   
+if nargin < 3
+    line_style='-';
+end
+
+if nargin < 2
+    dir = 0;
+end
+
 % edit these to change the colors 
 edge_color = 'b';
 vertex_color = 'r';
 vertex_fill = 'w';
 r = 0.15;
-  
-n = nv(g);
-  
-if nargin < 2
-    line_style='-';
-end
 
+%step: needed for non-line connection between nodes
+step = 0.15;
+
+n = nv(g);
 
 if ~hasxy(g)
     embed(g);
@@ -25,14 +32,53 @@ xy = getxy(g);
 % first draw the edges
 
 elist = edges(g);
-for j=1:ne(g)
-    u = elist(j,1); %from u ...
-    v = elist(j,2); % ... to v
-    x = xy([u,v],1);
-    y = xy([u,v],2);
-    line(x,y,'Color', edge_color,'LineStyle',line_style);
+
+if dir == 0 %interpret graph as undirected
+    for j=1:ne(g)
+        u = elist(j,1); %from u ...
+        v = elist(j,2); % ... to v
+        x = xy([u,v],1);
+        y = xy([u,v],2);
+        line(x,y,'Color', edge_color,'LineStyle',line_style);
+    end
 end
 
+if dir == 1 % interpret graph as directed
+    for j=1:ne(g)
+        u = elist(j,1); %from u ...
+        v = elist(j,2); % ... to v
+
+        %prepare start and end coordinates
+        from = xy(u,:)';
+        to = xy(v,:)';
+        %vector from outgoing vertex to incoming vertex
+        ft = xy(v,:)'-xy(u,:)';
+        %prepare the orthogonal of the line connection between both vertices
+        ftT = [-ft(2); ft(1)];
+        %prepare middle of line connection between both vertices
+        middle = 0.5*(xy(u,:)'+xy(v,:)');
+        %Via-point of connection line, needed for quadratic interpolation
+        via = middle + step*ftT/norm(ftT); %step: distance of via point from middle of line connection between outoing and incoming vertex
+
+        %generate quadratic interpolation coefficients
+        P = polyfit([from(1);via(1);to(1)],[from(2);via(2);to(2)],2);
+        
+        %prepare x-values of connection
+        x = linspace(to(1),from(1));
+        
+        line(x,P(1)*x.^2+P(2)*x+P(3),'Color', edge_color,'LineStyle',line_style);
+        
+        %test: slope at position of arrow (atop)
+        slope=P(1)*2*x(95)+P(2);
+        %get point of curve, on which the arrow should lie
+        atop=[x(95);P(1).*x(95).^2+P(2).*x(95)+P(3)];
+        %compute y-axis-abschnitt
+        t=atop(2)-slope*atop(1);
+        %plot slope through atop
+        line([x(50);x(100)],[slope*x(50)+t;slope*x(100)+t]);
+
+    end       
+end
 
 % now draw the vertices
   
