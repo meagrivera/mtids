@@ -102,6 +102,10 @@ set(handles.numberview,'Check','on');
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
 
+% Parameter to divide the modus "undirected" / "directed": dir
+% To start the program, activate "undirected"
+% dir = 0;
+
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -889,6 +893,7 @@ else
     set(handles.maximum_degree,'String', '0');
     set(handles.graph_heterogenity,'String', '0');
     set(handles.algebraic_connectivity,'String', '0');
+    %set(handles.graph_modus,'String', 'undirected');
 end
 
 % check for choice of vertex-layout
