@@ -1,13 +1,24 @@
-function delete(g,i,j)
+function delete(g,i,j,dir)
 % delete --- delete vertices or edges from a graph
 % delete(g,v) --- delete vertex v
 % delete(g,vlist) --- delete vertices in column vector v
 % delete(g,i,j) --- delete edge ij
+% delete(g,i,j,dir) -- delete edge while treating g as directed graph
 % delete(g,elist) --- delete edges in m-by-2 array elist
 
 global GRAPH_MAGIC
 
 n = nv(g);
+
+% This a true argument "dir" is passed, the graph will be treated as
+% directed and only the entry (i,j) in the adjacency matrix will be erased
+if (nargin > 3 && dir == 1)
+   if (i<1) || (i>n) || (j<1) || (j>n) 
+       return
+   end
+   GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 0;
+   return
+end
 
 if nargin==3   % simple delete an edge
    if (i<1) || (i>n) || (j<1) || (j>n) 

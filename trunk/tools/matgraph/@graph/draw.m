@@ -52,7 +52,7 @@ if dir == 0 %interpret graph as undirected
 end
 
 if dir == 1 % interpret graph as directed
-    for j=1:length(elist)
+    for j=1:ne(g,dir)
         u = elist(j,1); %from u ...
         v = elist(j,2); % ... to v
 

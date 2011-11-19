@@ -1,6 +1,7 @@
 function add(g,i,j,dir)
 % add --- add edge(s) to the graph
 % add(g,i,j) --- adds the edge ij
+% add(g,i,j,dir) -- treats the graph as directed
 % add(g,elist) --- adds edges specified in elist to the graph
 %                  elist is an n-by-2 array of edges
 % If an end point is larger than the number of vertices, the graph is

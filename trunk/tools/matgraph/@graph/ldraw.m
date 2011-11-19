@@ -1,23 +1,32 @@
-function ldraw(g,line_style)
-% ldraw(g,line_style) --- draw a graph with vertices marked with their labels
+function ldraw(g,dir,line_style)
+% ldraw(g,dir) -- draw a graph with vertices marked with their labels 
+%                 and treat it as directed, if dir == 1
+% ldraw(g,dir,line_style) --- give additional line_style
 % If the graph is unlabled, we use the vertex numbers instead.
 % See also draw, cdraw, and ndraw.
 
 
 if ~is_labeled(g)
     if nargin ==1
-        ndraw(g);
+        dir = 0;
+        ndraw(g,dir);
+        return
+    elseif nargin == 2
+        ndraw(g,dir);
         return
     else
-        ndraw(g,line_style)
+        ndraw(g,dir,line_style)
         return
     end
 end
 
 if nargin == 1
-    draw(g);
+    dir = 0;
+    draw(g,dir);
+elseif nargin == 2
+    draw(g,dir);
 else
-    draw(g,line_style);
+    draw(g,dir,line_style);
 end
 
 draw_labels(g);

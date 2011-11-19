@@ -1,12 +1,18 @@
-function ndraw(g,line_style)
+function ndraw(g,dir,line_style)
 % ndraw(g) --- draw g in a figure window with numbered vertices
-% ndraw(g,line_style) --- lines have given line_style
+% ndraw(g,dir) --- treat g as directed
+% ndraw(g,dir,line_style) --- lines have given line_style
 % see also draw, ldraw, and cdraw
 
-if nargin == 1
-    draw(g);
+if nargin < 2
+    dir = 0;
+    draw(g,dir);
+end
+
+if nargin < 3
+   draw(g,dir); 
 else
-    draw(g,line_style);
+    draw(g,dir,line_style);
 end
 
 xy = getxy(g);
