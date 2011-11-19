@@ -1,13 +1,13 @@
 --------------<<<<<COMPLETED CHANGES:>>>>>>>>---------------------------------------------
 
-add.m : if a 4th argument with value = 1 is prompted, then the new egde will be treated as directed
+add.m : if a 4th argument with value = 1 is prompted, then the new egde will be treated as directed.
 
-draw.m : if a 4th argument like above is promted, the edges between the vertices will be drawn as curves and with an arrow, which indicates the direction of this edge. Debugging isn't completed yet.
+draw.m : if a 4th argument like above is promted, the edges between the vertices will be drawn as curves and with an arrow, which indicates the direction of this edge. A more robust algorithm was implemented, thus the visualization works quite well.
 
 edges.m : if "dir" as an additional argument is passed, then the read-out of the adjacency-matrix will be performed as direted
 
 mtids.m
-mtids.fig : start first changes to implement the different "modus operandi": "directed" / "undirected", but no working functions were implemented yet
+mtids.fig : The visualization of directed graphs seems to work well. There is some work left, e.g. the exporting functions does not work.
 
 delete.m : if "dir" as an additional argument is passed, the deletion of an edge will be treated as directed.
 
@@ -19,20 +19,15 @@ ndraw.m : works also with an argument, that indicates, if graph is treated as di
 
 ne.m : works also with an argument, that indicates, if graph is treated as directed or not; not totally debugged until now
 
+random.m : Edited this function, to assure, that it works properly with directed graphs. Just added a few lines, to implement an own algorithm, to create random graphs. It may be poor, but quickly to write.
 
 
 --------------<<<<<CHANGES STILL TO DO:>>>>>>>>--------------------------------------------
 
-now that the dynamic visualization works (roughly) with the directed version, much bugs are visible. if bugs are heavy, details were listed here:
--check arrow direction for the "ellipse"-case
--the quadratic interpolation can only be used in the case, if both x-values are fairly distant to each other. otherwise, the interpolation generates funny things
--the ellipse-case plots the edge in both cases "from-to" and "to-from" in the same way, that the edges are overlapping
+Basic stats: i cancled out every value, which seems useless for directed graphs. Here, we should talk about purposeful algorithms, which are to implement
 
+Exporting functions: familiarize with the m-files
 
-the function "randomconnection_Callback" is not stable. It happens also in the "undirected" case. If possible, check this bug with a former version of mtids to be sure, that the bug was not ferdls fault :)
-
-
-do something with the basic stats stuff, if the modus is set to "directed", e.g. in the function refresh_graph
 
 
 

@@ -524,7 +524,14 @@ function randomgraph_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
-random(g);
+global modus;
+
+switch modus
+    case 'undirected';
+        random(g,1/2);
+    case 'directed';
+        random(g);
+end
 
 refresh_graph(0, eventdata, handles)
 
@@ -921,19 +928,47 @@ switch modus
         if(ne(g)>0) %check if there are vertices in the current graph
             basic_stats(eventdata, handles);
         else
+            set(handles.text22,'String', 'Independent Graphs:');
             set(handles.connected_graphs,'String', '0');
+            set(handles.text16,'String', 'Graph density:');
             set(handles.graph_density,'String', '0');
+            set(handles.text10,'String', 'Average degree:');
             set(handles.average_degree,'String', '0');
+            set(handles.text11,'String', 'Median degree:');
             set(handles.median_degree,'String', '0');
+            set(handles.text9,'String', 'Minimum degree:');
             set(handles.minimum_degree,'String', '0');
+            set(handles.text12,'String', 'Maximum degree:');
             set(handles.maximum_degree,'String', '0');
+            set(handles.text18,'String', 'Graph heterogenity:');
             set(handles.graph_heterogenity,'String', '0');
+            set(handles.text19,'String', 'Algebraic connectivity:');
             set(handles.algebraic_connectivity,'String', '0');
         end
 
     case 'directed';
         dir = 1;
         % do something with the basic stats stuff
+        if(ne(g)>0) %check if there are vertices in the current graph
+            basic_stats(eventdata, handles);
+        else
+            set(handles.text22,'String', ' ');
+            set(handles.connected_graphs,'String', ' ');
+            set(handles.text16,'String', ' ');
+            set(handles.graph_density,'String', ' ');
+            set(handles.text10,'String', ' ');
+            set(handles.average_degree,'String', ' ');
+            set(handles.text11,'String', ' ');
+            set(handles.median_degree,'String', ' ');
+            set(handles.text9,'String', ' ');
+            set(handles.minimum_degree,'String', ' ');
+            set(handles.text12,'String', ' ');
+            set(handles.maximum_degree,'String', ' ');
+            set(handles.text18,'String', ' ');
+            set(handles.graph_heterogenity,'String', ' ');
+            set(handles.text19,'String', ' ');
+            set(handles.algebraic_connectivity,'String', ' ');
+        end
         
 end
 
@@ -971,58 +1006,89 @@ function basic_stats(eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 global g;
+global modus;
 
-L = laplacian(g);
+switch modus
+    case 'undirected';
 
- rank_L = rank(L);       % Matrix rank
-  dim_L  = mean(size(L)); % Matrix dimension
+        L = laplacian(g);
+
+         rank_L = rank(L);       % Matrix rank
+          dim_L  = mean(size(L)); % Matrix dimension
+
+         null_L = dim_L - rank(L); %Rank of the null-space (from rank-nullity theorem)
+                                    %Gives us number of connected (sub) graphs
+        degree_vector = diag(L);
+
+        D = diag(diag(L));
+        A = D - L; % Adjacency matrix
+
+         rank_A = rank(A);       % Matrix rank
+          dim_A  = mean(size(A)); % Matrix dimension
+
+         null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
+                                    %Gives us number of connected (sub) graphs
+        set(handles.text22,'String', 'Independent Graphs:');
+        set(handles.connected_graphs,'String', num2str(null_L,'%d'));
+        set(handles.text16,'String', 'Graph density:');
+        graph_density = mean(degree_vector)/(dim_L-1); %(1)
+        set(handles.graph_density,'String', num2str(graph_density, '%1.3f'));
+        graph_average_degree = mean(degree_vector);
+        set(handles.text10,'String', 'Average degree:');
+        set(handles.average_degree,'String', num2str(graph_average_degree, '%3.2f'));
+        set(handles.text11,'String', 'Median degree:');
+        graph_median_degree = median(degree_vector);
+        set(handles.median_degree,'String', num2str(graph_median_degree));
+        graph_min_degree = min(degree_vector);
+        set(handles.text9,'String', 'Minimum degree:');
+        set(handles.minimum_degree,'String', num2str(graph_min_degree));
+        graph_max_degree = max(degree_vector);
+        set(handles.text12,'String', 'Maximum degree:');
+        set(handles.maximum_degree,'String', num2str(graph_max_degree));
+        %graph_density = 2*NEdges/(NVertex*(NVertex-1)); % Segun Wikipedia
+        graph_heterogenity = sqrt(var(degree_vector))/mean(degree_vector);
+        set(handles.text18,'String', 'Graph heterogenity:');
+        set(handles.graph_heterogenity,'String', num2str(graph_heterogenity,'%1.3f'));
+        [Eigen_Matrix_L, Eigen_Values_L] = eig(L);
+        [Eigen_Matrix_A, Eigen_Values_A] = eig(A);
+
+        % Sorting Eigenvalues
+         Eigen_Values_L = diag(Eigen_Values_L);
+        [Eigen_Values_L, ndx] = sort(Eigen_Values_L, 'ascend');
+         Eigen_Matrix_L=Eigen_Matrix_L(:,ndx); 
+
+          Eigen_Values_A = diag(Eigen_Values_A);
+        [Eigen_Values_A, ndx] = sort(Eigen_Values_A, 'ascend');
+         Eigen_Matrix_A=Eigen_Matrix_A(:,ndx); 
+
+         graph_connectivityA = Eigen_Values_A(null_L+1);
+         graph_connectivity = Eigen_Values_L(null_L+1);
+         set(handles.text19,'String', 'Algebraic connectivity:');
+         set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
+         fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
+
+         estrada_connectivity = diag(exp(A));
+
+         estrada_graph_index  = trace(exp(A));
  
- null_L = dim_L - rank(L); %Rank of the null-space (from rank-nullity theorem)
-                            %Gives us number of connected (sub) graphs
-degree_vector = diag(L);
-
-D = diag(diag(L));
-A = D - L; % Adjacency matrix
-
- rank_A = rank(A);       % Matrix rank
-  dim_A  = mean(size(A)); % Matrix dimension
- 
- null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
-                            %Gives us number of connected (sub) graphs
-set(handles.connected_graphs,'String', num2str(null_L,'%d'));
-graph_density = mean(degree_vector)/(dim_L-1); %(1)
-set(handles.graph_density,'String', num2str(graph_density, '%1.3f'));
-graph_average_degree = mean(degree_vector);
-set(handles.average_degree,'String', num2str(graph_average_degree, '%3.2f'));
-graph_median_degree = median(degree_vector);
-set(handles.median_degree,'String', num2str(graph_median_degree));
-graph_min_degree = min(degree_vector);
-set(handles.minimum_degree,'String', num2str(graph_min_degree));
-graph_max_degree = max(degree_vector);
-set(handles.maximum_degree,'String', num2str(graph_max_degree));
-%graph_density = 2*NEdges/(NVertex*(NVertex-1)); % Segun Wikipedia
-graph_heterogenity = sqrt(var(degree_vector))/mean(degree_vector);
-set(handles.graph_heterogenity,'String', num2str(graph_heterogenity,'%1.3f'));
-[Eigen_Matrix_L, Eigen_Values_L] = eig(L);
-[Eigen_Matrix_A, Eigen_Values_A] = eig(A);
-
-% Sorting Eigenvalues
- Eigen_Values_L = diag(Eigen_Values_L);
-[Eigen_Values_L, ndx] = sort(Eigen_Values_L, 'ascend');
- Eigen_Matrix_L=Eigen_Matrix_L(:,ndx); 
- 
-  Eigen_Values_A = diag(Eigen_Values_A);
-[Eigen_Values_A, ndx] = sort(Eigen_Values_A, 'ascend');
- Eigen_Matrix_A=Eigen_Matrix_A(:,ndx); 
- 
- graph_connectivityA = Eigen_Values_A(null_L+1);
- graph_connectivity = Eigen_Values_L(null_L+1);
- set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
- fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
-  
- estrada_connectivity = diag(exp(A));
-  
- estrada_graph_index  = trace(exp(A));
+    case 'directed';
+        set(handles.text22,'String', ' ');
+        set(handles.connected_graphs,'String', ' ');
+        set(handles.text16,'String', ' ');
+        set(handles.graph_density,'String', ' ');
+        set(handles.text10,'String', ' ');
+        set(handles.average_degree,'String', ' ');
+        set(handles.text11,'String', ' ');
+        set(handles.median_degree,'String', ' ');
+        set(handles.text9,'String', ' ');
+        set(handles.minimum_degree,'String', ' ');
+        set(handles.text12,'String', ' ');
+        set(handles.maximum_degree,'String', ' ');
+        set(handles.text18,'String', ' ');
+        set(handles.graph_heterogenity,'String', ' ');
+        set(handles.text19,'String', ' ');
+        set(handles.algebraic_connectivity,'String', ' ');
+end
 
 
 
@@ -1287,20 +1353,6 @@ end
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 refresh_graph(0, eventdata, handles);
 
 
@@ -1446,11 +1498,21 @@ function circular_graph_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global modus;
+
+switch modus
+    case 'undirected';
+        dir = 0;
+    case 'directed';
+        dir = 1;
+end
+
+clear_edges(g);
 
 for i=1:(nv(g)-1)
-    add(g,i,i+1);
+    add(g,i,i+1,dir);
 end
-    add(g,nv(g),1)
+    add(g,nv(g),1,dir)
 
 refresh_graph(0, eventdata, handles);
 
@@ -1787,7 +1849,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % Function, that creates a pop-up-menu, that says: "interpret
         % undirected graph as directed? (Yes / No) If no, save current
         % graph?"
-        resize(g,0);
+        %resize(g,0);
         refresh_graph(0, eventdata, handles);
         guidata(hObject, handles);
     % Continue with more cases as necessary.

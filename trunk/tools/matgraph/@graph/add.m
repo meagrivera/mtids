@@ -10,21 +10,11 @@ function add(g,i,j,dir)
 global GRAPH_MAGIC
 n = nv(g);
 
-if nargin == 4 %switch to directed graphs, interpret i as the node, from which an edge should be directed to j
-    if (i==j) || (i<1) || (j<1) 
-        return
-    end
-    
-    %maxij = max(i,j);
-    %if maxij > n
-    %    resize(g,maxij)
-    %end
-    
-    GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 1;
-    
+if nargin < 4
+    dir = 0;
 end
 
-if nargin == 3
+if (nargin == 3 || nargin == 4)
     if (i==j) || (i<1) || (j<1) 
         return
     end
@@ -33,10 +23,15 @@ if nargin == 3
     if maxij > n
         resize(g,maxij)
     end
-
-    GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 1;
-    GRAPH_MAGIC.graphs{g.idx}.array(j,i) = 1;
-    return
+    if dir == 0;
+        GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 1;
+        GRAPH_MAGIC.graphs{g.idx}.array(j,i) = 1;
+        return
+    end
+    if dir == 1
+        GRAPH_MAGIC.graphs{g.idx}.array(i,j) = 1;
+        return
+    end
 end
 
 if nargin == 2
