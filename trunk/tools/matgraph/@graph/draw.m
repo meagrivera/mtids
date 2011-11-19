@@ -62,40 +62,30 @@ if dir == 1 % interpret graph as directed
         %vector from outgoing vertex to incoming vertex
         ft = xy(v,:)'-xy(u,:)';
         %prepare the orthogonal of the line connection between both vertices
-        ftT = [-ft(2); ft(1)];
+        ftT = [-ft(2); ft(1)]/norm([-ft(2); ft(1)]);
         %angle of direction vector pointing from outoing to incoming vertex
         ftAngle = atan2(ft(2),ft(1))/pi*180;
+        %prepare middle of line connection between both vertices
+        middle = 0.5*(xy(u,:)'+xy(v,:)');        
+        %line from "from" to "to"
+        xlin = linspace(from(1),to(1));
+        ylin = linspace(from(2),to(2));
         
-        %test, if x1 and x2 are proper to use quadratic interpolation
-        %if x1 and x2 is proper
-        if(norm(from(1)-to(1))>min_dist)
-            %prepare middle of line connection between both vertices
-            middle = 0.5*(xy(u,:)'+xy(v,:)');
-            %Via-point of connection line, needed for quadratic interpolation
-            via = middle + step*ftT/norm(ftT); %step: distance of via point from middle of line connection between outoing and incoming vertex
-            %generate quadratic interpolation coefficients
-            P = polyfit([from(1);via(1);to(1)],[from(2);via(2);to(2)],2);
-            %prepare x-values of connection
-            x = linspace(from(1),to(1));
-            line(x,P(1)*x.^2+P(2)*x+P(3),'Color', edge_color,'LineStyle',line_style);
-            %get point of curve, on which the arrow should lie
-            atop=[x(arrPos);P(1).*x(arrPos).^2+P(2).*x(arrPos)+P(3)];
+        for i = 1:length(xlin)
+            alpha = pi/length(xlin)*i;
+            temp = step*sin(alpha)*ftT;
+            xlin(i) = xlin(i) + temp(1);
+            ylin(i) = ylin(i) + temp(2);
         end
-        %second case, if x1 and x2 are not proper
-        if(norm(from(1)-to(1))<min_dist)
-            %prepare middle of line connection between both vertices
-            middle = 0.5*(xy(u,:)'+xy(v,:)');
-            %print the curve using an ellipse
-            [EllX EllY] = calculateEllipse(middle(1),middle(2),0.10,norm(ft)/2,0,ellSteps);
-            line(EllX(  25:75),EllY(    25:75),'Color', edge_color,'LineStyle',line_style);
-            %get point of curve, on which the arrow should lie
-            atop=[EllX(69);EllY(69)];
-            via=[EllX(50);EllY(50)];
-       end
         
+        line(xlin,ylin,'Color', edge_color,'LineStyle',line_style);
+                
         %approximate slope vector for orientation of arrow
-        arrVec = (to - via)/norm(to - via);       
-
+        arrVec = (to - [xlin(length(xlin)/2);ylin(length(xlin)/2)])/...
+            norm(to - [xlin(length(xlin)/2);ylin(length(xlin)/2)]);       
+        %get point of curve, on which the arrow should lie
+        atop = [xlin(length(xlin)*0.95);ylin(length(xlin)*0.95)];
+        
         %first rotation matrix with angle phi
         phi = 5*pi/6;
         R=[cos(phi) -sin(phi); sin(phi) cos(phi)];
