@@ -33,4 +33,9 @@ end
 
 % last case: random(g)
 
-random(g,0.5);
+%random(g,0.5);
+
+n = nv(g);
+A = rand(n);
+A = A < 0.5; % or even larger, is doesn't matter
+fast_set_matrix(g,A);
