@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 25-Jun-2011 06:09:12
+% Last Modified by GUIDE v2.5 19-Nov-2011 11:18:13
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -90,6 +90,13 @@ g = graph;
 template_list = cell(0,1);
 templates = cell(0,1);
 
+% Parameter to divide the modus "undirected" / "directed": dir
+% To start the program, activate "undirected"
+global modus;
+modus = 'undirected';
+set(handles.button_undirected,'Value',1);
+set(handles.button_directed,'Value',0);
+
 template_list{1,1} = 'LTI';
 %template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
 
@@ -102,9 +109,7 @@ set(handles.numberview,'Check','on');
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
 
-% Parameter to divide the modus "undirected" / "directed": dir
-% To start the program, activate "undirected"
-% dir = 0;
+
 
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
@@ -281,6 +286,7 @@ function addconnection_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global modus;
 
 % Arreglar conexiones
 % Buscar en labels
@@ -288,17 +294,24 @@ label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
 
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
-labs = get_label(g);
-n1 = strmatch(label1, labs, 'exact');
-n2 = strmatch(label2, labs, 'exact');
+    labs = get_label(g);
+    n1 = strmatch(label1, labs, 'exact');
+    n2 = strmatch(label2, labs, 'exact');
 else
-n1 = str2num(label1);
-n2 = str2num(label2);
+    n1 = str2num(label1);
+    n2 = str2num(label2);
 end
 
-add(g,n1(1), n2(1));
+switch modus
+    case 'undirected';
+        add(g,n1(1), n2(1));
+        refresh_graph(0, eventdata, handles);
+    case 'directed';
+        add(g,n1(1), n2(1),1);
+        refresh_graph(0, eventdata, handles);
+end
 
-refresh_graph(0, eventdata, handles);
+%refresh_graph(0, eventdata, handles);
 
 guidata(hObject, handles);
 
@@ -361,11 +374,19 @@ function randomconnection_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global modus;
+
+switch modus
+    case 'undirected';
+        dir = 0;
+    case 'directed';
+        dir = 1;
+end
 
 a = ceil(nv(g)*rand());
 b = floor(nv(g)*rand());
 
-add(g,a,b);
+add(g,a,b,dir);
 
 refresh_graph(0, eventdata, handles)
 
@@ -377,6 +398,7 @@ function removeconnection_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global modus;
 
 % Arreglar conexiones
 % Buscar en labels
@@ -384,15 +406,24 @@ label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
 
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
-labs = get_label(g);
-n1 = strmatch(label1, labs, 'exact');
-n2 = strmatch(label2, labs, 'exact');
+    labs = get_label(g);
+    n1 = strmatch(label1, labs, 'exact');
+    n2 = strmatch(label2, labs, 'exact');
 else
-n1 = str2num(label1);
-n2 = str2num(label2);
+    n1 = str2num(label1);
+    n2 = str2num(label2);
 end
 
-delete(g,n1(1), n2(1));
+switch modus
+    case 'undirected';
+        dir = 0;
+        
+    case 'directed';
+        dir = 1;
+        
+end
+
+delete(g,n1(1), n2(1), dir);
 
 
 refresh_graph(0, eventdata, handles);
@@ -869,7 +900,9 @@ function editnode_Callback(hObject, eventdata, handles)
 function refresh_graph(reset, eventdata, handles)
 % This function refreshes the graph window
 global g;
+global modus;
 
+% Check which kind of lable is activated
  checklabel = get(handles.labelview,'Check');
 checknumber = get(handles.numberview,'Check');
  checkcolor = get(handles.colorview,'Check');
@@ -879,35 +912,43 @@ checknumber = get(handles.numberview,'Check');
 cla;
 
 if reset == 1
-    rmxy(g);
+    rmxy(g); %rmxy: erase g's embedding
 end
 
-if(ne(g)>0) %check if there are vertices in the current graph
-    basic_stats(eventdata, handles);
-else
-    set(handles.connected_graphs,'String', '0');
-    set(handles.graph_density,'String', '0');
-    set(handles.average_degree,'String', '0');
-    set(handles.median_degree,'String', '0');
-    set(handles.minimum_degree,'String', '0');
-    set(handles.maximum_degree,'String', '0');
-    set(handles.graph_heterogenity,'String', '0');
-    set(handles.algebraic_connectivity,'String', '0');
-    %set(handles.graph_modus,'String', 'undirected');
+switch modus
+    case 'undirected';
+        dir = 0;
+        if(ne(g)>0) %check if there are vertices in the current graph
+            basic_stats(eventdata, handles);
+        else
+            set(handles.connected_graphs,'String', '0');
+            set(handles.graph_density,'String', '0');
+            set(handles.average_degree,'String', '0');
+            set(handles.median_degree,'String', '0');
+            set(handles.minimum_degree,'String', '0');
+            set(handles.maximum_degree,'String', '0');
+            set(handles.graph_heterogenity,'String', '0');
+            set(handles.algebraic_connectivity,'String', '0');
+        end
+
+    case 'directed';
+        dir = 1;
+        % do something with the basic stats stuff
+        
 end
 
 % check for choice of vertex-layout
 if strcmp(checklabel, 'on')
-    ldraw(g);
+    ldraw(g,dir);
 elseif strcmp(checkcolor, 'on')
-    cdraw(g);
+    cdraw(g,dir);
 elseif strcmp(checknumber, 'on')
-    ndraw(g);
+    ndraw(g,dir);
 else
-    draw(g);
+    draw(g,dir);
 end
 
-set(handles.nedges,'String', num2str(ne(g)));
+set(handles.nedges,'String', num2str(ne(g,dir)));
 set(handles.nvertices,'String',num2str(nv(g)));
 
 
@@ -1705,3 +1746,52 @@ name =	'untitled';
  end
 
 
+
+
+% --- Executes on button press in radiobutton7.
+function radiobutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton7
+
+
+
+
+
+% --- Executes when selected object is changed in uipanel9.
+function uipanel9_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel9 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+% Originally taken from the Help Menu "Programming a button group"
+% With it, the choice of which graphs are supported can be done
+
+global modus;
+global g;
+
+switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
+    case 'button_undirected'
+        modus = 'undirected';
+        % Function, that creates a pop-up-menu, that says: "save current
+        % graph?"
+        resize(g,0);
+        refresh_graph(0, eventdata, handles);
+        guidata(hObject, handles);
+    case 'button_directed'
+        modus = 'directed';
+        % Function, that creates a pop-up-menu, that says: "interpret
+        % undirected graph as directed? (Yes / No) If no, save current
+        % graph?"
+        resize(g,0);
+        refresh_graph(0, eventdata, handles);
+        guidata(hObject, handles);
+    % Continue with more cases as necessary.
+    otherwise
+        % Code for when there is no match.
+        modus = 'undirected';
+end
