@@ -8,7 +8,7 @@ function[] =exportLayer(name,template,templateList,A, xy, labs)
 %                              -template: template used to generate subsystems
 %                              - templateList: List of templates that are
 %                                 availible in mtids
-%                              -A: Adjacense matrix,
+%                              -A: Adjacency matrix,
 %                              -xy: Position of the nodes
 %                              -labs: cell with the names of the nodes
 %                      
