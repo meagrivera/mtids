@@ -28,6 +28,8 @@ Basic stats: i cancled out every value, which seems useless for directed graphs.
 
 Exporting functions: familiarize with the m-files
 
+Bugs: 	if a scroll down menu is visible and if you are pointing in this state over the figure, a lot of error messages appear on the console. This happens, after at least once an export has started.
+	LTI model is shadowed. Maybe it is possible to rename this function.
 
 
 
