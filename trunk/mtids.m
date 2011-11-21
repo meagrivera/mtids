@@ -1282,6 +1282,7 @@ function label_button_Callback(hObject, eventdata, handles)
 set(handles.number_button,'Value', 0);
 set(handles.label_button,'Value', 1);
 
+
 % --- Executes on button press in number_button.
 function number_button_Callback(hObject, eventdata, handles)
 % hObject    handle to number_button (see GCBO)
@@ -1351,8 +1352,6 @@ end
 end
 
 
-
-
 refresh_graph(0, eventdata, handles);
 
 
@@ -1418,8 +1417,6 @@ cd(oldFolder);
 
 refresh_dynamics(eventdata, handles); 
  
-
-
 
 
 % --- Executes on selection change in selector_dynamic.
@@ -1518,10 +1515,6 @@ refresh_graph(0, eventdata, handles);
 
 
 
-
-
-
-
 % --- Executes on mouse press over figure background, over a disabled or
 % --- inactive control, or over an axes background.
 function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
@@ -1535,6 +1528,7 @@ global move_index;
 global start_index;
 global templates;
 global template_list;
+global modus;
 
 
 CP = get(handles.axes1, 'CurrentPoint');
@@ -1559,66 +1553,71 @@ if C <= 0.05; % Hardcoded value!
     botton_down = 1;
     start_index = 0; % Reset starting index
 
-elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
-    if start_index
-        if has(g, start_index, I) 
-            delete(g,start_index, I);
+    elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
+        if start_index
+            if has(g, start_index, I) %no additional request for the case of directed graphs necessary
+                switch modus
+                    case 'undirected';
+                        delete(g,start_index, I);
+                    case 'directed';
+                        delete(g,start_index, I,1);
+                end
+            else
+                switch modus
+                    case 'undirected';
+                        add(g,start_index,I);
+                    case 'directed';
+                        add(g,start_index,I,1);
+                end
+            end
+            start_index = 0;
+            refresh_graph(0, eventdata, handles);
         else
-            add(g,start_index,I);
+            start_index = I;
         end
-        start_index = 0;
-    refresh_graph(0, eventdata, handles);
-    else
-    start_index = I;
-    end
     
-elseif strcmp(get(handles.output, 'SelectionType'), 'open')
+    elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
 
    [s1,nodenumber,nodelabel,template,neighbours,destroy] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
   
    if destroy == 0
        if ~strcmp(nodelabel, get_label(g,I))
-       
             if(strmatch(nodelabel,get_label(g),'exact'))
                 for i=1:nv(g)
-    
-                if(strmatch(strcat(nodelabel, num2str(i)),get_label(g),'exact'))
-                continue;
-                else
-                nodelabel = strcat(nodelabel, num2str(i));
-                break;
+                    if (strmatch(strcat(nodelabel, num2str(i)),get_label(g),'exact'))
+                        continue;
+                    else
+                        nodelabel = strcat(nodelabel, num2str(i));
+                        break;
+                    end
                 end
-
-                end
-                end
+            end
        end
        
-       
-            label(g,I, nodelabel);
-            
-            templates{I} = template;
-            e_delete = g(I);
-            size_ne = size(e_delete,2);
-                         
-            neighbours = eval(neighbours);
-            
+        label(g,I, nodelabel);
+
+        templates{I} = template;
+        e_delete = g(I);
+        size_ne = size(e_delete,2);
+
+        neighbours = eval(neighbours);
+
+        for i=1:size_ne
+           delete(g,I,e_delete(i)); 
+        end
+
+        size_ne = size(neighbours,2);
+
+        if ~strcmp(neighbours, '[]')
             for i=1:size_ne
-               delete(g,I,e_delete(i)); 
+                add(g,I,neighbours(i)); 
             end
-            
-            size_ne = size(neighbours,2);
-           
-            if ~strcmp(neighbours, '[]')
-                for i=1:size_ne
-                    add(g,I,neighbours(i)); 
-                end
-            end
+        end
                 
             
-            refresh_graph(0, eventdata, handles)
+        refresh_graph(0, eventdata, handles)
             
-       
    elseif destroy == 1
             if nv(g) && (I <= nv(g))
             templates(I,:) = []; % Deleting a template
@@ -1630,15 +1629,14 @@ elseif strcmp(get(handles.output, 'SelectionType'), 'open')
        
    end
     
-   
 end
 
-else
+else % do nothing?
   
 end
 
  
-    if strcmp(get(handles.output, 'SelectionType'), 'extend')
+if strcmp(get(handles.output, 'SelectionType'), 'extend')
     start_button = 0;
     button_down = 0;
     
@@ -1648,7 +1646,7 @@ end
     XY(nv(g),2) = y_c;
     embed(g,XY);
     refresh_graph(0, eventdata, handles);
-   end
+end
 
 
 
