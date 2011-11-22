@@ -1309,8 +1309,9 @@ function export_to_workplace_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global g;
+global modus;
 
-uiwait( export_as_matrix(laplacian(g)));
+uiwait( export_as_matrix(laplacian(g),g,modus));
 
 
 % --------------------------------------------------------------------

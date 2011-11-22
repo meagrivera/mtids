@@ -19,5 +19,5 @@ if dir == 1
     
     [i,j] = find(Adj);
 end
-
+%temp=sortrows([i,j],1);
 elist = [i,j];

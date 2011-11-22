@@ -38,4 +38,7 @@ end
 n = nv(g);
 A = rand(n);
 A = A < 0.5; % or even larger, is doesn't matter
+for i=1:length(A)
+    A(i,i) = 0;
+end
 fast_set_matrix(g,A);

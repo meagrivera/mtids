@@ -22,7 +22,7 @@ function varargout = export_as_matrix(varargin)
 
 % Edit the above text to modify the response to help export_as_matrix
 
-% Last Modified by GUIDE v2.5 30-May-2011 15:48:07
+% Last Modified by GUIDE v2.5 22-Nov-2011 20:06:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,14 +56,27 @@ function export_as_matrix_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 global matrix;
+global g;
+global modus;
+global kindOfDegree;
 
 matrix = varargin{1};
+g = varargin{2};
+modus = varargin{3};
+kindOfDegree = 'isIndegree';
 
-
+% default values at start of the figure
 set(handles.export_as_laplacian,'Value', 1);
 set(handles.export_as_adjacency,'Value', 0);
 set(handles.export_as_edge_list,'Value', 0);
+set(handles.indegree,'Value',1);
 
+switch modus
+    case 'undirected';
+        set(handles.choiceDegree,'Visible','off');
+    case 'directed';
+        set(handles.choiceDegree,'Visible','on');
+end
 
 
 % Update handles structure
@@ -94,21 +107,40 @@ function export_to_workplace_Callback(hObject, eventdata, handles)
 
 %%varargin
 global matrix;
+global modus;
+global g;
+global kindOfDegree;
 
 workspace  = get(handles.edit_workplace,'String');
 varname    = get(handles.edit_matrix,'String');
 
+
 if (get(handles.export_as_laplacian,'Value') == get(handles.export_as_laplacian,'Max'))
-    matrix = matrix; 
+    switch modus
+        case 'undirected';
+            matrix = laplacian(g);
+        case 'directed';
+            [InDeg OutDeg] = getDegree(matrixOfGraph(g));
+            switch kindOfDegree
+                case 'isIndegree';
+                    matrix = diag(InDeg) - double(matrixOfGraph(g));
+                case 'isOutdegree';
+                    matrix = diag(OutDeg) - double(matrixOfGraph(g));
+            end
+    end
 elseif (get(handles.export_as_adjacency,'Value') == get(handles.export_as_adjacency,'Max'))
-    degree = diag(diag(matrix));
-    adjacency = degree - matrix;
-    matrix = adjacency;
+    % No distinction of cases necessary
+    matrix = matrixOfGraph(g);
 elseif (get(handles.export_as_edge_list,'Value') == get(handles.export_as_edge_list,'Max'))
-    addpath(strcat(pwd,'/interface2Simulink'));
-    degree = diag(diag(matrix));
-    adjacency = degree - matrix;
-    matrix = adj_to_elist(adjacency);
+    switch modus
+        case 'undirected'
+            addpath(strcat(pwd,'/interface2Simulink'));
+            degree = diag(diag(matrix));
+            adjacency = degree - matrix;
+            matrix = adj_to_elist(adjacency);
+        case 'directed'
+            matrix = sortrows(edges(g,1),1);
+    end
 end
         assignin(workspace, varname, matrix);
 
@@ -208,3 +240,24 @@ function export_as_edge_list_Callback(hObject, eventdata, handles)
 set(handles.export_as_laplacian,'Value', 0);
 set(handles.export_as_adjacency,'Value', 0);
 set(handles.export_as_edge_list,'Value', 1);
+
+
+% --- Executes when selected object is changed in choiceDegree.
+function choiceDegree_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in choiceDegree 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+
+global kindOfDegree;
+
+switch get(eventdata.NewValue,'Tag') % Get Tag of selected object
+    case 'indegree';
+        kindOfDegree = 'isIndegree';
+        
+    case 'outdegree';
+        kindOfDegree = 'isOutdegree';
+        
+end
