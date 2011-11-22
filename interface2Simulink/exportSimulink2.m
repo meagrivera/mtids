@@ -1,4 +1,4 @@
-function[] =exportSimulink(name,template,templateList,A, xy, labs)
+function[] =exportSimulink(name,templates,templateList,A, xy, labs)
 % exportSimulink.m 
 %
 % Project: MTIDS
@@ -68,11 +68,11 @@ graphCenter= [nodePosRadius+4 nodePosRadius+2] ;
 
 for i=1:nodeNumber
 
-    load_system(template{i});
+    load_system(templates{i}); % Loads an invisible Simulink model
     
-    nodeConnections= find(A(:,i));
+    nodeConnections= find(A(:,i)); % Find in-degree
     
-    templateModify2(length(nodeConnections),nodeConnections,template{i})
+    templateModify2(length(nodeConnections),nodeConnections,templates{i})
    
     if x(i)>0
     nodePosAngle= atan(-y(i)/x(i)) ;
@@ -89,10 +89,10 @@ add_block('built-in/Subsystem',[sys ['/' labs{i}]] , 'position', blockCanvas(nod
 %modify template of subsystem call a function
 
 
-Simulink.BlockDiagram.copyContentsToSubSystem(template{i}, [sys ['/' labs{i}]]);
+Simulink.BlockDiagram.copyContentsToSubSystem(templates{i}, [sys ['/' labs{i}]]);
 
 %close template
-close_system(template{i},0)
+close_system(templates{i},0)
 
 end
 

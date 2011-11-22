@@ -25,7 +25,7 @@ min_dist = 0.05;
 %set arrow parameters
 arrLength = 0.10;
 arrWidth = 0.08;
-arrPos = 90; %percent of the length between outgoing and incoming node
+arrPos = 92/100; %position of arrow in percent of the length between outgoing and incoming node
 %ellSample; iteration steps for drawing the ellipse
 ellSteps = 100;
 
@@ -84,7 +84,7 @@ if dir == 1 % interpret graph as directed
         arrVec = (to - [xlin(length(xlin)/2);ylin(length(xlin)/2)])/...
             norm(to - [xlin(length(xlin)/2);ylin(length(xlin)/2)]);       
         %get point of curve, on which the arrow should lie
-        atop = [xlin(length(xlin)*0.95);ylin(length(xlin)*0.95)];
+        atop = [xlin(length(xlin)*arrPos);ylin(length(xlin)*arrPos)];
         
         %first rotation matrix with angle phi
         phi = 5*pi/6;

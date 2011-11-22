@@ -1,6 +1,6 @@
 % buildSubsystem.m
 %model to put 
-function [] = templateModify(nodeNumber, nodeConnections, template)
+function [] = templateModify2(nodeNumber, nodeConnections, template)
 
 % Template is already opened
 

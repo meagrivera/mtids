@@ -21,6 +21,12 @@ ne.m : works also with an argument, that indicates, if graph is treated as direc
 
 random.m : Edited this function, to assure, that it works properly with directed graphs. Just added a few lines, to implement an own algorithm, to create random graphs. It may be poor, but quickly to write.
 
+getDegree.m : Added new function to compute the in- and out-degree of adjacency matrices for directed graphs
+
+export_as_matrix.m : Adopted for directed graphs, so that export_to_workplace works for directed graphs. Contains a choice for indegree and outdegree when computing the laplacian for directed graphs.
+
+
+
 
 --------------<<<<<CHANGES STILL TO DO:>>>>>>>>--------------------------------------------
 
