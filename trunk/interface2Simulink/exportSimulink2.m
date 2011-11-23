@@ -1,4 +1,4 @@
-function[] =exportSimulink(name,templates,templateList,A, xy, labs)
+function[] =exportSimulink2(name,templates,templateList,A, xy, labs)
 % exportSimulink.m 
 %
 % Project: MTIDS
@@ -66,33 +66,34 @@ y=xy(:,2);
 nodePosRadius= sqrt( x(1)^2 + y(1)^2) + nodeNumber/2;
 graphCenter= [nodePosRadius+4 nodePosRadius+2] ;
 
-for i=1:nodeNumber
 
+for i=1:nodeNumber
+    % Avoid problem with shadowing of .mdl-file "LTI"
+    if strcmp(templates{i},'LTI')
+        templates{i} = strcat('Copy_of_',templates{i});
+    end
     load_system(templates{i}); % Loads an invisible Simulink model
     
     nodeConnections= find(A(:,i)); % Find in-degree
     
-    templateModify2(length(nodeConnections),nodeConnections,templates{i})
+    templateModify2(length(nodeConnections),nodeConnections,templates{i});
    
     if x(i)>0
-    nodePosAngle= atan(-y(i)/x(i)) ;
+        nodePosAngle= atan(-y(i)/x(i)) ;
     else
-      nodePosAngle= atan(-y(i)/x(i)) + pi ;  
+        nodePosAngle= atan(-y(i)/x(i)) + pi ;  
     end
     
-   nodePos= graphCenter + [nodePosRadius*cos(nodePosAngle) nodePosRadius*sin(nodePosAngle)] ;
+    nodePos= graphCenter + [nodePosRadius*cos(nodePosAngle) nodePosRadius*sin(nodePosAngle)] ;
+   
+    add_block('built-in/Subsystem',[sys ['/' labs{i}]] , 'position', blockCanvas(nodePos) );
 
-add_block('built-in/Subsystem',[sys ['/' labs{i}]] , 'position', blockCanvas(nodePos) );
+    %modify template of subsystem call a function
 
+    Simulink.BlockDiagram.copyContentsToSubSystem(templates{i}, [sys ['/' labs{i}]]);
 
-
-%modify template of subsystem call a function
-
-
-Simulink.BlockDiagram.copyContentsToSubSystem(templates{i}, [sys ['/' labs{i}]]);
-
-%close template
-close_system(templates{i},0)
+    %close template
+    close_system(templates{i},0)
 
 end
 
@@ -101,23 +102,21 @@ end
 %% Connect Subsystems
 
 
-
 for i=1:nodeNumber
     for j=1:nodeNumber
     
-    %if i~=j  % make all nodes connect
-    if A(i,j)~=0
-   %add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')
-    %add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)])
-    add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str( find(find(A(j,:)) == i))])
-    end
+        %if i~=j  % make all nodes connect
+        if A(i,j)~=0
+            %add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')
+            %add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)]);
+            add_line(sys, [labs{i} '/1'], [labs{j} '/' num2str( find(find(A(:,j)) == i))]);
+        end
  
-    
     end   
 end
 
 %% open system
-% NO VISULAISATION FOR LARGE NUMBER OF NODES
+% NO VISULALIZATION FOR LARGE NUMBER OF NODES
 if(nodeNumber<=vizMaxNodeNumber)
 open_system(sys) 
 end
