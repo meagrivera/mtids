@@ -1,4 +1,4 @@
-function elist = any_matrix_to_elist(M)
+function elist = any_matrix_to_elist(M,dir)
 %
 % any_matrix_to_elist().m:
 %
@@ -9,20 +9,31 @@ function elist = any_matrix_to_elist(M)
 %
 % Inputs:
 %           M:     Laplacian, Adjacency or Edge List
+%           dir:   (optional) If dir = 1, the graph will be treated as
+%                  directed
 %         
 % Outputs: 
 %           elist:  Edge list (m x 2 int) 
 %
+
+if nargin < 2
+    dir = 0;
+end
 
 [a, b] = size(M);
 
 if (a == b)
     % Matrix is a square matrix
     % Test if matrix is symmetric
-    if( M - M')
-       disp('Warning: Matrix is not symmetric'); 
-       M = 0.500*(M + M');     
+    if dir == 0
+        if( M - M')
+            disp('Warning: Matrix is not symmetric'); 
+            M = 0.500*(M + M');     
+        end
+    elseif dir == 1
+        
     end
+    
     
     if(trace(M))
        %Matrix is a Laplacian
@@ -32,8 +43,12 @@ if (a == b)
     end
     
         abs(M);
-        
-        elist = adj_to_elist(M);
+        if dir == 0
+            elist = adj_to_elist(M);
+        elseif dir == 1
+            [i,j] = find(M);
+            elist = [i,j];
+        end
     
    
 elseif (b == 2) || (a == 2)

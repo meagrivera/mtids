@@ -1322,6 +1322,8 @@ function import_from_workplace_Callback(hObject, eventdata, handles)
 global g;
 global templates;
 global template_list;
+global modus;
+
 prompt = {'Workspace:','Variable name:'};
 dlg_title = 'Inport matrix from workspace';
 num_lines = 1;
@@ -1332,24 +1334,37 @@ if isempty(answer)
 
 else
     M = evalin(answer{1},answer{2});
+    switch modus
+        case 'undirected';
+            elist = any_matrix_to_elist(M);
+        case 'directed';
+            elist = any_matrix_to_elist(M,1);
+    end
 
-elist = any_matrix_to_elist(M);
- 
-%Corrects the problem posed by a zero-adj-matrix!
- if ( elist == zeros(2)  )
- g = graph( size(A,1) );
- else    
- g = graph(elist);
- end
+    %Corrects the problem posed by a zero-adj-matrix!
+     if ( elist(1,:) == zeros(1,2)  )
+        g = graph( size(M,1) );
+     else
+        switch modus
+            case 'undirected';
+                g = graph(elist);
+            case 'directed';
+                maxM = max(M);
+                g = graph(maxM(1));
+                for i = 1:length(elist)
+                    add(g,elist(i,1),elist(i,2),1);
+                end
+        end
+     end
 
-templates = cell(0,1);
+    templates = cell(0,1);
 
-n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+    n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
 
-for i=1:nv(g)
-   
-    templates{i,1}=template_list{n_template,1};
-end
+    for i=1:nv(g)
+
+        templates{i,1}=template_list{n_template,1};
+    end
 end
 
 
@@ -1785,6 +1800,7 @@ xy = getxy(g);
 
 
 labs = get_label(g);
+
 name =	'untitled';
  template =	'LTI'; 
  if nv(g) > 200
@@ -1848,7 +1864,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % Function, that creates a pop-up-menu, that says: "interpret
         % undirected graph as directed? (Yes / No) If no, save current
         % graph?"
-        %resize(g,0);
+        resize(g,0);
         refresh_graph(0, eventdata, handles);
         guidata(hObject, handles);
     % Continue with more cases as necessary.
