@@ -6,12 +6,14 @@ function [] = templateModify2(nodeNumber, nodeConnections, template)
 
 % degree of subsystem (number of outs and ins)
 
+% case distinction: number of inputs equals zero
+
 % case distinction, if indegree equals zero
 if (nodeNumber == 0)
     % task: delete input and mux
     
     % get position for constant block with zero values
-    constPos= get_param([template '/Mux'],'position');
+    constPos= get_param([template '/In1'],'position');
     %constPos = constPos + [-20 -20 20 20];
     
     % delete line from Inport to Mux
@@ -38,8 +40,7 @@ if (nodeNumber == 0)
     
     % add constant block with value = 0
     add_block('built-in/Constant',[template '/Const']);
-    set_param([template '/Const'],'position',constPos);
-    set_param([template '/Const'],'Value','0');
+    set_param([template '/Const'],'position',constPos,'Value','0');
     
     % add line from const block to first subsystem block
     add_line(template, [get_param([template '/Const'],'Outport'); endPoint(2,:)]);
@@ -48,6 +49,7 @@ else % do job as before
     
     set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
     set_param( [template '/Mux'],'DisplayOption','bar');
+
 
     % get position of ins and outs
     %  get_param('template/In1','position')
@@ -66,6 +68,7 @@ else % do job as before
 
     add_line(template,['In' num2str(nodeConnections(i)) '/1'], ['Mux/' num2str(i)],'autorouting','on')
     %add_line('template',[lastBlockBeforeOut '/1'], ['Out' num2str(i) '/1' ],'autorouting','on')
+    end
 end
 end
 
