@@ -108,6 +108,7 @@ resize(g,0);
 set(handles.numberview,'Check','on');
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
+set(handles.newnodelabel,'String','Node');
 
 
 
@@ -235,19 +236,26 @@ embed(g,XY);
     labs = get_label(g);
     lab_string =  get(handles.newnodelabel,'String');
 
-if(strmatch(lab_string,labs,'exact'))
-    for i=1:nv(g)
+% check if any of the existing names is equal as the new one
+if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'exact') % strmatch is scalar in contrast to strcmp
+    n = find(strcmp(lab_string,labs)); % find index of node, which
+    % contains the used name
+    if n
+        label(g, n, [lab_string '1']); % add a '1' to the unnumbered name
+        labs = get_label(g);
+    end
     
-        if(strmatch(strcat(lab_string, num2str(i)),labs,'exact'))
-        continue;
+    for i=1:nv(g)
+        % check
+        if strmatch(strcat(lab_string, num2str(i)),labs,'exact') % check if current number 'i' is available
+            continue;
         else
-           lab_string = strcat(lab_string, num2str(i));
-           break;
+           lab_string = strcat(lab_string, num2str(i)); % if 'i' isn't contained, take this for the new name
+           break; % if a "free" name was discovered, quit the for-loop
         end
 
     end
 end
-
 
 
 label(g, new_vertex, lab_string); 
