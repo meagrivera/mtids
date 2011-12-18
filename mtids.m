@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 19-Nov-2011 11:18:13
+% Last Modified by GUIDE v2.5 18-Dec-2011 11:54:50
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1829,6 +1829,19 @@ name =	'untitled';
  else   
      disp('Done exporting');
  end
+ 
+ % If visualization is needed, the plotting functions are evoked here
+% if strcmp(get(handle.Live_Plot,'Check'), 'On')
+     % evoke Live Plot Figure
+     % We need: number of nodes, name of output signals of nodes
+%     nrNodes = size(A,1);
+% end
+ 
+% if strcmp(get(handle.Exportable_Plot,'Check'), 'On')
+     % evoke Exportable Plots in separate figures
+%     nrNodes = size(A,1);
+     
+% end
 
 
 
@@ -1879,4 +1892,47 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     otherwise
         % Code for when there is no match.
         modus = 'undirected';
+end
+
+
+% --------------------------------------------------------------------
+function Visualization_Callback(hObject, eventdata, handles)
+% hObject    handle to Visualization (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function Live_Plot_Callback(hObject, eventdata, handles)
+% hObject    handle to Live_Plot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% if the status of the checkfield is to be evaluated, use:
+% get(handle.Live_Plot,'Check');
+
+checkstatus = get(hObject,'Check');
+
+if strcmp(checkstatus, 'on')
+    set(hObject,'Check','off');
+elseif strcmp(checkstatus, 'off')
+    set(hObject,'Check','on');
+    
+end
+
+% --------------------------------------------------------------------
+function Exportable_Plot_Callback(hObject, eventdata, handles)
+% hObject    handle to Exportable_Plot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% if the status of the checkfield is to be evaluated, use:
+% get(handle.Exportable_Plot,'Check');
+
+checkstatus = get(hObject,'Check');
+
+if strcmp(checkstatus, 'on')
+    set(hObject,'Check','off');
+elseif strcmp(checkstatus, 'off')
+    set(hObject,'Check','on');
 end

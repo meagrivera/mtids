@@ -25,7 +25,13 @@ getDegree.m : Added new function to compute the in- and out-degree of adjacency 
 
 export_as_matrix.m : Adopted for directed graphs, so that export_to_workplace works for directed graphs. Contains a choice for indegree and outdegree when computing the laplacian for directed graphs.
 
+template_modify2.m : case distinction for nodes with zero input
 
+export_to_simulink2.m : some minor changes for adoptaption to directed graphs; also added some functions for LTI-templates, that the state matrices can be differed now.
+
+Copy_of_LTI.mdl : Added a To Workspace-Block; if this is fulfilling our needs, cannot be said actually. Maybe, some more changes are necessary.
+
+ctrl_simulation.fig / .m : A new GUI, which hosts the starting function for the simulation as well as some checks for feasibility and the start of the plot function. A lot of work is left for now (18.12.11).
 
 
 --------------<<<<<CHANGES STILL TO DO:>>>>>>>>--------------------------------------------
@@ -34,8 +40,7 @@ Basic stats: i cancled out every value, which seems useless for directed graphs.
 
 Exporting functions: familiarize with the m-files
 
-Bugs: 	if a scroll down menu is visible and if you are pointing in this state over the figure, a lot of error messages appear on the console. This happens, after at least once an export has started.
-	LTI model is shadowed. Maybe it is possible to rename this function.
+
 
 
 
@@ -45,3 +50,5 @@ Bugs: 	if a scroll down menu is visible and if you are pointing in this state ov
 
 Concerning the edited matgraph-toolbox: due to that the "dir"-flag is more important that passed visualization arguments, most of the edited functions do not very likely work as before in cooperation with all other functions of matgraph.
 In our special case, we can check each instance of the edited functions, because our context lies in defined functions and GUIs, so that the passed arguments can be proved, that nothing bad happens.
+
+neighbors.m is also working with directed graphs. Thus dfstree.m works with directed graphs, which we need to perform the strong connectivity attributes.
