@@ -77,6 +77,19 @@ for i=1:nodeNumber
     nodeConnections= find(A(:,i)); % Find in-degree
     
     templateModify2(length(nodeConnections),nodeConnections,templates{i});
+    
+    %until now, only the LTI template was modified, please also do so 
+    %with all other templates
+    if strcmp(templates{i},'Copy_of_LTI') 
+        set_param( [ templates{i} '/To Workspace'], 'VariableName', ['nodeout' num2str(i)] );
+        set_param( [ templates{i} '/State-Space'],...
+            'A', ['A' num2str(i)],...
+            'B', ['B' num2str(i)],...
+            'C', ['C' num2str(i)],...
+            'D', ['D' num2str(i)],...
+            'X0', ['x0' num2str(i) '+var' num2str(i) '*rand(1)'] );
+    end
+    
    
     if x(i)>0
         nodePosAngle= atan(-y(i)/x(i)) ;
