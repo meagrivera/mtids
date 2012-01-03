@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 18-Dec-2011 11:54:50
+% Last Modified by GUIDE v2.5 03-Jan-2012 13:41:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -81,6 +81,8 @@ global templates;
 global botton_down;
 global move_index;
 global start_index;
+%Global cell-array to store plotting information
+global printCell;
 
 botton_down = 0;
 add_connection = 0;
@@ -89,6 +91,7 @@ g = graph;
 
 template_list = cell(0,1);
 templates = cell(0,1);
+printCell = cell(0,1);
 
 % Parameter to divide the modus "undirected" / "directed": dir
 % To start the program, activate "undirected"
@@ -184,6 +187,7 @@ global g;
 global graph_refresh;
 global templates;
 global template_list;
+global printCell;
 
 %/ Visualization creator
 %{
@@ -264,6 +268,20 @@ n_template = get(handles.selector_dynamic, 'Value'); % Get template name from li
 
 templates{nv(g),1}=template_list{n_template,1};
 % templates{nv(g),2}=template_list{n_template,2};
+
+%Now, after the node was created, the printCell can be added  
+length_cellPrint = size(printCell,1);
+
+%Keep the informations of the old nodes
+tempCell = printCell;
+printCell = cell(length_cellPrint+1,1);
+for i = 1:length_cellPrint
+    printCell(i) = tempCell(i);
+end
+
+%Initially, the printVector is the same for all templates
+printCell(length_cellPrint+1) = num2cell([1 0],2);
+
 
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles)
@@ -472,12 +490,24 @@ function removenode_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global g;
 global templates;
+global printCell;
 
-    a = str2num(get(handles.remnode,'String'));
+a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
     templates(a,:) = []; % Deleting a template
 
     delete(g,a);
+
+    %Here, the i-th entry of the printCell must be deleted too
+    length_printCell = size(printCell,1);
+    temp_printCell = printCell;
+    printCell = cell(length_printCell-1,1);
+    for i = 1:(a-1)
+        printCell(i) = temp_printCell(i);
+    end
+    for i = (a+1):length_printCell
+        printCell(i-1) = temp_printCell(i);
+    end
 
     refresh_graph(0, eventdata, handles)
 end
@@ -1331,6 +1361,7 @@ global g;
 global templates;
 global template_list;
 global modus;
+global printCell;
 
 prompt = {'Workspace:','Variable name:'};
 dlg_title = 'Inport matrix from workspace';
@@ -1375,6 +1406,12 @@ else
     end
 end
 
+%Initialize the printCell
+nrNodes = nv(g);
+printCell = cell(nrNodes,1);
+for i = 1:nrNodes
+    printCell(i) = num2cell([1 0],2);
+end
 
 refresh_graph(0, eventdata, handles);
 
@@ -1553,6 +1590,7 @@ global start_index;
 global templates;
 global template_list;
 global modus;
+global printCell;
 
 
 CP = get(handles.axes1, 'CurrentPoint');
@@ -1603,7 +1641,7 @@ if C <= 0.05; % Hardcoded value!
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
 
-   [s1,nodenumber,nodelabel,template,neighbours,destroy] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
+   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
   
    if destroy == 0
        if ~strcmp(nodelabel, get_label(g,I))
@@ -1638,7 +1676,9 @@ if C <= 0.05; % Hardcoded value!
                 add(g,I,neighbours(i)); 
             end
         end
-                
+           
+        %Provide here the new plotting information
+        printCell(nodenumber) = num2cell(printVector,2);
             
         refresh_graph(0, eventdata, handles)
             
@@ -1647,6 +1687,17 @@ if C <= 0.05; % Hardcoded value!
             templates(I,:) = []; % Deleting a template
 
             delete(g,I);
+            
+            %Here, the i-th entry of the printCell must be deleted too
+            length_printCell = size(printCell,1);
+            temp_printCell = printCell;
+            printCell = cell(length_printCell-1,1);
+            for i = 1:(nodenumber-1)
+                printCell(i) = temp_printCell(i);
+            end
+            for i = (nodenumber+1):length_printCell
+                printCell(i-1) = temp_printCell(i);
+            end
 
             refresh_graph(0, eventdata, handles)
             end
@@ -1816,9 +1867,7 @@ name =	'untitled';
  else   
      disp('Exporting...');
  end
-     disp('  ');
-
-  
+     disp('  '); 
      
     exportSimulink2(name,templates,template_list,A, xy, labs);
 
@@ -1830,18 +1879,6 @@ name =	'untitled';
      disp('Done exporting');
  end
  
- % If visualization is needed, the plotting functions are evoked here
-% if strcmp(get(handle.Live_Plot,'Check'), 'On')
-     % evoke Live Plot Figure
-     % We need: number of nodes, name of output signals of nodes
-%     nrNodes = size(A,1);
-% end
- 
-% if strcmp(get(handle.Exportable_Plot,'Check'), 'On')
-     % evoke Exportable Plots in separate figures
-%     nrNodes = size(A,1);
-     
-% end
 
 
 
@@ -1895,44 +1932,63 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
 end
 
 
-% --------------------------------------------------------------------
-function Visualization_Callback(hObject, eventdata, handles)
-% hObject    handle to Visualization (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --------------------------------------------------------------------
-function Live_Plot_Callback(hObject, eventdata, handles)
-% hObject    handle to Live_Plot (see GCBO)
+function run_simulation_Callback(hObject, eventdata, handles)
+% hObject    handle to run_simulation (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global g;
+global printCell;
+global templates;
 
-% if the status of the checkfield is to be evaluated, use:
-% get(handle.Live_Plot,'Check');
 
-checkstatus = get(hObject,'Check');
+%After export to simulink is complete, start the simulation, using the
+%plotting parameters in printCell
 
-if strcmp(checkstatus, 'on')
-    set(hObject,'Check','off');
-elseif strcmp(checkstatus, 'off')
-    set(hObject,'Check','on');
+
+%We need: number of nodes, number of internal states per node
+nrNodes = nv(g);
+intStates = zeros(nrNodes,1);
+for i = 1:nrNodes
+    intStates(i) = length(printCell{i})-1;
+end
+
+%t contains the simulation time, x the states in order of the nodenumbers.
+%The output of each %node is contained in the To Workspace struct nodeouti, 
+%where i stands for the nodenumber
+[t,x]=sim(gcs);
+
+%Plotting of the simulation result can be done on different ways. For now,
+%every state gets its own figure
+
+for i = 1:nrNodes
+    figure;
+    hold on;
+    y = evalin('base',['nodeout' num2str(i) '.signals.values']);
+    plot(t,y,'Linewidth',1.7);
+    %legend(['Output signal of node' num2str(i)]);
+    xlabel('Simulation time in [s]');
+    if strcmp(templates{i},'LTI')
+        if i == 1
+            index = 1;
+        else
+            index = 1+sum(intStates(1:(i-1)));
+        end
+        x_loc = x(:,index:index+intStates(i)-1);
+        plot(t,x_loc,'Linewidth',1.2);
+        %Build string matrix for legend
+        stringMatrix = cell(intStates(i)+1,1);
+        stringMatrix{1} = ['Output signal of node ' num2str(i)];
+        for j=2:intStates(i)+1
+            stringMatrix{j} = ['Nodal state' num2str(j)];
+        end
+        legend(stringMatrix,'Location','NorthEastOutside');
+    else
+        legend(['Output signal of node ' num2str(i)]);
+    end
     
+    hold off;
 end
 
-% --------------------------------------------------------------------
-function Exportable_Plot_Callback(hObject, eventdata, handles)
-% hObject    handle to Exportable_Plot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% if the status of the checkfield is to be evaluated, use:
-% get(handle.Exportable_Plot,'Check');
-
-checkstatus = get(hObject,'Check');
-
-if strcmp(checkstatus, 'on')
-    set(hObject,'Check','off');
-elseif strcmp(checkstatus, 'off')
-    set(hObject,'Check','on');
-end

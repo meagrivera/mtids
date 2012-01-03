@@ -22,7 +22,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 05-Jun-2011 23:52:17
+% Last Modified by GUIDE v2.5 03-Jan-2012 10:34:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,7 +63,19 @@ global template;
 global template_list;
 global neighbours;
 global destroy;
+%Additional variables for plotting the simulation
+global intStates;
+global printVector;
+intStates = 1;
+%Minimum length of princt vector is 2. First entry denotes if node output
+%should be plotted. Entries 1+i denotes if internal state i should be plotted.
+printVector = [1 0];
 
+%Flags for plot checkboxes
+global flagCheck1;
+global flagCheck2;
+flagCheck1 = 1;
+flagCheck2 = 0;
 
 %Input Arguments!!
 nodenumber = varargin{1};
@@ -118,6 +130,8 @@ global template;
 global template_list;
 global neighbours;
 global destroy;
+global intStates;
+global printVector;
 
 uiwait(handles.output);
 
@@ -127,6 +141,8 @@ varargout{3} = nodelabel;
 varargout{4} = template;
 varargout{5} = neighbours;
 varargout{6} = destroy;
+varargout{7} = intStates;
+varargout{8} = printVector;
 % uiresume(handles.output);
 
 
@@ -190,6 +206,11 @@ global template;
 global template_list;
 global neighbours;
 global destroy;
+global intStates;
+global printVector;
+global flagCheck1;
+global flagCheck2;
+global temp;
 
 destroy = 0;
 
@@ -197,6 +218,41 @@ n_template = get(handles.selector_dynamics, 'Value');
 template =  template_list{n_template};
 nodelabel = get(handles.edit_label, 'String');
 neighbours = get(handles.connections, 'String');
+
+%Compute printVector
+%TODO: case distinction for templates with only one internal state
+
+%Get number of internal states
+intStates = str2double(get(handles.edit_intStates,'String'));
+
+%Set length of printVector, depending on number of internal states
+%ATTENTION: value of intStates must be an integer and of the minimum of 1!
+printVector = zeros(1,intStates+1);
+%Read out manually the information about the states, which should be
+%plotted. Format is: "i j l", no brackets, just a spacer between the
+%numbers.
+temp = str2num(get(handles.edit_selectedStates,'String'));
+
+if flagCheck1 %Checkbox 1 is checked
+    printVector(1) = 1;
+else %Checkbox 1 is not checked
+    printVector(1) = 0;
+end
+
+if flagCheck2 && strcmp(template,'LTI') %Checkbox 2 is checked AND dynamics are LTI
+    for i = 1:intStates
+        if find(temp == i)
+           printVector(1+i) = 1; 
+        end
+    end
+    %printVector(2) = 5; %just for debugging
+    
+else %Checkbox 2 is not checked
+    printVector(2:intStates+1) = zeros(1,intStates);
+    
+end
+
+
 close(handles.output);
 
 
@@ -217,3 +273,90 @@ function button_cancel_Callback(hObject, eventdata, handles)
 global destroy;
 destroy = 2;
 close(handles.output);
+
+
+% --- Executes on button press in checkbox1.
+function checkbox1_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of checkbox1
+%global printVector;
+global flagCheck1;
+%global flagCheck2;
+if (get(hObject,'Value') == get(hObject,'Max'))
+    % Checkbox is checked-take appropriate action
+    
+    flagCheck1 = 1;
+else
+    % Checkbox is not checked-take appropriate action
+    
+    flagCheck1 = 0;
+end
+
+
+
+function edit_intStates_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_intStates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_intStates as text
+%        str2double(get(hObject,'String')) returns contents of edit_intStates as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_intStates_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_intStates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox2.
+function checkbox2_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox2
+%global printVector;
+%global intStates;
+global flagCheck2;
+
+if (get(hObject,'Value') == get(hObject,'Max'))
+    % Checkbox is checked-take appropriate action
+
+    flagCheck2 = 1;
+else
+    % Checkbox is not checked-take appropriate action
+
+    flagCheck2 = 0;
+end
+
+
+function edit_selectedStates_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_selectedStates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_selectedStates as text
+%        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_selectedStates (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
