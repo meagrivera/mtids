@@ -112,7 +112,8 @@ set(handles.numberview,'Check','on');
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles);
 set(handles.newnodelabel,'String','Node');
-
+set(handles.strong_connections,'String', ' ');        
+set(handles.text16,'String', 'Graph density:');
 
 
 % This function has no output args, see OutputFcn.
@@ -968,6 +969,8 @@ switch modus
         else
             set(handles.text22,'String', 'Independent Graphs:');
             set(handles.connected_graphs,'String', '0');
+            set(handles.text32,'String',' ');
+            set(handles.strong_connections,'String', ' ');            
             set(handles.text16,'String', 'Graph density:');
             set(handles.graph_density,'String', '0');
             set(handles.text10,'String', 'Average degree:');
@@ -990,22 +993,24 @@ switch modus
         if(ne(g)>0) %check if there are vertices in the current graph
             basic_stats(eventdata, handles);
         else
-            set(handles.text22,'String', ' ');
-            set(handles.connected_graphs,'String', ' ');
-            set(handles.text16,'String', ' ');
-            set(handles.graph_density,'String', ' ');
-            set(handles.text10,'String', ' ');
-            set(handles.average_degree,'String', ' ');
-            set(handles.text11,'String', ' ');
-            set(handles.median_degree,'String', ' ');
-            set(handles.text9,'String', ' ');
-            set(handles.minimum_degree,'String', ' ');
-            set(handles.text12,'String', ' ');
-            set(handles.maximum_degree,'String', ' ');
-            set(handles.text18,'String', ' ');
-            set(handles.graph_heterogenity,'String', ' ');
-            set(handles.text19,'String', ' ');
-            set(handles.algebraic_connectivity,'String', ' ');
+            set(handles.text32,'String','Strong connected subgraphs:');
+            set(handles.strong_connections,'String', '0');            
+            set(handles.text22,'String', 'Independent Graphs:');
+            set(handles.connected_graphs,'String', '0');
+            set(handles.text9,'String', 'Minimum In-Degree:');
+            set(handles.minimum_degree,'String', '0');
+            set(handles.text10,'String', 'Maximum In-Degree: ');
+            set(handles.average_degree,'String', '0');
+            set(handles.text11,'String', 'Minimum Out-Degree:');
+            set(handles.median_degree,'String', '0');
+            set(handles.text12,'String', 'Maximum Out-Degree:');
+            set(handles.maximum_degree,'String', '0');
+            set(handles.text16,'String', 'Average Degree:');
+            set(handles.graph_density,'String', '0');            
+            set(handles.text18,'String', 'Graph is balanced:');
+            set(handles.graph_heterogenity,'String', '-');
+            set(handles.text19,'String', 'Loops:');
+            set(handles.algebraic_connectivity,'String', '0');
         end
         
 end
@@ -1030,9 +1035,6 @@ function click_add_node_long_Callback(hObject, eventdata, handles)
 % hObject    handle to click_add_node_long (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
-
 
 
 
@@ -1068,6 +1070,8 @@ switch modus
                                     %Gives us number of connected (sub) graphs
         set(handles.text22,'String', 'Independent Graphs:');
         set(handles.connected_graphs,'String', num2str(null_L,'%d'));
+        set(handles.text32,'String',' ');
+        set(handles.strong_connections,'String', ' ');        
         set(handles.text16,'String', 'Graph density:');
         graph_density = mean(degree_vector)/(dim_L-1); %(1)
         set(handles.graph_density,'String', num2str(graph_density, '%1.3f'));
@@ -1110,22 +1114,54 @@ switch modus
          estrada_graph_index  = trace(exp(A));
  
     case 'directed';
-        set(handles.text22,'String', ' ');
-        set(handles.connected_graphs,'String', ' ');
-        set(handles.text16,'String', ' ');
-        set(handles.graph_density,'String', ' ');
-        set(handles.text10,'String', ' ');
-        set(handles.average_degree,'String', ' ');
-        set(handles.text11,'String', ' ');
-        set(handles.median_degree,'String', ' ');
-        set(handles.text9,'String', ' ');
-        set(handles.minimum_degree,'String', ' ');
-        set(handles.text12,'String', ' ');
-        set(handles.maximum_degree,'String', ' ');
-        set(handles.text18,'String', ' ');
-        set(handles.graph_heterogenity,'String', ' ');
-        set(handles.text19,'String', ' ');
-        set(handles.algebraic_connectivity,'String', ' ');
+        [InDeg OutDeg]=getDegree(matrixOfGraph(g));
+        LaplacianIn = diag(InDeg) - double(matrixOfGraph(g));
+        LaplacianOut = diag(OutDeg) - double(matrixOfGraph(g));
+        rank_L_In = rank(LaplacianIn); %rank of laplacian with indegree
+        rank_L_Out = rank(LaplacianOut); %rank of laplacian with outdegree
+        dim_L = mean(size(LaplacianIn)); %matrix-dimension
+        
+        set(handles.text22,'String', 'Independent Graphs:');
+        if rank_L_In ~= rank_L_Out
+            set(handles.connected_graphs,'String', 'Error!');
+        elseif rank_L_In == rank_L_Out
+            %rank of the nullspace, gives the number of connected subgraphs
+            null_L = dim_L-rank_L_In;
+            set(handles.connected_graphs,'String', num2str(null_L,'%d')); 
+        end
+        
+        minInDeg = min(InDeg);
+        maxInDeg = max(InDeg);
+        minOutDeg = min(OutDeg);
+        maxOutDeg = max(OutDeg);
+        
+        [i,j,s]=find(InDeg == OutDeg);
+        
+        if size(s,1) == dim_L
+            isBalanced = 'Yes';
+        else %if size(s,1) < dim_L
+            isBalanced = 'No';
+        end
+        
+        nrOfLoops = 0;
+        strongCons = 0;
+        
+        set(handles.text32,'String','Strong connected subgraphs:');
+        set(handles.strong_connections,'String', num2str(strongCons,'%d'));
+        set(handles.text9,'String', 'Minimum In-Degree:');
+        set(handles.minimum_degree,'String', num2str(minInDeg,'%d'));        
+        set(handles.text10,'String', 'Maximum In-Degree:');
+        set(handles.average_degree,'String', num2str(maxInDeg,'%d'));
+        set(handles.text11,'String', 'Minimum Out-Degree:');
+        set(handles.median_degree,'String', num2str(minOutDeg,'%d'));
+        set(handles.text12,'String', 'Maximum Out-Degree:');
+        set(handles.maximum_degree,'String', num2str(maxOutDeg,'%d'));
+        set(handles.text16,'String', 'Average Degree:');
+        set(handles.graph_density,'String', num2str(mean(InDeg), '%1.3f'));        
+        set(handles.text18,'String', 'Graph is balanced:');
+        set(handles.graph_heterogenity,'String', isBalanced);
+        set(handles.text19,'String', 'Loops:');
+        set(handles.algebraic_connectivity,'String', num2str(nrOfLoops,'%d'));
 end
 
 
@@ -1641,7 +1677,7 @@ if C <= 0.05; % Hardcoded value!
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
 
-   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I));
+   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell );
   
    if destroy == 0
        if ~strcmp(nodelabel, get_label(g,I))
@@ -1970,19 +2006,27 @@ for i = 1:nrNodes
     plot(t,y,'Linewidth',1.7);
     %legend(['Output signal of node' num2str(i)]);
     xlabel('Simulation time in [s]');
+    %Check printCell to see if visualization of state i is wanted
+    temp = printCell{i};
+    
     if strcmp(templates{i},'LTI')
         if i == 1
             index = 1;
         else
             index = 1+sum(intStates(1:(i-1)));
         end
-        x_loc = x(:,index:index+intStates(i)-1);
-        plot(t,x_loc,'Linewidth',1.2);
+        x_loc = x(:,index:index+intStates(i)-1); 
         %Build string matrix for legend
-        stringMatrix = cell(intStates(i)+1,1);
+        stringMatrix = cell(1,1);
         stringMatrix{1} = ['Output signal of node ' num2str(i)];
+        counterStringMatrix = 1;
         for j=2:intStates(i)+1
-            stringMatrix{j} = ['Nodal state' num2str(j)];
+            if temp(j) == 1
+                counterStringMatrix = counterStringMatrix + 1;
+                stringMatrix = [stringMatrix; cell(1,1)];
+                plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+            end
         end
         legend(stringMatrix,'Location','NorthEastOutside');
     else

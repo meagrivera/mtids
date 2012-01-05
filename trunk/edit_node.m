@@ -66,7 +66,8 @@ global destroy;
 %Additional variables for plotting the simulation
 global intStates;
 global printVector;
-intStates = 1;
+global printCell;
+%intStates = 1;
 %Minimum length of princt vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
 printVector = [1 0];
@@ -74,8 +75,7 @@ printVector = [1 0];
 %Flags for plot checkboxes
 global flagCheck1;
 global flagCheck2;
-flagCheck1 = 1;
-flagCheck2 = 0;
+
 
 %Input Arguments!!
 nodenumber = varargin{1};
@@ -83,6 +83,7 @@ nodelabel  = varargin{2};
 template   = varargin{3};
 template_list = varargin{4};
 neighbours = varargin{5};
+printCell = varargin{6};
 global drop_string;
 
 [ny, nx] = size(template_list);
@@ -107,6 +108,27 @@ set(handles.selector_dynamics, 'Value', n1); % Get template name from list
 set(handles.number_node, 'String', num2str(nodenumber));
 set(handles.edit_label, 'String', nodelabel);
 set(handles.connections, 'String', matrix_to_string(neighbours));
+
+%Initialize figure with information contained in printCell
+temp = printCell{nodenumber};
+intStates = length(temp)-1;
+set(handles.edit_intStates,'String',num2str(intStates));
+if temp(1) == 1
+    flagCheck1 = 1;
+else
+    flagCheck1 = 0;
+end
+set(handles.checkbox1,'Value',flagCheck1);
+if any(temp(2:length(temp)))
+    flagCheck2 = 1;
+    stringSelectedStates = num2str(find(temp(2:length(temp))));
+else
+    flagCheck2 = 0;
+    stringSelectedStates = '';
+end
+set(handles.checkbox2,'Value',flagCheck2);
+set(handles.edit_selectedStates,'String',stringSelectedStates);
+
 
 %set(handles.selector_dynamics, 'Value', '2');
 
