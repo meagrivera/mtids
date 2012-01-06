@@ -83,6 +83,11 @@ global move_index;
 global start_index;
 %Global cell-array to store plotting information
 global printCell;
+%Flag, if the export to simulink was succesful
+global expSucc;
+
+expSucc = 0;
+
 
 botton_down = 0;
 add_connection = 0;
@@ -995,7 +1000,7 @@ switch modus
         else
             set(handles.text32,'String','Strong connected subgraphs:');
             set(handles.strong_connections,'String', '0');            
-            set(handles.text22,'String', 'Independent Graphs:');
+            set(handles.text22,'String', 'Weak connected subgraphs:');
             set(handles.connected_graphs,'String', '0');
             set(handles.text9,'String', 'Minimum In-Degree:');
             set(handles.minimum_degree,'String', '0');
@@ -1009,8 +1014,8 @@ switch modus
             set(handles.graph_density,'String', '0');            
             set(handles.text18,'String', 'Graph is balanced:');
             set(handles.graph_heterogenity,'String', '-');
-            set(handles.text19,'String', 'Loops:');
-            set(handles.algebraic_connectivity,'String', '0');
+            set(handles.text19,'String', 'Has cycles:');
+            set(handles.algebraic_connectivity,'String', '-');
         end
         
 end
@@ -1121,13 +1126,21 @@ switch modus
         rank_L_Out = rank(LaplacianOut); %rank of laplacian with outdegree
         dim_L = mean(size(LaplacianIn)); %matrix-dimension
         
-        set(handles.text22,'String', 'Independent Graphs:');
-        if rank_L_In ~= rank_L_Out
-            set(handles.connected_graphs,'String', 'Error!');
-        elseif rank_L_In == rank_L_Out
+        set(handles.text22,'String', 'Weak connected subgraphs:');
+        %if rank_L_In ~= rank_L_Out
+        %    set(handles.connected_graphs,'String', 'Error!');
+        %elseif rank_L_In == rank_L_Out
             %rank of the nullspace, gives the number of connected subgraphs
-            null_L = dim_L-rank_L_In;
-            set(handles.connected_graphs,'String', num2str(null_L,'%d')); 
+        %    null_L = dim_L-rank_L_In;
+        %    set(handles.connected_graphs,'String', num2str(null_L,'%d')); 
+        %end
+        
+        if exist('graphconncomp.m','file') == 2
+            adj = matrixOfGraph(g);
+            adjS = sparse(adj);
+            set(handles.connected_graphs,'String',num2str(graphconncomp(adjS,'WEAK',true),'%d'));
+        else
+            set(handles.connected_graphs,'String', '-');
         end
         
         minInDeg = min(InDeg);
@@ -1143,11 +1156,29 @@ switch modus
             isBalanced = 'No';
         end
         
-        nrOfLoops = 0;
-        strongCons = 0;
+        if exist('graphconncomp.m','file') == 2
+            adj = matrixOfGraph(g);
+            adjS = sparse(adj);
+            [S,C]=graphconncomp(adjS);
+            strongCons = num2str(S);
+        else
+             strongCons = '-';
+        end
+        
+        if exist('graphisdag.m','file') == 2
+            adj = matrixOfGraph(g);
+            adjS = sparse(adj);
+            if graphisdag(adjS) == 0
+                isAcyclic = 'Yes';
+            elseif graphisdag(adjS) == 1
+                isAcyclic = 'No';
+            end
+        else
+            isAcyclic = '-';
+        end
         
         set(handles.text32,'String','Strong connected subgraphs:');
-        set(handles.strong_connections,'String', num2str(strongCons,'%d'));
+        set(handles.strong_connections,'String', strongCons);
         set(handles.text9,'String', 'Minimum In-Degree:');
         set(handles.minimum_degree,'String', num2str(minInDeg,'%d'));        
         set(handles.text10,'String', 'Maximum In-Degree:');
@@ -1160,8 +1191,8 @@ switch modus
         set(handles.graph_density,'String', num2str(mean(InDeg), '%1.3f'));        
         set(handles.text18,'String', 'Graph is balanced:');
         set(handles.graph_heterogenity,'String', isBalanced);
-        set(handles.text19,'String', 'Loops:');
-        set(handles.algebraic_connectivity,'String', num2str(nrOfLoops,'%d'));
+        set(handles.text19,'String', 'Has cycles:');
+        set(handles.algebraic_connectivity,'String', isAcyclic);
 end
 
 
@@ -1882,6 +1913,7 @@ function export_to_simulink2_Callback(hObject, eventdata, handles)
 global g;
 global templates;
 global template_list;
+global expSucc;
 
 disp('Export mode 2');
 A  = double(matrix(g));
@@ -1914,6 +1946,7 @@ name =	'untitled';
  else   
      disp('Done exporting');
  end
+ expSucc = 1;
  
 
 
@@ -1944,6 +1977,7 @@ function uipanel9_SelectionChangeFcn(hObject, eventdata, handles)
 
 global modus;
 global g;
+global printCell;
 
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'button_undirected'
@@ -1951,6 +1985,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % Function, that creates a pop-up-menu, that says: "save current
         % graph?"
         resize(g,0);
+        printCell = cell(0,1);
         refresh_graph(0, eventdata, handles);
         guidata(hObject, handles);
     case 'button_directed'
@@ -1959,6 +1994,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % undirected graph as directed? (Yes / No) If no, save current
         % graph?"
         resize(g,0);
+        printCell = cell(0,1);
         refresh_graph(0, eventdata, handles);
         guidata(hObject, handles);
     % Continue with more cases as necessary.
@@ -1978,12 +2014,16 @@ function run_simulation_Callback(hObject, eventdata, handles)
 global g;
 global printCell;
 global templates;
+global expSucc;
 
 
 %After export to simulink is complete, start the simulation, using the
 %plotting parameters in printCell
+if expSucc ~= 1
+    msgbox('Please start Export to Simulink2 before using this function.','Notice');
+end
 
-
+if expSucc == 1
 %We need: number of nodes, number of internal states per node
 nrNodes = nv(g);
 intStates = zeros(nrNodes,1);
@@ -2000,14 +2040,15 @@ end
 %every state gets its own figure
 
 for i = 1:nrNodes
+    %Check printCell to see if visualization of state i is wanted
+    temp = printCell{i};
+    if any(temp)
     figure;
     hold on;
     y = evalin('base',['nodeout' num2str(i) '.signals.values']);
-    plot(t,y,'Linewidth',1.7);
+    plot(t,y,'Linewidth',2.0);
     %legend(['Output signal of node' num2str(i)]);
     xlabel('Simulation time in [s]');
-    %Check printCell to see if visualization of state i is wanted
-    temp = printCell{i};
     
     if strcmp(templates{i},'LTI')
         if i == 1
@@ -2024,7 +2065,11 @@ for i = 1:nrNodes
             if temp(j) == 1
                 counterStringMatrix = counterStringMatrix + 1;
                 stringMatrix = [stringMatrix; cell(1,1)];
-                plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                R = 0.1 + 0.5*rand;
+                G = 0.1 + 0.5*rand;
+                B = 0.1 + 0.5*rand;
+                set(p,'Color', [R G B] );
                 stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
             end
         end
@@ -2034,5 +2079,7 @@ for i = 1:nrNodes
     end
     
     hold off;
+    end
+end
 end
 
