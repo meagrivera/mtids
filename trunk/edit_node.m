@@ -22,7 +22,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 03-Jan-2012 10:34:16
+% Last Modified by GUIDE v2.5 14-Jan-2012 15:31:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -261,6 +261,10 @@ else %Checkbox 1 is not checked
     printVector(1) = 0;
 end
 
+if any(temp)
+    flagCheck2 = 1;
+end
+
 if flagCheck2 && strcmp(template,'LTI') %Checkbox 2 is checked AND dynamics are LTI
     for i = 1:intStates
         if find(temp == i)
@@ -382,3 +386,17 @@ function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in edit_plot_parameters.
+function edit_plot_parameters_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_plot_parameters (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+%global intStates;
+%global flagCheck1;
+%global flagCheck2;
+
+plotStates = str2num(get(handles.edit_selectedStates,'String'));
+
+[parameters] = plot_parameters(plotStates);

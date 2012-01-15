@@ -12,12 +12,20 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
+      SignalName	      "Nodeout"
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.11"
+    ComputedModelVersion    "1.12"
     NumModelReferences	    0
-    NumTestPointedSignals   0
+    NumTestPointedSignals   1
+    TestPointedSignal {
+      SignalName	      "Nodeout"
+      FullBlockPath	      "consensus/Integrator"
+      LogSignal		      1
+      MaxPoints		      5000
+      Decimation	      2
+    }
   }
   SavedCharacterEncoding  "UTF-8"
   SaveDefaultBlockParams  on
@@ -36,9 +44,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Tigervilla"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Jan 03 16:20:24 2012"
-  RTWModifiedTimeStamp	  247508422
-  ModelVersionFormat	  "1.%<AutoIncrement:11>"
+  LastModifiedDate	  "Sat Jan 14 13:46:43 2012"
+  RTWModifiedTimeStamp	  248449601
+  ModelVersionFormat	  "1.%<AutoIncrement:12>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -786,6 +794,13 @@ Model {
       Ports		      [1, 1]
       Position		      [455, 90, 485, 120]
       InitialCondition	      "100*(rand()-0.5)"
+      Port {
+	PortNumber		1
+	Name			"Nodeout"
+	RTWStorageClass		"Auto"
+	DataLogging		on
+	DataLoggingNameMode	"SignalName"
+      }
     }
     Block {
       BlockType		      Mux
@@ -872,6 +887,8 @@ Model {
       DstPort		      1
     }
     Line {
+      Name		      "Nodeout"
+      Labels		      [0, 0]
       SrcBlock		      "Integrator"
       SrcPort		      1
       Points		      [40, 0]

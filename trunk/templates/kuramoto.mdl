@@ -12,13 +12,20 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
-      SignalName	      "rho_i"
+      SignalName	      "Nodeout"
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.22"
+    ComputedModelVersion    "1.23"
     NumModelReferences	    0
-    NumTestPointedSignals   0
+    NumTestPointedSignals   1
+    TestPointedSignal {
+      SignalName	      "Nodeout"
+      FullBlockPath	      "kuramoto/Integrator"
+      LogSignal		      1
+      MaxPoints		      5000
+      Decimation	      2
+    }
   }
   Description		  "Kuramoto oscillator model\ncopy Jose Rivera\nchepeadan@gmail.com"
   SavedCharacterEncoding  "UTF-8"
@@ -38,9 +45,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Tigervilla"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Jan 03 16:19:51 2012"
-  RTWModifiedTimeStamp	  247508389
-  ModelVersionFormat	  "1.%<AutoIncrement:22>"
+  LastModifiedDate	  "Sat Jan 14 13:46:26 2012"
+  RTWModifiedTimeStamp	  248449580
+  ModelVersionFormat	  "1.%<AutoIncrement:23>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -910,8 +917,9 @@ Model {
       InitialConditionSource  "external"
       Port {
 	PortNumber		1
-	Name			"rho_i"
+	Name			"Nodeout"
 	RTWStorageClass		"Auto"
+	DataLogging		on
 	DataLoggingNameMode	"SignalName"
       }
     }
@@ -984,6 +992,7 @@ Model {
       Name		      "Threshold"
       SID		      "27"
       Position		      [480, 435, 510, 465]
+      BlockRotation	      -1.#IND00
       BlockMirror	      on
       Value		      "threshold"
     }
@@ -1164,7 +1173,7 @@ Model {
       BlockType		      Outport
       Name		      "Out1"
       SID		      "2"
-      Position		      [685, 153, 715, 167]
+      Position		      [705, 163, 735, 177]
       IconDisplay	      "Port number"
     }
     Line {
@@ -1180,43 +1189,6 @@ Model {
       Points		      [40, 0]
       DstBlock		      "Add1"
       DstPort		      1
-    }
-    Line {
-      Name		      "rho_i"
-      Labels		      [0, 0]
-      SrcBlock		      "Integrator"
-      SrcPort		      1
-      Points		      [0, -10; 25, 0]
-      Branch {
-	Labels			[2, 0]
-	Points			[0, 100; -450, 0]
-	DstBlock		"Add1"
-	DstPort			2
-      }
-      Branch {
-	Points			[15, 0]
-	Branch {
-	  DstBlock		  "Out1"
-	  DstPort		  1
-	}
-	Branch {
-	  Points		  [0, 85; 20, 0]
-	  Branch {
-	    DstBlock		    "Scope"
-	    DstPort		    1
-	  }
-	  Branch {
-	    Points		    [0, 75]
-	    DstBlock		    "Math\nFunction"
-	    DstPort		    1
-	  }
-	}
-      }
-      Branch {
-	Points			[0, -95]
-	DstBlock		"To Workspace"
-	DstPort			1
-      }
     }
     Line {
       SrcBlock		      "Add1"
@@ -1290,6 +1262,44 @@ Model {
       Points		      [-30, 0]
       DstBlock		      "flash"
       DstPort		      2
+    }
+    Line {
+      Name		      "Nodeout"
+      Labels		      [0, 0]
+      SrcBlock		      "Integrator"
+      SrcPort		      1
+      Points		      [0, -10; 25, 0]
+      Branch {
+	Labels			[2, 0]
+	Points			[0, 100; -450, 0]
+	DstBlock		"Add1"
+	DstPort			2
+      }
+      Branch {
+	Points			[0, -95]
+	DstBlock		"To Workspace"
+	DstPort			1
+      }
+      Branch {
+	Points			[15, 0]
+	Branch {
+	  Points		  [35, 0]
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+	Branch {
+	  Points		  [0, 85; 20, 0]
+	  Branch {
+	    DstBlock		    "Scope"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 75]
+	    DstBlock		    "Math\nFunction"
+	    DstPort		    1
+	  }
+	}
+      }
     }
   }
 }
