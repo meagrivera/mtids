@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 03-Jan-2012 13:41:44
+% Last Modified by GUIDE v2.5 14-Jan-2012 14:21:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,7 +85,10 @@ global start_index;
 global printCell;
 %Flag, if the export to simulink was succesful
 global expSucc;
-
+%Flag, if the output of all nodes should be plotted
+global plotAllOutput;
+plotAllOutput = 1;
+set(handles.plotAllOutput,'Checked','on');
 expSucc = 0;
 
 
@@ -98,8 +101,8 @@ template_list = cell(0,1);
 templates = cell(0,1);
 printCell = cell(0,1);
 
-% Parameter to divide the modus "undirected" / "directed": dir
-% To start the program, activate "undirected"
+% Parameter to distinguish the modus "undirected" / "directed": dir
+% At start of program, "undirected" is activated
 global modus;
 modus = 'undirected';
 set(handles.button_undirected,'Value',1);
@@ -194,6 +197,7 @@ global graph_refresh;
 global templates;
 global template_list;
 global printCell;
+global plotAllOutput;
 
 %/ Visualization creator
 %{
@@ -286,7 +290,7 @@ for i = 1:length_cellPrint
 end
 
 %Initially, the printVector is the same for all templates
-printCell(length_cellPrint+1) = num2cell([1 0],2);
+printCell(length_cellPrint+1) = num2cell([plotAllOutput 0],2);
 
 
 if graph_refresh == 1
@@ -2004,8 +2008,6 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
 end
 
 
-
-
 % --------------------------------------------------------------------
 function run_simulation_Callback(hObject, eventdata, handles)
 % hObject    handle to run_simulation (see GCBO)
@@ -2083,3 +2085,100 @@ for i = 1:nrNodes
 end
 end
 
+
+
+% --------------------------------------------------------------------
+function plotAllOutput_Callback(hObject, eventdata, handles)
+% hObject    handle to plotAllOutput (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global plotAllOutput;
+
+if strcmp(get(handles.plotAllOutput,'Checked'),'on')
+    set(handles.plotAllOutput,'Checked','off')
+    plotAllOutput = 0;
+else
+    set(handles.plotAllOutput,'Checked','on')
+    plotAllOutput = 1;
+end
+
+
+% --------------------------------------------------------------------
+function run_simulation_plots_Callback(hObject, eventdata, handles)
+% hObject    handle to run_simulation_plots (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global g;
+global printCell;
+global templates;
+global expSucc;
+global xout;
+global tout;
+
+
+
+%After export to simulink is complete, start the simulation, using the
+%plotting parameters in printCell
+if expSucc ~= 1
+    msgbox('Please start Export to Simulink2 before using this function.','Notice');
+end
+
+if expSucc == 1
+%We need: number of nodes, number of internal states per node
+nrNodes = nv(g);
+intStates = zeros(nrNodes,1);
+for i = 1:nrNodes
+    intStates(i) = length(printCell{i})-1;
+end
+
+%t contains the simulation time, x the states in order of the nodenumbers.
+%The output of each %node is contained in the To Workspace struct nodeouti, 
+%where i stands for the nodenumber
+%[t,x]=sim(gcs);
+
+%Plotting of the simulation result can be done on different ways. For now,
+%every state gets its own figure
+
+for i = 1:nrNodes
+    %Check printCell to see if visualization of state i is wanted
+    temp = printCell{i};
+    if any(temp)
+    figure;
+    hold on;
+    y = evalin('base',['nodeout' num2str(i) '.signals.values']);
+    plot(tout,y,'Linewidth',2.0);
+    %legend(['Output signal of node' num2str(i)]);
+    xlabel('Simulation time in [s]');
+    
+    if strcmp(templates{i},'LTI')
+        if i == 1
+            index = 1;
+        else
+            index = 1+sum(intStates(1:(i-1)));
+        end
+        x_loc = xout(:,index:index+intStates(i)-1); 
+        %Build string matrix for legend
+        stringMatrix = cell(1,1);
+        stringMatrix{1} = ['Output signal of node ' num2str(i)];
+        counterStringMatrix = 1;
+        for j=2:intStates(i)+1
+            if temp(j) == 1
+                counterStringMatrix = counterStringMatrix + 1;
+                stringMatrix = [stringMatrix; cell(1,1)];
+                p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                R = 0.1 + 0.5*rand;
+                G = 0.1 + 0.5*rand;
+                B = 0.1 + 0.5*rand;
+                set(p,'Color', [R G B] );
+                stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+            end
+        end
+        legend(stringMatrix,'Location','NorthEastOutside');
+    else
+        legend(['Output signal of node ' num2str(i)]);
+    end
+    
+    hold off;
+    end
+end
+end

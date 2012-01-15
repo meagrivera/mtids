@@ -137,7 +137,9 @@ end
 %% open system
 % NO VISULALIZATION FOR LARGE NUMBER OF NODES
 if(nodeNumber<=vizMaxNodeNumber)
-open_system(sys) 
+    open_system(sys);
+    %Enables state saving to workspace
+    set_param(gcs,'SaveState','on');
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)

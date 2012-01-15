@@ -12,12 +12,20 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
+      SignalName	      "Nodeout"
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.7"
+    ComputedModelVersion    "1.8"
     NumModelReferences	    0
-    NumTestPointedSignals   0
+    NumTestPointedSignals   1
+    TestPointedSignal {
+      SignalName	      "Nodeout"
+      FullBlockPath	      "Copy_of_LTI/State-Space"
+      LogSignal		      1
+      MaxPoints		      5000
+      Decimation	      2
+    }
   }
   SavedCharacterEncoding  "UTF-8"
   SaveDefaultBlockParams  on
@@ -36,9 +44,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Tigervilla"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Dec 18 13:44:46 2011"
-  RTWModifiedTimeStamp	  246116603
-  ModelVersionFormat	  "1.%<AutoIncrement:7>"
+  LastModifiedDate	  "Sat Jan 14 13:45:33 2012"
+  RTWModifiedTimeStamp	  248449528
+  ModelVersionFormat	  "1.%<AutoIncrement:8>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -792,6 +800,13 @@ Model {
       C			      "C"
       D			      "D"
       X0		      "x0+var*rand(1)"
+      Port {
+	PortNumber		1
+	Name			"Nodeout"
+	RTWStorageClass		"Auto"
+	DataLogging		on
+	DataLoggingNameMode	"SignalName"
+      }
     }
     Block {
       BlockType		      ToWorkspace
@@ -826,6 +841,8 @@ Model {
       DstPort		      1
     }
     Line {
+      Name		      "Nodeout"
+      Labels		      [0, 0]
       SrcBlock		      "State-Space"
       SrcPort		      1
       Points		      [35, 0]

@@ -1,0 +1,25 @@
+In this text-file known and not fixed bugs should be contained.
+
+----------15.01.2012-------------------------------------------
+[OPEN][1]
+Using Windows 7 and Matlab Version R2011b: at adding a new dynamical template, a message, but no
+crash, appears: 'Undefined function 'mtids' for input arguments of type 'struct'.'.
+
+[OPEN][2]
+The generation of plots should also be possible when starting the simulation directly in Simulink.
+This is not possible now. Acutally, the simulaton may be started in MTIDS
+
+[OPEN][3]
+To deal with [2], the subsystem templates were extend with naming the ouput signals 'Nodeout'. But
+during the 'Export to Simulink 2' function, the name is not dynamically concatenated with the node
+number. Problem here is to find the correct system attribute, which may be edited programmatically.
+
+[OPEN][4]
+In the 'Edit Node' figure, which opens by double clicking a node, the prompting of the 
+interconncetions will not discriminate between undirected and directed modus. This must be done
+by passing the corresponding global flag in the main m-file to 'Edit Node'. The design of the figure
+may be changed dynamically due to space limitations.
+
+[OPEN][5]
+In the m-file "template2modify.m", the case that a node has no entry is only considered for LTI-
+templates. The other templates should also be edited correctly.
