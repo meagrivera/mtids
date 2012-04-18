@@ -48,8 +48,14 @@ end
 
 % --- Executes just before mtids is made visible.
 function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to mtids (see VARARGIN)
+
 disp(' ');
-disp('MTIDS 1.0');
+disp('MTIDS 1.1');
 disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
 disp('<a href="http://code.google.com/p/mtids">http://code.google.com/p/mtids</a>');
 disp(' ');
@@ -59,7 +65,7 @@ disp('as published by the Free Software Foundation; either version 2');
 disp('of the License, or (at your option) any later version.');
 disp('This program is distributed in the hope that it will be useful,');
 disp('but WITHOUT ANY WARRANTY; without even the implied warranty of');
-disp('MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the');
+disp('MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the');
 disp('GNU General Public License for more details.');
 disp(' ');
 disp('You should have received a copy of the GNU General Public License');
@@ -72,7 +78,12 @@ addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
 addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
 
+%initialize graph
 graph_init;
+
+%declare userdata as structures: data.*; with it global variables could be
+%erased
+
 global g;
 global gui_handle;
 global graph_refresh;
@@ -88,23 +99,30 @@ global expSucc;
 %Flag, if the output of all nodes should be plotted
 global plotAllOutput;
 plotAllOutput = 1;
+data.plotAllOutput = plotAllOutput;
 set(handles.plotAllOutput,'Checked','on');
 expSucc = 0;
+data.expSucc = expSucc;
 
 
 botton_down = 0;
+data.botton_down = botton_down;
 add_connection = 0;
+data.add_connection = add_connection;
 start_index = 0;
-g = graph;
+data.start_index = start_index;
 
 template_list = cell(0,1);
 templates = cell(0,1);
+data.templates = templates;
 printCell = cell(0,1);
+data.printCell = printCell;
 
 % Parameter to distinguish the modus "undirected" / "directed": dir
 % At start of program, "undirected" is activated
 global modus;
 modus = 'undirected';
+data.modus = modus;
 set(handles.button_undirected,'Value',1);
 set(handles.button_directed,'Value',0);
 
@@ -112,24 +130,26 @@ template_list{1,1} = 'LTI';
 %template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
 
 graph_refresh = 1;
+data.graph_refresh = graph_refresh;
 g = graph; %% Creating a graph
 resize(g,0);
+data.g = g;
+
 %grid on;
 %zoom on;
 set(handles.numberview,'Check','on');
 refresh_dynamics(eventdata, handles);
-refresh_graph(0, eventdata, handles);
+
 set(handles.newnodelabel,'String','Node');
 set(handles.strong_connections,'String', ' ');        
 set(handles.text16,'String', 'Graph density:');
 
 
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to mtids (see VARARGIN)
+data.template_list = template_list;
+% store userdata, use tag 'appData'
+setappdata(hObject,'appData',data);
 
+refresh_graph(0, eventdata, handles,hObject);
 % Choose default command line output for mtids
 handles.output = hObject;
 
@@ -150,26 +170,6 @@ function varargout = mtids_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-% --- Executes on button press in updategraph.
-function updategraph_Callback(hObject, eventdata, handles)
-% hObject    handle to updategraph (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-global g;
-
-
-refresh_graph(1, eventdata, handles);
-
-guidata(hObject, handles);
-
-function newnodelabel_Callback(hObject, eventdata, handles)
-% hObject    handle to newnodelabel (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of newnodelabel as text
-%        str2double(get(hObject,'String')) returns contents of newnodelabel as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -192,63 +192,29 @@ function newnode_Callback(hObject, eventdata, handles)
 % hObject    handle to newnode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global graph_refresh;
-global templates;
-global template_list;
-global printCell;
-global plotAllOutput;
 
-%/ Visualization creator
-%{
-if nv(g) == 0;
-    x_n = 2;
-    y_n = 0;
-    
-else    
-        XY = getxy(g);
+% load application data
+data = getappdata(handles.figure1,'appData');
 
-        x = XY(:,1)';
-        y = XY(:,2)'; 
-        d = x.*x + y.*y;
-        R = 2;
-        N = 12;
-   
-       
-        run_loop = 1;
-   
-     while run_loop
-        for i = 0:N-1
-        phi = i*2*pi/N;
-        x_n = R*cos(phi);
-        y_n = R*sin(phi);
-   
-        dx1 = x - x_n;
-        dy1 = y - y_n;
-        dd  = dx1.*dx1 + dy1.*dy1;
- 
-            if min(dd) > 0.05
-                run_loop = 0;
-                break;
-            end
-        end
-        
-        R = 2*R;
-        N = 2*N;
-        end
-        
-  end
-   
-XY(new_vertex,1) = x_n;
-XY(new_vertex,2) = y_n;
+%global g;
+g = data.g;
+%global graph_refresh;
+graph_refresh = data.graph_refresh;
+%global templates;
+templates = data.templates;
+%global template_list;
+template_list = data.template_list;
+%global printCell;
+printCell = data.printCell;
+%global plotAllOutput;
+plotAllOutput = data.plotAllOutput;
 
-embed(g,XY);
-%}
-    rmxy(g);
-    new_vertex = nv(g) + 1;
-    resize(g, new_vertex);
-    labs = get_label(g);
-    lab_string =  get(handles.newnodelabel,'String');
+
+rmxy(g);
+new_vertex = nv(g) + 1;
+resize(g, new_vertex);
+labs = get_label(g);
+lab_string =  get(handles.newnodelabel,'String');
 
 % check if any of the existing names is equal as the new one
 if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'exact') % strmatch is scalar in contrast to strcmp
@@ -267,7 +233,6 @@ if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'
            lab_string = strcat(lab_string, num2str(i)); % if 'i' isn't contained, take this for the new name
            break; % if a "free" name was discovered, quit the for-loop
         end
-
     end
 end
 
@@ -292,10 +257,18 @@ end
 %Initially, the printVector is the same for all templates
 printCell(length_cellPrint+1) = num2cell([plotAllOutput 0],2);
 
-
 if graph_refresh == 1
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject);
 end
+
+% store changed data back to structure 'data'
+data.g = g;
+data.graph_refresh = graph_refresh;
+data.templates = templates;
+data.template_list = template_list;
+data.printCell = printCell;
+data.plotAllOutput = plotAllOutput;
+setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles);
 
@@ -307,11 +280,23 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% load application data
+data = getappdata(handles.figure1,'appData');
+
 % Hint: delete(hObject) closes the figure
-global g;
+%global g;
+g = data.g;
 free(g)
+
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles);
+
 % graph_destroy();
 delete(hObject);
+
 
 
 
@@ -341,16 +326,15 @@ end
 switch modus
     case 'undirected';
         add(g,n1(1), n2(1));
-        refresh_graph(0, eventdata, handles);
+        refresh_graph(0, eventdata, handles,hObject);
     case 'directed';
         add(g,n1(1), n2(1),1);
-        refresh_graph(0, eventdata, handles);
+        refresh_graph(0, eventdata, handles,hObject);
 end
 
-%refresh_graph(0, eventdata, handles);
+%refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
-
 
 
 function fromnode_Callback(hObject, eventdata, handles)
@@ -375,7 +359,6 @@ if ispc
 else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
-
 
 
 function tonode_Callback(hObject, eventdata, handles)
@@ -403,7 +386,6 @@ end
 
 
 
-
 % --- Executes on button press in randomconnection.
 function randomconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to randomconnection (see GCBO)
@@ -424,7 +406,7 @@ b = floor(nv(g)*rand());
 
 add(g,a,b,dir);
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
 
@@ -462,11 +444,9 @@ end
 delete(g,n1(1), n2(1), dir);
 
 
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
-
-
 
 
 function remnode_Callback(hObject, eventdata, handles)
@@ -498,12 +478,20 @@ function removenode_Callback(hObject, eventdata, handles)
 % hObject    handle to removenode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global printCell;
+
+% load application data
+data = getappdata(handles.figure1,'appData');
+
+%global g;
+g = data.g;
+%global templates;
+templates = data.templates;
+%global printCell;
+printCell = data.printCell;
 
 a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
+    %errordlg(templates); %debugging-output
     templates(a,:) = []; % Deleting a template
 
     delete(g,a);
@@ -519,8 +507,14 @@ if nv(g) && (a <= nv(g))
         printCell(i-1) = temp_printCell(i);
     end
 
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject);
 end
+
+%store application data
+data.g = g;
+data.templates = templates;
+data.printCell = printCell;
+setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles);
 
@@ -534,7 +528,7 @@ function trimgraph_Callback(hObject, eventdata, handles)
 global g;
 trim(g);
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
 
@@ -547,7 +541,7 @@ function clearconnections_Callback(hObject, eventdata, handles)
 global g;
 clear_edges(g);
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
 
@@ -562,7 +556,7 @@ function completegraph_Callback(hObject, eventdata, handles)
 global g;
 complete(g);
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
 
@@ -581,7 +575,7 @@ switch modus
         random(g);
 end
 
-refresh_graph(0, eventdata, handles)
+refresh_graph(0, eventdata, handles,hObject)
 
 guidata(hObject, handles);
 
@@ -628,7 +622,7 @@ global templates;
 
 resize(g,0);
 templates = cell(0,1);
-refresh_graph(1, eventdata, handles);
+refresh_graph(1, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
 function loadgraph_Callback(hObject, eventdata, handles)
@@ -690,7 +684,7 @@ embed(g,XY);
 end
 
 refresh_dynamics(eventdata, handles);
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
 function Savegraph_Callback(hObject, eventdata, handles)
@@ -734,7 +728,7 @@ if filename
  end
 end
  
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
 function Untitled_10_Callback(hObject, eventdata, handles)
@@ -821,7 +815,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.labelview,'Check','on');
     set(handles.numberview,'Check','off');
     set(handles.blankview,'Check','off');
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject)
 end
 
 guidata(hObject, handles);
@@ -841,7 +835,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.labelview,'Check','off');
     set(handles.numberview,'Check','off');
     set(handles.blankview,'Check','off');
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject)
 end
 
 guidata(hObject, handles);
@@ -861,7 +855,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.labelview,'Check','off');
     set(handles.numberview,'Check','on');
         set(handles.blankview,'Check','off');
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject)
 end
 
 guidata(hObject, handles);
@@ -882,7 +876,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.labelview,'Check','off');
     set(handles.numberview,'Check','off');
     set(handles.blankview,'Check','on');
-    refresh_graph(0, eventdata, handles)
+    refresh_graph(0, eventdata, handles,hObject);
 end
 
 guidata(hObject, handles);
@@ -952,16 +946,22 @@ function editnode_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-function refresh_graph(reset, eventdata, handles)
+function refresh_graph(reset, eventdata, handles,hObject)
 % This function refreshes the graph window
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+
+%global g;
+g = data.g;
+%global modus;
+modus = data.modus;
 
 % Check which kind of lable is activated
- checklabel = get(handles.labelview,'Check');
+checklabel = get(handles.labelview,'Check');
 checknumber = get(handles.numberview,'Check');
- checkcolor = get(handles.colorview,'Check');
- checkblank = get(handles.blankview,'Check');
+checkcolor = get(handles.colorview,'Check');
+checkblank = get(handles.blankview,'Check');
  
 % rmxy(g);
 cla;
@@ -1037,6 +1037,13 @@ end
 
 set(handles.nedges,'String', num2str(ne(g,dir)));
 set(handles.nvertices,'String',num2str(nv(g)));
+
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles);
+
 
 
 % --------------------------------------------------------------------
@@ -1200,11 +1207,6 @@ switch modus
 end
 
 
-
-
-
-
-
 function dynamic_label_Callback(hObject, eventdata, handles)
 % hObject    handle to dynamic_label (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -1277,7 +1279,7 @@ for i=1:nverts
 
 embed(g,xy); 
 
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
 function export_to_simulink_Callback(hObject, eventdata, handles)
@@ -1323,27 +1325,34 @@ name =	'untitled';
  end
 
 
-
-
 % --- Executes on button press in add_multiple_nodes.
 function add_multiple_nodes_Callback(hObject, eventdata, handles)
 % hObject    handle to add_multiple_nodes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-global g;
-global graph_refresh;
+%load application data
+data = getappdata(handles.figure1,'appData');
+%g = data.g;
+%global g;
+%global graph_refresh;
 n_nodes = str2num(get(handles.number_of_nodes,'String'));
 
-graph_refresh = 0;
+% this is needed, because during creation of the nodes the graph isn't build
+% newly; only at the end the graph should built new.
+data.graph_refresh = 0;
+setappdata(handles.figure1,'appData',data);
 
 for i=1:n_nodes
    newnode_Callback(hObject, eventdata, handles); 
 end
 
-graph_refresh = 1;
+%store application data
+%data.g = g;
+data.graph_refresh = 1;
+setappdata(handles.figure1,'appData',data);
 
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles, hObject);
 
 
 % --------------------------------------------------------------------
@@ -1484,7 +1493,7 @@ for i = 1:nrNodes
     printCell(i) = num2cell([1 0],2);
 end
 
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 
 % --------------------------------------------------------------------
@@ -1643,7 +1652,7 @@ for i=1:(nv(g)-1)
 end
     add(g,nv(g),1,dir)
 
-refresh_graph(0, eventdata, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 
 
@@ -1704,7 +1713,7 @@ if C <= 0.05; % Hardcoded value!
                 end
             end
             start_index = 0;
-            refresh_graph(0, eventdata, handles);
+            refresh_graph(0, eventdata, handles,hObject);
         else
             start_index = I;
         end
@@ -1751,7 +1760,7 @@ if C <= 0.05; % Hardcoded value!
         %Provide here the new plotting information
         printCell(nodenumber) = num2cell(printVector,2);
             
-        refresh_graph(0, eventdata, handles)
+        refresh_graph(0, eventdata, handles,hObject);
             
    elseif destroy == 1
             if nv(g) && (I <= nv(g))
@@ -1770,7 +1779,7 @@ if C <= 0.05; % Hardcoded value!
                 printCell(i-1) = temp_printCell(i);
             end
 
-            refresh_graph(0, eventdata, handles)
+            refresh_graph(0, eventdata, handles,hObject);
             end
        
    end
@@ -1791,7 +1800,7 @@ if strcmp(get(handles.output, 'SelectionType'), 'extend')
     XY(nv(g),1) = x_c;
     XY(nv(g),2) = y_c;
     embed(g,XY);
-    refresh_graph(0, eventdata, handles);
+    refresh_graph(0, eventdata, handles,hObject);
 end
 
 
@@ -1826,7 +1835,7 @@ if botton_down
     XY(move_index,1) = x_c;
     XY(move_index,2) = y_c;
     embed(g,XY);
-    refresh_graph(0, eventdata, handles);
+    refresh_graph(0, eventdata, handles,hObject);
 end
    
 
@@ -1905,7 +1914,7 @@ function update_graph_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-refresh_graph(1, eventdata, handles);
+refresh_graph(1, eventdata, handles,hObject);
 
 
 
@@ -1990,7 +1999,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % graph?"
         resize(g,0);
         printCell = cell(0,1);
-        refresh_graph(0, eventdata, handles);
+        refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     case 'button_directed'
         modus = 'directed';
@@ -1999,7 +2008,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % graph?"
         resize(g,0);
         printCell = cell(0,1);
-        refresh_graph(0, eventdata, handles);
+        refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     % Continue with more cases as necessary.
     otherwise
@@ -2182,3 +2191,4 @@ for i = 1:nrNodes
     end
 end
 end
+
