@@ -84,20 +84,22 @@ graph_init;
 %declare userdata as structures: data.*; with it global variables could be
 %erased
 
-global g;
-global gui_handle;
-global graph_refresh;
-global template_list;
-global templates;
-global botton_down;
-global move_index;
-global start_index;
+%global g;
+%global gui_handle;
+%global graph_refresh;
+%global template_list;
+%global templates;
+%global botton_down;
+%global move_index;
+move_index = 0;
+data.move_index = move_index;
+%global start_index;
 %Global cell-array to store plotting information
-global printCell;
+%global printCell;
 %Flag, if the export to simulink was succesful
-global expSucc;
+%global expSucc;
 %Flag, if the output of all nodes should be plotted
-global plotAllOutput;
+%global plotAllOutput;
 plotAllOutput = 1;
 data.plotAllOutput = plotAllOutput;
 set(handles.plotAllOutput,'Checked','on');
@@ -120,7 +122,7 @@ data.printCell = printCell;
 
 % Parameter to distinguish the modus "undirected" / "directed": dir
 % At start of program, "undirected" is activated
-global modus;
+%global modus;
 modus = 'undirected';
 data.modus = modus;
 set(handles.button_undirected,'Value',1);
@@ -138,8 +140,8 @@ data.g = g;
 %grid on;
 %zoom on;
 set(handles.numberview,'Check','on');
-refresh_dynamics(eventdata, handles);
 
+set(handles.number_button,'Value', 1);
 set(handles.newnodelabel,'String','Node');
 set(handles.strong_connections,'String', ' ');        
 set(handles.text16,'String', 'Graph density:');
@@ -149,6 +151,7 @@ data.template_list = template_list;
 % store userdata, use tag 'appData'
 setappdata(hObject,'appData',data);
 
+refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles,hObject);
 % Choose default command line output for mtids
 handles.output = hObject;
@@ -193,6 +196,7 @@ function newnode_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
 % load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -208,6 +212,18 @@ template_list = data.template_list;
 printCell = data.printCell;
 %global plotAllOutput;
 plotAllOutput = data.plotAllOutput;
+
+%debugging output
+%{
+display(['DEBUGGING - "Add node']);
+display(['After loading the application data:']);
+display(['______________________________________________________________']);
+display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
+display(['Number of elements in "template_list": ' num2str(numel(template_list)) ]);
+for k = 1:numel(templates)
+    display(['data.templates{' num2str(k) '} = ' templates(k)]);
+end
+%}
 
 
 rmxy(g);
@@ -270,6 +286,17 @@ data.printCell = printCell;
 data.plotAllOutput = plotAllOutput;
 setappdata(handles.figure1,'appData',data);
 
+%debugging output
+%{
+display(['DEBUGGING - "Add node",']);
+display(['End of callback function:']);
+display(['___________________________________________________________']);
+display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
+for k = 1:numel(templates)
+    display(['data.templates{' num2str(k) '} = ' templates(k)]);
+end
+%}
+
 guidata(hObject, handles);
 
 
@@ -299,15 +326,20 @@ delete(hObject);
 
 
 
-
-
 % --- Executes on button press in addconnection.
 function addconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to addconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
+
 
 % Arreglar conexiones
 % Buscar en labels
@@ -333,6 +365,11 @@ switch modus
 end
 
 %refresh_graph(0, eventdata, handles,hObject);
+
+%store application data
+data.modus = modus;
+data.g = g;
+setappdata(handles.figure1,'appData', data);
 
 guidata(hObject, handles);
 
@@ -391,8 +428,14 @@ function randomconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to randomconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 switch modus
     case 'undirected';
@@ -406,6 +449,11 @@ b = floor(nv(g)*rand());
 
 add(g,a,b,dir);
 
+%store application data
+data.modus = modus;
+data.g = g;
+setappdata(handles.figure1,'appData', data);
+
 refresh_graph(0, eventdata, handles,hObject);
 
 guidata(hObject, handles);
@@ -415,34 +463,89 @@ function removeconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to removeconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 % Arreglar conexiones
 % Buscar en labels
 label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
 
-if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
+%debugging output
+%{
+display(['DEBUGGING - "removeconnection_Callback",']);
+display(['Before evaluating the buttons "Label" and "Node number":']);
+display(['_____________________________________________________________']);
+display(['Removing... ']);
+display(['From: ' label1 ' to: ' label2]);
+display(['_____________________________________________________________']);
+%}
+
+
+%the radio buttons "Label" and "Node number" evaluates, if a node is
+%adressed via its number or label
+if (get(handles.label_button,'Value') == get(handles.label_button,'Max')) 
+    %if this is true, the radio button is selected
     labs = get_label(g);
-    n1 = strmatch(label1, labs, 'exact');
-    n2 = strmatch(label2, labs, 'exact');
-else
+    %n1 = strmatch(label1, labs, 'exact');
+    n1 = find(strcmp(label1, labs));
+    %n2 = strmatch(label2, labs, 'exact');
+    n2 = find(strcmp(label2, labs));
+elseif (get(handles.number_button,'Value') == get(handles.label_button,'Max'))
     n1 = str2num(label1);
     n2 = str2num(label2);
 end
 
-switch modus
-    case 'undirected';
-        dir = 0;
-        
-    case 'directed';
-        dir = 1;
-        
+
+%debugging output
+%{
+display(['DEBUGGING - "removeconnection_Callback",']);
+display(['After evaluating the buttons "Label" and "Node number":']);
+display(['_____________________________________________________________']);
+display(['Evaluation of button "Label": ' num2str(get(handles.label_button,'Value'))]);
+display(['If 0: value is a number, if 1: value is a string. ']);
+display(['---------------']);
+if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
+    display(['Displaying the content of the structure "labels" of graph:']);
+    display(['---------------']);
+    for k = 1:numel(labs)
+       display(['Entry' num2str(k) 'of "labs": ' labs(k)]); 
+    end
+    display(['---------------']);
+    %display(['Class of the variables n1 and n2, which are used ']);
+    %display(['to delete the chosen edge: ']);
+    display(['Class of n1: ' class(n1) ', Class of n2: ' class(n2) ]);
+    display(['If numbers are visible, validation was correct: ']);
+    display(['From: n1 = ' int2str(n1) ' to: n2 = ' num2str(n2) ]);
+else
+    display(['Class of n1: ' class(n1) ', Class of n2: ' class(n2) ]);
+    display(['If numbers are visible, validation was correct: ']);
+    display(['From: n1 = ' num2str(n1) ' to: n2 = ' num2str(n2) ]);
 end
 
-delete(g,n1(1), n2(1), dir);
+display(['_____________________________________________________________']);
+%}
 
+switch modus
+    case 'undirected';
+        delete(g,n1(1),n2(1));
+        %dir = 0;      
+    case 'directed';
+        dir = 1;
+        delete(g,n1(1), n2(1), dir);
+end
+
+
+%store application data
+data.g = g;
+data.modus = modus;
+setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -491,7 +594,6 @@ printCell = data.printCell;
 
 a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
-    %errordlg(templates); %debugging-output
     templates(a,:) = []; % Deleting a template
 
     delete(g,a);
@@ -525,8 +627,17 @@ function trimgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to trimgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
 trim(g);
+
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -538,8 +649,17 @@ function clearconnections_Callback(hObject, eventdata, handles)
 % hObject    handle to clearconnections (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+%global g;
+
 clear_edges(g);
+
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -553,8 +673,17 @@ function completegraph_Callback(hObject, eventdata, handles)
 % hObject    handle to completegraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+%global g;
+
 complete(g);
+
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -565,8 +694,14 @@ function randomgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to randomgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 switch modus
     case 'undirected';
@@ -575,8 +710,12 @@ switch modus
         random(g);
 end
 
-refresh_graph(0, eventdata, handles,hObject)
+%store application data
+data.g = g;
+data.modus = modus;
+setappdata(handles.figure1,'appData',data);
 
+refresh_graph(0, eventdata, handles,hObject)
 guidata(hObject, handles);
 
 
@@ -617,11 +756,22 @@ function Newgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to Newgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
+%global templates;
 
 resize(g,0);
 templates = cell(0,1);
+
+%store application data
+data.g = g;
+data.templates = templates;
+setappdata(handles.figure1,'appData',data);
+
 refresh_graph(1, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
@@ -629,9 +779,16 @@ function loadgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to loadgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
+
+% load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+
+%global g;
+%global templates;
+%global template_list;
 
 [filename, pathname] = uigetfile( ...
 {'*.mat;','Graph/Network Files';
@@ -640,37 +797,37 @@ global template_list;
    'Open');
 
 if filename
-     
-    
+         
     file = strcat(pathname, filename);
     [pathname, filename, ext] = fileparts(file);
 
     free(g);
     
-     if strcmp(ext, '.mat') 
-    S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list') ;
-    
-    nverts = S.nverts;
-    adj_matrix = S.adj_matrix;
-    XY = S.XY;
-    labs = S.labs;
-    templates = S.templates;
-    template_list = S.template_list;
-  
-   g = graph(nverts);
-    
-    for i=1:nverts
-    label(g,i,labs{i});
-    for j=1:nverts
-      if adj_matrix(i,j)
-         add(g,i,j);
-         adj_matrix(j,i) = 0;
-      end            
-    end
- end
+    if strcmp(ext, '.mat') 
+        S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list','modus') ;
 
-embed(g,XY);
-    
+        nverts = S.nverts;
+        adj_matrix = S.adj_matrix;
+        XY = S.XY;
+        labs = S.labs;
+        templates = S.templates;
+        template_list = S.template_list;
+        modus = S.modus;
+
+        g = graph(nverts);
+
+        for i=1:nverts
+            label(g,i,labs{i});
+            for j=1:nverts
+              if adj_matrix(i,j)
+                 add(g,i,j);
+                 adj_matrix(j,i) = 0;
+              end            
+            end
+        end
+
+        embed(g,XY);
+
     elseif strcmp(ext, '.gr')
         load(g, file);
         templates = cell(0,1);
@@ -682,6 +839,23 @@ embed(g,XY);
         end
     end
 end
+
+%set the uipanel according to stored value of "modus"
+switch modus
+    case 'directed'
+        set(handles.button_undirected,'Value', 0.0);
+        set(handles.button_directed,'Value', 1.0);
+    case 'undirected'
+        set(handles.button_undirected,'Value', 1.0);
+        set(handles.button_directed,'Value', 0.0);        
+end
+
+%store application data
+data.g = g;
+data.templates = templates;
+data.template_list = template_list;
+data.modus = modus;
+setappdata(handles.figure1,'appData',data);
 
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles,hObject);
@@ -698,9 +872,17 @@ function savegraphas_Callback(hObject, eventdata, handles)
 % hObject    handle to savegraphas (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+modus = data.modus;
+
+%global g;
+%global templates;
+%global template_list;
 
 [filename, pathname] = uiputfile( ...
 {'*.mat;','Graph/Network Files';
@@ -709,23 +891,23 @@ global template_list;
    'Save');
 
 if filename
- file = strcat(pathname, filename);
-[pathname, filename, ext] = fileparts(file);
- %save(g, file);
- 
- adj_matrix = double(matrix(g));
- labs = get_label(g);
- XY = getxy(g);
- nverts = nv(g);
- nedges = ne(g);
- 
- if strcmp(ext, '.mat') 
-    save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list') ;
-    disp(strcat('Saved graph as binary .mat file ("', file,'")'));
- elseif strcmp(ext, '.gr')
-    save(g, file);
-    disp(strcat('Saved graph as Matgraph file ("', file,'")'));       
- end
+     file = strcat(pathname, filename);
+     [pathname, filename, ext] = fileparts(file);
+     %save(g, file);
+
+     adj_matrix = double(matrix(g));
+     labs = get_label(g);
+     XY = getxy(g);
+     nverts = nv(g);
+     nedges = ne(g);
+
+     if strcmp(ext, '.mat') 
+        save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list','modus') ;
+        disp(strcat('Saved graph as binary .mat file ("', file,'")'));
+     elseif strcmp(ext, '.gr')
+        save(g, file);
+        disp(strcat('Saved graph as Matgraph file ("', file,'")'));       
+     end
 end
  
 refresh_graph(0, eventdata, handles,hObject);
@@ -805,7 +987,12 @@ function labelview_Callback(hObject, eventdata, handles)
 % hObject    handle to labelview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
 checkstatus = get(hObject,'Check');
 
 if strcmp(checkstatus, 'on')
@@ -818,6 +1005,10 @@ elseif strcmp(checkstatus, 'off')
     refresh_graph(0, eventdata, handles,hObject)
 end
 
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -825,7 +1016,12 @@ function colorview_Callback(hObject, eventdata, handles)
 % hObject    handle to colorview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
 checkstatus = get(hObject,'Check');
 
 if strcmp(checkstatus, 'on')
@@ -838,6 +1034,10 @@ elseif strcmp(checkstatus, 'off')
     refresh_graph(0, eventdata, handles,hObject)
 end
 
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -845,7 +1045,12 @@ function numberview_Callback(hObject, eventdata, handles)
 % hObject    handle to numberview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
 checkstatus = get(hObject,'Check');
 
 if strcmp(checkstatus, 'on')
@@ -858,6 +1063,10 @@ elseif strcmp(checkstatus, 'off')
     refresh_graph(0, eventdata, handles,hObject)
 end
 
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
 guidata(hObject, handles);
 
 
@@ -866,7 +1075,12 @@ function blankview_Callback(hObject, eventdata, handles)
 % hObject    handle to blankview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+
+%global g;
 checkstatus = get(hObject,'Check');
 
 if strcmp(checkstatus, 'on')
@@ -879,6 +1093,10 @@ elseif strcmp(checkstatus, 'off')
     refresh_graph(0, eventdata, handles,hObject);
 end
 
+%store application data
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
 guidata(hObject, handles);
 
 
@@ -889,40 +1107,50 @@ function export_as_layer_2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)global g;
 
-global g;
-global templates;
-global template_list;
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+
+%global g;
+%global templates;
+%global template_list;
 
 A  = double(matrix(g));
 
-%
 rmxy(g);
 embed(g);
-
-%
 xy = getxy(g);
-
-
 
 labs = get_label(g);
 name =	'untitled';
- template =	'LTI'; 
- if nv(g) > 200
+template =	'LTI'; 
+if nv(g) > 200
     disp('Exporting...may take some time...go get some coffee...');
- else   
+else   
      disp('Exporting...');
- end
-     disp('  ');
- 
-    exportLayer2(name,templates,template_list,A, xy, labs);
+end
+disp('  ');
 
- if nv(g) > 50
+%function contained in folder "interface2simulink"
+exportLayer2(name,templates,template_list,A, xy, labs); 
+
+if nv(g) > 50
     disp('Done exporting');
     disp(' ');
-   %msgbox('Done exporting','Export to Simulink');
- else   
-     disp('Done exporting');
- end
+    %msgbox('Done exporting','Export to Simulink');
+else   
+    disp('Done exporting');
+end
+
+%store application data
+data.g = g;
+data.templates = templates;
+data.template_list = template_list;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles);
 
 
 
@@ -1061,28 +1289,33 @@ function basic_stats(eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-global g;
-global modus;
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 switch modus
     case 'undirected';
 
         L = laplacian(g);
 
-         rank_L = rank(L);       % Matrix rank
-          dim_L  = mean(size(L)); % Matrix dimension
+        rank_L = rank(L);       % Matrix rank
+        dim_L  = mean(size(L)); % Matrix dimension
 
-         null_L = dim_L - rank(L); %Rank of the null-space (from rank-nullity theorem)
+        null_L = dim_L - rank(L); %Rank of the null-space (from rank-nullity theorem)
                                     %Gives us number of connected (sub) graphs
         degree_vector = diag(L);
 
         D = diag(diag(L));
         A = D - L; % Adjacency matrix
 
-         rank_A = rank(A);       % Matrix rank
-          dim_A  = mean(size(A)); % Matrix dimension
+        rank_A = rank(A);       % Matrix rank
+        dim_A  = mean(size(A)); % Matrix dimension
 
-         null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
+        null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
                                     %Gives us number of connected (sub) graphs
         set(handles.text22,'String', 'Independent Graphs:');
         set(handles.connected_graphs,'String', num2str(null_L,'%d'));
@@ -1111,23 +1344,23 @@ switch modus
         [Eigen_Matrix_A, Eigen_Values_A] = eig(A);
 
         % Sorting Eigenvalues
-         Eigen_Values_L = diag(Eigen_Values_L);
+        Eigen_Values_L = diag(Eigen_Values_L);
         [Eigen_Values_L, ndx] = sort(Eigen_Values_L, 'ascend');
-         Eigen_Matrix_L=Eigen_Matrix_L(:,ndx); 
+        Eigen_Matrix_L=Eigen_Matrix_L(:,ndx); 
 
-          Eigen_Values_A = diag(Eigen_Values_A);
+        Eigen_Values_A = diag(Eigen_Values_A);
         [Eigen_Values_A, ndx] = sort(Eigen_Values_A, 'ascend');
-         Eigen_Matrix_A=Eigen_Matrix_A(:,ndx); 
+        Eigen_Matrix_A=Eigen_Matrix_A(:,ndx); 
 
-         graph_connectivityA = Eigen_Values_A(null_L+1);
-         graph_connectivity = Eigen_Values_L(null_L+1);
-         set(handles.text19,'String', 'Algebraic connectivity:');
-         set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
-         fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
+        graph_connectivityA = Eigen_Values_A(null_L+1);
+        graph_connectivity = Eigen_Values_L(null_L+1);
+        set(handles.text19,'String', 'Algebraic connectivity:');
+        set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
+        fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
 
-         estrada_connectivity = diag(exp(A));
+        estrada_connectivity = diag(exp(A));
 
-         estrada_graph_index  = trace(exp(A));
+        estrada_graph_index  = trace(exp(A));
  
     case 'directed';
         [InDeg OutDeg]=getDegree(matrixOfGraph(g));
@@ -1205,6 +1438,7 @@ switch modus
         set(handles.text19,'String', 'Has cycles:');
         set(handles.algebraic_connectivity,'String', isAcyclic);
 end
+%no data storaged needed, because this is a "void" function
 
 
 function dynamic_label_Callback(hObject, eventdata, handles)
@@ -1236,9 +1470,16 @@ function import_from_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global template_list;
-global templates;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+template_list = data.template_list;
+templates = data.templates;
+
+%global g;
+%global template_list;
+%global templates;
 
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
@@ -1246,22 +1487,22 @@ global templates;
    'Import Simulink model');
 
 
- file = strcat(pathname, filename);
+file = strcat(pathname, filename);
 
- addpath(pathname);
+addpath(pathname);
  
- [pathname, model, ext] = fileparts(file);
+[pathname, model, ext] = fileparts(file);
  
  
- [A, nverts, nedges, xy, labs ] = importSimulink(model);
+[A, nverts, nedges, xy, labs ] = importSimulink(model);
 
- % Delete graph!
+% Delete graph!
   
- % Deprecated! elist = adj_to_elist(A);
+% Deprecated! elist = adj_to_elist(A);
 
- free(g);
+free(g);
  
- g = graph(nverts); 
+g = graph(nverts); 
   
 % Preliminary template import 
 n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
@@ -1270,25 +1511,40 @@ for i=1:nverts
     label(g,i,labs{i});
     templates{i,1}=template_list{n_template,1};
     for j=1:nverts
-      if A(i,j)
-         add(g,i,j);
-         A(j,i) = 0;
-      end            
+        if A(i,j)
+             add(g,i,j);
+             A(j,i) = 0;
+        end            
     end
- end
+end
 
-embed(g,xy); 
+embed(g,xy);
+
+%store application data
+data.g = g;
+data.template_list = template_list;
+data.templates = templates;
+setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
+guidata(hObject, handles);
+
 
 % --------------------------------------------------------------------
 function export_to_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+template_list = data.template_list;
+templates = data.templates;
+
+%global g;
+%global template_list;
+%global templates;
 
 disp('Export mode 1');
 
@@ -1297,32 +1553,29 @@ A  = double(matrix(g));
 % Makes the graph a circle
 rmxy(g);
 embed(g);
-%
 
 xy = getxy(g);
 
-
 labs = get_label(g);
 name =	'untitled';
- template =	'LTI'; 
- if nv(g) > 200
+template =	'LTI'; 
+if nv(g) > 200
     disp('Exporting...may take some time...go get some coffee...');
- else   
-     disp('Exporting...');
- end
-     disp('  ');
+else   
+    disp('Exporting...');
+end
+disp('  ');
 
-  
-     
-    exportSimulink(name,templates,template_list,A, xy, labs);
+exportSimulink(name,templates,template_list,A, xy, labs);
 
- if nv(g) > 50
+if nv(g) > 50
     disp('Done exporting');
     disp(' ');
-   %msgbox('Done exporting','Export to Simulink');
- else   
-     disp('Done exporting');
- end
+    %msgbox('Done exporting','Export to Simulink');
+else   
+    disp('Done exporting');
+end
+%no app data storage needed, because this can be seen as a "void" function.
 
 
 % --- Executes on button press in add_multiple_nodes.
@@ -1333,10 +1586,23 @@ function add_multiple_nodes_Callback(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
+templates = data.templates;
 %g = data.g;
 %global g;
 %global graph_refresh;
 n_nodes = str2num(get(handles.number_of_nodes,'String'));
+
+%debugging output
+%{
+display(['DEBUGGING - "Add multiple nodes",']);
+display(['directly after loading the application data:']);
+display(['_____________________________________________________________']);
+display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
+for k = 1:numel(templates)
+    display(['data.templates{' num2str(k) '} = ' templates(k)]);
+end
+display(['_____________________________________________________________']);
+%}
 
 % this is needed, because during creation of the nodes the graph isn't build
 % newly; only at the end the graph should built new.
@@ -1347,10 +1613,23 @@ for i=1:n_nodes
    newnode_Callback(hObject, eventdata, handles); 
 end
 
+data = getappdata(handles.figure1,'appData');
 %store application data
 %data.g = g;
 data.graph_refresh = 1;
 setappdata(handles.figure1,'appData',data);
+
+%debugging output
+%{
+display(['DEBUGGING - "Add multiple nodes"']);
+display(['End of callback function:']);
+display(['_____________________________________________________________']);
+display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
+for k = 1:numel(templates)
+    display(['data.templates{' num2str(k) '} = ' templates(k)]);
+end
+display(['_____________________________________________________________']);
+%}
 
 refresh_graph(0, eventdata, handles, hObject);
 
@@ -1361,7 +1640,6 @@ function exit_to_matlab_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 close(handles.output);
-
 
 
 
@@ -1426,8 +1704,14 @@ function export_to_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 uiwait( export_as_matrix(laplacian(g),g,modus));
 
@@ -1437,11 +1721,20 @@ function import_from_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
-global modus;
-global printCell;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+modus = data.modus;
+%printCell = data.printCell;
+
+%global g;
+%global templates;
+%global template_list;
+%global modus;
+%global printCell;
 
 prompt = {'Workspace:','Variable name:'};
 dlg_title = 'Inport matrix from workspace';
@@ -1477,11 +1770,9 @@ else
      end
 
     templates = cell(0,1);
-
     n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
 
     for i=1:nv(g)
-
         templates{i,1}=template_list{n_template,1};
     end
 end
@@ -1493,6 +1784,15 @@ for i = 1:nrNodes
     printCell(i) = num2cell([1 0],2);
 end
 
+%store application data
+data.g = g;
+data.templates = templates;
+data.template_list = template_list;
+data.modus = modus;
+data.printCell = printCell;
+setappdata(handle.figure1,'appData',data);
+
+guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
 
@@ -1501,7 +1801,13 @@ function add_mdl_template_Callback(hObject, eventdata, handles)
 % hObject    handle to add_mdl_template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global template_list;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+template_list = data.template_list;
+templates = data.templates;
+
+%global template_list;
 oldFolder = cd(strcat(pwd,'/templates'));
 
 [filename, pathname] = uigetfile( ...
@@ -1511,52 +1817,47 @@ oldFolder = cd(strcat(pwd,'/templates'));
    'MultiSelect', 'on');
 
 if iscell(filename)
-    
     [a, b] = size(filename);
-
     for i=1:b
-       file = strcat(pathname, filename{i});
-       [path, template, ext] = fileparts(file);
-       
-       if strcmp('.mdl', ext)
-
+        file = strcat(pathname, filename{i});
+        [path, template, ext] = fileparts(file);
+        if strcmp('.mdl', ext)
             if strmatch(template, template_list, 'exact')
-             disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
-             continue;
+                disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
+                continue;
             else
-             [ny, nx] = size(template_list);
-             template_list{ny+1,1} = template;
-             %template_list{ny+1,2} = file;
+                [ny, nx] = size(template_list);
+                template_list{ny+1,1} = template;
+                %template_list{ny+1,2} = file;
             end 
-
         else
             disp(strcat('ERROR: "',filename{i}, '" is not a Simulink model'));
         end
-        end % End del for
-        
+    end % End del for
 elseif filename %filename is not a cell (it's a string) and not 0
     file = strcat(pathname, filename);
     [path, template, ext] = fileparts(file);
-     
     if strcmp('.mdl', ext)
-
-            if strmatch(template, template_list, 'exact')
-             disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
-            else
-             [ny, nx] = size(template_list);
-             template_list{ny+1,1} = template;
-             %template_list{ny+1,2} = file;
-            end 
-
+        if strmatch(template, template_list, 'exact')
+            disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
         else
-            disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
-        end
-    
+            [ny, nx] = size(template_list);
+            template_list{ny+1,1} = template;
+            %template_list{ny+1,2} = file;
+        end 
+    else
+        disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
+    end
 end
 
 cd(oldFolder);
 
-refresh_dynamics(eventdata, handles); 
+%store application data
+data.template_list = template_list;
+setappdata(handles.figure1,'appData',data);
+
+refresh_dynamics(eventdata, handles);
+guidata(hObject, handles);
  
 
 
@@ -1583,8 +1884,12 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-global g;
-global template_list;
+
+template_list = cell(0,1);
+template_list{1,1} = 'LTI';
+
+%global g;
+%global template_list;
 %global drop_string;% = cell(0,0);
 
 drop_string = cell(0,0);
@@ -1604,17 +1909,22 @@ end
 
 set(hObject, 'String', drop_string);
 %set(handles.selector_dynamic, 'String', drop_string);
+%guidata(hObject, handles);
 
 
 
 function refresh_dynamics(eventdata, handles)
 % This function refreshes the graph window
 
-global g;
-global template_list;
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+template_list = data.template_list;
+
+%global g;
+%global template_list;
 
 [ny, nx] = size(template_list);
-
 
 for i=1:ny
     if i == 1
@@ -1627,6 +1937,8 @@ for i=1:ny
 end
 
 set(handles.selector_dynamic, 'String', drop_string);
+%guidata(hObject, handles);
+%no data storage needed, because this can be seen as a "void" function.
  
 
 
@@ -1635,8 +1947,14 @@ function circular_graph_Callback(hObject, eventdata, handles)
 % hObject    handle to circular_graph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global modus;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+modus = data.modus;
+
+%global g;
+%global modus;
 
 switch modus
     case 'undirected';
@@ -1650,9 +1968,15 @@ clear_edges(g);
 for i=1:(nv(g)-1)
     add(g,i,i+1,dir);
 end
-    add(g,nv(g),1,dir)
+add(g,nv(g),1,dir)
 
+%store application data
+data.g = g;
+data.modus = modus;
+setappdata(handles.figure1,'appData',data);
+    
 refresh_graph(0, eventdata, handles,hObject);
+guidata(hObject, handles);
 
 
 
@@ -1662,15 +1986,27 @@ function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global botton_down;
-global add_connection;
-global move_index;
-global start_index;
-global templates;
-global template_list;
-global modus;
-global printCell;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+botton_down = data.botton_down;
+move_index = data.move_index;
+start_index = data.start_index;
+templates = data.templates;
+template_list = data.template_list;
+modus = data.modus;
+printCell = data.printCell;
+
+%global g;
+%global botton_down;
+%global add_connection;
+%global move_index;
+%global start_index;
+%global templates;
+%global template_list;
+%global modus;
+%global printCell;
 
 
 CP = get(handles.axes1, 'CurrentPoint');
@@ -1688,8 +2024,7 @@ radius = d_x.*d_x+d_y.*d_y;
 [C,I] = min(radius);
 if C <= 0.05; % Hardcoded value!
  
-    
-    if strcmp(get(handles.output, 'SelectionType'), 'normal')
+if strcmp(get(handles.output, 'SelectionType'), 'normal')
  %  disp(I);
     move_index = I;
     botton_down = 1;
@@ -1781,15 +2116,12 @@ if C <= 0.05; % Hardcoded value!
 
             refresh_graph(0, eventdata, handles,hObject);
             end
-       
    end
-    
 end
 
 else % do nothing?
   
 end
-
  
 if strcmp(get(handles.output, 'SelectionType'), 'extend')
     start_button = 0;
@@ -1803,6 +2135,20 @@ if strcmp(get(handles.output, 'SelectionType'), 'extend')
     refresh_graph(0, eventdata, handles,hObject);
 end
 
+%store application data
+data.g = g;
+data.templates = templates;
+data.botton_down = botton_down;
+data.move_index = move_index;
+data.start_index = start_index;
+data.templates = templates;
+data.template_list = template_list;
+data.modus = modus;
+data.printCell = printCell;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles);
+
 
 
 
@@ -1812,20 +2158,38 @@ function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global botton_down;
-global g;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+%botton_down = data.botton_down;
+g = data.g;
+
+%global botton_down;
+%global g;
 
 botton_down = 0;
+
+%store application data
+data.g = g;
+data.botton_down = botton_down;
+setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);
 
 % --- Executes on mouse motion over figure - except title and menu.
 function figure1_WindowButtonMotionFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global botton_down;
-global move_index;
-global g;
 
+%load application data
+data = getappdata(handles.figure1,'appData');
+botton_down = data.botton_down;
+move_index = data.move_index;
+g = data.g;
+
+%global botton_down;
+%global move_index;
+%global g;
 
 if botton_down
     CP = get(handles.axes1, 'CurrentPoint');
@@ -1837,8 +2201,14 @@ if botton_down
     embed(g,XY);
     refresh_graph(0, eventdata, handles,hObject);
 end
-   
 
+%store application data
+data.botton_down = botton_down;
+data.move_index = move_index;
+data.g = g;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles);  
 
 
 
@@ -1861,9 +2231,16 @@ function export_as_layer_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+
+%global g;
+%global templates;
+%global template_list;
 
 A  = double(matrix(g));
 
@@ -1874,27 +2251,24 @@ embed(g);
 %
 xy = getxy(g);
 
-
-
 labs = get_label(g);
 name =	'untitled';
- template =	'LTI'; 
- if nv(g) > 200
+template ='LTI'; 
+if nv(g) > 200
     disp('Exporting...may take some time...go get some coffee...');
- else   
-     disp('Exporting...');
- end
-     disp('  ');
- 
-    exportLayer(name,templates,template_list,A, xy, labs);
+else   
+    disp('Exporting...');
+end
+disp('  ');
+exportLayer(name,templates,template_list,A, xy, labs);
 
- if nv(g) > 50
+if nv(g) > 50
     disp('Done exporting');
     disp(' ');
-   %msgbox('Done exporting','Export to Simulink');
- else   
-     disp('Done exporting');
- end
+    %msgbox('Done exporting','Export to Simulink');
+else   
+    disp('Done exporting');
+end
 
 
 
@@ -1923,10 +2297,17 @@ function export_to_simulink2_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global templates;
-global template_list;
-global expSucc;
+
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+
+%global g;
+%global templates;
+%global template_list;
+%global expSucc;
 
 disp('Export mode 2');
 A  = double(matrix(g));
@@ -1938,30 +2319,32 @@ embed(g);
 
 xy = getxy(g);
 
-
 labs = get_label(g);
 
 name =	'untitled';
- template =	'LTI'; 
- if nv(g) > 200
+template =	'LTI'; 
+if nv(g) > 200
     disp('Exporting...may take some time...go get some coffee...');
- else   
-     disp('Exporting...');
- end
-     disp('  '); 
-     
-    exportSimulink2(name,templates,template_list,A, xy, labs);
+else   
+    disp('Exporting...');
+end
+disp('  '); 
+exportSimulink2(name,templates,template_list,A, xy, labs);
 
- if nv(g) > 50
+if nv(g) > 50
     disp('Done exporting');
     disp(' ');
-   %msgbox('Done exporting','Export to Simulink');
- else   
-     disp('Done exporting');
- end
- expSucc = 1;
- 
+    %msgbox('Done exporting','Export to Simulink');
+else   
+    disp('Done exporting');
+end
+expSucc = 1;
 
+%store application data
+data.expSucc = expSucc;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles); 
 
 
 
@@ -1970,10 +2353,7 @@ function radiobutton7_Callback(hObject, eventdata, handles)
 % hObject    handle to radiobutton7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of radiobutton7
-
-
 
 
 
@@ -1988,9 +2368,14 @@ function uipanel9_SelectionChangeFcn(hObject, eventdata, handles)
 % Originally taken from the Help Menu "Programming a button group"
 % With it, the choice of which graphs are supported can be done
 
-global modus;
-global g;
-global printCell;
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+printCell = data.printCell;
+
+%global modus;
+%global g;
+%global printCell;
 
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'button_undirected'
@@ -2003,7 +2388,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         guidata(hObject, handles);
     case 'button_directed'
         modus = 'directed';
-        % Function, that creates a pop-up-menu, that says: "interpret
+        % Function, that creates a pop-up-menu, that says: "interprete
         % undirected graph as directed? (Yes / No) If no, save current
         % graph?"
         resize(g,0);
@@ -2016,17 +2401,32 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         modus = 'undirected';
 end
 
+%store application data
+data.modus = modus;
+data.g = g;
+data.printCell = printCell;
+setappdata(handles.figure1,'appData',data);
+
+guidata(hObject, handles); 
+
 
 % --------------------------------------------------------------------
 function run_simulation_Callback(hObject, eventdata, handles)
 % hObject    handle to run_simulation (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global printCell;
-global templates;
-global expSucc;
 
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+expSucc = data.expSucc;
+printCell = data.printCell;
+templates = data.templates;
+
+%global g;
+%global printCell;
+%global templates;
+%global expSucc;
 
 %After export to simulink is complete, start the simulation, using the
 %plotting parameters in printCell
@@ -2035,63 +2435,63 @@ if expSucc ~= 1
 end
 
 if expSucc == 1
-%We need: number of nodes, number of internal states per node
-nrNodes = nv(g);
-intStates = zeros(nrNodes,1);
-for i = 1:nrNodes
-    intStates(i) = length(printCell{i})-1;
-end
+    %We need: number of nodes, number of internal states per node
+    nrNodes = nv(g);
+    intStates = zeros(nrNodes,1);
+    for i = 1:nrNodes
+        intStates(i) = length(printCell{i})-1;
+    end
 
-%t contains the simulation time, x the states in order of the nodenumbers.
-%The output of each %node is contained in the To Workspace struct nodeouti, 
-%where i stands for the nodenumber
-[t,x]=sim(gcs);
+    %t contains the simulation time, x the states in order of the nodenumbers.
+    %The output of each %node is contained in the To Workspace struct nodeouti, 
+    %where i stands for the nodenumber
+    [t,x]=sim(gcs);
 
-%Plotting of the simulation result can be done on different ways. For now,
-%every state gets its own figure
+    %Plotting of the simulation result can be done on different ways. For now,
+    %every state gets its own figure
 
-for i = 1:nrNodes
-    %Check printCell to see if visualization of state i is wanted
-    temp = printCell{i};
-    if any(temp)
-    figure;
-    hold on;
-    y = evalin('base',['nodeout' num2str(i) '.signals.values']);
-    plot(t,y,'Linewidth',2.0);
-    %legend(['Output signal of node' num2str(i)]);
-    xlabel('Simulation time in [s]');
-    
-    if strcmp(templates{i},'LTI')
-        if i == 1
-            index = 1;
-        else
-            index = 1+sum(intStates(1:(i-1)));
-        end
-        x_loc = x(:,index:index+intStates(i)-1); 
-        %Build string matrix for legend
-        stringMatrix = cell(1,1);
-        stringMatrix{1} = ['Output signal of node ' num2str(i)];
-        counterStringMatrix = 1;
-        for j=2:intStates(i)+1
-            if temp(j) == 1
-                counterStringMatrix = counterStringMatrix + 1;
-                stringMatrix = [stringMatrix; cell(1,1)];
-                p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
-                R = 0.1 + 0.5*rand;
-                G = 0.1 + 0.5*rand;
-                B = 0.1 + 0.5*rand;
-                set(p,'Color', [R G B] );
-                stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+    for i = 1:nrNodes
+        %Check printCell to see if visualization of state i is wanted
+        temp = printCell{i};
+        if any(temp)
+        figure;
+        hold on;
+        y = evalin('base',['nodeout' num2str(i) '.signals.values']);
+        plot(t,y,'Linewidth',2.0);
+        %legend(['Output signal of node' num2str(i)]);
+        xlabel('Simulation time in [s]');
+
+        if strcmp(templates{i},'LTI')
+            if i == 1
+                index = 1;
+            else
+                index = 1+sum(intStates(1:(i-1)));
             end
+            x_loc = x(:,index:index+intStates(i)-1); 
+            %Build string matrix for legend
+            stringMatrix = cell(1,1);
+            stringMatrix{1} = ['Output signal of node ' num2str(i)];
+            counterStringMatrix = 1;
+            for j=2:intStates(i)+1
+                if temp(j) == 1
+                    counterStringMatrix = counterStringMatrix + 1;
+                    stringMatrix = [stringMatrix; cell(1,1)];
+                    p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                    R = 0.1 + 0.5*rand;
+                    G = 0.1 + 0.5*rand;
+                    B = 0.1 + 0.5*rand;
+                    set(p,'Color', [R G B] );
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+                end
+            end
+            legend(stringMatrix,'Location','NorthEastOutside');
+        else
+            legend(['Output signal of node ' num2str(i)]);
         end
-        legend(stringMatrix,'Location','NorthEastOutside');
-    else
-        legend(['Output signal of node ' num2str(i)]);
+
+        hold off;
+        end
     end
-    
-    hold off;
-    end
-end
 end
 
 
@@ -2101,7 +2501,6 @@ function plotAllOutput_Callback(hObject, eventdata, handles)
 % hObject    handle to plotAllOutput (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global plotAllOutput;
 
 if strcmp(get(handles.plotAllOutput,'Checked'),'on')
     set(handles.plotAllOutput,'Checked','off')
@@ -2111,19 +2510,32 @@ else
     plotAllOutput = 1;
 end
 
+%store application data
+data.data.plotAllOutput = plotAllOutput;
+setappdata(handle.figure1,'appData',data);
+
+guidata(hObject, handles); 
+
 
 % --------------------------------------------------------------------
 function run_simulation_plots_Callback(hObject, eventdata, handles)
 % hObject    handle to run_simulation_plots (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global g;
-global printCell;
-global templates;
-global expSucc;
+
+%load application data
+data = getappdata(handle.figure1,'appData');
+g = data.g;
+printCell = data.printCell;
+templates = data.templates;
+expSucc = data.expSucc;
+
+%global g;
+%global printCell;
+%global templates;
+%global expSucc;
 global xout;
 global tout;
-
 
 
 %After export to simulink is complete, start the simulation, using the
@@ -2133,62 +2545,62 @@ if expSucc ~= 1
 end
 
 if expSucc == 1
-%We need: number of nodes, number of internal states per node
-nrNodes = nv(g);
-intStates = zeros(nrNodes,1);
-for i = 1:nrNodes
-    intStates(i) = length(printCell{i})-1;
-end
+    %We need: number of nodes, number of internal states per node
+    nrNodes = nv(g);
+    intStates = zeros(nrNodes,1);
+    for i = 1:nrNodes
+        intStates(i) = length(printCell{i})-1;
+    end
 
-%t contains the simulation time, x the states in order of the nodenumbers.
-%The output of each %node is contained in the To Workspace struct nodeouti, 
-%where i stands for the nodenumber
-%[t,x]=sim(gcs);
+    %t contains the simulation time, x the states in order of the nodenumbers.
+    %The output of each %node is contained in the To Workspace struct nodeouti, 
+    %where i stands for the nodenumber
+    %[t,x]=sim(gcs);
 
-%Plotting of the simulation result can be done on different ways. For now,
-%every state gets its own figure
+    %Plotting of the simulation result can be done on different ways. For now,
+    %every state gets its own figure
 
-for i = 1:nrNodes
-    %Check printCell to see if visualization of state i is wanted
-    temp = printCell{i};
-    if any(temp)
-    figure;
-    hold on;
-    y = evalin('base',['nodeout' num2str(i) '.signals.values']);
-    plot(tout,y,'Linewidth',2.0);
-    %legend(['Output signal of node' num2str(i)]);
-    xlabel('Simulation time in [s]');
-    
-    if strcmp(templates{i},'LTI')
-        if i == 1
-            index = 1;
-        else
-            index = 1+sum(intStates(1:(i-1)));
-        end
-        x_loc = xout(:,index:index+intStates(i)-1); 
-        %Build string matrix for legend
-        stringMatrix = cell(1,1);
-        stringMatrix{1} = ['Output signal of node ' num2str(i)];
-        counterStringMatrix = 1;
-        for j=2:intStates(i)+1
-            if temp(j) == 1
-                counterStringMatrix = counterStringMatrix + 1;
-                stringMatrix = [stringMatrix; cell(1,1)];
-                p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
-                R = 0.1 + 0.5*rand;
-                G = 0.1 + 0.5*rand;
-                B = 0.1 + 0.5*rand;
-                set(p,'Color', [R G B] );
-                stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+    for i = 1:nrNodes
+        %Check printCell to see if visualization of state i is wanted
+        temp = printCell{i};
+        if any(temp)
+        figure;
+        hold on;
+        y = evalin('base',['nodeout' num2str(i) '.signals.values']);
+        plot(tout,y,'Linewidth',2.0);
+        %legend(['Output signal of node' num2str(i)]);
+        xlabel('Simulation time in [s]');
+
+        if strcmp(templates{i},'LTI')
+            if i == 1
+                index = 1;
+            else
+                index = 1+sum(intStates(1:(i-1)));
             end
+            x_loc = xout(:,index:index+intStates(i)-1); 
+            %Build string matrix for legend
+            stringMatrix = cell(1,1);
+            stringMatrix{1} = ['Output signal of node ' num2str(i)];
+            counterStringMatrix = 1;
+            for j=2:intStates(i)+1
+                if temp(j) == 1
+                    counterStringMatrix = counterStringMatrix + 1;
+                    stringMatrix = [stringMatrix; cell(1,1)];
+                    p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                    R = 0.1 + 0.5*rand;
+                    G = 0.1 + 0.5*rand;
+                    B = 0.1 + 0.5*rand;
+                    set(p,'Color', [R G B] );
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+                end
+            end
+            legend(stringMatrix,'Location','NorthEastOutside');
+        else
+            legend(['Output signal of node ' num2str(i)]);
         end
-        legend(stringMatrix,'Location','NorthEastOutside');
-    else
-        legend(['Output signal of node ' num2str(i)]);
+
+        hold off;
+        end
     end
-    
-    hold off;
-    end
-end
 end
 
