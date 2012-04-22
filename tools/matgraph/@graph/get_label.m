@@ -6,7 +6,7 @@ function out = get_label(g,v)
 global GRAPH_MAGIC;
 
 if ~is_labeled(g)
-    disp('graph is not labeled');
+    %disp('graph is not labeled');
     out = {};
     if nargin==2
         out='';
