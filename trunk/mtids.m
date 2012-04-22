@@ -1034,10 +1034,6 @@ elseif strcmp(checkstatus, 'off')
     refresh_graph(0, eventdata, handles,hObject)
 end
 
-%store application data
-data.g = g;
-setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -1059,7 +1055,7 @@ elseif strcmp(checkstatus, 'off')
     set(handles.colorview,'Check','off');
     set(handles.labelview,'Check','off');
     set(handles.numberview,'Check','on');
-        set(handles.blankview,'Check','off');
+    set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles,hObject)
 end
 
@@ -2055,9 +2051,28 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
     
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
-
    [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell );
-  
+
+   %DEBUGGING
+   %display([nodelabel]);
+   %{
+   %assignin('base','neighbours',neighbours);
+   %neighbours = eval(neighbours); %save variable to workspace
+   disp('------------------------------------------------------------------');
+    display(['@figure1_WindowButtonDownFcn: nodenumber = ' num2str(nodenumber)]);
+    display(['@figure1_WindowButtonDownFcn: nodelabel = ' nodelabel]);
+    display(['@figure1_WindowButtonDownFcn: template = ' template]);
+    display(['@figure1_WindowButtonDownFcn: class of "neighbours": ' class(neighbours) ]);
+   if strcmp(class(neighbours), 'double')
+        display(['@figure1_WindowButtonDownFcn: neighbours = ' num2str(neighbours) ]);
+   else
+        display(['@figure1_WindowButtonDownFcn: neighbours = ' neighbours]);
+   end
+    display(['@figure1_WindowButtonDownFcn: destroy = ' num2str(destroy) ]);
+    %display(['@figure1_WindowButtonDownFcn: intStates = ' num2str(intStates) ]);
+   display(['@figure1_WindowButtonDownFcn: length of printVector = ' num2str(length(printVector)) ]);
+    display(['@figure1_WindowButtonDownFcn: printVector = ' num2str(printVector) ]);
+   %}
    if destroy == 0
        if ~strcmp(nodelabel, get_label(g,I))
             if(strmatch(nodelabel,get_label(g),'exact'))
@@ -2077,9 +2092,12 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
         templates{I} = template;
         e_delete = g(I);
         size_ne = size(e_delete,2);
-
-        neighbours = eval(neighbours);
-
+        
+        if ~strcmp('double',class(neighbours))
+            %display(['Class of variable "neighbour" is not "double".']);
+            neighbours = eval(neighbours); %neighbours must be of type "double"
+        end
+   
         for i=1:size_ne
            delete(g,I,e_delete(i)); 
         end
@@ -2104,19 +2122,26 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
             delete(g,I);
             
             %Here, the i-th entry of the printCell must be deleted too
-            length_printCell = size(printCell,1);
-            temp_printCell = printCell;
-            printCell = cell(length_printCell-1,1);
-            for i = 1:(nodenumber-1)
-                printCell(i) = temp_printCell(i);
-            end
-            for i = (nodenumber+1):length_printCell
-                printCell(i-1) = temp_printCell(i);
+            if size(printCell,1) == 1
+                printCell = cell(0,1);
+            else
+                length_printCell = size(printCell,1);
+                display(['Length of printCell: ' num2str(length_printCell) ]);
+                temp_printCell = printCell;
+                printCell = cell(length_printCell-1,1);
+                for i = 1:(nodenumber-1)
+                    printCell(i) = temp_printCell(i);
+                end
+                for i = (nodenumber+1):length_printCell
+                    printCell(i-1) = temp_printCell(i);
+                end
             end
 
             refresh_graph(0, eventdata, handles,hObject);
             end
-   end
+   
+   end %if destroy == 0
+   %}
 end
 
 else % do nothing?
@@ -2134,6 +2159,7 @@ if strcmp(get(handles.output, 'SelectionType'), 'extend')
     embed(g,XY);
     refresh_graph(0, eventdata, handles,hObject);
 end
+
 
 %store application data
 data.g = g;

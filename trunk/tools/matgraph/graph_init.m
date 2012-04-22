@@ -9,8 +9,8 @@ DEFAULT_CAPACITY = 500;
 
 
 if graph_system_exists
-    disp('Graph system already initialized');
-    disp('To start over, use graph_destroy');
+    %disp('Graph system already initialized');
+    %disp('To start over, use graph_destroy');
     return;
 end
 
@@ -45,8 +45,8 @@ GRAPH_MAGIC.Q.array = [];
 GRAPH_MAGIC.Q.first = 0;
 GRAPH_MAGIC.Q.last = 0;
 
-
+%{
 disp(['Graph system initialized. Number of slots = ', ...
     int2str(capacity),'.']);
-
+%}
 set_large(1000);
