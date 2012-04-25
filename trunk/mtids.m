@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 14-Jan-2012 14:21:58
+% Last Modified by GUIDE v2.5 25-Apr-2012 13:24:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2054,8 +2054,9 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
    [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell );
 
    %DEBUGGING
-   %display([nodelabel]);
    %{
+   display(['Nodenumber: ' num2str(nodenumber)]);
+   display(['PrintCell: ' printCell(nodenumber)]);
    %assignin('base','neighbours',neighbours);
    %neighbours = eval(neighbours); %save variable to workspace
    disp('------------------------------------------------------------------');
@@ -2126,7 +2127,7 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
                 printCell = cell(0,1);
             else
                 length_printCell = size(printCell,1);
-                display(['Length of printCell: ' num2str(length_printCell) ]);
+                % display(['Length of printCell: ' num2str(length_printCell) ]);
                 temp_printCell = printCell;
                 printCell = cell(length_printCell-1,1);
                 for i = 1:(nodenumber-1)
@@ -2139,7 +2140,7 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
 
             refresh_graph(0, eventdata, handles,hObject);
             end
-   
+
    end %if destroy == 0
    %}
 end
@@ -2159,7 +2160,6 @@ if strcmp(get(handles.output, 'SelectionType'), 'extend')
     embed(g,XY);
     refresh_graph(0, eventdata, handles,hObject);
 end
-
 
 %store application data
 data.g = g;
@@ -2630,3 +2630,20 @@ if expSucc == 1
     end
 end
 
+
+
+% --- Executes on button press in pushbutton17.
+function pushbutton17_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton17 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+      %DEBUGGING
+data = getappdata(handles.figure1,'appData');
+      
+display(['Number of nodes: ' num2str(nv(data.g)) ]);
+%display(['PrintCell: ' printCell(nodenumber)]);
+assignin('base','printCell',data.printCell);
+
+
+
+%%%%%%%%%

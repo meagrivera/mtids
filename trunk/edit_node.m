@@ -156,7 +156,7 @@ display(['@edit_node_OutputFcn: data.template = ' data.template]);
 display(['@edit_node_OutputFcn: data.neighbours = ' data.neighbours]);
 display(['@edit_node_OutputFcn: data.destroy = ' data.destroy]);
 display(['@edit_node_OutputFcn: data.intStates = ' data.intStates]);
-display(['@edit_node_OutputFcn: data.printVector = ' data.printVector]);
+display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}) ]);
 %}
 
 if handles.OutputFlag == 2 % "apply changes"
@@ -168,7 +168,7 @@ if handles.OutputFlag == 2 % "apply changes"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-    delete(hObject)
+
     
 elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{1} = handles.output;
@@ -179,7 +179,7 @@ elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-    delete(hObject)
+
     
 elseif handles.OutputFlag == 0 % "delete node"
     varargout{1} = handles.output;
@@ -190,8 +190,9 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-    delete(hObject)
+    
 end
+delete(hObject)
 
 
 
@@ -351,15 +352,12 @@ function checkbox1_Callback(hObject, eventdata, handles)
 %global printVector;
 
 if (get(hObject,'Value') == get(hObject,'Max'))
-    % Checkbox is checked-take appropriate action
-    
+    % Checkbox is checked-take appropriate action  
     data.flagCheck1 = 1;
 else
-    % Checkbox is not checked-take appropriate action
-    
+    % Checkbox is not checked-take appropriate action 
     data.flagCheck1 = 0;
 end
-
 setappdata(handles.figure1,'appData',data);
 
 
@@ -368,7 +366,6 @@ function edit_intStates_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_intStates (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hints: get(hObject,'String') returns contents of edit_intStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_intStates as a double
 
@@ -378,7 +375,6 @@ function edit_intStates_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_intStates (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -391,16 +387,13 @@ function checkbox2_Callback(hObject, eventdata, handles)
 % hObject    handle to checkbox2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of checkbox2
 
 if (get(hObject,'Value') == get(hObject,'Max'))
     % Checkbox is checked-take appropriate action
-
     data.flagCheck2 = 1;
 else
     % Checkbox is not checked-take appropriate action
-
     data.flagCheck2 = 0;
 end
 setappdata(handles.figure1,'appData',data);
@@ -410,7 +403,6 @@ function edit_selectedStates_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_selectedStates (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hints: get(hObject,'String') returns contents of edit_selectedStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
 
@@ -420,7 +412,6 @@ function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_selectedStates (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -433,13 +424,21 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_plot_parameters (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-%global intStates;
-%global flagCheck1;
-%global flagCheck2;
 
+data = getappdata(handles.figure1,'appData');
 plotStates = str2num(get(handles.edit_selectedStates,'String'));
 
-[parameters] = plot_parameters(plotStates);
+[params] = pp2(data.nodenumber, plotStates);
+if isempty(params)
+    % line specs figure was cancled - no new plot specs should be applied
+    data.plotParams = params;
+    set(handles.figure1,'appData',data);
+else
+    % use plot specs in struct 'params'
+    data.plotParams = params;
+    set(handles.figure1,'appData',data);
+end
+guidata(hObject, handles);
 
 
 % --- Executes when user attempts to close figure1.
@@ -447,15 +446,26 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 data = getappdata(handles.figure1,'appData');
-
 data.destroy = 2; %graph should NOT be destroyed, but changes should NOT be applied
 setappdata(handles.figure1,'appData',data);
 handles.OutputFlag = 1;
 guidata(hObject, handles);
-uiresume(handles.figure1);
 
+%DEBUGGING
+%{
+disp('------------------------------------------------------------------');
+display(['@edit_node_OutputFcn: data.nodenumber = ' num2str(data.nodenumber)]);
+display(['@edit_node_OutputFcn: data.nodelabel = ' data.nodelabel]);
+display(['@edit_node_OutputFcn: data.template = ' data.template]);
+display(['@edit_node_OutputFcn: data.neighbours = ' data.neighbours]);
+display(['@edit_node_OutputFcn: data.destroy = ' data.destroy]);
+display(['@edit_node_OutputFcn: data.intStates = ' data.intStates]);
+display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}) ]);
+%}
+
+uiresume(handles.figure1);
+%delete(hObject);
 
 
 %%%
