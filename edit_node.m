@@ -22,7 +22,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 22-Apr-2012 21:44:16
+% Last Modified by GUIDE v2.5 26-Apr-2012 10:45:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -52,20 +52,6 @@ function edit_node_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to edit_node (see VARARGIN)
 
-%global nodenumber;
-%global nodelabel;
-%global template;
-%global template_list;
-%global neighbours;
-%global destroy;
-%Additional variables for plotting the simulation
-%global intStates;
-%global printVector;
-%global printCell;
-%intStates = 1;
-%Minimum length of princt vector is 2. First entry denotes if node output
-%should be plotted. Entries 1+i denotes if internal state i should be plotted.
-data.printVector = [1 0];
 data.destroy = 0; %means, node should NOT be destroyed and changes should be applied
 
 %Flags for plot checkboxes
@@ -80,6 +66,11 @@ data.template_list = varargin{4};
 data.neighbours = varargin{5};
 data.printCell = varargin{6};
 %global drop_string;
+%assignin('base','printCell',data.printCell);
+data.plotParams = data.printCell{:,2};
+%Minimum length of print vector is 2. First entry denotes if node output
+%should be plotted. Entries 1+i denotes if internal state i should be plotted.
+data.printVector = data.printCell{:,1};
 
 [ny, nx] = size(data.template_list);
 
@@ -94,18 +85,16 @@ for i=1:ny
     end
 end
 
+% initialize gui
 set(handles.selector_dynamics, 'String', data.drop_string);
-
 n1 = find(strcmp(data.template, data.template_list));
-
 set(handles.selector_dynamics, 'Value', n1); % Get template name from list
-
 set(handles.number_node, 'String', num2str(data.nodenumber));
 set(handles.edit_label, 'String', data.nodelabel);
 set(handles.connections, 'String', matrix_to_string(data.neighbours));
 
 %Initialize figure with information contained in printCell
-temp = data.printCell{data.nodenumber};
+temp = data.printCell{1,1};
 data.intStates = length(temp)-1;
 set(handles.edit_intStates,'String',num2str(data.intStates));
 if temp(1) == 1
@@ -123,7 +112,6 @@ else
 end
 set(handles.checkbox2,'Value',data.flagCheck2);
 set(handles.edit_selectedStates,'String',stringSelectedStates);
-
 
 setappdata(handles.figure1,'appData',data);
 
@@ -168,7 +156,7 @@ if handles.OutputFlag == 2 % "apply changes"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-
+    varargout{9} = data.plotParams;
     
 elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{1} = handles.output;
@@ -179,7 +167,7 @@ elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-
+    varargout{9} = data.plotParams;
     
 elseif handles.OutputFlag == 0 % "delete node"
     varargout{1} = handles.output;
@@ -190,8 +178,9 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVector;
-    
-end
+    varargout{9} = data.plotParams;
+ end
+
 delete(hObject)
 
 
@@ -265,10 +254,11 @@ data.neighbours = get(handles.connections, 'String');
 %TODO: case distinction for templates with only one internal state
 
 %Get number of internal states
-data.intStates = str2double(get(handles.edit_intStates,'String'));
+data.intStates = str2num(get(handles.edit_intStates,'String'));
 
 %Set length of printVector, depending on number of internal states
 %ATTENTION: value of intStates must be an integer and of the minimum of 1!
+%display(['@button_edit_node: number of intStates: ' num2str(data.intStates) ]);
 data.printVector = zeros(1,data.intStates+1);
 %Read out manually the information about the states, which should be
 %plotted. Format is: "i j l", no brackets, just a spacer between the
@@ -297,6 +287,21 @@ else %Checkbox 2 is not checked
     data.printVector(2:data.intStates+1) = zeros(1,data.intStates);
     
 end
+
+% plot params handling:
+% check if numbers of plot params and numbers of states to plot are equal
+% if not: perform action (is to define)
+if isempty(data.plotParams) % if no parameters are submitted or the parameters were not edited
+    %pass initial plot values to every state, which should be plotted
+    %for i = 1:data.intStates
+    %   data.plotParams(1) = data.printCell{:,2};
+    %end
+else %if length(data.plotParams) ~= length(data.printVector)
+    %for i = 1:data.intStates
+    %   data.plotParams(1) = data.printCell{:,2};
+    %end
+end
+
 
 setappdata(handles.figure1,'appData',data);
 
@@ -350,7 +355,7 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
 %global printVector;
-
+data = getappdata(handles.figure,'appData');
 if (get(hObject,'Value') == get(hObject,'Max'))
     % Checkbox is checked-take appropriate action  
     data.flagCheck1 = 1;
@@ -368,7 +373,20 @@ function edit_intStates_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of edit_intStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_intStates as a double
-
+%check if string is scalar
+if length( num2str(get(hObject,'String')) ) > 1
+    %error
+end
+% check if internal states and chosen internal states to plot is
+% consistent, resetting intStates if not
+%{
+display(['@edit_intStates_Callback ']);
+display(['String of intStates: ' get(hObject,'String') ]);
+display(['Max. of intStates to plot: ' num2str( max( str2num( get(handles.edit_selectedStates,'String') ) ) ) ]);
+%}
+if str2double(get(hObject,'String')) < max( str2num( get(handles.edit_selectedStates,'String') ) )
+    set( hObject,'String', num2str( max( str2num( get(handles.edit_selectedStates,'String') ) ) ) );
+end
 
 % --- Executes during object creation, after setting all properties.
 function edit_intStates_CreateFcn(hObject, eventdata, handles)
@@ -388,7 +406,7 @@ function checkbox2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: get(hObject,'Value') returns toggle state of checkbox2
-
+data = getappdata(handles.figure1,'appData');
 if (get(hObject,'Value') == get(hObject,'Max'))
     % Checkbox is checked-take appropriate action
     data.flagCheck2 = 1;
@@ -405,7 +423,7 @@ function edit_selectedStates_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of edit_selectedStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
-
+set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
 
 % --- Executes during object creation, after setting all properties.
 function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
@@ -428,16 +446,9 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 plotStates = str2num(get(handles.edit_selectedStates,'String'));
 
-[params] = pp2(data.nodenumber, plotStates);
-if isempty(params)
-    % line specs figure was cancled - no new plot specs should be applied
-    data.plotParams = params;
-    set(handles.figure1,'appData',data);
-else
-    % use plot specs in struct 'params'
-    data.plotParams = params;
-    set(handles.figure1,'appData',data);
-end
+data.plotParams = pp2(data.nodenumber, plotStates);
+
+setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
@@ -466,6 +477,40 @@ display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}
 
 uiresume(handles.figure1);
 %delete(hObject);
+
+
+% --- Executes on button press in pushbutton5.
+function pushbutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+%display(['get(handles.edit_intStates,"String": ' get(handles.edit_intStates,'String') ]);
+
+n_template = get(handles.selector_dynamics, 'Value');
+%data.template = data.template_list{n_template};
+data.nodelabel = get(handles.edit_label, 'String');
+handles.nodelabel = get(handles.edit_label, 'String');
+data.neighbours = get(handles.connections, 'String');
+
+%display(['get(handles.selector_dynamics: ' num2str(n_template) ]);
+%display(['data.template: ' data.template]);
+%display(['data.template_list: ' data.template_list ]);
+%display(['data.nodelabel: ' data.nodelabel ]);
+%assignin('base','data',data);
+checkPlotParams(handles);
+ 
+% -- check for the same number of states to plot and number of plot
+% parameters
+function [argout] = checkPlotParams (handles)
+data = getappdata(handles.figure1,'appData');
+% number of states
+nrOfStates = str2double( get(handles.edit_intStates,'String') );
+% number of sets of plot params
+nrOfPlotParams = length( data.plotParams );
+
+display(['Number of states to plot: ' num2str( nrOfStates ) ]);
+display(['Number of sets of plot params: ' num2str( nrOfPlotParams ) ]);
 
 
 %%%
