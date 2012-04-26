@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 25-Apr-2012 13:24:27
+% Last Modified by GUIDE v2.5 26-Apr-2012 10:22:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -117,7 +117,14 @@ data.start_index = start_index;
 template_list = cell(0,1);
 templates = cell(0,1);
 data.templates = templates;
-printCell = cell(0,1);
+%container for plot information - 
+% 1.column: printVector -- containes the information about node number,
+%internal states and which should be plotted
+%2. column: plotParams -- the design information for the plot command, a
+%struct with 6 elements per state
+%       Example: a node has 3 int. states, 2 should be plotted, then
+%       struct(1) and struct(2) exists, each with 6 elements
+printCell = cell(0,2);
 data.printCell = printCell;
 
 % Parameter to distinguish the modus "undirected" / "directed": dir
@@ -265,13 +272,14 @@ length_cellPrint = size(printCell,1);
 
 %Keep the informations of the old nodes
 tempCell = printCell;
-printCell = cell(length_cellPrint+1,1);
+printCell = cell(length_cellPrint+1,2);
 for i = 1:length_cellPrint
-    printCell(i) = tempCell(i);
+    printCell(i,:) = tempCell(i,:);
 end
 
-%Initially, the printVector is the same for all templates
-printCell(length_cellPrint+1) = num2cell([plotAllOutput 0],2);
+%Initially, the printVector and the plotParams are the same for all templates
+printCell(length_cellPrint+1,1) = num2cell([plotAllOutput 0],2);
+printCell{length_cellPrint+1,2} = initPlotParams;
 
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles,hObject);
@@ -314,7 +322,7 @@ data = getappdata(handles.figure1,'appData');
 %global g;
 g = data.g;
 free(g)
-
+graph_destroy;
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
@@ -601,12 +609,12 @@ if nv(g) && (a <= nv(g))
     %Here, the i-th entry of the printCell must be deleted too
     length_printCell = size(printCell,1);
     temp_printCell = printCell;
-    printCell = cell(length_printCell-1,1);
+    printCell = cell(length_printCell-1,2);
     for i = 1:(a-1)
-        printCell(i) = temp_printCell(i);
+        printCell(i,:) = temp_printCell(i,:);
     end
     for i = (a+1):length_printCell
-        printCell(i-1) = temp_printCell(i);
+        printCell(i-1,:) = temp_printCell(i,:);
     end
 
     refresh_graph(0, eventdata, handles,hObject);
@@ -1775,9 +1783,10 @@ end
 
 %Initialize the printCell
 nrNodes = nv(g);
-printCell = cell(nrNodes,1);
+printCell = cell(nrNodes,2);
 for i = 1:nrNodes
-    printCell(i) = num2cell([1 0],2);
+    printCell(i,1) = num2cell([1 0],2);
+    printCell{i,1} = initPlotParams;
 end
 
 %store application data
@@ -2051,7 +2060,8 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
     
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
-   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector] = edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell );
+   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector,plotParams] = ...
+       edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell(I,:) );
 
    %DEBUGGING
    %{
@@ -2110,9 +2120,10 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
                 add(g,I,neighbours(i)); 
             end
         end
-           
+        %assignin('base','printVector',printVector);
         %Provide here the new plotting information
-        printCell(nodenumber) = num2cell(printVector,2);
+        printCell(nodenumber,1) = num2cell(printVector,2);
+        printCell{nodenumber,2} = plotParams;
             
         refresh_graph(0, eventdata, handles,hObject);
             
@@ -2124,17 +2135,17 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
             
             %Here, the i-th entry of the printCell must be deleted too
             if size(printCell,1) == 1
-                printCell = cell(0,1);
+                printCell = cell(0,2);
             else
                 length_printCell = size(printCell,1);
                 % display(['Length of printCell: ' num2str(length_printCell) ]);
                 temp_printCell = printCell;
-                printCell = cell(length_printCell-1,1);
+                printCell = cell(length_printCell-1,2);
                 for i = 1:(nodenumber-1)
-                    printCell(i) = temp_printCell(i);
+                    printCell(i,:) = temp_printCell(i,:);
                 end
                 for i = (nodenumber+1):length_printCell
-                    printCell(i-1) = temp_printCell(i);
+                    printCell(i-1,:) = temp_printCell(i,:);
                 end
             end
 
@@ -2409,7 +2420,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % Function, that creates a pop-up-menu, that says: "save current
         % graph?"
         resize(g,0);
-        printCell = cell(0,1);
+        printCell = cell(0,2);
         refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     case 'button_directed'
@@ -2418,7 +2429,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % undirected graph as directed? (Yes / No) If no, save current
         % graph?"
         resize(g,0);
-        printCell = cell(0,1);
+        printCell = cell(0,2);
         refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     % Continue with more cases as necessary.
@@ -2465,7 +2476,7 @@ if expSucc == 1
     nrNodes = nv(g);
     intStates = zeros(nrNodes,1);
     for i = 1:nrNodes
-        intStates(i) = length(printCell{i})-1;
+        intStates(i) = length(printCell{i,1})-1;
     end
 
     %t contains the simulation time, x the states in order of the nodenumbers.
@@ -2478,7 +2489,7 @@ if expSucc == 1
 
     for i = 1:nrNodes
         %Check printCell to see if visualization of state i is wanted
-        temp = printCell{i};
+        temp = printCell{i,1};
         if any(temp)
         figure;
         hold on;
@@ -2575,7 +2586,7 @@ if expSucc == 1
     nrNodes = nv(g);
     intStates = zeros(nrNodes,1);
     for i = 1:nrNodes
-        intStates(i) = length(printCell{i})-1;
+        intStates(i) = length(printCell{i,1})-1;
     end
 
     %t contains the simulation time, x the states in order of the nodenumbers.
@@ -2588,7 +2599,7 @@ if expSucc == 1
 
     for i = 1:nrNodes
         %Check printCell to see if visualization of state i is wanted
-        temp = printCell{i};
+        temp = printCell{i,1};
         if any(temp)
         figure;
         hold on;
@@ -2631,8 +2642,9 @@ if expSucc == 1
 end
 
 
-
 % --- Executes on button press in pushbutton17.
+% -- This button is only necessary for easily generating debugging output
+% -- it should be set to invisible or deleted after debugging
 function pushbutton17_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton17 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -2644,6 +2656,17 @@ display(['Number of nodes: ' num2str(nv(data.g)) ]);
 %display(['PrintCell: ' printCell(nodenumber)]);
 assignin('base','printCell',data.printCell);
 
+% -- this function initializes the plot parameters for a node
+function [argout] = initPlotParams()
+% output is a one element struct containing six elements
+plotParams.lineWidth = '1.0';
+plotParams.lineStyle = '-';
+plotParams.marker = 'none';
+plotParams.lineColor = 'b';
+plotParams.edgeColor = 'b';
+plotParams.faceColor = 'b';
+
+argout = plotParams;
 
 
 %%%%%%%%%
