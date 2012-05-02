@@ -53,7 +53,7 @@ function pp2_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to pp2 (see VARARGIN)
 
 % Choose default command line output for pp2
-handles.output = hObject;
+handles(1).output = hObject;
 
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
 set(gcf,'Color',defaultBackground);
@@ -61,7 +61,13 @@ set(gcf,'Color',defaultBackground);
 %Initializing
 nodenumber = varargin{1};
 plotStates = varargin{2};
-handles.nrOfPlotStates = length(plotStates);
+plotString = varargin{3};
+oldParams = varargin{4};
+handles(1).nrOfPlotStates = length(plotStates);
+
+if handles(1).nrOfPlotStates ~= length(oldParams)
+    display(['ERROR - nrOfPlotStates and length(oldParams) must be equal!']);
+end
 
 %DEBUGGING
 %{
@@ -71,11 +77,11 @@ display(['Number of states to plot: ' num2str(handles.nrOfPlotStates) ]);
 %}
 
 %% Outputstrings
-handles.lineWidthVector = {'0.2','0.4','0.6','0.8','1.0','1.2','1.4','1.6','1.8','2.0',...
+handles(1).lineWidthVector = {'0.2','0.4','0.6','0.8','1.0','1.2','1.4','1.6','1.8','2.0',...
                 '2.2','2.4','2.6','2.8','3.0','3.2','3.4','3.6','3.8','4.0'};
-handles.lineStyleVector = {'-','--',':','-.','none'};
-handles.markerVector = {'+','o','*','.','x','s','d','^','v','>','<','p','h','none'};
-handles.colorVector = {'r','g','b','c','m','y','k','w'};
+handles(1).lineStyleVector = {'-','--',':','-.','none'};
+handles(1).markerVector = {'+','o','*','.','x','s','d','^','v','>','<','p','h','none'};
+handles(1).colorVector = {'r','g','b','c','m','y','k','w'};
 %%
 
 %% Set layout parameters
@@ -91,10 +97,10 @@ screenSize = get( 0, 'ScreenSize' );
 
 topGap = 1/12*screenSize(4);
 left = screenSize(3)*0.1;
-height = fixedHeight + handles.nrOfPlotStates*rowHeight;
+height = fixedHeight + handles(1).nrOfPlotStates*rowHeight;
 
-if screenSize(3)*0.9 > 700
-    width = 700;
+if screenSize(3)*0.9 > 760
+    width = 760;
 else
     width = screenSize(3)*0.85;
 end
@@ -106,7 +112,7 @@ posVector = [left bottom width height]; %do this dynamically % [left, bottom, wi
 
 % setting figure parameters manually
 set(gcf,'Units','pixels');
-set(gcf,'Position',posVector,'Name','Plot Parameters','Toolbar','none','MenuBar','none');
+set(gcf,'Position',posVector,'Name',['Plot Parameters for node ' num2str( nodenumber ) ],'Toolbar','none','MenuBar','none');
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
 set(gcf,'Color',defaultBackground);
 
@@ -117,11 +123,11 @@ ph = uipanel('Parent',gcf,'Title','Choose plot parameters',...
 
 % parameters for pushbutton "submitt"
 posVectorSubmitButton = [0.15*width 1.7*bottomFrame 140 35];
-set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
+set(handles(1).pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
     'String','Submit Parameters');
 
 posVectorCancelButton = [0.55*width 1.7*bottomFrame 140 35];
-set(handles.pushbutton2,'Units','pixels','String','Cancel',...
+set(handles(1).pushbutton2,'Units','pixels','String','Cancel',...
                 'Position',posVectorCancelButton);
 
 %DEBUGGING
@@ -133,71 +139,71 @@ set(handles.text1,'String',['Nodenumber:' num2str(nodenumber) ' States to plot:'
 %}
 
 % setting the text for the columns
-posVectorTextLineWidth = [66 height-2.5*topFrame 90 rowHeight];
+posVectorTextLineWidth = [66 height-2.5*topFrame 90 rowHeight] + [60 0 0 0];
 legendH1 = uicontrol(hObject,'Style','text','String','Line Width:',...
                 'Position',posVectorTextLineWidth);
-posVectorTextLineStyle = [154 height-2.5*topFrame 90 rowHeight];
+posVectorTextLineStyle = [154 height-2.5*topFrame 90 rowHeight] + [60 0 0 0];
 legendH2 = uicontrol(hObject,'Style','text','String','Line Style:',...
                 'Position',posVectorTextLineStyle);
-posVectorTextMarkerStyle = [245 height-2.5*topFrame 90 rowHeight];
+posVectorTextMarkerStyle = [245 height-2.5*topFrame 90 rowHeight] + [60 0 0 0];
 legendH3 = uicontrol(hObject,'Style','text','String','Marker Style:',...
                 'Position',posVectorTextMarkerStyle);
-posVectorTextColor = [343 height-2.5*topFrame 80 rowHeight];
+posVectorTextColor = [343 height-2.5*topFrame 80 rowHeight] + [60 0 0 0];
 legendH4 = uicontrol(hObject,'Style','text','String','Line Color:',...
                 'Position',posVectorTextColor);
-posVectorTextMarkerEdgeColor = [430 height-2.5*topFrame 120 rowHeight];
+posVectorTextMarkerEdgeColor = [430 height-2.5*topFrame 120 rowHeight] + [60 0 0 0];
 legendH5 = uicontrol(hObject,'Style','text','String','Marker Edge Color:',...
                 'Position',posVectorTextMarkerEdgeColor);
-posVectorTextMarkerFaceColor = [560 height-2.5*topFrame 120 rowHeight];
+posVectorTextMarkerFaceColor = [560 height-2.5*topFrame 120 rowHeight] + [60 0 0 0];
 legendH5 = uicontrol(hObject,'Style','text','String','Marker Face Color:',...
                 'Position',posVectorTextMarkerFaceColor);
 
 % setting the elements for each row, depending on how many states are to
 % plot
-if handles.nrOfPlotStates > 0
-    sth1 = zeros(handles.nrOfPlotStates,1); %handles text box 1
+if handles(1).nrOfPlotStates > 0
+    sth1 = zeros(handles(1).nrOfPlotStates,1); %handles text box 1
 
-    for i = 1:handles.nrOfPlotStates
+    for i = 1:handles(1).nrOfPlotStates
         %Label State
-        posVectorSth1 = [rowOffset1 height-2.2*topFrame-i*rowHeight 60 rowHeight];
+        posVectorSth1 = [rowOffset1 height-2.2*topFrame-i*rowHeight 120 rowHeight];
         sth1(i) = uicontrol(hObject,'Style','text','String',...
-            ['State ' num2str(plotStates(i)) ':'],'Position',posVectorSth1);
+            plotString{i},'Position',posVectorSth1);
         %PopUp-Menu for LineWidth
         posVectorSh = [rowOffset1+posVectorSth1(3) height-1.38*topFrame-i*rowHeight 50 0.40*rowHeight];
-        handles.pmh1(i) = uicontrol(hObject,'Style','popupmenu',...
-                'String',handles.lineWidthVector,...
+        handles(i).pmh1 = uicontrol(hObject,'Style','popupmenu',...
+                'String',handles(1).lineWidthVector,...
                 'Value',5,'Position',posVectorSh);
         %PopUp-Menu for LineStyle
         posVectorSth2 = posVectorSh + [1.65*posVectorSh(3) 0 10 0];
-        handles.pmh2(i) = uicontrol(hObject,'Style','popupmenu',...
-                'String',handles.lineStyleVector,...
+        handles(i).pmh2 = uicontrol(hObject,'Style','popupmenu',...
+                'String',handles(1).lineStyleVector,...
                 'Value',1,'Position',posVectorSth2);
         %PopUp-Menu for Marker
         posVectorSth3 = posVectorSth2 + [1.5*posVectorSth2(3) 0 0 0];
-        handles.pmh3(i) = uicontrol(hObject,'Style','popupmenu',...
-                'String',handles.markerVector,...
+        handles(i).pmh3 = uicontrol(hObject,'Style','popupmenu',...
+                'String',handles(1).markerVector,...
                 'Value',14,'Position',posVectorSth3);
         %PopUp-Menu for Line Color
         posVectorSth4 = posVectorSth3 + [1.7*posVectorSth3(3) -12 -15 15]; % [left, bottom, width, height]
-        handles.pmh4(i) = uicontrol(hObject,'Style','Push Button',...
-            'Units','pixels','Position',posVectorSth4,'BackgroundColor',[0 0 1]);
-        set(handles.pmh4(i),'Callback',@color_setting_Callback);
+        handles(i).pmh4 = uicontrol(hObject,'Style','Push Button',...
+            'Units','pixels','Position',posVectorSth4,'BackgroundColor',[0 0 1], 'Tag', ['handles(' num2str(i) ').pmh4']);
+        %set(handles(i).pmh4,'Callback',{@color_setting_Callback});
         %handles.pmh4(i) = uicontrol(hObject,'Style','popupmenu',...
         %        'String',handles.colorVector,...
         %        'Value',1,'Position',posVectorSth4);
         %PopUp-Menu for Marker Edge Color
         posVectorSth5 = posVectorSth4 + [2.4*posVectorSth4(3) 0 0 0];
-        handles.pmh5(i) = uicontrol(hObject,'Style','Push Button',...
-            'Units','pixels','Position',posVectorSth5,'BackgroundColor',[0 0 1]);
-        set(handles.pmh5(i),'Callback',@color_setting_Callback);
+        handles(i).pmh5 = uicontrol(hObject,'Style','Push Button',...
+            'Units','pixels','Position',posVectorSth5,'BackgroundColor',[0 0 1],'Tag', ['handles(' num2str(i) ').pmh5']);
+        %set(handles(i).pmh5,'Callback',{@color_setting_Callback});
         %handles.pmh5(i) = uicontrol(hObject,'Style','popupmenu',...
         %        'String',handles.colorVector,...
         %        'Value',1,'Position',posVectorSth5);
         %PopUp-Menu for Marker Edge Color
         posVectorSth6 = posVectorSth5 + [2.7*posVectorSth5(3) 0 0 0];
-        handles.pmh6(i) = uicontrol(hObject,'Style','Push Button',...
-            'Units','pixels','Position',posVectorSth6,'BackgroundColor',[0 0 1]);
-        set(handles.pmh6(i),'Callback',@color_setting_Callback);
+        handles(i).pmh6 = uicontrol(hObject,'Style','Push Button',...
+            'Units','pixels','Position',posVectorSth6,'BackgroundColor',[0 0 1],'Tag', ['handles(' num2str(i) ').pmh6']);
+        %set(handles(i).pmh6,'Callback',{@color_setting_Callback});
         %handles.pmh6(i) = uicontrol(hObject,'Style','popupmenu',...
         %        'String',handles.colorVector,...
         %        'Value',1,'Position',posVectorSth6);
@@ -206,8 +212,24 @@ end
 
 guidata(hObject, handles);
 
+for i = 1:handles(1).nrOfPlotStates
+    set(handles(i).pmh4,'Callback',{@color_setting_Callback,handles});
+    set(handles(i).pmh5,'Callback',{@color_setting_Callback,handles});
+    set(handles(i).pmh6,'Callback',{@color_setting_Callback,handles});
+    %show old plot params
+    set(handles(i).pmh1,'Value',find( strcmp( handles(1).lineWidthVector, oldParams(i).lineWidth) ) );
+    set(handles(i).pmh2,'Value',find( strcmp( handles(1).lineStyleVector, oldParams(i).lineStyle) ) );
+    set(handles(i).pmh3,'Value', find( strcmp( handles(1).markerVector, oldParams(i).marker )  ) );
+    set(handles(i).pmh4,'BackgroundColor',oldParams(i).lineColor);
+    set(handles(i).pmh5,'BackgroundColor',oldParams(i).edgeColor);
+    set(handles(i).pmh6,'BackgroundColor',oldParams(i).faceColor);
+end
+
+
+guidata(hObject, handles);
+
 % UIWAIT makes pp2 wait for user response (see UIRESUME)
-uiwait(handles.figure1);
+uiwait(handles(1).figure1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -218,14 +240,14 @@ function varargout = pp2_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-for i = 1:handles.nrOfPlotStates
-    params(i).lineWidth = handles.lineWidthVector{get(handles.pmh1(i),'Value')};
-    params(i).lineStyle = handles.lineStyleVector{get(handles.pmh2(i),'Value')};
-    params(i).marker = handles.markerVector{get(handles.pmh3(i),'Value')};
-    params(i).lineColor = get(handles.pmh4(i),'BackgroundColor');
+for i = 1:handles(1).nrOfPlotStates
+    params(i).lineWidth = handles(1).lineWidthVector{get(handles(i).pmh1,'Value')};
+    params(i).lineStyle = handles(1).lineStyleVector{get(handles(i).pmh2,'Value')};
+    params(i).marker = handles(1).markerVector{get(handles(i).pmh3,'Value')};
+    params(i).lineColor = get(handles(i).pmh4,'BackgroundColor');
     %handles.colorVector{get(handles.pmh4(i),'Value')};
-    params(i).edgeColor = get(handles.pmh5(i),'BackgroundColor');
-    params(i).faceColor = get(handles.pmh6(i),'BackgroundColor');
+    params(i).edgeColor = get(handles(i).pmh5,'BackgroundColor');
+    params(i).faceColor = get(handles(i).pmh6,'BackgroundColor');
 end
 
 
@@ -235,11 +257,11 @@ display([params]);
 %}
 
 % data should be applied to current node
-if handles.OutputFlag == 2
+if handles(1).OutputFlag == 2
     %varargout{1} = handles.output;
     varargout{1} = params;
 % data should NOT be applied ('button' cancel or 'closerequest' was prompted    
-elseif handles.OutputFlag == 1
+elseif handles(1).OutputFlag == 1
     %varargout{1} = handles.output;
     varargout{1} = [];
 end
@@ -256,9 +278,9 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 %for debugging
 %set(handles.text1,'String',f);
 % indictates, that the prompted data should be applied
-handles.OutputFlag = 2;
+handles(1).OutputFlag = 2;
 guidata(hObject, handles);
-uiresume(handles.figure1);
+uiresume(handles(1).figure1);
 
 
 % --- Executes when user attempts to close figure1.
@@ -267,9 +289,9 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: delete(hObject) closes the figure
-handles.OutputFlag = 1;
+handles(1).OutputFlag = 1;
 guidata(hObject, handles);
-uiresume(handles.figure1);
+uiresume(handles(1).figure1);
 
 
 % --- Executes on button press in pushbutton2.
@@ -277,14 +299,35 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.OutputFlag = 1;
+handles(1).OutputFlag = 1;
 guidata(hObject, handles);
-uiresume(handles.figure1);
+uiresume(handles(1).figure1);
 
 % Opens a color setting dialog and passes the color to the invoking object
 function color_setting_Callback(hObject, eventdata, handles)
 C = uisetcolor(get(hObject,'BackgroundColor'));
 set(hObject,'BackgroundColor',C);
+
+%if color was chosen for lineColor, marker and markerface color should be
+%set to same value
+%display(['Tag of envoking object: ' get(hObject,'Tag') ]);
+%determine line number
+tmpstr = get(hObject,'Tag');
+
+% THIS SOLUTION WORKS ONLY IF THERE ARE LESS THAN 10 STATES TO PLOT!!!
+ln = str2double(tmpstr(9));
+pmh = str2double(tmpstr(15));
+%display(['ln = ' num2str(ln) ]);
+%display(['pmh = ' num2str(pmh) ]);
+
+%determine if color was set for linecolor
+if pmh == 4
+   eval( ['set(handles(' num2str(ln) ').pmh5,' char(39) 'BackgroundColor' char(39) ',C)'] );
+   eval( ['set(handles(' num2str(ln) ').pmh6,' char(39) 'BackgroundColor' char(39) ',C)'] ); 
+end
+
 %guidata(hObject, handles);
+
+
 
 %%%
