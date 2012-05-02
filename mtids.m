@@ -203,7 +203,6 @@ function newnode_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
 % load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -2658,13 +2657,19 @@ assignin('base','printCell',data.printCell);
 
 % -- this function initializes the plot parameters for a node
 function [argout] = initPlotParams()
-% output is a one element struct containing six elements
+% output is a (1+n) element struct containing six elements, where
+%n is the amount of internal states to plot. At start of mtids, n=1 for
+%each node
 plotParams.lineWidth = '1.0';
 plotParams.lineStyle = '-';
 plotParams.marker = 'none';
-plotParams.lineColor = 'b';
-plotParams.edgeColor = 'b';
-plotParams.faceColor = 'b';
+plotParams.lineColor = [0 0 1];
+plotParams.edgeColor = [0 0 1];
+plotParams.faceColor = [0 0 1];
+
+%at start of mtids, no int. states should be plotted, thus the 2nd stuct is
+%empty
+plotParams(2).lineWidth = [];
 
 argout = plotParams;
 

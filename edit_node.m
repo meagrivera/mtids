@@ -54,26 +54,21 @@ function edit_node_OpeningFcn(hObject, eventdata, handles, varargin)
 
 data.destroy = 0; %means, node should NOT be destroyed and changes should be applied
 
-%Flags for plot checkboxes
-%global flagCheck1;
-%global flagCheck2;
-
-%Input Arguments!!
+%Process Input Arguments!!
 data.nodenumber = varargin{1};
 data.nodelabel  = varargin{2};
 data.template = varargin{3};
 data.template_list = varargin{4};
 data.neighbours = varargin{5};
 data.printCell = varargin{6};
-%global drop_string;
-%assignin('base','printCell',data.printCell);
-data.plotParams = data.printCell{:,2};
+data.plotParamsOld = data.printCell{:,2};
 %Minimum length of print vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
-data.printVector = data.printCell{:,1};
+data.printVectorOld = data.printCell{:,1}; %old print vector
 
 [ny, nx] = size(data.template_list);
 
+% INITIALIZE GUI
 % Building selector string
 for i=1:ny
     if i == 1
@@ -85,7 +80,6 @@ for i=1:ny
     end
 end
 
-% initialize gui
 set(handles.selector_dynamics, 'String', data.drop_string);
 n1 = find(strcmp(data.template, data.template_list));
 set(handles.selector_dynamics, 'Value', n1); % Get template name from list
@@ -113,12 +107,12 @@ end
 set(handles.checkbox2,'Value',data.flagCheck2);
 set(handles.edit_selectedStates,'String',stringSelectedStates);
 
-setappdata(handles.figure1,'appData',data);
 
+% store input data and figure handles
+setappdata(handles.figure1,'appData',data);
 % Choose default command line output for edit_node
 handles.output = hObject;
 guidata(hObject, handles);
-
 %set(handles.selector_dynamics, 'Value', '2');
 % UIWAIT makes edit_node wait for user response (see UIRESUME)
 uiwait(handles.figure1);
@@ -131,7 +125,7 @@ function varargout = edit_node_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+compute_printVector(handles);
 %load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -166,8 +160,8 @@ elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{5} = data.neighbours;
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
-    varargout{8} = data.printVector;
-    varargout{9} = data.plotParams;
+    varargout{8} = data.printVectorOld;
+    varargout{9} = data.plotParamsOld;
     
 elseif handles.OutputFlag == 0 % "delete node"
     varargout{1} = handles.output;
@@ -177,8 +171,8 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{5} = data.neighbours;
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
-    varargout{8} = data.printVector;
-    varargout{9} = data.plotParams;
+    varargout{8} = data.printVectorOld;
+    varargout{9} = data.plotParamsOld;
  end
 
 delete(hObject)
@@ -235,7 +229,8 @@ function button_edit_Callback(hObject, eventdata, handles)
 % hObject    handle to button_edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+setPlotParams(hObject,handles);
+compute_printVector(handles);
 %load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -246,62 +241,6 @@ data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
 handles.nodelabel = get(handles.edit_label, 'String');
 data.neighbours = get(handles.connections, 'String');
-
-%DEBUGGING
-%display([data.nodelabel]);
-
-%Compute printVector
-%TODO: case distinction for templates with only one internal state
-
-%Get number of internal states
-data.intStates = str2num(get(handles.edit_intStates,'String'));
-
-%Set length of printVector, depending on number of internal states
-%ATTENTION: value of intStates must be an integer and of the minimum of 1!
-%display(['@button_edit_node: number of intStates: ' num2str(data.intStates) ]);
-data.printVector = zeros(1,data.intStates+1);
-%Read out manually the information about the states, which should be
-%plotted. Format is: "i j l", no brackets, just a spacer between the
-%numbers.
-data.temp = str2num(get(handles.edit_selectedStates,'String'));
-
-if data.flagCheck1 %Checkbox 1 is checked
-    data.printVector(1) = 1;
-else %Checkbox 1 is not checked
-    data.printVector(1) = 0;
-end
-
-if any(data.temp)
-    data.flagCheck2 = 1;
-end
-
-if data.flagCheck2 && strcmp(data.template,'LTI') %Checkbox 2 is checked AND dynamics are LTI
-    for i = 1:data.intStates
-        if find(data.temp == i)
-           data.printVector(1+i) = 1; 
-        end
-    end
-    %printVector(2) = 5; %just for debugging
-    
-else %Checkbox 2 is not checked
-    data.printVector(2:data.intStates+1) = zeros(1,data.intStates);
-    
-end
-
-% plot params handling:
-% check if numbers of plot params and numbers of states to plot are equal
-% if not: perform action (is to define)
-if isempty(data.plotParams) % if no parameters are submitted or the parameters were not edited
-    %pass initial plot values to every state, which should be plotted
-    %for i = 1:data.intStates
-    %   data.plotParams(1) = data.printCell{:,2};
-    %end
-else %if length(data.plotParams) ~= length(data.printVector)
-    %for i = 1:data.intStates
-    %   data.plotParams(1) = data.printCell{:,2};
-    %end
-end
-
 
 setappdata(handles.figure1,'appData',data);
 
@@ -355,7 +294,7 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
 %global printVector;
-data = getappdata(handles.figure,'appData');
+data = getappdata(handles.figure1,'appData');
 if (get(hObject,'Value') == get(hObject,'Max'))
     % Checkbox is checked-take appropriate action  
     data.flagCheck1 = 1;
@@ -425,6 +364,8 @@ function edit_selectedStates_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
 set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
 
+
+
 % --- Executes during object creation, after setting all properties.
 function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_selectedStates (see GCBO)
@@ -442,11 +383,60 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 % hObject    handle to edit_plot_parameters (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+%generateDefaultPlotParams(hObject,handles);
 
+
+setPlotParams(hObject,handles);
 data = getappdata(handles.figure1,'appData');
-plotStates = str2num(get(handles.edit_selectedStates,'String'));
 
-data.plotParams = pp2(data.nodenumber, plotStates);
+%process visualization data for pp2 (eg line naming)
+if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
+    plotStates = [1 str2num(get(handles.edit_selectedStates,'String'))];
+    plotString = cell(length(plotStates),1 );
+    for i = 1:length(plotStates)
+        if i==1
+            plotString{i} = 'Node output:';
+        elseif i>1
+            plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':'];
+        end      
+    end
+    data.plotParams = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
+    plotString = cell(1,1);
+    plotString{1} = 'Node output:';
+    data.plotParams = pp2(data.nodenumber, 1,plotString,data.plotParams);
+elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
+    plotStates = str2num(get(handles.edit_selectedStates,'String'));
+    plotString = cell(length(plotStates),1 );
+    for i = 1:length(plotStates)
+        plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':' ];     
+    end
+    data.plotParams = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+    for i = 1:length(data.plotParams)
+        %because no node output should be plotted, we introduce
+        % an offset in the struct, where the first struct element is empty
+        data.plotParams(i+1) = data.plotParams(i);
+    end
+    data.plotParams(1).lineWidth = [];
+    data.plotParams(1).lineStyle = [];
+    data.plotParams(1).marker = [];
+    data.plotParams(1).lineColor = [];
+    data.plotParams(1).edgeColor = [];
+    data.plotParams(1).faceColor = [];
+elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0)%nothing sould be plotted => do not open pp2.m
+    errordlg('There is nothing selected to plot.','Error');
+    plotParams = data.plotParamsOld;
+    plotParams(1).lineWidth = [];
+    plotParams(1).lineStyle = [];
+    plotParams(1).marker = [];
+    plotParams(1).lineColor = [];
+    plotParams(1).edgeColor = [];
+    plotParams(1).faceColor = [];
+    plotParams(2).lineWidth = [];
+    data.plotParams = plotParams; %minimum plotParams configuration
+end
+
+%data.plotParams = pp2(data.nodenumber, plotStates);
 
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
@@ -478,20 +468,29 @@ display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}
 uiresume(handles.figure1);
 %delete(hObject);
 
-
+% ---- DEBUGGING OUTPUT---------------------------------------
 % --- Executes on button press in pushbutton5.
 function pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-data = getappdata(handles.figure1,'appData');
+
 %display(['get(handles.edit_intStates,"String": ' get(handles.edit_intStates,'String') ]);
+
+compute_printVector(handles);
+data = getappdata(handles.figure1,'appData');
 
 n_template = get(handles.selector_dynamics, 'Value');
 %data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
 handles.nodelabel = get(handles.edit_label, 'String');
 data.neighbours = get(handles.connections, 'String');
+
+assignin('base','printVector',data.printVector);
+assignin('base','plotParamsOld',data.plotParamsOld);
+if isfield(data,{'plotParams'})
+   assignin('base','plotParams',data.plotParams); 
+end
 
 %display(['get(handles.selector_dynamics: ' num2str(n_template) ]);
 %display(['data.template: ' data.template]);
@@ -507,10 +506,217 @@ data = getappdata(handles.figure1,'appData');
 % number of states
 nrOfStates = str2double( get(handles.edit_intStates,'String') );
 % number of sets of plot params
-nrOfPlotParams = length( data.plotParams );
+if isfield(data,{'plotParams'})
+    nrOfPlotParams = length( data.plotParams );
+    display(['Number of states to plot: ' num2str( nrOfStates ) ]);
+    display(['Number of sets of plot params: ' num2str( nrOfPlotParams ) ]);
+end
 
-display(['Number of states to plot: ' num2str( nrOfStates ) ]);
-display(['Number of sets of plot params: ' num2str( nrOfPlotParams ) ]);
+function editPlotParams(hObject, handles)
+data = getappdata(handles.figure1,'appData');
+
+%hard coded default-value => in future versions editable
+auswahl = 1; %First colors according to order 'r','b','m','g','k'
+             %LineStyle, LineWidth, markers always set to: '-',1.0, 'none'
+
+% Control structure is similar as in "edit_plot_parameters_Callback"
+if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
+    nrOfPlotStates = length( [1 str2num(get(handles.edit_selectedStates,'String'))] );
+elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
+    nrOfPlotStates = 1;
+elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
+    nrOfPlotStates = length( [str2num(get(handles.edit_selectedStates,'String'))] );  
+elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0) %nothing should be plotted
+    nrOfPlotStates = 0;
+end
+
+lengthPlotParams = length(data.plotParams);
+
+colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
+if nrOfPlotStates == 0
+    data.plotParams(1).lineWidth = [];
+    data.plotParams(1).lineStyle = [];
+    data.plotParams(1).marker = [];
+    data.plotParams(1).lineColor = [];
+    data.plotParams(1).edgeColor = [];
+    data.plotParams(1).faceColor = [];
+    data.plotParams(2).lineWidth = [];
+elseif lengthPlotParams > nrOfPlotStates
+    data.plotParams = data.plotParams(1:nrOfPlotStates);
+else
+    data.plotParams(1:lengthPlotParams) = data.plotParams;
+
+    if nrOfPlotStates-lengthPlotParams > 5
+        coltemp = zeros(nrOfPlotStates+lengthPlotParams,3);
+        coltemp(lengthPlotParams+1:lengthPlotParams+5,:) = colorTemplate;
+        for i = lengthPlotParams+6:lengthPlotParams+nrOfPlotStates
+           coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; %a factor f < 1.0 makes each color channel darker
+        end
+        color = coltemp;
+    else
+        color = [zeros(lengthPlotParams,3)  ; colorTemplate(1:nrOfPlotStates,:)];
+    end
+
+    switch auswahl;
+        case 1; 
+            for i = lengthPlotParams+1:lengthPlotParams+nrOfPlotStates
+                data.plotParams(i).lineWidth = '1.0';
+                data.plotParams(i).lineStyle = '-';
+                data.plotParams(i).marker = 'none';
+                data.plotParams(i).lineColor = color(i,:);
+                data.plotParams(i).edgeColor = color(i,:);
+                data.plotParams(i).faceColor = color(i,:);
+            end      
+    end
+end
+
+setappdata(handles.figure1,'appData',data);
+%guidata(hObject, handles);
+
+function generatePlotParams(hObject,handles)
+%hard coded default-value => in future versions editable
+auswahl = 1; %First colors according to order 'r','b','m','g','k'
+             %LineStyle, LineWidth, markers always set to: '-',1.0, 'none'
+             
+data = getappdata(handles.figure1,'appData');
+nrOfPlotStates = length(find(data.printVector));
+
+
+             
+colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
+if nrOfPlotStates == 0
+    data.plotParams(1).lineWidth = [];
+    data.plotParams(1).lineStyle = [];
+    data.plotParams(1).marker = [];
+    data.plotParams(1).lineColor = [];
+    data.plotParams(1).edgeColor = [];
+    data.plotParams(1).faceColor = [];
+    data.plotParams(2).lineWidth = [];
+
+else
+    if nrOfPlotStates > 5
+        coltemp = zeros(nrOfPlotStates,3);
+        coltemp(1:5,:) = colorTemplate;
+        for i = 6:nrOfPlotStates
+           coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; %a factor f < 1.0 makes each color channel darker
+        end
+        color = coltemp;
+    else
+        color = colorTemplate(1:nrOfPlotStates,:);
+    end
+
+    switch auswahl;
+        case 1; 
+            for i = 1:nrOfPlotStates
+                data.plotParams(i).lineWidth = '1.0';
+                data.plotParams(i).lineStyle = '-';
+                data.plotParams(i).marker = 'none';
+                data.plotParams(i).lineColor = color(i,:);
+                data.plotParams(i).edgeColor = color(i,:);
+                data.plotParams(i).faceColor = color(i,:);
+            end      
+    end
+end
+
+
+setappdata(handles.figure1,'appData',data);
+
+
+function compute_printVector(handles)
+%TODO: case distinction for templates with only one internal state
+data = getappdata(handles.figure1,'appData');
+
+%Get number of internal states
+data.intStates = str2num(get(handles.edit_intStates,'String'));
+
+%Set length of printVector, depending on number of internal states
+%ATTENTION: value of intStates must be an integer and of the minimum of 1!
+%display(['@button_edit_node: number of intStates: ' num2str(data.intStates) ]);
+data.printVector = zeros(1,data.intStates+1);
+%Read out manually the information about the states, which should be
+%plotted. Format is: "i j l", no brackets, just a spacer between the
+%numbers.
+data.temp = str2num(get(handles.edit_selectedStates,'String'));
+
+if data.flagCheck1 %Checkbox 1 is checked
+    data.printVector(1) = 1;
+else %Checkbox 1 is not checked
+    data.printVector(1) = 0;
+end
+
+if any(data.temp)
+    data.flagCheck2 = 1;
+end
+
+if data.flagCheck2 && strcmp(data.template,'LTI') %check is needed, because at the moment, only the LTI template
+    %can provide more than one internal state
+    for i = 1:data.intStates
+        if find(data.temp == i)
+           data.printVector(1+i) = 1;
+        end
+    end
+    %printVector(2) = 5; %just for debugging   
+else %Checkbox 2 is not checked
+    data.printVector(2:data.intStates+1) = zeros(1,data.intStates);
+end
+
+setappdata(handles.figure1,'appData',data);
+
+function setPlotParams(hObject,handles)
+compute_printVector(handles);
+data = getappdata(handles.figure1,'appData');
+nrOfPlotStates = length(find(data.printVector));
+
+%consider the following cases:
+
+%no change to printVector (compared to printVectorOld)
+%--- use plotParamsOld
+if ( length(find(data.printVectorOld)) == length(find(data.printVector) ) &&  all(data.printVectorOld == data.printVector))
+    choice = 1;
+
+%change to printVector AND plotParams does not exist => no input has been created yet
+%--- generate default plotParams
+elseif ( isfield(data,{'plotParams'}) == 0 )
+    choice = 2;
+
+%change to printVector, but nrOfPlotStates hasn't changed
+%--- use plotParams
+elseif ( ( isfield(data,{'plotParams'} ) ~= 0 ) && ( nrOfPlotStates == length(data.plotParams) ) )
+    choice = 3;
+
+%change to printVector AND nrOfPlotStates has changed, plotParams must
+%exist
+%--- edit plotParams
+elseif ( isfield(data,{'plotParams'} ) ~= 0 )
+    choice = 4;
+
+%default case: generate default plotParams
+else
+    choice = 2;
+end
+
+
+
+switch choice
+    case 1;
+        data.plotParams = data.plotParamsOld;
+    case 2;
+        generatePlotParams(hObject,handles);
+        data = getappdata(handles.figure1,'appData');
+    case 3;
+        %do nothing
+    case 4;
+        editPlotParams(hObject, handles);
+        data = getappdata(handles.figure1,'appData');
+end
+
+
+
+
+
+setappdata(handles.figure1,'appData',data);
+
+
 
 
 %%%
