@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 26-Apr-2012 10:22:02
+% Last Modified by GUIDE v2.5 03-May-2012 08:46:50
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -102,6 +102,7 @@ data.move_index = move_index;
 %global plotAllOutput;
 plotAllOutput = 1;
 data.plotAllOutput = plotAllOutput;
+data.flag_showSimMod = 1;
 set(handles.plotAllOutput,'Checked','on');
 expSucc = 0;
 data.expSucc = expSucc;
@@ -1794,7 +1795,7 @@ data.templates = templates;
 data.template_list = template_list;
 data.modus = modus;
 data.printCell = printCell;
-setappdata(handle.figure1,'appData',data);
+setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
@@ -2365,7 +2366,7 @@ else
     disp('Exporting...');
 end
 disp('  '); 
-exportSimulink2(name,templates,template_list,A, xy, labs);
+exportSimulink2(name, templates, template_list, A, xy, labs, data.flag_showSimMod);
 
 if nv(g) > 50
     disp('Done exporting');
@@ -2547,8 +2548,8 @@ else
 end
 
 %store application data
-data.data.plotAllOutput = plotAllOutput;
-setappdata(handle.figure1,'appData',data);
+data.plotAllOutput = plotAllOutput;
+setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles); 
 
@@ -2560,7 +2561,7 @@ function run_simulation_plots_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 %load application data
-data = getappdata(handle.figure1,'appData');
+data = getappdata(handles.figure1,'appData');
 g = data.g;
 printCell = data.printCell;
 templates = data.templates;
@@ -2667,11 +2668,36 @@ plotParams.lineColor = [0 0 1];
 plotParams.edgeColor = [0 0 1];
 plotParams.faceColor = [0 0 1];
 
-%at start of mtids, no int. states should be plotted, thus the 2nd stuct is
-%empty
-plotParams(2).lineWidth = [];
+%at start of mtids, no int. states should be plotted, thus no 2nd struct
+%exists
+
 
 argout = plotParams;
+
+
+
+
+
+% --------------------------------------------------------------------
+function showSimMod_Callback(hObject, eventdata, handles)
+% hObject    handle to showSimMod (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+
+if strcmp(get(handles.showSimMod,'Checked'),'on')
+    set(handles.showSimMod,'Checked','off')
+    data.flag_showSimMod = 0;
+else
+    set(handles.showSimMod,'Checked','on')
+    data.flag_showSimMod = 1;
+end
+
+setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);         
+        
+        
+
 
 
 %%%%%%%%%

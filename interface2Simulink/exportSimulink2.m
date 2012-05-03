@@ -1,4 +1,4 @@
-function[] =exportSimulink2(name,templates,templateList,A, xy, labs)
+function[] =exportSimulink2(name, templates, templateList, A, xy, labs, flag_showSimMod)
 % exportSimulink.m 
 %
 % Project: MTIDS
@@ -136,14 +136,14 @@ end
 
 %% open system
 % NO VISULALIZATION FOR LARGE NUMBER OF NODES
-if(nodeNumber<=vizMaxNodeNumber)
+if(nodeNumber<=vizMaxNodeNumber && flag_showSimMod == 1)
     open_system(sys);
     %Enables state saving to workspace
     set_param(gcs,'SaveState','on');
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
-if(nodeNumber>vizMaxNodeNumber)
+if(nodeNumber>vizMaxNodeNumber || flag_showSimMod == 0)
  [filename, pathname] = uiputfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
    '*.*',  'All Files (*.*)'}, ...

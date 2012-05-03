@@ -22,7 +22,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 26-Apr-2012 10:45:57
+% Last Modified by GUIDE v2.5 03-May-2012 10:43:26
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -244,15 +244,6 @@ data.neighbours = get(handles.connections, 'String');
 
 setappdata(handles.figure1,'appData',data);
 
-%DO DEBUGGING
-%display([data.neighbours]);
-
-%DEBUGGING
-%{
-disp('------------------------------------------------------------------');
-display(['@button_edit_Callback: data.nodelabel = ' data.nodelabel]);
-%}
-
 handles.OutputFlag = 2;
 
 guidata(hObject, handles);
@@ -362,8 +353,13 @@ function edit_selectedStates_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of edit_selectedStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
-set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
-
+if max( str2num( get(hObject,'String'))) > str2num( get(handles.edit_intStates,'String'))
+    set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
+end
+set(handles.checkbox2,'Value',1.0);
+data=getappdata(handles.figure1,'appData');
+data.flagCheck2 = 1;
+setappdata(handles.figure1,'appData',data);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -385,7 +381,6 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %generateDefaultPlotParams(hObject,handles);
 
-
 setPlotParams(hObject,handles);
 data = getappdata(handles.figure1,'appData');
 
@@ -400,18 +395,33 @@ if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int.
             plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':'];
         end      
     end
-    data.plotParams = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+    temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+    % if the following is true, then pp2 was cancel without passing new
+    % params
+    if ~isempty(temp)
+        data.plotParams = temp;
+    end 
 elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
     plotString = cell(1,1);
     plotString{1} = 'Node output:';
-    data.plotParams = pp2(data.nodenumber, 1,plotString,data.plotParams);
+    temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
+    % if the following is true, then pp2 was cancel without passing new
+    % params
+    if ~isempty(temp)
+        data.plotParams = temp;
+    end 
 elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
     plotStates = str2num(get(handles.edit_selectedStates,'String'));
     plotString = cell(length(plotStates),1 );
     for i = 1:length(plotStates)
         plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':' ];     
     end
-    data.plotParams = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+    temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+    % if the following is true, then pp2 was cancel without passing new
+    % params
+    if ~isempty(temp)
+        data.plotParams = temp;
+    end 
     for i = 1:length(data.plotParams)
         %because no node output should be plotted, we introduce
         % an offset in the struct, where the first struct element is empty
@@ -432,7 +442,6 @@ elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0)%nothing sould be plotted =
     plotParams(1).lineColor = [];
     plotParams(1).edgeColor = [];
     plotParams(1).faceColor = [];
-    plotParams(2).lineWidth = [];
     data.plotParams = plotParams; %minimum plotParams configuration
 end
 
@@ -518,7 +527,7 @@ data = getappdata(handles.figure1,'appData');
 %hard coded default-value => in future versions editable
 auswahl = 1; %First colors according to order 'r','b','m','g','k'
              %LineStyle, LineWidth, markers always set to: '-',1.0, 'none'
-
+%{
 % Control structure is similar as in "edit_plot_parameters_Callback"
 if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
     nrOfPlotStates = length( [1 str2num(get(handles.edit_selectedStates,'String'))] );
@@ -529,7 +538,8 @@ elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states
 elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0) %nothing should be plotted
     nrOfPlotStates = 0;
 end
-
+%}
+nrOfPlotStates = length(find(data.printVector));
 lengthPlotParams = length(data.plotParams);
 
 colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
@@ -540,7 +550,7 @@ if nrOfPlotStates == 0
     data.plotParams(1).lineColor = [];
     data.plotParams(1).edgeColor = [];
     data.plotParams(1).faceColor = [];
-    data.plotParams(2).lineWidth = [];
+
 elseif lengthPlotParams > nrOfPlotStates
     data.plotParams = data.plotParams(1:nrOfPlotStates);
 else
@@ -580,10 +590,10 @@ auswahl = 1; %First colors according to order 'r','b','m','g','k'
              
 data = getappdata(handles.figure1,'appData');
 nrOfPlotStates = length(find(data.printVector));
-
-
+lengthPlotParamsOld = length(data.plotParamsOld);
              
 colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
+%{
 if nrOfPlotStates == 0
     data.plotParams(1).lineWidth = [];
     data.plotParams(1).lineStyle = [];
@@ -591,7 +601,6 @@ if nrOfPlotStates == 0
     data.plotParams(1).lineColor = [];
     data.plotParams(1).edgeColor = [];
     data.plotParams(1).faceColor = [];
-    data.plotParams(2).lineWidth = [];
 
 else
     if nrOfPlotStates > 5
@@ -617,7 +626,43 @@ else
             end      
     end
 end
+%}
+if nrOfPlotStates == 0
+    data.plotParams(1).lineWidth = [];
+    data.plotParams(1).lineStyle = [];
+    data.plotParams(1).marker = [];
+    data.plotParams(1).lineColor = [];
+    data.plotParams(1).edgeColor = [];
+    data.plotParams(1).faceColor = [];
 
+elseif lengthPlotParamsOld > nrOfPlotStates
+    data.plotParams = data.plotParamsOld(1:nrOfPlotStates);
+else
+    data.plotParams(1:lengthPlotParamsOld) = data.plotParamsOld;
+
+    if nrOfPlotStates-lengthPlotParamsOld > 5
+        coltemp = zeros(nrOfPlotStates+lengthPlotParamsOld,3);
+        coltemp(lengthPlotParams+1:lengthPlotParamsOld+5,:) = colorTemplate;
+        for i = lengthPlotParamsOld+6:lengthPlotParamsOld+nrOfPlotStates
+           coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; %a factor f < 1.0 makes each color channel darker
+        end
+        color = coltemp;
+    else
+        color = [zeros(lengthPlotParamsOld,3)  ; colorTemplate(1:nrOfPlotStates,:)];
+    end
+
+    switch auswahl;
+        case 1; 
+            for i = lengthPlotParamsOld+1:lengthPlotParamsOld+nrOfPlotStates
+                data.plotParams(i).lineWidth = '1.0';
+                data.plotParams(i).lineStyle = '-';
+                data.plotParams(i).marker = 'none';
+                data.plotParams(i).lineColor = color(i,:);
+                data.plotParams(i).edgeColor = color(i,:);
+                data.plotParams(i).faceColor = color(i,:);
+            end      
+    end
+end
 
 setappdata(handles.figure1,'appData',data);
 
@@ -644,10 +689,6 @@ else %Checkbox 1 is not checked
     data.printVector(1) = 0;
 end
 
-if any(data.temp)
-    data.flagCheck2 = 1;
-end
-
 if data.flagCheck2 && strcmp(data.template,'LTI') %check is needed, because at the moment, only the LTI template
     %can provide more than one internal state
     for i = 1:data.intStates
@@ -671,7 +712,7 @@ nrOfPlotStates = length(find(data.printVector));
 
 %no change to printVector (compared to printVectorOld)
 %--- use plotParamsOld
-if ( length(find(data.printVectorOld)) == length(find(data.printVector) ) &&  all(data.printVectorOld == data.printVector))
+if ( length(data.printVectorOld) == length(data.printVector ) &&  all(data.printVectorOld == data.printVector))
     choice = 1;
 
 %change to printVector AND plotParams does not exist => no input has been created yet
@@ -699,7 +740,9 @@ end
 
 switch choice
     case 1;
-        data.plotParams = data.plotParamsOld;
+        if isfield(data,{'plotParams'}) == 0
+            data.plotParams = data.plotParamsOld;
+        end
     case 2;
         generatePlotParams(hObject,handles);
         data = getappdata(handles.figure1,'appData');
