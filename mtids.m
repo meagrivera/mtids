@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 03-May-2012 08:46:50
+% Last Modified by GUIDE v2.5 09-May-2012 17:33:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -283,9 +283,14 @@ switch templates{nv(g),1};
     case 'kuramoto'; col = [230 230 250]/255;
     otherwise; col = [0 149 237]/255; 
 end
-
-data.nodeColor{nv(g),1} = col;
-% templates{nv(g),2}=template_list{n_template,2};
+length_nodeColor = size(data.nodeColor,1);
+tempNodeColor = data.nodeColor;
+data.nodeColor = cell(length_nodeColor+1,1);
+for i = 1:length_nodeColor
+   data.nodeColor(i) = tempNodeColor(i);
+end
+% this line sets the face color for the node
+data.nodeColor{length_nodeColor+1} = col;
 
 %Now, after the node was created, the printCell can be added  
 length_cellPrint = size(printCell,1);
@@ -300,7 +305,7 @@ end
 %Initially, the printVector and the plotParams are the same for all templates
 printCell(length_cellPrint+1,1) = num2cell([plotAllOutput 0],2);
 printCell{length_cellPrint+1,2} = initPlotParams;
-
+setappdata(handles.figure1,'appData',data);
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles,hObject);
 end
@@ -404,14 +409,6 @@ setappdata(handles.figure1,'appData', data);
 guidata(hObject, handles);
 
 
-function fromnode_Callback(hObject, eventdata, handles)
-% hObject    handle to fromnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of fromnode as text
-%        str2double(get(hObject,'String')) returns contents of fromnode as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function fromnode_CreateFcn(hObject, eventdata, handles)
@@ -427,14 +424,6 @@ else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
 
-
-function tonode_Callback(hObject, eventdata, handles)
-% hObject    handle to tonode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of tonode as text
-%        str2double(get(hObject,'String')) returns contents of tonode as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -582,15 +571,6 @@ refresh_graph(0, eventdata, handles,hObject);
 guidata(hObject, handles);
 
 
-function remnode_Callback(hObject, eventdata, handles)
-% hObject    handle to remnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of remnode as text
-%        str2double(get(hObject,'String')) returns contents of remnode as a double
-
-
 % --- Executes during object creation, after setting all properties.
 function remnode_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to remnode (see GCBO)
@@ -696,8 +676,6 @@ refresh_graph(0, eventdata, handles,hObject);
 guidata(hObject, handles);
 
 
-
-
 % --- Executes on button press in completegraph.
 function completegraph_Callback(hObject, eventdata, handles)
 % hObject    handle to completegraph (see GCBO)
@@ -707,7 +685,6 @@ function completegraph_Callback(hObject, eventdata, handles)
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-%global g;
 
 complete(g);
 
@@ -749,22 +726,6 @@ refresh_graph(0, eventdata, handles,hObject)
 guidata(hObject, handles);
 
 
-% --- Executes when figure1 is resized.
-function figure1_ResizeFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on selection change in listbox1.
-function listbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = get(hObject,'String') returns listbox1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox1
-
 
 % --- Executes during object creation, after setting all properties.
 function listbox1_CreateFcn(hObject, eventdata, handles)
@@ -791,9 +752,6 @@ function Newgraph_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 
-%global g;
-%global templates;
-
 resize(g,0);
 templates = cell(0,1);
 
@@ -814,10 +772,6 @@ function loadgraph_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
-
-%global g;
-%global templates;
-%global template_list;
 
 [filename, pathname] = uigetfile( ...
 {'*.mat;','Graph/Network Files';
@@ -899,12 +853,6 @@ guidata(hObject, handles);
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
-% --------------------------------------------------------------------
-function Savegraph_Callback(hObject, eventdata, handles)
-% hObject    handle to Savegraph (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 % --------------------------------------------------------------------
 function savegraphas_Callback(hObject, eventdata, handles)
@@ -919,10 +867,6 @@ templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
 printCell = data.printCell;
-
-%global g;
-%global templates;
-%global template_list;
 
 [filename, pathname] = uiputfile( ...
 {'*.mat;','Graph/Network Files';
@@ -955,73 +899,11 @@ end
 refresh_graph(0, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
-function Untitled_10_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function file_Callback(hObject, eventdata, handles)
-% hObject    handle to file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_9_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_11_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function generatesimulinkmdl_Callback(hObject, eventdata, handles)
-% hObject    handle to generatesimulinkmdl (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_12_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
 function aboutmtids_Callback(hObject, eventdata, handles)
 % hObject    handle to aboutmtids (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 about_mtids();
-
-% --------------------------------------------------------------------
-function about_Callback(hObject, eventdata, handles)
-% hObject    handle to about (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function adddynamics_Callback(hObject, eventdata, handles)
-% hObject    handle to adddynamics (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function dynamicsimporter_Callback(hObject, eventdata, handles)
-% hObject    handle to dynamicsimporter (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --------------------------------------------------------------------
@@ -1187,40 +1069,13 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
-%--------------------------------------------------------------------------
-%----------UNUSED FUNCTIONS - AUTOMATICALLY GENERATED BY GUIDE-------------
-%--------------------------------------------------------------------------
-
-
-% --------------------------------------------------------------------
-function Untitled_17_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_17 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function viewmenu_Callback(hObject, eventdata, handles)
-% hObject    handle to viewmenu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function editnode_Callback(hObject, eventdata, handles)
-% hObject    handle to editnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 function refresh_graph(reset, eventdata, handles,hObject)
 % This function refreshes the graph window
 
 %load application data
 data = getappdata(handles.figure1,'appData');
 
-%global g;
 g = data.g;
-%global modus;
 modus = data.modus;
 
 % Check which kind of lable is activated
@@ -1290,8 +1145,6 @@ switch modus
 end
 
 % set node color
-%choice = 
-
 
 % check for choice of vertex-layout
 if strcmp(checklabel, 'on')
@@ -1314,16 +1167,6 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
-
-% --------------------------------------------------------------------
-function click_add_node_long_Callback(hObject, eventdata, handles)
-% hObject    handle to click_add_node_long (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-
 % --- Executes on button press in laplacianvisualize.
 function basic_stats(eventdata, handles)
 % hObject    handle to laplacianvisualize (see GCBO)
@@ -1334,9 +1177,6 @@ function basic_stats(eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
 
 switch modus
     case 'undirected';
@@ -1480,15 +1320,6 @@ switch modus
         set(handles.algebraic_connectivity,'String', isAcyclic);
 end
 %no data storaged needed, because this is a "void" function
-
-
-function dynamic_label_Callback(hObject, eventdata, handles)
-% hObject    handle to dynamic_label (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of dynamic_label as text
-%        str2double(get(hObject,'String')) returns contents of dynamic_label as a double
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1682,17 +1513,6 @@ function exit_to_matlab_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 close(handles.output);
 
-
-
-function number_of_nodes_Callback(hObject, eventdata, handles)
-% hObject    handle to number_of_nodes (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of number_of_nodes as text
-%        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
-
-
 % --- Executes during object creation, after setting all properties.
 function number_of_nodes_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to number_of_nodes (see GCBO)
@@ -1731,14 +1551,6 @@ set(handles.label_button,'Value', 0);
 set(handles.number_button,'Value', 1);
 
 
-% --- Executes on button press in checkbox2.
-function checkbox2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
-
 
 % --------------------------------------------------------------------
 function export_to_workplace_Callback(hObject, eventdata, handles)
@@ -1770,12 +1582,6 @@ templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
 %printCell = data.printCell;
-
-%global g;
-%global templates;
-%global template_list;
-%global modus;
-%global printCell;
 
 prompt = {'Workspace:','Variable name:'};
 dlg_title = 'Inport matrix from workspace';
@@ -1902,17 +1708,6 @@ refresh_dynamics(eventdata, handles);
 guidata(hObject, handles);
  
 
-
-% --- Executes on selection change in selector_dynamic.
-function selector_dynamic_Callback(hObject, eventdata, handles)
-% hObject    handle to selector_dynamic (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from selector_dynamic
-
-%get(hObject,'Value')
 
 % --- Executes during object creation, after setting all properties.
 function selector_dynamic_CreateFcn(hObject, eventdata, handles)
@@ -2285,21 +2080,6 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);  
 
 
-
-% --------------------------------------------------------------------
-function Untitled_13_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --------------------------------------------------------------------
-function Untitled_14_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --------------------------------------------------------------------
 function export_as_layer_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer (see GCBO)
@@ -2343,17 +2123,6 @@ if nv(g) > 50
 else   
     disp('Done exporting');
 end
-
-
-
-% --- Executes on key press with focus on figure1 and none of its controls.
-function figure1_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
-% eventdata  structure with the following fields (see FIGURE)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on button press in update_graph_button.
@@ -2419,15 +2188,6 @@ data.expSucc = expSucc;
 setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles); 
-
-
-
-% --- Executes on button press in radiobutton7.
-function radiobutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hint: get(hObject,'Value') returns toggle state of radiobutton7
 
 
 
@@ -2711,7 +2471,6 @@ plotParams.faceColor = [0 0 1];
 %at start of mtids, no int. states should be plotted, thus no 2nd struct
 %exists
 
-
 argout = plotParams;
 
 
@@ -2750,3 +2509,196 @@ data = getappdata(handles.figure1,'appData');
 save(filename, '-struct','data', 'modus', 'flag_showSimMod','plotAllOutput','template_list');
 
 %%%%%%%%%
+
+
+%--------------------------------------------------------------------------
+%-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
+%--------------------------------------------------------------------------
+
+
+% --- Executes on button press in radiobutton7.
+function radiobutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of radiobutton7
+
+function tonode_Callback(hObject, eventdata, handles)
+% hObject    handle to tonode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of tonode as text
+%        str2double(get(hObject,'String')) returns contents of tonode as a double
+
+function fromnode_Callback(hObject, eventdata, handles)
+% hObject    handle to fromnode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of fromnode as text
+%        str2double(get(hObject,'String')) returns contents of fromnode as a double
+
+% --- Executes on selection change in selector_dynamic.
+function selector_dynamic_Callback(hObject, eventdata, handles)
+% hObject    handle to selector_dynamic (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from selector_dynamic
+%get(hObject,'Value')
+
+% --------------------------------------------------------------------
+function Untitled_10_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function file_Callback(hObject, eventdata, handles)
+% hObject    handle to file (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_9_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_11_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function generatesimulinkmdl_Callback(hObject, eventdata, handles)
+% hObject    handle to generatesimulinkmdl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_12_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --- Executes when figure1 is resized.
+function figure1_ResizeFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --- Executes on selection change in listbox1.
+function listbox1_Callback(hObject, eventdata, handles)
+% hObject    handle to listbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = get(hObject,'String') returns listbox1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listbox1
+
+% --------------------------------------------------------------------
+function about_Callback(hObject, eventdata, handles)
+% hObject    handle to about (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function adddynamics_Callback(hObject, eventdata, handles)
+% hObject    handle to adddynamics (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function dynamicsimporter_Callback(hObject, eventdata, handles)
+% hObject    handle to dynamicsimporter (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --- Executes on button press in checkbox2.
+function checkbox2_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of checkbox2
+
+% --- Executes on key press with focus on figure1 and none of its controls.
+function figure1_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  structure with the following fields (see FIGURE)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Savegraph_Callback(hObject, eventdata, handles)
+% hObject    handle to Savegraph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_17_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_17 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function viewmenu_Callback(hObject, eventdata, handles)
+% hObject    handle to viewmenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function editnode_Callback(hObject, eventdata, handles)
+% hObject    handle to editnode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_13_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function Untitled_14_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_14 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% --------------------------------------------------------------------
+function click_add_node_long_Callback(hObject, eventdata, handles)
+% hObject    handle to click_add_node_long (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+function remnode_Callback(hObject, eventdata, handles)
+% hObject    handle to remnode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of remnode as text
+%        str2double(get(hObject,'String')) returns contents of remnode as a double
+
+function dynamic_label_Callback(hObject, eventdata, handles)
+% hObject    handle to dynamic_label (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of dynamic_label as text
+%        str2double(get(hObject,'String')) returns contents of dynamic_label as a double
+
+function number_of_nodes_Callback(hObject, eventdata, handles)
+% hObject    handle to number_of_nodes (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of number_of_nodes as text
+%        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
+
+
+
+
+
+
+
+
