@@ -1,4 +1,4 @@
-function ndraw(g,dir,line_style)
+function ndraw(g,dir,line_style,nodeFillColor)
 % ndraw(g) --- draw g in a figure window with numbered vertices
 % ndraw(g,dir) --- treat g as directed
 % ndraw(g,dir,line_style) --- lines have given line_style
@@ -6,13 +6,13 @@ function ndraw(g,dir,line_style)
 
 if nargin < 2
     dir = 0;
-    draw(g,dir);
+    draw(g,dir,'-',nodeFillColor);
 end
 
 if nargin < 3
-   draw(g,dir); 
+   draw(g,dir,'-',nodeFillColor); 
 else
-    draw(g,dir,line_style);
+    draw(g,dir,line_style,nodeFillColor);
 end
 
 xy = getxy(g);
