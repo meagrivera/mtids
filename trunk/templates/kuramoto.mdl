@@ -16,7 +16,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.23"
+    ComputedModelVersion    "1.24"
     NumModelReferences	    0
     NumTestPointedSignals   1
     TestPointedSignal {
@@ -43,11 +43,11 @@ Model {
   Creator		  "chepeadan"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "Tigervilla"
+  LastModifiedBy	  "trommsdorff"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sat Jan 14 13:46:26 2012"
-  RTWModifiedTimeStamp	  248449580
-  ModelVersionFormat	  "1.%<AutoIncrement:23>"
+  LastModifiedDate	  "Wed May 09 10:22:35 2012"
+  RTWModifiedTimeStamp	  258459707
+  ModelVersionFormat	  "1.%<AutoIncrement:24>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -849,7 +849,7 @@ Model {
   }
   System {
     Name		    "kuramoto"
-    Location		    [184, 140, 1182, 657]
+    Location		    [280, 194, 1278, 711]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -876,7 +876,7 @@ Model {
       Name		      "Add"
       SID		      "5"
       Ports		      [2, 1]
-      Position		      [480, 142, 510, 173]
+      Position		      [465, 142, 495, 173]
       InputSameDT	      off
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -963,7 +963,7 @@ Model {
       Name		      "Scope2"
       SID		      "25"
       Ports		      [1]
-      Position		      [825, 309, 855, 341]
+      Position		      [825, 314, 855, 346]
       Floating		      off
       Location		      [188, 390, 512, 629]
       Open		      off
@@ -992,7 +992,7 @@ Model {
       Name		      "Threshold"
       SID		      "27"
       Position		      [480, 435, 510, 465]
-      BlockRotation	      -1.#IND00
+      BlockRotation	      359
       BlockMirror	      on
       Value		      "threshold"
     }
@@ -1001,7 +1001,7 @@ Model {
       Name		      "To Workspace"
       SID		      "29"
       Ports		      [1]
-      Position		      [670, 50, 730, 80]
+      Position		      [705, 50, 765, 80]
       ZOrder		      -7
       VariableName	      "simout"
       MaxDataPoints	      "inf"
@@ -1173,7 +1173,7 @@ Model {
       BlockType		      Outport
       Name		      "Out1"
       SID		      "2"
-      Position		      [705, 163, 735, 177]
+      Position		      [720, 163, 750, 177]
       IconDisplay	      "Port number"
     }
     Line {
@@ -1245,13 +1245,13 @@ Model {
     Line {
       SrcBlock		      "Math\nFunction"
       SrcPort		      1
-      Points		      [30, 0; 0, -5; 5, 0]
+      Points		      [35, 0]
       Branch {
 	DstBlock		"Scope2"
 	DstPort			1
       }
       Branch {
-	Points			[0, 65]
+	Points			[0, 60]
 	DstBlock		"flash"
 	DstPort			1
       }
@@ -1268,7 +1268,7 @@ Model {
       Labels		      [0, 0]
       SrcBlock		      "Integrator"
       SrcPort		      1
-      Points		      [0, -10; 25, 0]
+      Points		      [25, 0; 0, -10]
       Branch {
 	Labels			[2, 0]
 	Points			[0, 100; -450, 0]
@@ -1281,14 +1281,13 @@ Model {
 	DstPort			1
       }
       Branch {
-	Points			[15, 0]
+	Points			[0, 10; 35, 0]
 	Branch {
-	  Points		  [35, 0]
 	  DstBlock		  "Out1"
 	  DstPort		  1
 	}
 	Branch {
-	  Points		  [0, 85; 20, 0]
+	  Points		  [0, 75]
 	  Branch {
 	    DstBlock		    "Scope"
 	    DstPort		    1
@@ -1305,7 +1304,7 @@ Model {
 }
 # Finite State Machines
 #
-#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 13:17:15
+#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 03:32:36
 #
 #
 
@@ -1358,7 +1357,7 @@ Stateflow {
       script		      "function y = fcn(u,t)\n%#eml\n% Allows the flashing of the subsystem block after some threshold\n"
       "eml.extrinsic('set_param','get_param','gcs');\n\ny = u;\n\nif u > t\nset_param(get_param(gcs,'parent'),'Backgrou"
       "ndColor','[0.3, 0.9, 0.5]');\nelse\nset_param(get_param(gcs,'parent'),'BackgroundColor','white');\nend\n\ny = u;"
-      editorLayout	      "100 M4x1[167 123 1080 733]"
+      editorLayout	      "100 M4x1[160 123 1080 733]"
     }
   }
   junction {

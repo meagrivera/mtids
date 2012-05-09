@@ -1,9 +1,15 @@
-function draw(g,dir,line_style)
+function draw(g,dir,line_style,nodeFillColor)
 % draw(g) --- draw g in a figure window
 % draw(g,dir) --- interpret g as a directed graph
 % draw(g,dir,line_style) --- lines have given line_style
+% draw(g,dir,line_style,nodeFillColor) -- passes a desired color for the
+% vertex face color, it is a cell array with as many entries as nodes in the graph
 % see also ndraw, ldraw, and cdraw
   
+if nargin < 4
+    nodeFillColor = 'w';
+end
+
 if nargin < 3
     line_style='-';
 end
@@ -14,8 +20,9 @@ end
 
 % edit these to change the colors 
 edge_color = 'b';
+
+% do here the coloring for the nodes
 vertex_color = 'r';
-vertex_fill = 'w';
 r = 0.15;
 
 %step: needed for non-line connection between nodes
@@ -111,10 +118,17 @@ end
 for v=1:n
     x = xy(v,1);
     y = xy(v,2);
+    if nargin < 4
     rectangle('Position', [x-r/2, y-r/2, r, r],...
               'Curvature', [1 1], ...
               'EdgeColor', vertex_color, ...
-              'FaceColor', vertex_fill);    
+              'FaceColor', nodeFillColor);
+    else
+    rectangle('Position', [x-r/2, y-r/2, r, r],...
+             'Curvature', [1 1], ...
+             'EdgeColor', vertex_color, ...
+             'FaceColor', nodeFillColor{v});
+    end
 end
 
 

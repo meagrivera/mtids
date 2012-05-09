@@ -74,6 +74,11 @@ disp('Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 disp(' ');
 disp(' ');
 
+
+%--------------------------------------------------------------------------
+%----------------INITIALISE PARAMETERS-------------------------------------
+%--------------------------------------------------------------------------
+
 addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
 addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
@@ -84,40 +89,47 @@ graph_init;
 %declare userdata as structures: data.*; with it global variables could be
 %erased
 
-%global g;
-%global gui_handle;
-%global graph_refresh;
-%global template_list;
-%global templates;
-%global botton_down;
-%global move_index;
-move_index = 0;
-data.move_index = move_index;
-%global start_index;
-%Global cell-array to store plotting information
-%global printCell;
-%Flag, if the export to simulink was succesful
-%global expSucc;
-%Flag, if the output of all nodes should be plotted
-%global plotAllOutput;
-plotAllOutput = 1;
-data.plotAllOutput = plotAllOutput;
-data.flag_showSimMod = 1;
-set(handles.plotAllOutput,'Checked','on');
-expSucc = 0;
-data.expSucc = expSucc;
+flagLoadSet = 0;
+try
+    load_settings('lastset',handles);
+    data = getappdata(handles.figure1,'appData');
+    % todo: if successful, provide dialog to confirm
+    if ~isempty(data)
+        
+        [selectedButton] = uigetpref(...
+            'mystart',...                        % Group
+            'savefigurebeforeclosing',...           % Preference
+            'Former settings?',...                    % Window title
+            {'Do you want to load the settings formerly used?'},...
+            {'always','never';'Yes','No'});        % Callback for Help button
+        switch selectedButton
+            case 'always'; flagLoadSet = 1;
+            case 'never'; flagLoadSet = 0; 
+        end
+        
+    end
+catch
+    %
+end
 
+if flagLoadSet == 1    
+    % the saved settings are already restored
+else
+    data.plotAllOutput = 1;
+    data.flag_showSimMod = 1;
+    data.template_list = cell(0,1);
+    data.modus = 'undirected';
+    data.template_list{1,1} = 'LTI';    
+end
 
-botton_down = 0;
-data.botton_down = botton_down;
-add_connection = 0;
-data.add_connection = add_connection;
-start_index = 0;
-data.start_index = start_index;
+data.move_index = 0;
+data.expSucc = 0;
+data.botton_down = 0;
+data.add_connection = 0;
+data.start_index = 0;
+data.templates = cell(0,1);
+data.nodeColor = cell(0,1); % how matgraph draws the vertex
 
-template_list = cell(0,1);
-templates = cell(0,1);
-data.templates = templates;
 %container for plot information - 
 % 1.column: printVector -- containes the information about node number,
 %internal states and which should be plotted
@@ -128,19 +140,32 @@ data.templates = templates;
 printCell = cell(0,2);
 data.printCell = printCell;
 
-% Parameter to distinguish the modus "undirected" / "directed": dir
-% At start of program, "undirected" is activated
-%global modus;
-modus = 'undirected';
-data.modus = modus;
-set(handles.button_undirected,'Value',1);
-set(handles.button_directed,'Value',0);
 
-template_list{1,1} = 'LTI';
-%template_list{1,2} = strcat(pwd,'/templates/LTI.mdl');
+%--------------------------------------------------------------------------
+%-------------------INITIALISE GUI-----------------------------------------
+%--------------------------------------------------------------------------
 
-graph_refresh = 1;
-data.graph_refresh = graph_refresh;
+if strcmp(data.modus, 'undirected')
+    set(handles.button_undirected,'Value',1);
+    set(handles.button_directed,'Value',0);
+elseif strcmp(data.modus, 'directed')
+    set(handles.button_undirected,'Value',0);
+    set(handles.button_directed,'Value',1);
+end
+
+if data.plotAllOutput == 0
+    set(handles.plotAllOutput,'Checked','off')
+elseif data.plotAllOutput == 1
+    set(handles.plotAllOutput,'Checked','on')
+end
+
+if data.flag_showSimMod == 0
+    set(handles.showSimMod,'Checked','off')
+elseif data.flag_showSimMod == 1
+    set(handles.showSimMod,'Checked','on')
+end
+
+data.graph_refresh = 1;
 g = graph; %% Creating a graph
 resize(g,0);
 data.g = g;
@@ -148,14 +173,11 @@ data.g = g;
 %grid on;
 %zoom on;
 set(handles.numberview,'Check','on');
-
 set(handles.number_button,'Value', 1);
 set(handles.newnodelabel,'String','Node');
 set(handles.strong_connections,'String', ' ');        
 set(handles.text16,'String', 'Graph density:');
 
-
-data.template_list = template_list;
 % store userdata, use tag 'appData'
 setappdata(hObject,'appData',data);
 
@@ -207,17 +229,11 @@ function newnode_Callback(hObject, eventdata, handles)
 % load application data
 data = getappdata(handles.figure1,'appData');
 
-%global g;
 g = data.g;
-%global graph_refresh;
 graph_refresh = data.graph_refresh;
-%global templates;
 templates = data.templates;
-%global template_list;
 template_list = data.template_list;
-%global printCell;
 printCell = data.printCell;
-%global plotAllOutput;
 plotAllOutput = data.plotAllOutput;
 
 %debugging output
@@ -231,7 +247,6 @@ for k = 1:numel(templates)
     display(['data.templates{' num2str(k) '} = ' templates(k)]);
 end
 %}
-
 
 rmxy(g);
 new_vertex = nv(g) + 1;
@@ -247,7 +262,6 @@ if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'
         label(g, n, [lab_string '1']); % add a '1' to the unnumbered name
         labs = get_label(g);
     end
-    
     for i=1:nv(g)
         % check
         if strmatch(strcat(lab_string, num2str(i)),labs,'exact') % check if current number 'i' is available
@@ -259,12 +273,18 @@ if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'
     end
 end
 
-
 label(g, new_vertex, lab_string); 
 
-n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+n_template = get(handles.selector_dynamic, 'Value'); % Get number of template name from list
 
-templates{nv(g),1}=template_list{n_template,1};
+templates{nv(g),1} = template_list{n_template,1};
+switch templates{nv(g),1};
+    case 'LTI'; col = [245 245 245]/255;
+    case 'kuramoto'; col = [230 230 250]/255;
+    otherwise; col = [0 149 237]/255; 
+end
+
+data.nodeColor{nv(g),1} = col;
 % templates{nv(g),2}=template_list{n_template,2};
 
 %Now, after the node was created, the printCell can be added  
@@ -317,6 +337,8 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % load application data
 data = getappdata(handles.figure1,'appData');
+
+save_settings('lastset',handles);
 
 % Hint: delete(hObject) closes the figure
 %global g;
@@ -791,7 +813,6 @@ function loadgraph_Callback(hObject, eventdata, handles)
 % load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-templates = data.templates;
 template_list = data.template_list;
 
 %global g;
@@ -812,30 +833,38 @@ if filename
     free(g);
     
     if strcmp(ext, '.mat') 
-        S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list','modus') ;
-
+        S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
+            'printCell','template_list','modus') ;
+        %S = load(file, 'data' );
+        %data = S.data;
+        %assignin('base','data',data);
+        
         nverts = S.nverts;
         adj_matrix = S.adj_matrix;
         XY = S.XY;
         labs = S.labs;
         templates = S.templates;
         template_list = S.template_list;
-        modus = S.modus;
-
+        data.modus = S.modus;
+        data.printCell = S.printCell;
         g = graph(nverts);
+        switch data.modus;
+            case 'undirected'; dir = 0;
+            case 'directed'; dir = 1;
+        end
 
         for i=1:nverts
             label(g,i,labs{i});
             for j=1:nverts
               if adj_matrix(i,j)
-                 add(g,i,j);
+                 add(g,i,j,dir);
                  adj_matrix(j,i) = 0;
               end            
             end
         end
 
         embed(g,XY);
-
+        
     elseif strcmp(ext, '.gr')
         load(g, file);
         templates = cell(0,1);
@@ -845,11 +874,12 @@ if filename
         for i=1:nv(g)
             templates{i,1}=template_list{n_template,1};
         end
+        
     end
 end
 
 %set the uipanel according to stored value of "modus"
-switch modus
+switch data.modus
     case 'directed'
         set(handles.button_undirected,'Value', 0.0);
         set(handles.button_directed,'Value', 1.0);
@@ -862,9 +892,10 @@ end
 data.g = g;
 data.templates = templates;
 data.template_list = template_list;
-data.modus = modus;
-setappdata(handles.figure1,'appData',data);
 
+
+setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);
 refresh_dynamics(eventdata, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -887,6 +918,7 @@ g = data.g;
 templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
+printCell = data.printCell;
 
 %global g;
 %global templates;
@@ -895,7 +927,7 @@ modus = data.modus;
 [filename, pathname] = uiputfile( ...
 {'*.mat;','Graph/Network Files';
    '*.mat','MAT-files [Prefered] (*.mat)'; ...
-   '*.*',  'All Files (*.*)'}, ...
+   '*.*',  'All Files (*.*)';}, ...
    'Save');
 
 if filename
@@ -909,12 +941,14 @@ if filename
      nverts = nv(g);
      nedges = ne(g);
 
-     if strcmp(ext, '.mat') 
-        save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates', 'template_list','modus') ;
+     if strcmp(ext, '.mat')
+        %save(file, 'data' );
+        save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
+            'printCell','template_list','modus') ;
         disp(strcat('Saved graph as binary .mat file ("', file,'")'));
      elseif strcmp(ext, '.gr')
         save(g, file);
-        disp(strcat('Saved graph as Matgraph file ("', file,'")'));       
+        disp(strcat('Saved graph as Matgraph file ("', file,'")'));
      end
 end
  
@@ -1117,10 +1151,6 @@ g = data.g;
 templates = data.templates;
 template_list = data.template_list;
 
-%global g;
-%global templates;
-%global template_list;
-
 A  = double(matrix(g));
 
 rmxy(g);
@@ -1157,6 +1187,10 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
+%--------------------------------------------------------------------------
+%----------UNUSED FUNCTIONS - AUTOMATICALLY GENERATED BY GUIDE-------------
+%--------------------------------------------------------------------------
+
 
 % --------------------------------------------------------------------
 function Untitled_17_Callback(hObject, eventdata, handles)
@@ -1192,7 +1226,7 @@ modus = data.modus;
 % Check which kind of lable is activated
 checklabel = get(handles.labelview,'Check');
 checknumber = get(handles.numberview,'Check');
-checkcolor = get(handles.colorview,'Check');
+%checkcolor = get(handles.colorview,'Check');
 checkblank = get(handles.blankview,'Check');
  
 % rmxy(g);
@@ -1252,19 +1286,22 @@ switch modus
             set(handles.graph_heterogenity,'String', '-');
             set(handles.text19,'String', 'Has cycles:');
             set(handles.algebraic_connectivity,'String', '-');
-        end
-        
+        end    
 end
+
+% set node color
+%choice = 
+
 
 % check for choice of vertex-layout
 if strcmp(checklabel, 'on')
-    ldraw(g,dir);
-elseif strcmp(checkcolor, 'on')
-    cdraw(g,dir);
+    ldraw(g,dir,'-',data.nodeColor);
+%elseif strcmp(checkcolor, 'on')
+%    cdraw(g,dir);
 elseif strcmp(checknumber, 'on')
-    ndraw(g,dir);
+    ndraw(g,dir,'-',data.nodeColor);
 else
-    draw(g,dir);
+    draw(g,dir,'-',data.nodeColor);
 end
 
 set(handles.nedges,'String', num2str(ne(g,dir)));
@@ -2538,6 +2575,7 @@ function plotAllOutput_Callback(hObject, eventdata, handles)
 % hObject    handle to plotAllOutput (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
 
 if strcmp(get(handles.plotAllOutput,'Checked'),'on')
     set(handles.plotAllOutput,'Checked','off')
@@ -2654,7 +2692,9 @@ data = getappdata(handles.figure1,'appData');
       
 display(['Number of nodes: ' num2str(nv(data.g)) ]);
 %display(['PrintCell: ' printCell(nodenumber)]);
-assignin('base','printCell',data.printCell);
+assignin('base','data',data);
+
+
 
 % -- this function initializes the plot parameters for a node
 function [argout] = initPlotParams()
@@ -2676,8 +2716,6 @@ argout = plotParams;
 
 
 
-
-
 % --------------------------------------------------------------------
 function showSimMod_Callback(hObject, eventdata, handles)
 % hObject    handle to showSimMod (see GCBO)
@@ -2696,8 +2734,19 @@ end
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);         
         
-        
+       
+function load_settings(filename,handles)
+%data = getappdata(handles.figure1,'appData');
+S=load(filename, 'modus','flag_showSimMod','plotAllOutput','template_list');
+data.modus = S.modus;
+data.flag_showSimMod = S.flag_showSimMod;
+data.plotAllOutput = S.plotAllOutput;
+data.template_list = S.template_list;
+setappdata(handles.figure1,'appData',data);
 
+function save_settings(filename,handles)
+data = getappdata(handles.figure1,'appData');
 
+save(filename, '-struct','data', 'modus', 'flag_showSimMod','plotAllOutput','template_list');
 
 %%%%%%%%%

@@ -80,9 +80,9 @@ for i=1:ny
     end
 end
 
-set(handles.selector_dynamics, 'String', data.drop_string);
+%set(handles.selector_dynamics, 'String', data.drop_string);
 n1 = find(strcmp(data.template, data.template_list));
-set(handles.selector_dynamics, 'Value', n1); % Get template name from list
+set(handles.selector_dynamics, 'String', data.template); % Get number of template name from list
 set(handles.number_node, 'String', num2str(data.nodenumber));
 set(handles.edit_label, 'String', data.nodelabel);
 set(handles.connections, 'String', matrix_to_string(data.neighbours));
@@ -236,8 +236,9 @@ data = getappdata(handles.figure1,'appData');
 
 data.destroy = 0; %node should NOT be destroyed and changes be applied
 
-n_template = get(handles.selector_dynamics, 'Value');
-data.template = data.template_list{n_template};
+n_template = get(handles.selector_dynamics, 'String');
+data.template = n_template;
+%data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
 handles.nodelabel = get(handles.edit_label, 'String');
 data.neighbours = get(handles.connections, 'String');
@@ -381,71 +382,103 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %generateDefaultPlotParams(hObject,handles);
 
-setPlotParams(hObject,handles);
-data = getappdata(handles.figure1,'appData');
 
-%process visualization data for pp2 (eg line naming)
-if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
-    plotStates = [1 str2num(get(handles.edit_selectedStates,'String'))];
-    plotString = cell(length(plotStates),1 );
-    for i = 1:length(plotStates)
-        if i==1
-            plotString{i} = 'Node output:';
-        elseif i>1
-            plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':'];
-        end      
-    end
-    temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
-    % if the following is true, then pp2 was cancel without passing new
-    % params
-    if ~isempty(temp)
-        data.plotParams = temp;
-    end 
-elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
-    plotString = cell(1,1);
-    plotString{1} = 'Node output:';
-    temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
-    % if the following is true, then pp2 was cancel without passing new
-    % params
-    if ~isempty(temp)
-        data.plotParams = temp;
-    end 
-elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
-    plotStates = str2num(get(handles.edit_selectedStates,'String'));
-    plotString = cell(length(plotStates),1 );
-    for i = 1:length(plotStates)
-        plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':' ];     
-    end
-    temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
-    % if the following is true, then pp2 was cancel without passing new
-    % params
-    if ~isempty(temp)
-        data.plotParams = temp;
-    end 
-    for i = 1:length(data.plotParams)
-        %because no node output should be plotted, we introduce
-        % an offset in the struct, where the first struct element is empty
-        data.plotParams(i+1) = data.plotParams(i);
-    end
-    data.plotParams(1).lineWidth = [];
-    data.plotParams(1).lineStyle = [];
-    data.plotParams(1).marker = [];
-    data.plotParams(1).lineColor = [];
-    data.plotParams(1).edgeColor = [];
-    data.plotParams(1).faceColor = [];
-elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0)%nothing sould be plotted => do not open pp2.m
-    errordlg('There is nothing selected to plot.','Error');
-    plotParams = data.plotParamsOld;
-    plotParams(1).lineWidth = [];
-    plotParams(1).lineStyle = [];
-    plotParams(1).marker = [];
-    plotParams(1).lineColor = [];
-    plotParams(1).edgeColor = [];
-    plotParams(1).faceColor = [];
-    data.plotParams = plotParams; %minimum plotParams configuration
+%case distinction for different templates needed
+temp = get(handles.selector_dynamics,'String');
+%temp = data.template_list{n_temp,1};
+
+switch temp;
+    case 'LTI';
+
+        setPlotParams(hObject,handles);
+        data = getappdata(handles.figure1,'appData');
+        %process visualization data for pp2 (eg line naming)
+        if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
+            plotStates = [1 str2num(get(handles.edit_selectedStates,'String'))];
+            plotString = cell(length(plotStates),1 );
+            for i = 1:length(plotStates)
+                if i==1
+                    plotString{i} = 'Node output:';
+                elseif i>1
+                    plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':'];
+                end      
+            end
+            temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+            % if the following is true, then pp2 was cancel without passing new
+            % params
+            if ~isempty(temp)
+                data.plotParams = temp;
+            end 
+        elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
+            plotString = cell(1,1);
+            plotString{1} = 'Node output:';
+            temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
+            % if the following is true, then pp2 was cancel without passing new
+            % params
+            if ~isempty(temp)
+                data.plotParams = temp;
+            end 
+        elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
+            plotStates = str2num(get(handles.edit_selectedStates,'String'));
+            plotString = cell(length(plotStates),1 );
+            for i = 1:length(plotStates)
+                plotString{i} = ['Internal state ' num2str( plotStates(i) ) ':' ];     
+            end
+            temp = pp2(data.nodenumber, plotStates,plotString,data.plotParams);
+            % if the following is true, then pp2 was cancel without passing new
+            % params
+            if ~isempty(temp)
+                data.plotParams = temp;
+            end 
+            for i = 1:length(data.plotParams)
+                %because no node output should be plotted, we introduce
+                % an offset in the struct, where the first struct element is empty
+                data.plotParams(i+1) = data.plotParams(i);
+            end
+            data.plotParams(1).lineWidth = [];
+            data.plotParams(1).lineStyle = [];
+            data.plotParams(1).marker = [];
+            data.plotParams(1).lineColor = [];
+            data.plotParams(1).edgeColor = [];
+            data.plotParams(1).faceColor = [];
+        elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0)%nothing sould be plotted => do not open pp2.m
+            errordlg('There is nothing selected to plot.','Error');
+            plotParams = data.plotParamsOld;
+            plotParams(1).lineWidth = [];
+            plotParams(1).lineStyle = [];
+            plotParams(1).marker = [];
+            plotParams(1).lineColor = [];
+            plotParams(1).edgeColor = [];
+            plotParams(1).faceColor = [];
+            data.plotParams = plotParams; %minimum plotParams configuration
+        end
+        
+    case 'kuramoto';
+        % only one output state must be considered
+        
+        data = getappdata(handles.figure1,'appData');
+        
+        if get(handles.checkbox1,'Value') % just check if output should be plotted
+            plotString = cell(1,1);
+            plotString{1} = 'Node output';
+            if ~isfield(data,{'plotParams'})
+                data.plotParams = data.plotParamsOld;
+            end
+            
+            if size(data.plotParams,2) > 1
+                data.plotParams = data.plotParams(1);
+            end
+            
+            temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
+            
+            if ~isempty(temp)
+                data.plotParams = temp;
+            end
+        else
+            
+        end
+        
 end
-
-%data.plotParams = pp2(data.nodenumber, plotStates);
 
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
@@ -489,7 +522,7 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 compute_printVector(handles);
 data = getappdata(handles.figure1,'appData');
 
-n_template = get(handles.selector_dynamics, 'Value');
+n_template = get(handles.selector_dynamics, 'String');
 %data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
 handles.nodelabel = get(handles.edit_label, 'String');
@@ -527,18 +560,7 @@ data = getappdata(handles.figure1,'appData');
 %hard coded default-value => in future versions editable
 auswahl = 1; %First colors according to order 'r','b','m','g','k'
              %LineStyle, LineWidth, markers always set to: '-',1.0, 'none'
-%{
-% Control structure is similar as in "edit_plot_parameters_Callback"
-if (data.flagCheck1 == 1 && data.flagCheck2 == 1) %node output and selected int. states should be plotted
-    nrOfPlotStates = length( [1 str2num(get(handles.edit_selectedStates,'String'))] );
-elseif (data.flagCheck1 == 1 && data.flagCheck2 == 0) %only node output should be plotted
-    nrOfPlotStates = 1;
-elseif (data.flagCheck1 == 0 && data.flagCheck2 == 1) %only selected int. states should be plotted
-    nrOfPlotStates = length( [str2num(get(handles.edit_selectedStates,'String'))] );  
-elseif (data.flagCheck1 == 0 && data.flagCheck2 == 0) %nothing should be plotted
-    nrOfPlotStates = 0;
-end
-%}
+
 nrOfPlotStates = length(find(data.printVector));
 lengthPlotParams = length(data.plotParams);
 
@@ -593,40 +615,7 @@ nrOfPlotStates = length(find(data.printVector));
 lengthPlotParamsOld = length(data.plotParamsOld);
              
 colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
-%{
-if nrOfPlotStates == 0
-    data.plotParams(1).lineWidth = [];
-    data.plotParams(1).lineStyle = [];
-    data.plotParams(1).marker = [];
-    data.plotParams(1).lineColor = [];
-    data.plotParams(1).edgeColor = [];
-    data.plotParams(1).faceColor = [];
 
-else
-    if nrOfPlotStates > 5
-        coltemp = zeros(nrOfPlotStates,3);
-        coltemp(1:5,:) = colorTemplate;
-        for i = 6:nrOfPlotStates
-           coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; %a factor f < 1.0 makes each color channel darker
-        end
-        color = coltemp;
-    else
-        color = colorTemplate(1:nrOfPlotStates,:);
-    end
-
-    switch auswahl;
-        case 1; 
-            for i = 1:nrOfPlotStates
-                data.plotParams(i).lineWidth = '1.0';
-                data.plotParams(i).lineStyle = '-';
-                data.plotParams(i).marker = 'none';
-                data.plotParams(i).lineColor = color(i,:);
-                data.plotParams(i).edgeColor = color(i,:);
-                data.plotParams(i).faceColor = color(i,:);
-            end      
-    end
-end
-%}
 if nrOfPlotStates == 0
     data.plotParams(1).lineWidth = [];
     data.plotParams(1).lineStyle = [];
@@ -648,12 +637,12 @@ else
         end
         color = coltemp;
     else
-        color = [zeros(lengthPlotParamsOld,3)  ; colorTemplate(1:nrOfPlotStates,:)];
+        color = [zeros(lengthPlotParamsOld,3)  ; colorTemplate(1:nrOfPlotStates-lengthPlotParamsOld,:)];
     end
 
     switch auswahl;
         case 1; 
-            for i = lengthPlotParamsOld+1:lengthPlotParamsOld+nrOfPlotStates
+            for i = lengthPlotParamsOld+1:nrOfPlotStates
                 data.plotParams(i).lineWidth = '1.0';
                 data.plotParams(i).lineStyle = '-';
                 data.plotParams(i).marker = 'none';
@@ -737,7 +726,6 @@ else
 end
 
 
-
 switch choice
     case 1;
         if isfield(data,{'plotParams'}) == 0
@@ -752,8 +740,6 @@ switch choice
         editPlotParams(hObject, handles);
         data = getappdata(handles.figure1,'appData');
 end
-
-
 
 
 
