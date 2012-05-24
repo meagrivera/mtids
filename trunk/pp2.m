@@ -121,7 +121,7 @@ posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [l
 ph = uipanel('Parent',gcf,'Title','Choose plot parameters',...
         'Units','pixel','Position',posVectorPanel);
 
-% parameters for pushbutton "submitt"
+% parameters for pushbutton "submit"
 posVectorSubmitButton = [0.15*width 1.7*bottomFrame 140 35];
 set(handles(1).pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
     'String','Submit Parameters');

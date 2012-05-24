@@ -36,14 +36,11 @@ catch  % if subsystem already exist then look for an availible name
           sys=newsys;
           break;
        catch
-         
-       
+                
        end
-       
-   
+         
     end
     
-
 end
 
 %% open template and modify it do not visulize if number of nodes to high
@@ -82,6 +79,7 @@ for i=1:nodeNumber
     set_param( [ templates{i} '/To Workspace'], 'VariableName', ['nodeout' num2str(i)] );
     %The next lines are modifying the templates variables, so that they can
     %be differed from each other node.
+    %problem is, that 
     if strcmp(templates{i},'Copy_of_LTI') 
         set_param( [ templates{i} '/State-Space'],...
             'A', ['A' num2str(i)],...
@@ -153,8 +151,12 @@ if(nodeNumber>vizMaxNodeNumber || flag_showSimMod == 0)
 try
 save_system(sys,filename);
 catch
-   close_system(sys,0) 
+   close_system(sys,0);
 end
 
 close_system(sys,0)
 end
+
+
+
+%%%%%%%%
