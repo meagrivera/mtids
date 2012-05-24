@@ -1,10 +1,8 @@
-function dfstree(t,g,v)
+function visited = dfstree(t,g,v)
 % dfstree(t,g,v) --- create a depth-first spanning tree of g
 % The tree is rooted a the vertex v (or vertex 1 if missing). If g is not
 % connected, we generate a tree only for the component containing v;
 % vertices in the other components are isolated vertices in t.
-
-
 
 if nargin==2
     v = 1;
@@ -21,7 +19,7 @@ clear_edges(t);
 q_init(2*n+1);
 
 visited = zeros(n,1);
-tree_build(t,g,v,visited);
+visited = tree_build(t,g,v,visited);
     
    
 if is_labeled(g)
@@ -50,8 +48,5 @@ for w = nlist
     end
 end
         
-
-
-
 
 end

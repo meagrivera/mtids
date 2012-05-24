@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 09-May-2012 17:33:59
+% Last Modified by GUIDE v2.5 15-May-2012 22:15:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -95,7 +95,6 @@ try
     data = getappdata(handles.figure1,'appData');
     % todo: if successful, provide dialog to confirm
     if ~isempty(data)
-        
         [selectedButton] = uigetpref(...
             'mystart',...                        % Group
             'savefigurebeforeclosing',...           % Preference
@@ -105,8 +104,7 @@ try
         switch selectedButton
             case 'always'; flagLoadSet = 1;
             case 'never'; flagLoadSet = 0; 
-        end
-        
+        end        
     end
 catch
     %
@@ -117,9 +115,11 @@ if flagLoadSet == 1
 else
     data.plotAllOutput = 1;
     data.flag_showSimMod = 1;
-    data.template_list = cell(0,1);
+    data.template_list = cell(0,3);
     data.modus = 'undirected';
-    data.template_list{1,1} = 'LTI';    
+    data.template_list{1,1} = 'LTI';
+    data.template_list{1,2} = [245 245 245]/255; % node face color for template
+    data.template_list{1,3} = [0 0 0]; % node edge color for template
 end
 
 data.move_index = 0;
@@ -128,7 +128,7 @@ data.botton_down = 0;
 data.add_connection = 0;
 data.start_index = 0;
 data.templates = cell(0,1);
-data.nodeColor = cell(0,1); % how matgraph draws the vertex
+data.nodeColor = cell(0,2); % how matgraph draws the vertex
 
 %container for plot information - 
 % 1.column: printVector -- containes the information about node number,
@@ -163,6 +163,10 @@ if data.flag_showSimMod == 0
     set(handles.showSimMod,'Checked','off')
 elseif data.flag_showSimMod == 1
     set(handles.showSimMod,'Checked','on')
+end
+
+for k = 1:size(data.template_list,1)
+    
 end
 
 data.graph_refresh = 1;
@@ -278,19 +282,22 @@ label(g, new_vertex, lab_string);
 n_template = get(handles.selector_dynamic, 'Value'); % Get number of template name from list
 
 templates{nv(g),1} = template_list{n_template,1};
+%{
 switch templates{nv(g),1};
     case 'LTI'; col = [245 245 245]/255;
     case 'kuramoto'; col = [230 230 250]/255;
     otherwise; col = [0 149 237]/255; 
 end
+%}
 length_nodeColor = size(data.nodeColor,1);
 tempNodeColor = data.nodeColor;
-data.nodeColor = cell(length_nodeColor+1,1);
+data.nodeColor = cell(length_nodeColor+1,2);
 for i = 1:length_nodeColor
-   data.nodeColor(i) = tempNodeColor(i);
+   data.nodeColor(i,:) = tempNodeColor(i,:);
 end
 % this line sets the face color for the node
-data.nodeColor{length_nodeColor+1} = col;
+data.nodeColor{length_nodeColor+1,1} = template_list{n_template,2};
+data.nodeColor{length_nodeColor+1,2} = template_list{n_template,3};
 
 %Now, after the node was created, the printCell can be added  
 length_cellPrint = size(printCell,1);
@@ -371,10 +378,6 @@ function addconnection_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
-
 
 % Arreglar conexiones
 % Buscar en labels
@@ -640,13 +643,10 @@ function trimgraph_Callback(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
 
-%global g;
-trim(g);
+trim(data.g);
 
 %store application data
-data.g = g;
 setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject);
@@ -704,22 +704,15 @@ function randomgraph_Callback(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-modus = data.modus;
 
-%global g;
-%global modus;
-
-switch modus
+switch data.modus
     case 'undirected';
-        random(g,1/2);
+        random(data.g,1/2);
     case 'directed';
-        random(g);
+        random(data.g);
 end
 
 %store application data
-data.g = g;
-data.modus = modus;
 setappdata(handles.figure1,'appData',data);
 
 refresh_graph(0, eventdata, handles,hObject)
@@ -1148,13 +1141,13 @@ end
 
 % check for choice of vertex-layout
 if strcmp(checklabel, 'on')
-    ldraw(g,dir,'-',data.nodeColor);
+    ldraw(g,dir,'-',data.nodeColor(:,1), data.nodeColor(:,2) );
 %elseif strcmp(checkcolor, 'on')
 %    cdraw(g,dir);
 elseif strcmp(checknumber, 'on')
-    ndraw(g,dir,'-',data.nodeColor);
+    ndraw(g,dir,'-',data.nodeColor(:,1), data.nodeColor(:,2) );
 else
-    draw(g,dir,'-',data.nodeColor);
+    draw(g,dir,'-',data.nodeColor(:,1), data.nodeColor(:,2) );
 end
 
 set(handles.nedges,'String', num2str(ne(g,dir)));
@@ -1260,13 +1253,7 @@ switch modus
         %    set(handles.connected_graphs,'String', num2str(null_L,'%d')); 
         %end
         
-        if exist('graphconncomp.m','file') == 2
-            adj = matrixOfGraph(g);
-            adjS = sparse(adj);
-            set(handles.connected_graphs,'String',num2str(graphconncomp(adjS,'WEAK',true),'%d'));
-        else
-            set(handles.connected_graphs,'String', '-');
-        end
+        set(handles.connected_graphs,'String', num2str( length( compute_WCC( data.g))));
         
         minInDeg = min(InDeg);
         maxInDeg = max(InDeg);
@@ -1280,26 +1267,14 @@ switch modus
         else %if size(s,1) < dim_L
             isBalanced = 'No';
         end
+        strongCons = num2str( length( compute_SCC( data.g )));
         
-        if exist('graphconncomp.m','file') == 2
-            adj = matrixOfGraph(g);
-            adjS = sparse(adj);
-            [S,C]=graphconncomp(adjS);
-            strongCons = num2str(S);
+        % idea of detecting cyclic graphs: if there are less sets of SCC
+        % as nodes in the graph, then there must be at least one cycle.
+        if str2double( strongCons ) < nv(data.g)
+            isCyclic = 'Yes';
         else
-             strongCons = '-';
-        end
-        
-        if exist('graphisdag.m','file') == 2
-            adj = matrixOfGraph(g);
-            adjS = sparse(adj);
-            if graphisdag(adjS) == 0
-                isAcyclic = 'Yes';
-            elseif graphisdag(adjS) == 1
-                isAcyclic = 'No';
-            end
-        else
-            isAcyclic = '-';
+            isCyclic = 'No';
         end
         
         set(handles.text32,'String','Strong connected subgraphs:');
@@ -1317,7 +1292,7 @@ switch modus
         set(handles.text18,'String', 'Graph is balanced:');
         set(handles.graph_heterogenity,'String', isBalanced);
         set(handles.text19,'String', 'Has cycles:');
-        set(handles.algebraic_connectivity,'String', isAcyclic);
+        set(handles.algebraic_connectivity,'String', isCyclic);
 end
 %no data storaged needed, because this is a "void" function
 
@@ -1348,10 +1323,6 @@ data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
 templates = data.templates;
-
-%global g;
-%global template_list;
-%global templates;
 
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
@@ -1413,10 +1384,6 @@ data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
 templates = data.templates;
-
-%global g;
-%global template_list;
-%global templates;
 
 disp('Export mode 1');
 
@@ -1655,7 +1622,6 @@ data = getappdata(handles.figure1,'appData');
 template_list = data.template_list;
 templates = data.templates;
 
-%global template_list;
 oldFolder = cd(strcat(pwd,'/templates'));
 
 [filename, pathname] = uigetfile( ...
@@ -1676,7 +1642,8 @@ if iscell(filename)
             else
                 [ny, nx] = size(template_list);
                 template_list{ny+1,1} = template;
-                %template_list{ny+1,2} = file;
+                template_list{ny+1,2} = [1 1 1]; %default color
+                template_list{ny+1,3} = [0 0 1]; %default color
             end 
         else
             disp(strcat('ERROR: "',filename{i}, '" is not a Simulink model'));
@@ -1686,12 +1653,13 @@ elseif filename %filename is not a cell (it's a string) and not 0
     file = strcat(pathname, filename);
     [path, template, ext] = fileparts(file);
     if strcmp('.mdl', ext)
-        if strmatch(template, template_list, 'exact')
+        if strmatch(template, template_list{:,1}, 'exact')
             disp(strcat('WARNING: A template with the name "', template, '" was already imported!'));
         else
             [ny, nx] = size(template_list);
             template_list{ny+1,1} = template;
-            %template_list{ny+1,2} = file;
+            template_list{ny+1,2} = [1 1 1]; %default color
+            template_list{ny+1,3} = [0 0 1]; %default color
         end 
     else
         disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
@@ -1721,13 +1689,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
 template_list = cell(0,1);
 template_list{1,1} = 'LTI';
-
-%global g;
-%global template_list;
-%global drop_string;% = cell(0,0);
 
 drop_string = cell(0,0);
 
@@ -2362,7 +2325,7 @@ function run_simulation_plots_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 printCell = data.printCell;
-templates = data.templates;
+templates = s;
 expSucc = data.expSucc;
 
 %global g;
@@ -2507,6 +2470,29 @@ function save_settings(filename,handles)
 data = getappdata(handles.figure1,'appData');
 
 save(filename, '-struct','data', 'modus', 'flag_showSimMod','plotAllOutput','template_list');
+
+
+
+% --------------------------------------------------------------------
+function set_node_color_Callback(hObject, eventdata, handles)
+% hObject    handle to set_node_color (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+temp = setnodecolor(data.template_list);
+if ~isempty(temp)
+    data.template_list = temp;
+    for i = 1:nv(data.g)
+        nr_template = find( strcmp( data.templates(i), data.template_list(:,1) ));
+        data.nodeColor{i,1} = data.template_list{nr_template,2}; 
+        data.nodeColor{i,2} = data.template_list{nr_template,3}; 
+    end
+    
+end
+
+guidata(hObject, handles);
+setappdata(handles.figure1,'appData',data);
+refresh_graph(0, eventdata, handles,hObject);
 
 %%%%%%%%%
 
@@ -2694,9 +2680,6 @@ function number_of_nodes_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of number_of_nodes as text
 %        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
-
-
-
 
 
 
