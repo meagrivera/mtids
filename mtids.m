@@ -1,6 +1,6 @@
 function varargout = mtids(varargin)
 %
-%      MTIDS 1.0
+%      MTIDS 1.1
 %      (C) 2011 The MTIDS Project (http://code.google.com/p/mtids)
 %      Matlab Toolbox for Interconnected Dynamical Systems
 %      Test Rig for Large-Scale Interconnected Systems.
@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 15-May-2012 22:15:30
+% Last Modified by GUIDE v2.5 29-May-2012 10:01:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2494,6 +2494,90 @@ guidata(hObject, handles);
 setappdata(handles.figure1,'appData',data);
 refresh_graph(0, eventdata, handles,hObject);
 
+
+% --------------------------------------------------------------------
+function create_dynamic_Template_Callback(hObject, eventdata, handles)
+% hObject    handle to create_dynamic_Template (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% out = dialog('WindowStyle', 'normal', 'Name', 'Open');
+title = 'Creation of new dynamic template';
+message = ['A new model in Simulink will be loaded now. Please leave Inport, Outport ' ...
+    'and the Mux-Block at the Inport unmodified. Save your work afterwards and open the import ' ...
+    'wizard to use the created dynamics in mtids.' ...
+    'See ''help'' for detailed advise.'];
+h1=msgbox(message,title,'help');
+posVector=get(h1,'OuterPosition');
+set(h1,'OuterPosition',posVector + [0 0 20 0]); %[left, bottom, width, height]
+simulink;
+open_system('nodeTemplate.mdl');
+
+
+
+% --------------------------------------------------------------------
+function template_import_wizard_Callback(hObject, eventdata, handles)
+% hObject    handle to template_import_wizard (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% next step: load template invisibly from mdl-file
+oldFolder = cd(strcat(pwd,'/templates'));
+
+[filename, pathname] = uigetfile( ...
+{'*.mdl','Simulink model template(*.mdl)';
+   '*.*',  'All Files (*.*)'}, ...
+   'Import Simulink model templates', ...
+   'MultiSelect', 'on');
+
+% disp(['Filename: ' filename]);
+load_system(filename);
+
+
+% check this file for unset parameter values - this is a prestep to the
+% dialog of asking for all needed parameters for this template
+% finds all blocks in the simulink model
+blks = find_system(gcs, 'Type', 'block');
+listblks = get_param(blks, 'BlockType');
+listnms = get_param(blks,'Name');
+
+% is is very hard to show the variation of all editable parameters
+% thus just show the blocks and let the user type in which values should be
+% introduced as parameters for the template OR make a choice of possible
+% values, which are very likely
+
+% there are some blocks, which are very likely not to contain parameters,
+% which the user should set, e.g.:
+% Inport, Outport, Sum, Mux, Math
+% sort out these blocks:
+listnms( ~cellfun( @isempty, regexp( listblks,...
+    'Inport|Outport|Sum|Mux|Math|Scope|ToWorkspace','start')) ) = [];
+listblks( ~cellfun( @isempty, regexp( listblks,...
+    'Inport|Outport|Sum|Mux|Math|Scope|ToWorkspace','start')) ) = [];
+
+
+% create new figure and place found blocks in table environment
+if ~cellfun( @isempty, listblks )
+    argout = import_dynamic_params(listblks,listnms,filename);
+else
+    % errordlg('No blocks with editable');
+end
+
+close_system(filename);
+cd(oldFolder);
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%
 
 
@@ -2680,6 +2764,12 @@ function number_of_nodes_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of number_of_nodes as text
 %        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
+
+
+
+
+
+
 
 
 
