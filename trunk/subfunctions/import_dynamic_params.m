@@ -22,7 +22,7 @@ function varargout = import_dynamic_params(varargin)
 
 % Edit the above text to modify the response to help import_dynamic_params
 
-% Last Modified by GUIDE v2.5 29-May-2012 11:20:35
+% Last Modified by GUIDE v2.5 30-May-2012 21:10:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,7 +63,7 @@ sysname = m{1};
 
 %% Geometry
 screenSize = get( 0, 'ScreenSize' );
-fixedHeight = 150;
+fixedHeight = 170;
 rowHeight = 30;
 topFrame = 30;
 bottomFrame = 0.5*topFrame;
@@ -88,32 +88,17 @@ posVector = [left bottom width height]; %do this dynamically % [left, bottom, wi
 %% Building GUI
 
 % setting figure parameters manually
-set(gcf,'Units','pixels');
-set(gcf,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none','MenuBar','none','Resize','on');
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
-set(gcf,'Color',defaultBackground);
+set(gcf,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
+    'MenuBar','none','Resize','on','ResizeFcn',@figResize,'Color',...
+    defaultBackground,'Units','pixels');
 
-% parameters for panel, in which all other control elements are positioned
-posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
-ph = uipanel('Parent',gcf,'Title','Collecting model parameters',...
-        'Units','pixel','Position',posVectorPanel);
 
-% parameters for pushbuttons
-posVectorSubmitButton = [0.15*width 1.7*bottomFrame 140 35];
-set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
-    'String','pushbutton1');
-
-posVectorCancelButton = [0.55*width 1.7*bottomFrame 140 35];
-set(handles.pushbutton2,'Units','pixels','String','pushbutton2',...
-                'Position',posVectorCancelButton);
 
 
 % build table with block information
 t = uitable;
-posVecTable = [1.5*sideFrame 5*bottomFrame width-3.5*sideFrame 40+nrBlks*rowHeight];
-cnames = {'Block Name','Parameter Name','Value'};
-columneditable =  [false true true];
-columnformat = {'char','char','char'};
+
 % rnames = cell(length(listBlks),1);
 % for i = 1:length(listBlks)
 %     rnames{i} = [listBlks{i} ': ' char(39) listnms{i} char(39)];
@@ -130,15 +115,15 @@ for i = 1:length(listBlks)
         case 'Gain';
             % check out the model explorer to get the correct parameter
             % names
-            paramname = 'Gain';
+            paramname = {'Gain'};
             % read it out of the imported system
-            paramvalue = get_param([sysname '/' listnms{i}],paramname);
+            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
         case 'Integrator';
-            paramname = 'InitialCondition';
-            paramvalue = get_param([sysname '/' listnms{i}],paramname);
+            paramname = {'InitialCondition'};
+            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
         case 'Constant';
-            paramname = 'Value';
-            paramvalue = get_param([sysname '/' listnms{i}],paramname);
+            paramname = {'Value'};
+            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
         case 'StateSpace';
             paramname = {'A';'B';'C';'D';'X0'};
             paramvalue = cell( length(paramname) , 1);
@@ -146,8 +131,8 @@ for i = 1:length(listBlks)
                 paramvalue{j} = get_param([sysname '/' listnms{i}],paramname{j});
             end
         otherwise;
-            paramname = '';
-            paramvalue = '';
+            paramname = {''};
+            paramvalue = {''};
     end
 
     for j = 1:length(paramname)
@@ -156,11 +141,60 @@ for i = 1:length(listBlks)
     end
 end
 
+cnames = cell( size(dat,2) , 1 );
+cnames{1} = 'Block Name';
+columneditable = logical( zeros(1, size(dat,2) ));
+for i = 1:floor( size(dat,2) / 2)
+    cnames{2*i} = 'Parameter Name';
+    cnames{2*i + 1} = 'Value';
+    columneditable(2*i) = true;
+    columneditable(2*i + 1) = true;
+end
+
+columnformat = repmat( {'char'}, 1,size(dat,2) );
+
+% width of table should be adapted on content or column cells
+% idea: compute number of symbols which are spread horizontally
+val1 = max(cellfun( @length, listBlks ));
+temp = char(cnames);
+val2 = length(temp(:)')-length(regexp(temp(:)','[ ]'));
+nrOfChars = 2*val1 + val2; % double weighting of val1 because the row name gets more space
+
+widthTable = nrOfChars*10;
+widthFigure = nrOfChars*10 + 50;
+widthPanel = nrOfChars*10 + 30;
+posVecTable = [1.5*sideFrame 5*bottomFrame widthTable 50+nrBlks*rowHeight];% [left, bottom, width, height]
+if widthFigure > screenSize(3)
+    widthFigure = screenSize(3);
+    posVector(1) = 0;
+end
+
+
+posVector(3) = widthFigure;
+set(gcf,'Position',posVector);
+
+
+% parameters for panel, in which all other control elements are positioned
+posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
+posVectorPanel(3) = widthPanel;
+set(handles.uipanel1,'Parent',gcf,'Title','Collecting model parameters',...
+        'Units','pixel','Position',posVectorPanel);
+
+    
 set(t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
     'ColumnWidth','auto','Data',dat, 'ColumnEditable', columneditable,...
     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
 
+% parameters for pushbuttons
+horPosPushbutton1 = 0.15*widthFigure;
+posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 140 35];
+set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
+    'String','pushbutton1');
 
+horPosPushbutton2 = 0.55*widthFigure;
+posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 140 35];
+set(handles.pushbutton2,'Units','pixels','String','pushbutton2',...
+                'Position',posVectorCancelButton);
 
 
 
@@ -194,3 +228,15 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
+% Figure resize function
+function figResize(src,evt)
+ fpos = get(gcf,'Position');
+ set(uipanel1,'Position',...
+  [fpos(1) fpos(2) fpos(3)-.1 fpos(4)*8/35])
+
+
+
+%%%%%%%%%%%%%%%%
