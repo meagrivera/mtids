@@ -82,6 +82,7 @@ disp(' ');
 addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
 addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
+addpath(strcat(pwd,'/subfunctions'));
 
 %initialize graph
 graph_init;
@@ -379,8 +380,8 @@ data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
 
-% Arreglar conexiones
-% Buscar en labels
+% Fix connections
+% Search labels
 label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
 
@@ -607,7 +608,7 @@ printCell = data.printCell;
 
 a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
-    templates(a,:) = []; % Deleting a template
+    templates(a,:) = []; % Deleting the template for the node, which should be deleted
 
     delete(g,a);
 
