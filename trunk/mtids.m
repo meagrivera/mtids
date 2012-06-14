@@ -79,10 +79,11 @@ disp(' ');
 %----------------INITIALISE PARAMETERS-------------------------------------
 %--------------------------------------------------------------------------
 
-addpath(strcat(pwd,'/tools/matgraph'));     % Folder with a copy of Matgraph
-addpath(strcat(pwd,'/interface2Simulink')); % Folder with various import/export functions
-addpath(strcat(pwd,'/templates'));          % Folder for Simulink templates
-addpath(strcat(pwd,'/subfunctions'));
+addpath(strcat(pwd,'/tools/matgraph'));                     % Folder with a copy of Matgraph
+addpath(strcat(pwd,'/templates'));                          % Folder for Simulink templates
+addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs and functions
+addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with various import/export functions
+addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
 
 %initialize graph
 graph_init;
