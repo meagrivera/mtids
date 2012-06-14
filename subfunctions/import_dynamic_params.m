@@ -62,7 +62,7 @@ listBlks = varargin{1};
 listnms = varargin{2};
 filename = varargin{3};
 m=regexp( filename, '\.', 'split','once');
-sysname = m{1};
+handles.sysname = m{1};
 
 %% Geometry
 screenSize = get( 0, 'ScreenSize' );
@@ -104,7 +104,7 @@ set(hObject,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none'
 
 
 
-%% Filling the cells
+%% Filling the data cells
 dat = cell(length(listBlks),3);
 dat(:,1) = listnms;
 for i = 1:length(listBlks)
@@ -117,22 +117,22 @@ for i = 1:length(listBlks)
             % names
             paramname = {'Gain'};
             % read it out of the imported system
-            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
+            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
         case 'Integrator';
             paramname = {'InitialCondition'};
-            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
+            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
         case 'Constant';
             paramname = {'Value'};
-            paramvalue = {get_param([sysname '/' listnms{i}],paramname{1})};
+            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
         case 'StateSpace';
             paramname = {'A';'B';'C';'D';'X0'};
             paramvalue = cell( length(paramname) , 1);
             for j = 1:length(paramname)
-                paramvalue{j} = get_param([sysname '/' listnms{i}],paramname{j});
+                paramvalue{j} = get_param([handles.sysname '/' listnms{i}],paramname{j});
             end
         otherwise;
             paramname = {''};
-%                 paramname = get_param([sysname '/' listnms{i}],'DialogParameters')
+%                 paramname = get_param([handles.sysname '/' listnms{i}],'DialogParameters')
             paramvalue = {''};
     end
 
@@ -157,25 +157,37 @@ columnformat = repmat( {'char'}, 1,size(dat,2) );
 %% Column and cell format computations
 % width of table should be adapted on content or column cells
 % idea: compute number of symbols which are spread horizontally
-val1 = max(cellfun( @length, listBlks ));
-temp = char(cnames);
-val2 = length(temp(:)')-length(regexp(temp(:)','[ ]'));
-nrOfChars = 2*val1 + val2; % double weighting of val1 because the row name gets more space
+heightTable2 = 1.25*sizeChar2Pixel(hObject, 'h', ( nrBlks + 2 ) );
 
-widthTable = nrOfChars*10;
-widthFigure = nrOfChars*10 + 50;
-widthPanel = nrOfChars*10 + 30;
-%     heightTable = 50+nrBlks*rowHeight;
-% compute conversion factor between chars and pixels to set table
-% heigth
-size_pixels=get(hObject,'Position');
-set(hObject,'Units','characters');
-size_characters=get(hObject,'Position');
-set(hObject,'Units','Pixels');
-convFactor = size_pixels(3:4)./size_characters(3:4);
-heightTable2 = ( nrBlks + 2 ) * convFactor(2) * 1.25; % correcting factor needed
+% determine width:
+% 1) Compute longest string of each column
+% 2) Convert string to pixel and set width
+charCounter = 0;
+columnwidth = cell( 1 ,size(dat,2) );
+for ii = 1: size(dat,2)
+    % get max length of a single column in table data
+    [val IDX] = max(cellfun(@length,dat(:,ii)));
+    % compare max length with column name and take maximum of it
+    if cellfun(@length,cnames(ii)) > val
+        % column name IS longer
+        charCounter = charCounter + cellfun(@length,cnames(ii));
+        columnwidth{ii} = 1.4*sizeChar2Pixel(hObject, 'w', cnames{ii} );
+    else
+        % longest name is within the table data
+        charCounter = charCounter + val;
+        columnwidth{ii} = 1.2*sizeChar2Pixel(hObject, 'w', dat{IDX,ii} );
+    end
+end
 
-posVecTable = [1.5*sideFrame 5*bottomFrame widthTable heightTable2];% [left, bottom, width, height]
+% widthTable = nrOfChars*10;
+widthTable = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,listBlks )) )...
+    + sum(cell2mat(columnwidth));
+widthFigure = widthTable + 100;
+widthPanel = widthTable + 30;
+
+
+%% Prepare table position properties
+posVecTable = [1.5*sideFrame 5*bottomFrame widthTable heightTable2]; % [left, bottom, width, height]
 if widthFigure > screenSize(3)
     widthFigure = screenSize(3);
     posVector(1) = 0;
@@ -193,18 +205,18 @@ set(handles.uipanel1,'Parent',hObject,'Title','Collecting model parameters',...
         'Units','pixel','Position',posVectorPanel);
 
 set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
-    'ColumnWidth','auto','Data',dat, 'ColumnEditable', columneditable,...
+    'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
 
 % parameters for pushbuttons
 horPosPushbutton1 = 0.15*widthFigure;
 posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 140 35];
 set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
-    'String','pushbutton1');
+    'String','Add Block');
 
 horPosPushbutton2 = 0.55*widthFigure;
 posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 140 35];
-set(handles.pushbutton2,'Units','pixels','String','pushbutton2',...
+set(handles.pushbutton2,'Units','pixels','String','Cancel Import',...
                 'Position',posVectorCancelButton);
 
 
@@ -235,12 +247,49 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% add new row to the table
-
 % determine length of row labeling vector
 nrOfRows = length( get(handles.t,'RowName') );
-disp(num2str(nrOfRows));
 
+% ask for new row (=block) name
+newRowName = inputdlg({'New Block Type: '},'Add Row',1);
+% check if block type exists before adding the row to the table
+if isempty(find_system(handles.sysname,'BlockType',newRowName{1}));
+    errordlg(['No Block of Type ',newRowName,' found!']);
+    return;
+end
+
+% Data processing to row names and table data
+rownames = cell(nrOfRows+1,1);
+rownames(1:nrOfRows) = get(handles.t,'RowName');
+rownames(end) = newRowName;
+testCell=find_system(handles.sysname,'BlockType',newRowName{1});
+s=regexp(testCell,'/','split');
+listOutString = cell(size(s,1),1);
+for i = 1:size(s,1)
+    listOutString{i} = s{i}{2};
+end
+listsize = [1.2*sizeChar2Pixel(hObject,'w', 3+max(cellfun(@length,listOutString))) ...
+    1.2*sizeChar2Pixel(hObject,'h',size(listOutString,1)+1 )];
+newBlockNameIndex = listdlg('PromptString','Select a Block Name:',...
+    'SelectionMode','single','ListSize',listsize,...
+    'ListString',listOutString);
+dataOld=get(handles.t,'Data');
+dataNew = cell( size(dataOld,1)+1, size(dataOld,2) );
+dataNew{end,1} = listOutString(newBlockNameIndex);
+
+% Processing of new table position
+% oldTablePosition = get(handles.t,'Position');
+% oldTableColumnwidth = get(handles.t,'ColumnWidth');
+% cnames = get(handles.t,'ColumnName');
+% heightTableNew = 1.25*sizeChar2Pixel(hObject, 'h', ( size(dataNew,1) + 2 ) );
+% widthTableNew = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,rownames )) )...
+%     + sum(cell2mat(columnwidth));
+
+1
+
+%   set(handles.t,'RowName',rownames,'Data',dataNew);%,'ColumnName',cnames,'Position',posVecTable,...
+%     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
+%     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
 
 
 % --- Executes on button press in pushbutton2.
@@ -248,6 +297,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 
 
 % --- Executes when user attempts to close figure1.
@@ -280,8 +330,24 @@ function figResize(src,evt,handles)
      set(handles.pushbutton2,'Position',...
          [0.55*fpos(3) fposPushbutton2(2) fposPushbutton2(3) fposPushbutton2(4)]);
 
-
-
+     
+function tableColumnWidth = get_tableColumnWidth(hObject,dat,cnames)
+charCounter = 0;
+columnwidth = cell( 1 ,size(dat,2) );
+for ii = 1: size(dat,2)
+    % get max length of a single column in table data
+    [val IDX] = max(cellfun(@length,dat(:,ii)));
+    % compare max length with column name and take maximum of it
+    if cellfun(@length,cnames(ii)) > val
+        % column name IS longer
+        charCounter = charCounter + cellfun(@length,cnames(ii));
+        columnwidth{ii} = 1.4*sizeChar2Pixel(hObject, 'w', cnames{ii} );
+    else
+        % longest name is within the table data
+        charCounter = charCounter + val;
+        columnwidth{ii} = 1.2*sizeChar2Pixel(hObject, 'w', dat{IDX,ii} );
+    end
+end
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%
 
