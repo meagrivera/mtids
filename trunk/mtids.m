@@ -2487,8 +2487,7 @@ if ~isempty(temp)
         nr_template = find( strcmp( data.templates(i), data.template_list(:,1) ));
         data.nodeColor{i,1} = data.template_list{nr_template,2}; 
         data.nodeColor{i,2} = data.template_list{nr_template,3}; 
-    end
-    
+    end    
 end
 
 guidata(hObject, handles);

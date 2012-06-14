@@ -38,7 +38,7 @@ listblks( ~cellfun( @isempty, regexp( listblks,...
 if ~cellfun( @isempty, listblks )
     argout = import_dynamic_params(listblks,listnms,filename);
 else
-    % errordlg('No blocks with editable');
+    % errordlg('No editable blocks ');
 end
 
 cd(oldFolder);
