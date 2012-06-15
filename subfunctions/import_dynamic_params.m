@@ -54,7 +54,6 @@ function import_dynamic_params_OpeningFcn(hObject, eventdata, handles, varargin)
 
 %% Callback Functions
 
-
 % Choose default command line output for import_dynamic_params
 handles.output = hObject;
 
@@ -66,8 +65,6 @@ handles.sysname = m{1};
 
 %% Geometry
 screenSize = get( 0, 'ScreenSize' );
-fixedHeight = 170;
-rowHeight = 25;
 topFrame = 30;
 bottomFrame = 0.5*topFrame;
 sideFrame = 0.5*topFrame;
@@ -76,7 +73,7 @@ nrBlks = length(listBlks);
 
 topGap = 1/12*screenSize(4);
 left = screenSize(3)*0.1;
-height = fixedHeight + nrBlks*rowHeight;
+height = get_figureHeight ( nrBlks );
 
 if screenSize(3)*0.9 > 760
     width = 760;
@@ -90,18 +87,16 @@ posVector = [left bottom width height]; %do this dynamically % [left, bottom, wi
 
 %% Creating Figure
 
-% create panel
+% creatint elements
 handles.uipanel1 = uipanel;
-
-% create table with block information
-handles.t = uitable;    
+handles.t = uitable;
+% handles.textBlockType = uicontrol;
 
 % setting figure parameters manually
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
 set(hObject,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
     'MenuBar','none','Resize','on','ResizeFcn',{@figResize,handles},'Color',...
     defaultBackground,'Units','pixels');%,'CloseRequestFcn',{@figure1_CloseRequestFcn,handles});
-
 
 
 %% Filling the data cells
@@ -157,50 +152,25 @@ columnformat = repmat( {'char'}, 1,size(dat,2) );
 %% Column and cell format computations
 % width of table should be adapted on content or column cells
 % idea: compute number of symbols which are spread horizontally
-heightTable2 = 1.25*sizeChar2Pixel(hObject, 'h', ( nrBlks + 2 ) );
-
-% determine width:
-% 1) Compute longest string of each column
-% 2) Convert string to pixel and set width
-charCounter = 0;
-columnwidth = cell( 1 ,size(dat,2) );
-for ii = 1: size(dat,2)
-    % get max length of a single column in table data
-    [val IDX] = max(cellfun(@length,dat(:,ii)));
-    % compare max length with column name and take maximum of it
-    if cellfun(@length,cnames(ii)) > val
-        % column name IS longer
-        charCounter = charCounter + cellfun(@length,cnames(ii));
-        columnwidth{ii} = 1.4*sizeChar2Pixel(hObject, 'w', cnames{ii} );
-    else
-        % longest name is within the table data
-        charCounter = charCounter + val;
-        columnwidth{ii} = 1.2*sizeChar2Pixel(hObject, 'w', dat{IDX,ii} );
-    end
-end
-
-% widthTable = nrOfChars*10;
-widthTable = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,listBlks )) )...
-    + sum(cell2mat(columnwidth));
-widthFigure = widthTable + 100;
-widthPanel = widthTable + 30;
-
+heightTable = 1.25*sizeChar2Pixel(hObject, 'h', ( nrBlks + 2 ) );
+[ widthTable columnwidth] = get_tableColumnWidth(hObject,listBlks,dat,cnames);
+widthFigure = widthTable + 140;
 
 %% Prepare table position properties
-posVecTable = [1.5*sideFrame 5*bottomFrame widthTable heightTable2]; % [left, bottom, width, height]
+posVecTable = [1.5*sideFrame 5*bottomFrame widthTable heightTable]; % [left, bottom, width, height]
 if widthFigure > screenSize(3)
     widthFigure = screenSize(3);
     posVector(1) = 0;
 end
-
 
 %% Creating Figure Content
 posVector(3) = widthFigure;
 set(hObject,'Position',posVector);
 
 % parameters for panel, in which all other control elements are positioned
-posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
-posVectorPanel(3) = widthPanel;
+posVectorPanel = get_panelPosition(widthTable, height);
+% posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
+
 set(handles.uipanel1,'Parent',hObject,'Title','Collecting model parameters',...
         'Units','pixel','Position',posVectorPanel);
 
@@ -219,7 +189,15 @@ posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 140 35];
 set(handles.pushbutton2,'Units','pixels','String','Cancel Import',...
                 'Position',posVectorCancelButton);
 
-
+% handles.handles.textBlockType = uicontrol('Style','text','FontWeight','demi','FontSize',10,...
+%     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
+%     'String','Block Type');
+            
+% "Dirty": Prompt Block Type above the row names
+% set(handles.textBlockType,'Style','text','FontWeight','demi','FontSize',10,...
+%     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
+%     'String','Block Type');
+% uistack(handles.textBlockType,'top');
 
 % Update handles structure
 guidata(hObject, handles);
@@ -275,17 +253,43 @@ newBlockNameIndex = listdlg('PromptString','Select a Block Name:',...
     'ListString',listOutString);
 dataOld=get(handles.t,'Data');
 dataNew = cell( size(dataOld,1)+1, size(dataOld,2) );
-dataNew{end,1} = listOutString(newBlockNameIndex);
+dataNew(1:size(dataOld,1), 1:size(dataOld,2) ) = dataOld;
+dataNew(end,1) = listOutString(newBlockNameIndex);
+cnames = get(handles.t,'ColumnName');
+[ widthTable columnwidth ] = get_tableColumnWidth(hObject,rownames,dataNew,cnames);
+
+% % Processing of new figure position
+% figureHeight = get_figureHeight( length(rownames) );
+% widthFigure = widthTable + 140;
+% oldFigurePosition = get(gcf,'Position');
+% newFigurePosition = [oldFigurePosition(1) oldFigurePosition(2) widthFigure figureHeight];
+% set(gcf,'Position',newFigurePosition);
+% 
+% % Processing of new panel position
+% set(handles.uipanel1,'Position',get_panelPosition(widthTable, figureHeight) );
 
 % Processing of new table position
-% oldTablePosition = get(handles.t,'Position');
+oldPosVecTable = get(handles.t,'Position');
+heightTable = 1.25*sizeChar2Pixel(hObject, 'h', ( length(rownames) + 2 ) );
+posVecTable = [oldPosVecTable(1) oldPosVecTable(2) widthTable heightTable]; % [left, bottom, width, height]
+set(handles.t,'RowName',rownames,'Position',posVecTable,...
+    'ColumnWidth',columnwidth,'Data',dataNew);
+
+figResize(gcf,eventdata,handles);
+
+
+% oldPosVecTable = get(handles.t,'Position');
 % oldTableColumnwidth = get(handles.t,'ColumnWidth');
 % cnames = get(handles.t,'ColumnName');
 % heightTableNew = 1.25*sizeChar2Pixel(hObject, 'h', ( size(dataNew,1) + 2 ) );
 % widthTableNew = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,rownames )) )...
 %     + sum(cell2mat(columnwidth));
 
-1
+% Processing of new panel position
+
+% Processing of new figure position
+% oldFigurePosition = get(hObject,'Position');
+% 1
 
 %   set(handles.t,'RowName',rownames,'Data',dataNew);%,'ColumnName',cnames,'Position',posVecTable,...
 %     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
@@ -329,9 +333,16 @@ function figResize(src,evt,handles)
          [0.15*fpos(3) fposPushbutton1(2) fposPushbutton1(3) fposPushbutton1(4)]);
      set(handles.pushbutton2,'Position',...
          [0.55*fpos(3) fposPushbutton2(2) fposPushbutton2(3) fposPushbutton2(4)]);
+%      posTextBlockTypeOld = get(handles.textBlockType,'Position');
+%      figureFrames = get_figureFrames();
+%      posTextBlockTypeNew = [posTextBlockTypeOld(1) ...
+%          fpos(4)-1.725*figureFrames.top ...
+%          posTextBlockTypeOld(3) ...
+%          posTextBlockTypeOld(4)];
+%      set(handles.textBlockType,'Position',posTextBlockTypeNew);
 
      
-function tableColumnWidth = get_tableColumnWidth(hObject,dat,cnames)
+function [ tableColumnWidth columnwidth ] = get_tableColumnWidth(hObject,listBlks,dat,cnames)
 charCounter = 0;
 columnwidth = cell( 1 ,size(dat,2) );
 for ii = 1: size(dat,2)
@@ -348,6 +359,26 @@ for ii = 1: size(dat,2)
         columnwidth{ii} = 1.2*sizeChar2Pixel(hObject, 'w', dat{IDX,ii} );
     end
 end
+tableColumnWidth = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,listBlks )) )...
+    + sum(cell2mat(columnwidth));
+
+function figureHeight = get_figureHeight( nrOfBlks )
+fixedHeight = 170;
+rowHeight = 25;
+figureHeight = fixedHeight + nrOfBlks*rowHeight;
+
+function panelPosition = get_panelPosition(widthTable, heightFigure)
+figureFrames = get_figureFrames();
+panelPosition = ...
+    [figureFrames.side ...
+    figureFrames.bottom ...
+    widthTable + 30 ...
+    heightFigure-figureFrames.top]; % [left, bottom, width, height]
+
+function figureFrames = get_figureFrames()
+figureFrames.top = 30;
+figureFrames.bottom = 0.5*figureFrames.top;
+figureFrames.side = 0.5*figureFrames.top;
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%
 
