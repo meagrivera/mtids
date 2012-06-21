@@ -95,33 +95,52 @@ flagLoadSet = 0;
 try
     load_settings('lastset',handles);
     data = getappdata(handles.figure1,'appData');
-    % todo: if successful, provide dialog to confirm
     if ~isempty(data)
-        [selectedButton] = uigetpref(...
-            'mystart',...                        % Group
-            'savefigurebeforeclosing',...           % Preference
-            'Former settings?',...                    % Window title
-            {'Do you want to load the settings formerly used?'},...
-            {'always','never';'Yes','No'});        % Callback for Help button
-        switch selectedButton
-            case 'always'; flagLoadSet = 1;
-            case 'never'; flagLoadSet = 0; 
-        end        
+        choice = questdlg('Do you want to load the settings formerly used?', ...
+            'Former settings?', ...
+            'Yes','Yes, with last graph','No','No');
+        switch choice
+            case 'Yes';
+                flagLoadSet = 1;
+            case 'Yes, with last graph';
+                loadGraphAtOpening(hObject, eventdata, handles);
+                data = getappdata(handles.figure1,'appData');
+                flagLoadSet = 2;
+            case 'No';
+                flagLoadSet = 0;
+        end
     end
 catch
     %
 end
 
-if flagLoadSet == 1    
-    % the saved settings are already restored
-else
-    data.plotAllOutput = 1;
-    data.flag_showSimMod = 1;
-    data.template_list = cell(0,3);
-    data.modus = 'undirected';
-    data.template_list{1,1} = 'LTI';
-    data.template_list{1,2} = [245 245 245]/255; % node face color for template
-    data.template_list{1,3} = [0 0 0]; % node edge color for template
+% Setting the parameters according to chosen old data
+switch flagLoadSet
+    case 1;
+        data.templates = cell(0,1);
+        data.printCell = cell(0,2);
+        data.nodeColor = cell(0,2);
+        g = graph; %% Creating a graph
+        resize(g,0);
+        data.g = g;
+        
+    case 2;
+        
+        
+    otherwise;
+        data.plotAllOutput = 1;
+        data.flag_showSimMod = 1;
+        data.template_list = cell(0,3);
+        data.modus = 'undirected';
+        data.template_list{1,1} = 'LTI';
+        data.template_list{1,2} = [245 245 245]/255; % node face color for template
+        data.template_list{1,3} = [0 0 0]; % node edge color for template
+        data.templates = cell(0,1);
+        data.printCell = cell(0,2);
+        data.nodeColor = cell(0,2);
+        g = graph; %% Creating a graph
+        resize(g,0);
+        data.g = g;
 end
 
 data.move_index = 0;
@@ -129,8 +148,7 @@ data.expSucc = 0;
 data.botton_down = 0;
 data.add_connection = 0;
 data.start_index = 0;
-data.templates = cell(0,1);
-data.nodeColor = cell(0,2); % how matgraph draws the vertex
+data.graph_refresh = 1;
 
 %container for plot information - 
 % 1.column: printVector -- containes the information about node number,
@@ -139,8 +157,6 @@ data.nodeColor = cell(0,2); % how matgraph draws the vertex
 %struct with 6 elements per state
 %       Example: a node has 3 int. states, 2 should be plotted, then
 %       struct(1) and struct(2) exists, each with 6 elements
-printCell = cell(0,2);
-data.printCell = printCell;
 
 
 %--------------------------------------------------------------------------
@@ -171,10 +187,6 @@ for k = 1:size(data.template_list,1)
     
 end
 
-data.graph_refresh = 1;
-g = graph; %% Creating a graph
-resize(g,0);
-data.g = g;
 
 %grid on;
 %zoom on;
@@ -353,6 +365,10 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 
 save_settings('lastset',handles);
+filename = 'lastgraph.mat';
+pathname = [pwd filesep 'resources' filesep];
+saveGraph(hObject, eventdata, handles, pathname, filename);
+data = getappdata(handles.figure1,'appData');
 
 % Hint: delete(hObject) closes the figure
 %global g;
@@ -783,7 +799,7 @@ if filename
     
     if strcmp(ext, '.mat') 
         S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
-            'printCell','template_list','modus') ;
+            'printCell','template_list','modus','nodeColor') ;
         %S = load(file, 'data' );
         %data = S.data;
         %assignin('base','data',data);
@@ -796,6 +812,7 @@ if filename
         template_list = S.template_list;
         data.modus = S.modus;
         data.printCell = S.printCell;
+        data.nodeColor = S.nodeColor;
         g = graph(nverts);
         switch data.modus;
             case 'undirected'; dir = 0;
@@ -842,7 +859,6 @@ data.g = g;
 data.templates = templates;
 data.template_list = template_list;
 
-
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_dynamics(eventdata, handles);
@@ -855,43 +871,11 @@ function savegraphas_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%load application data
-data = getappdata(handles.figure1,'appData');
-g = data.g;
-templates = data.templates;
-template_list = data.template_list;
-modus = data.modus;
-printCell = data.printCell;
-
 [filename, pathname] = uiputfile( ...
-{'*.mat;','Graph/Network Files';
-   '*.mat','MAT-files [Prefered] (*.mat)'; ...
+{  '*.mat','MAT-files [Prefered] (*.mat)'; ...
    '*.*',  'All Files (*.*)';}, ...
    'Save');
-
-if filename
-     file = strcat(pathname, filename);
-     [pathname, filename, ext] = fileparts(file);
-     %save(g, file);
-
-     adj_matrix = double(matrix(g));
-     labs = get_label(g);
-     XY = getxy(g);
-     nverts = nv(g);
-     nedges = ne(g);
-
-     if strcmp(ext, '.mat')
-        %save(file, 'data' );
-        save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
-            'printCell','template_list','modus') ;
-        disp(strcat('Saved graph as binary .mat file ("', file,'")'));
-     elseif strcmp(ext, '.gr')
-        save(g, file);
-        disp(strcat('Saved graph as Matgraph file ("', file,'")'));
-     end
-end
- 
-refresh_graph(0, eventdata, handles,hObject);
+saveGraph(hObject, eventdata, handles, pathname, filename);
 
 % --------------------------------------------------------------------
 function aboutmtids_Callback(hObject, eventdata, handles)
@@ -2169,41 +2153,53 @@ function uipanel9_SelectionChangeFcn(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-printCell = data.printCell;
-
-%global modus;
-%global g;
-%global printCell;
 
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'button_undirected'
-        modus = 'undirected';
-        % Function, that creates a pop-up-menu, that says: "save current
-        % graph?"
-        resize(g,0);
-        printCell = cell(0,2);
+        data.modus = 'undirected';
+        qstring = {'Preserve vertices?','(Edges will be deleted in both cases)'};
+        choice = questdlg(qstring, ...
+            'Change of graph modus', ...
+            'Yes','No','No');
+        switch choice
+            case 'Yes';
+                % Only delete edges
+                elist = edges(data.g,1);
+                for ii = 1:size(elist,1)
+                    delete( data.g, elist(ii,1), elist(ii,2), 1 );
+                end
+            case 'No';
+                % Delete entire graph
+                resize(data.g,0);
+                data.printCell = cell(0,2);
+                data.nodeColor = cell(0,2);                
+        end     
         refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     case 'button_directed'
-        modus = 'directed';
-        % Function, that creates a pop-up-menu, that says: "interprete
-        % undirected graph as directed? (Yes / No) If no, save current
-        % graph?"
-        resize(g,0);
-        printCell = cell(0,2);
+        data.modus = 'directed';
+        qstring = {'Preserve vertices?','(Edges will be deleted in both cases)'};
+        choice = questdlg(qstring, ...
+            'Change of graph modus', ...
+            'Yes','No','No');
+        switch choice
+            case 'Yes';
+                elist = edges(data.g,0);
+                delete(data.g,elist);
+            case 'No';
+                resize(data.g,0);
+                data.printCell = cell(0,2);
+                data.nodeColor = cell(0,2);
+        end
         refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
     % Continue with more cases as necessary.
     otherwise
         % Code for when there is no match.
-        modus = 'undirected';
+        data.modus = 'undirected';
 end
 
 %store application data
-data.modus = modus;
-data.g = g;
-data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
 
 guidata(hObject, handles); 
@@ -2470,10 +2466,98 @@ setappdata(handles.figure1,'appData',data);
 
 function save_settings(filename,handles)
 data = getappdata(handles.figure1,'appData');
+save(filename, '-struct','data', 'modus', 'flag_showSimMod','plotAllOutput',...
+    'template_list');
 
-save(filename, '-struct','data', 'modus', 'flag_showSimMod','plotAllOutput','template_list');
 
+function loadGraphAtOpening(hObject, eventdata, handles)
+% hObject    handle to loadgraph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% load application data
+data = getappdata(handles.figure1,'appData');
+% g = data.g;
+template_list = data.template_list;
+
+% [filename, pathname] = uigetfile( ...
+% {'*.mat;','Graph/Network Files';
+%    '*.mat','MAT-files (*.mat)'; ...
+%     '*.*',  'All Files (*.*)'}, ...
+%    'Open');
+filename = 'lastgraph.mat';
+pathname = [pwd filesep 'resources' filesep];
+
+if filename       
+    file = strcat(pathname, filename);
+    [pathname, filename, ext] = fileparts(file);
+%     free(g);
+    
+    if strcmp(ext, '.mat') 
+        S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
+            'printCell','template_list','modus','nodeColor') ;
+        %S = load(file, 'data' );
+        %data = S.data;
+        %assignin('base','data',data);
+        
+        nverts = S.nverts;
+        adj_matrix = S.adj_matrix;
+        XY = S.XY;
+        labs = S.labs;
+        templates = S.templates;
+        template_list = S.template_list;
+        data.modus = S.modus;
+        data.printCell = S.printCell;
+        data.nodeColor = S.nodeColor;
+        g = graph(nverts);
+        switch data.modus;
+            case 'undirected'; dir = 0;
+            case 'directed'; dir = 1;
+        end
+
+        for i=1:nverts
+            label(g,i,labs{i});
+            for j=1:nverts
+              if adj_matrix(i,j)
+                 add(g,i,j,dir);
+                 adj_matrix(j,i) = 0;
+              end            
+            end
+        end
+
+        embed(g,XY);
+        
+%     elseif strcmp(ext, '.gr')
+%         load(g, file);
+%         templates = cell(0,1);
+%         % Temporary code...
+%         n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+%         for i=1:nv(g)
+%             templates{i,1}=template_list{n_template,1};
+%         end
+        
+    end
+end
+
+%set the uipanel according to stored value of "modus"
+switch data.modus
+    case 'directed'
+        set(handles.button_undirected,'Value', 0.0);
+        set(handles.button_directed,'Value', 1.0);
+    case 'undirected'
+        set(handles.button_undirected,'Value', 1.0);
+        set(handles.button_directed,'Value', 0.0);        
+end
+
+%store application data
+data.g = g;
+data.templates = templates;
+data.template_list = template_list;
+
+setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);
+% refresh_dynamics(eventdata, handles);
+% refresh_graph(0, eventdata, handles,hObject);
 
 % --------------------------------------------------------------------
 function set_node_color_Callback(hObject, eventdata, handles)
@@ -2567,7 +2651,44 @@ end
 close_system(filename);
 cd(oldFolder);
 
+% --------------------------------------------------------------------
+function saveGraph(hObject, eventdata, handles, pathname, filename)
+% hObject    handle to savegraphas (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+%load application data
+data = getappdata(handles.figure1,'appData');
+g = data.g;
+templates = data.templates;
+template_list = data.template_list;
+modus = data.modus;
+printCell = data.printCell;
+
+if filename
+     file = strcat(pathname, filename);
+     [pathname, filename, ext] = fileparts(file);
+     %save(g, file);
+
+     adj_matrix = double(matrix(g));
+     labs = get_label(g);
+     XY = getxy(g);
+     nverts = nv(g);
+     nedges = ne(g);
+     nodeColor = data.nodeColor;
+
+     if strcmp(ext, '.mat')
+        %save(file, 'data' );
+        save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
+            'printCell','template_list','modus','nodeColor') ;
+%         disp(strcat('Saved graph as binary .mat file ("', file,'")'));
+     elseif strcmp(ext, '.gr')
+        save(g, file);
+        disp(strcat('Saved graph as Matgraph file ("', file,'")'));
+     end
+end
+ 
+refresh_graph(0, eventdata, handles,hObject);
 
 
 

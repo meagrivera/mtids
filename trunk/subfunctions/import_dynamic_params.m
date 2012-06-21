@@ -174,6 +174,7 @@ posVectorPanel = get_panelPosition(widthTable, height);
 set(handles.uipanel1,'Parent',hObject,'Title','Collecting model parameters',...
         'Units','pixel','Position',posVectorPanel);
 
+set(handles.t,'Units','pixel');
 set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
@@ -253,48 +254,44 @@ newBlockNameIndex = listdlg('PromptString','Select a Block Name:',...
     'ListString',listOutString);
 dataOld=get(handles.t,'Data');
 dataNew = cell( size(dataOld,1)+1, size(dataOld,2) );
-dataNew(1:size(dataOld,1), 1:size(dataOld,2) ) = dataOld;
+dataNew(1:end-1,:) = dataOld;
 dataNew(end,1) = listOutString(newBlockNameIndex);
-cnames = get(handles.t,'ColumnName');
-[ widthTable columnwidth ] = get_tableColumnWidth(hObject,rownames,dataNew,cnames);
+dataNew(end,2) = {'UNNAMED'};
+dataNew(end,3) = {'UNNAMED'};
 
-% % Processing of new figure position
-% figureHeight = get_figureHeight( length(rownames) );
-% widthFigure = widthTable + 140;
-% oldFigurePosition = get(gcf,'Position');
-% newFigurePosition = [oldFigurePosition(1) oldFigurePosition(2) widthFigure figureHeight];
-% set(gcf,'Position',newFigurePosition);
-% 
-% % Processing of new panel position
-% set(handles.uipanel1,'Position',get_panelPosition(widthTable, figureHeight) );
+heightTableNew = 1.25*sizeChar2Pixel(handles.figure1, 'h', ( size(dataNew,1) + 2 ) );
+positionTable = get(handles.t,'Position');
+positionTableNew = positionTable;
+positionTableNew(4) = heightTableNew;
 
-% Processing of new table position
-oldPosVecTable = get(handles.t,'Position');
-heightTable = 1.25*sizeChar2Pixel(hObject, 'h', ( length(rownames) + 2 ) );
-posVecTable = [oldPosVecTable(1) oldPosVecTable(2) widthTable heightTable]; % [left, bottom, width, height]
-set(handles.t,'RowName',rownames,'Position',posVecTable,...
-    'ColumnWidth',columnwidth,'Data',dataNew);
+% Computing new positions
+% GUI soll nicht nach oben "raus wachsen"
+% newObjectPositions( positionTableNew,handles,eventdata );
+positionTable = get(handles.t,'Position');
+positionPanel = get(handles.uipanel1, 'Position');
+positionFigure = get(handles.figure1, 'Position');
 
-figResize(gcf,eventdata,handles);
+OffsetPanelTable = positionPanel(4) - positionTable(4);
+OffsetFigureTable = positionFigure(4) - positionTable(4);
 
 
-% oldPosVecTable = get(handles.t,'Position');
-% oldTableColumnwidth = get(handles.t,'ColumnWidth');
-% cnames = get(handles.t,'ColumnName');
-% heightTableNew = 1.25*sizeChar2Pixel(hObject, 'h', ( size(dataNew,1) + 2 ) );
-% widthTableNew = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,rownames )) )...
-%     + sum(cell2mat(columnwidth));
+heigthPanelNew = heightTableNew + OffsetPanelTable;
+heigthFigureNew = heightTableNew + OffsetFigureTable;
 
-% Processing of new panel position
 
-% Processing of new figure position
-% oldFigurePosition = get(hObject,'Position');
-% 1
+positionPanelNew = positionPanel;
+positionFigureNew = positionFigure;
 
-%   set(handles.t,'RowName',rownames,'Data',dataNew);%,'ColumnName',cnames,'Position',posVecTable,...
-%     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
-%     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
 
+positionPanelNew(4) = heigthPanelNew;
+positionFigureNew(4) = heigthFigureNew;
+
+set(handles.t,'RowName',rownames,'Data',dataNew,...
+    'Position',positionTableNew);
+set(handles.uipanel1,'Position',positionPanelNew);
+set(handles.figure1,'Position',positionFigureNew);
+
+figResize(handles.figure1,eventdata,handles);
 
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
@@ -362,23 +359,30 @@ end
 tableColumnWidth = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,listBlks )) )...
     + sum(cell2mat(columnwidth));
 
-function figureHeight = get_figureHeight( nrOfBlks )
-fixedHeight = 170;
-rowHeight = 25;
-figureHeight = fixedHeight + nrOfBlks*rowHeight;
+function newObjectPositions( positionTableNew,handles,eventdata )
+% Compute and set new layout positions for the figure
+positionTable = get(handles.t,'Position');
+positionPanel = get(handles.uipanel1, 'Position');
+positionFigure = get(handles.figure1, 'Position');
 
-function panelPosition = get_panelPosition(widthTable, heightFigure)
-figureFrames = get_figureFrames();
-panelPosition = ...
-    [figureFrames.side ...
-    figureFrames.bottom ...
-    widthTable + 30 ...
-    heightFigure-figureFrames.top]; % [left, bottom, width, height]
+OffsetPanelTable = positionPanel(4) - positionTable(4);
+OffsetFigureTable = positionFigure(4) - positionTable(4);
 
-function figureFrames = get_figureFrames()
-figureFrames.top = 30;
-figureFrames.bottom = 0.5*figureFrames.top;
-figureFrames.side = 0.5*figureFrames.top;
+heigthPanelNew = positionTableNew(4) + OffsetPanelTable;
+heigthFigureNew = positionTableNew(4) + OffsetFigureTable;
+
+positionPanelNew = positionPanel;
+positionFigureNew = positionFigure;
+
+positionPanelNew(4) = heigthPanelNew;
+positionFigureNew(4) = heigthFigureNew;
+
+set(handles.t,'RowName',rownames,'Data',dataNew,...
+    'Position',positionTableNew);
+set(handles.uipanel1,'Position',positionPanelNew);
+set(handles.figure1,'Position',positionFigureNew);
+
+figResize(handles.figure1,eventdata,handles);
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%
 
