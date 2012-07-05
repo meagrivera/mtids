@@ -22,7 +22,7 @@ function varargout = import_dynamic_params(varargin)
 
 % Edit the above text to modify the response to help import_dynamic_params
 
-% Last Modified by GUIDE v2.5 31-May-2012 12:57:32
+% Last Modified by GUIDE v2.5 29-Jun-2012 12:06:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,7 +73,7 @@ nrBlks = length(listBlks);
 
 topGap = 1/12*screenSize(4);
 left = screenSize(3)*0.1;
-height = get_figureHeight ( nrBlks );
+height = get_figureHeight( nrBlks );
 
 if screenSize(3)*0.9 > 760
     width = 760;
@@ -94,6 +94,7 @@ handles.t = uitable;
 
 % setting figure parameters manually
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
+save('posVecFigure','posVector');
 set(hObject,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
     'MenuBar','none','Resize','on','ResizeFcn',{@figResize,handles},'Color',...
     defaultBackground,'Units','pixels');%,'CloseRequestFcn',{@figure1_CloseRequestFcn,handles});
@@ -106,31 +107,8 @@ for i = 1:length(listBlks)
     % if there are well known block types here, we can provide some
     % initialisation of the table. If not, declare parameters names
     % otherwise
-    switch listBlks{i}
-        case 'Gain';
-            % check out the model explorer to get the correct parameter
-            % names
-            paramname = {'Gain'};
-            % read it out of the imported system
-            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
-        case 'Integrator';
-            paramname = {'InitialCondition'};
-            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
-        case 'Constant';
-            paramname = {'Value'};
-            paramvalue = {get_param([handles.sysname '/' listnms{i}],paramname{1})};
-        case 'StateSpace';
-            paramname = {'A';'B';'C';'D';'X0'};
-            paramvalue = cell( length(paramname) , 1);
-            for j = 1:length(paramname)
-                paramvalue{j} = get_param([handles.sysname '/' listnms{i}],paramname{j});
-            end
-        otherwise;
-            paramname = {''};
-%                 paramname = get_param([handles.sysname '/' listnms{i}],'DialogParameters')
-            paramvalue = {''};
-    end
-
+    [ paramname paramvalue ] = get_BlockParams( listBlks{i},handles,listnms{i} );
+    % Filling the data cells
     for j = 1:length(paramname)
         dat{i,2*j} = paramname{j};
         dat{i,1+2*j} = paramvalue{j};
@@ -168,32 +146,46 @@ posVector(3) = widthFigure;
 set(hObject,'Position',posVector);
 
 % parameters for panel, in which all other control elements are positioned
-posVectorPanel = get_panelPosition(widthTable, height);
-% posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
+% posVectorPanel = get_panelPosition(widthTable, height);
+posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
 
-set(handles.uipanel1,'Parent',hObject,'Title','Collecting model parameters',...
-        'Units','pixel','Position',posVectorPanel);
+save('posVecPanel','posVectorPanel');
+set(handles.uipanel1,'Parent',hObject,'Title',['Collecting parameters for model ''',...
+    handles.sysname char(39)],'Units','pixel','Position',posVectorPanel);
 
 set(handles.t,'Units','pixel');
+save('posVecTable');
 set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
-    'BackgroundColor',[1 1 1],'ColumnFormat',columnformat);
+    'BackgroundColor',[1 1 1],'ColumnFormat',columnformat,'CellSelectionCallback',...
+    {@table_CellSelectionCallback,handles},'CellEditCallback',...
+    {@table_CellEditCallbackFcn,handles});
 
 % parameters for pushbuttons
-horPosPushbutton1 = 0.15*widthFigure;
-posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 140 35];
+horPosPushbutton1 = 0.1*widthFigure;
+posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 120 35];
 set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
     'String','Add Block');
 
-horPosPushbutton2 = 0.55*widthFigure;
-posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 140 35];
-set(handles.pushbutton2,'Units','pixels','String','Cancel Import',...
+horPosPushbutton2 = 0.4*widthFigure;
+posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 120 35];
+set(handles.pushbutton2,'Units','pixels','String','Remove Block',...
                 'Position',posVectorCancelButton);
 
+horPosPushbutton3 = 0.7*widthFigure;
+posVectorAddParamButton = [horPosPushbutton3 1.7*bottomFrame 120 35];
+set(handles.pushbutton3,'Units','pixels','String','Add Parameter',...
+                'Position',posVectorAddParamButton);
+            
+horPosPushbutton4 = 0.4*widthFigure;
+posVectorDebugButton = [horPosPushbutton4 5.0*bottomFrame 120 35];
+set(handles.pushbutton4,'Units','pixels','String','DEBUGGING',...
+                'Position',posVectorDebugButton);            
+            
 % handles.handles.textBlockType = uicontrol('Style','text','FontWeight','demi','FontSize',10,...
 %     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
 %     'String','Block Type');
-            
+%             
 % "Dirty": Prompt Block Type above the row names
 % set(handles.textBlockType,'Style','text','FontWeight','demi','FontSize',10,...
 %     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
@@ -203,10 +195,9 @@ set(handles.pushbutton2,'Units','pixels','String','Cancel Import',...
 % Update handles structure
 guidata(hObject, handles);
 
+
 % UIWAIT makes import_dynamic_params wait for user response (see UIRESUME)
 %     uiwait(handles.figure1); 
-
-
 
 
 % --- Outputs from this function are returned to the command line.
@@ -220,7 +211,7 @@ function varargout = import_dynamic_params_OutputFcn(hObject, eventdata, handles
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in pushbutton1.
+% --- Executes on button press in pushbutton1. ADD BLOCK
 function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -230,7 +221,10 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 nrOfRows = length( get(handles.t,'RowName') );
 
 % ask for new row (=block) name
-newRowName = inputdlg({'New Block Type: '},'Add Row',1);
+newRowName = inputdlg({'New Block Type: '},'Add Block',1);
+if isempty( newRowName )
+    return;
+end
 % check if block type exists before adding the row to the table
 if isempty(find_system(handles.sysname,'BlockType',newRowName{1}));
     errordlg(['No Block of Type ',newRowName,' found!']);
@@ -255,50 +249,190 @@ newBlockNameIndex = listdlg('PromptString','Select a Block Name:',...
 dataOld=get(handles.t,'Data');
 dataNew = cell( size(dataOld,1)+1, size(dataOld,2) );
 dataNew(1:end-1,:) = dataOld;
+newBlockName = listOutString(newBlockNameIndex);
+[ paramname paramvalue ] = get_BlockParams( newRowName{:},handles,newBlockName{:} );
 dataNew(end,1) = listOutString(newBlockNameIndex);
-dataNew(end,2) = {'UNNAMED'};
-dataNew(end,3) = {'UNNAMED'};
-
-heightTableNew = 1.25*sizeChar2Pixel(handles.figure1, 'h', ( size(dataNew,1) + 2 ) );
-positionTable = get(handles.t,'Position');
-positionTableNew = positionTable;
-positionTableNew(4) = heightTableNew;
+for j = 1:length(paramname)
+    dataNew{end,2*j} = paramname{j};
+    dataNew{end,1+2*j} = paramvalue{j};
+end
 
 % Computing new positions
-% GUI soll nicht nach oben "raus wachsen"
-% newObjectPositions( positionTableNew,handles,eventdata );
-positionTable = get(handles.t,'Position');
-positionPanel = get(handles.uipanel1, 'Position');
-positionFigure = get(handles.figure1, 'Position');
-
-OffsetPanelTable = positionPanel(4) - positionTable(4);
-OffsetFigureTable = positionFigure(4) - positionTable(4);
+newTablePosition( handles,eventdata, rownames, dataNew );
 
 
-heigthPanelNew = heightTableNew + OffsetPanelTable;
-heigthFigureNew = heightTableNew + OffsetFigureTable;
-
-
-positionPanelNew = positionPanel;
-positionFigureNew = positionFigure;
-
-
-positionPanelNew(4) = heigthPanelNew;
-positionFigureNew(4) = heigthFigureNew;
-
-set(handles.t,'RowName',rownames,'Data',dataNew,...
-    'Position',positionTableNew);
-set(handles.uipanel1,'Position',positionPanelNew);
-set(handles.figure1,'Position',positionFigureNew);
-
-figResize(handles.figure1,eventdata,handles);
-
-% --- Executes on button press in pushbutton2.
+% --- Executes on button press in pushbutton2. REMOVE BLOCK
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Case handling: if no cells are selected
+try
+    if isempty(handles.selected_cells)
+        errordlg('No row(s) selected');
+        return
+    end
+    IDX = handles.selected_cells; % Contains indices of the selected cells
+    rowIDX = IDX(:,1);
+    % colIDX = IDX(:,2);
+    rownames = get(handles.t,'RowName');
+    % Perform request if cells should really be deleted
+    title = 'Sure? Delete block(s)?';
+    qstring = {'Should the following blocks be deleted?',...
+        rownames{rowIDX} };
+    choice = questdlg(qstring,title,'Yes','No','No');
+    switch choice
+        case 'Yes';
+            % adapt rownames
+            rownamesIDX = 1:1:length(rownames);
+            % delete rowname indices according to selected cells
+            for ii = 1:length(rowIDX)
+                rownamesIDX = rownamesIDX(rownamesIDX ~= rowIDX(ii));
+            end
+            rownamesNew = rownames( rownamesIDX );
+            % adapt table data
+            data=get(handles.t,'Data');
+            data = data( rownamesIDX,: );
+            % set new table
+            newTablePosition( handles,eventdata, rownamesNew, data );
+        case 'No';
+            % do nothing
+    end
+catch
+    errordlg('No row(s) selected');
+    return
+end
+
+% --- Executes on button press in pushbutton3. ADD PARAMETER
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Case handling: if no cells are selected
+
+if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
+    errordlg('No row(s) selected');
+    return
+end
+IDX = handles.selected_cells; % Contains indices of the selected cells
+rowIDX = IDX(:,1);
+% colIDX = IDX(:,2);
+if size( rowIDX,1 ) > 1
+    errordlg('Please choose only one block for adding a new parameter');
+    return
+end
+
+% Dialog if parameter out of list should be chosen or via free hand input
+% Construct a questdlg with three options
+choice = questdlg('How should the parameter be chosen?', ...
+ 'Add Parameter Menu', ...
+ 'Out of list','Free input','Cancel','Cancel');
+% Handle response
+switch choice
+    case 'Out of list'
+        % Show list with available parameters
+        cellData = get(handles.t,'Data');
+        allParams = get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
+        namesAllParams = fieldnames( allParams );
+        listsize = [1.4*sizeChar2Pixel(hObject,'w', 3+max(cellfun(@length,namesAllParams))) ...
+            1.3*sizeChar2Pixel(hObject,'h',size(namesAllParams,1)+1 )];
+        newParamIndex = listdlg('PromptString','Select a parameter:',...
+            'SelectionMode','single','ListSize',listsize,...
+            'ListString',namesAllParams);
+        if isempty( newParamIndex )
+            return;
+        end
+        answer(1) = namesAllParams( newParamIndex );
+%         rowname = get(handles.t,'RowName');
+%         prompt = {'Enter parameter value:'};
+%         title = ['New Parameter Name in Block ',rowname{rowIDX}];
+%         num_lines = 1;
+%         def = {'paramvalue'};
+%         answer(2) = inputdlg(prompt,title,num_lines,def);
+        paramvalue = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ],answer{1});
+    case 'Free input'
+        rowname = get(handles.t,'RowName');
+        % Perform request if parameter should be added
+        prompt = {'Enter parameter name:'};
+        title = ['Add new Parameter to Block ',rowname{rowIDX}];
+        num_lines = 1;
+        def = {'paramname'};
+        answer = inputdlg(prompt,title,num_lines,def);
+        % Check if parameter name really exists; if not, throw error
+        try
+            paramvalue = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ],answer{1});
+        catch
+            errordlg(['Parameter ',answer{1},' not found for block ',cellData{ rowIDX,1 },'!']);
+            return
+        end
+    case 'Cancel'
+        return;
+end
+
+
+if ~isempty( answer{1} ) && ~isempty( paramvalue )
+    cellData = get(handles.t,'Data');
+    % Determine next free position in cell data
+    % Check for length AND last empty cell
+    posLast = length( cellData( rowIDX,:));
+    while isempty( cellData{ rowIDX,posLast } )
+        posLast = posLast - 1;
+    end
+    posNew = posLast + 1;
+    cellData{ rowIDX, posNew } = answer{1};
+    cellData{ rowIDX, posNew+1 } = paramvalue;
+    % Adapt column names if necessary
+    cnames = get(handles.t,'ColumnName');
+    columneditable = get(handles.t,'ColumnEditable');
+    if length( cnames ) < posNew+1
+        %do something
+        cnames{posNew} = 'Parameter Name';
+        cnames{posNew + 1} = 'Value';
+        columneditable(posNew) = false;
+        columneditable(posNew + 1) = true;
+        set(handles.t,'ColumnName',cnames);
+        set(handles.t,'ColumnEditable',columneditable);
+    end
+    % Computing new positions
+    newTablePosition( handles,eventdata, get(handles.t,'RowName'), cellData );
+end
+
+
+% --- Executes on button press in pushbutton4. DEBUGGING
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% posVecTable_withGET = get(handles.t,'Position')
+% load('posVecTable')
+% posVecTable
+% posVecPanel_withGET = get(handles.uipanel1,'Position')
+% load('posVecPanel')
+% posVectorPanel
+% posVecFigure_withGET = get(handles.figure1,'Position')
+% load('posVecFigure')
+% posVector
+
+try
+    if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
+        errordlg('No row(s) selected');
+        return
+    end
+    IDX = handles.selected_cells; % Contains indices of the selected cells
+    rowIDX = IDX(:,1);
+    %     rowname = get(handles.t,'RowName');
+    cellData = get(handles.t,'Data');
+    % Getting access to a specific block in the model, whose name is contained
+    % in handls.sysname; the block name is contained in the first row
+    get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
+    
+    
+    
+    
+catch
+   % 
+end
 
 
 % --- Executes when user attempts to close figure1.
@@ -311,79 +445,85 @@ handles.OutputFlag = 1;
 guidata(hObject, handles);
 %     uiresume(handles.figure1);
 delete(hObject);
-
-
-% Figure resize function
-function figResize(src,evt,handles)
-     topFrame = 30;
-     fpos = get(src,'Position');
-     fposPanel = get(handles.uipanel1,'Position');
-     fposTable = get(handles.t,'Position');
-     set(handles.uipanel1,'Position',...
-      [fposPanel(1) fposPanel(2) fpos(3)-27 fpos(4)-20]);
-     bottomTable = fpos(4) - fposTable(4) - topFrame;
-     set(handles.t,'Position',...
-         [fposTable(1) bottomTable fpos(3)-45 fposTable(4) ]);
-     fposPushbutton1 = get(handles.pushbutton1,'Position');
-     fposPushbutton2 = get(handles.pushbutton2,'Position');
-     set(handles.pushbutton1,'Position',...
-         [0.15*fpos(3) fposPushbutton1(2) fposPushbutton1(3) fposPushbutton1(4)]);
-     set(handles.pushbutton2,'Position',...
-         [0.55*fpos(3) fposPushbutton2(2) fposPushbutton2(3) fposPushbutton2(4)]);
-%      posTextBlockTypeOld = get(handles.textBlockType,'Position');
-%      figureFrames = get_figureFrames();
-%      posTextBlockTypeNew = [posTextBlockTypeOld(1) ...
-%          fpos(4)-1.725*figureFrames.top ...
-%          posTextBlockTypeOld(3) ...
-%          posTextBlockTypeOld(4)];
-%      set(handles.textBlockType,'Position',posTextBlockTypeNew);
-
      
-function [ tableColumnWidth columnwidth ] = get_tableColumnWidth(hObject,listBlks,dat,cnames)
-charCounter = 0;
-columnwidth = cell( 1 ,size(dat,2) );
-for ii = 1: size(dat,2)
-    % get max length of a single column in table data
-    [val IDX] = max(cellfun(@length,dat(:,ii)));
-    % compare max length with column name and take maximum of it
-    if cellfun(@length,cnames(ii)) > val
-        % column name IS longer
-        charCounter = charCounter + cellfun(@length,cnames(ii));
-        columnwidth{ii} = 1.4*sizeChar2Pixel(hObject, 'w', cnames{ii} );
-    else
-        % longest name is within the table data
-        charCounter = charCounter + val;
-        columnwidth{ii} = 1.2*sizeChar2Pixel(hObject, 'w', dat{IDX,ii} );
-    end
+
+function height = get_figureHeight( nrBlks )
+% Set the height of the figure
+fixedHeight = 170;
+rowHeight = 25;
+height = fixedHeight + nrBlks*rowHeight;
+
+% --- Executes when selected cell(s) is changed
+function table_CellSelectionCallback(src,evt,handles)
+handles.selected_cells = evt.Indices;
+guidata(src, handles);
+
+% --- Executes when cell(s) is (are) edited
+function table_CellEditCallbackFcn(src,evt,handles)
+success = 0;
+% Get indices of edited cell
+IDX = evt.Indices;
+rowIDX = IDX(1);
+colIDX = IDX(2);
+% Get cell data
+cellData = get(handles.t,'Data');
+
+% Check in free hand input of parameter value is possible OR if there is a
+% list / enum value for this parameter
+
+paramCellArray = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ], 'DialogParameters');
+paramName = cellData{ rowIDX,colIDX-1 };
+paramField = getfield( paramCellArray, paramName );
+
+switch paramField.Type
+    case 'boolean';
+        % Value can be on / off
+        if ~any( strcmp( cellData{ rowIDX,colIDX }, {'on','off'} ))
+            success = 0;
+        else
+            success = 1;
+        end
+    case 'enum';
+        idxValue = find( strcmp( cellData{ rowIDX,colIDX }, paramField.Enum ));
+        if isempty( idxValue )
+            success = 0;
+        else
+            success = 1;
+        end
+    case 'string';
+        if isnan( str2num( cellData{ rowIDX,colIDX } ))
+            success = 0;
+        else
+            success = 1;
+        end
+        
+    otherwise;
+        
 end
-tableColumnWidth = sizeChar2Pixel(hObject, 'w', max(cellfun(@length,listBlks )) )...
-    + sum(cell2mat(columnwidth));
 
-function newObjectPositions( positionTableNew,handles,eventdata )
-% Compute and set new layout positions for the figure
-positionTable = get(handles.t,'Position');
-positionPanel = get(handles.uipanel1, 'Position');
-positionFigure = get(handles.figure1, 'Position');
+if success
+    
+else
+    errordlg('Parameter value not possible');
+    % Restore old data
+    cellData{ rowIDX,colIDX } = evt.PreviousData;
+    set(handles.t,'Data',cellData);
+end
 
-OffsetPanelTable = positionPanel(4) - positionTable(4);
-OffsetFigureTable = positionFigure(4) - positionTable(4);
 
-heigthPanelNew = positionTableNew(4) + OffsetPanelTable;
-heigthFigureNew = positionTableNew(4) + OffsetFigureTable;
 
-positionPanelNew = positionPanel;
-positionFigureNew = positionFigure;
+function geo_params = get_initialGeometry
+screenSize = get( 0, 'ScreenSize' );
+geo_params.topFrame = 30;
+geo_params.bottomFrame = 0.5*geo_params.topFrame;
+geo_params.sideFrame = 0.5*geo_params.topFrame;
+if screenSize(3)*0.9 > 760
+    geo_params.width = 760;
+else
+    geo_params.width = screenSize(3)*0.85;
+end
 
-positionPanelNew(4) = heigthPanelNew;
-positionFigureNew(4) = heigthFigureNew;
 
-set(handles.t,'RowName',rownames,'Data',dataNew,...
-    'Position',positionTableNew);
-set(handles.uipanel1,'Position',positionPanelNew);
-set(handles.figure1,'Position',positionFigureNew);
 
-figResize(handles.figure1,eventdata,handles);
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%
-
-
