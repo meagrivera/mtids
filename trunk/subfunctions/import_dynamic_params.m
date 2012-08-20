@@ -22,7 +22,7 @@ function varargout = import_dynamic_params(varargin)
 
 % Edit the above text to modify the response to help import_dynamic_params
 
-% Last Modified by GUIDE v2.5 29-Jun-2012 12:06:11
+% Last Modified by GUIDE v2.5 20-Aug-2012 09:56:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -177,10 +177,15 @@ posVectorAddParamButton = [horPosPushbutton3 1.7*bottomFrame 120 35];
 set(handles.pushbutton3,'Units','pixels','String','Add Parameter',...
                 'Position',posVectorAddParamButton);
             
-horPosPushbutton4 = 0.4*widthFigure;
+horPosPushbutton4 = 0.1*widthFigure;
 posVectorDebugButton = [horPosPushbutton4 5.0*bottomFrame 120 35];
-set(handles.pushbutton4,'Units','pixels','String','DEBUGGING',...
-                'Position',posVectorDebugButton);            
+set(handles.pushbutton4,'Units','pixels','String','Remove Parameter',...
+                'Position',posVectorDebugButton);
+            
+horPosPushbutton5 = 0.4*widthFigure;
+posVectorDebugButton = [horPosPushbutton5 5.0*bottomFrame 120 35];
+set(handles.pushbutton5,'Units','pixels','String','TESTING',...
+                'Position',posVectorDebugButton); 
             
 % handles.handles.textBlockType = uicontrol('Style','text','FontWeight','demi','FontSize',10,...
 %     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
@@ -226,7 +231,7 @@ if isempty( newRowName )
     return;
 end
 % check if block type exists before adding the row to the table
-if isempty(find_system(handles.sysname,'BlockType',newRowName{1}));
+if isempty( find_system(handles.sysname,'BlockType',newRowName{1}) )
     errordlg(['No Block of Type ',newRowName,' found!']);
     return;
 end
@@ -329,10 +334,10 @@ choice = questdlg('How should the parameter be chosen?', ...
  'Add Parameter Menu', ...
  'Out of list','Free input','Cancel','Cancel');
 % Handle response
+cellData = get(handles.t,'Data');
 switch choice
     case 'Out of list'
-        % Show list with available parameters
-        cellData = get(handles.t,'Data');
+        % Show list with available parameters        
         allParams = get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
         namesAllParams = fieldnames( allParams );
         listsize = [1.4*sizeChar2Pixel(hObject,'w', 3+max(cellfun(@length,namesAllParams))) ...
@@ -370,7 +375,6 @@ switch choice
         return;
 end
 
-
 if ~isempty( answer{1} ) && ~isempty( paramvalue )
     cellData = get(handles.t,'Data');
     % Determine next free position in cell data
@@ -399,20 +403,11 @@ if ~isempty( answer{1} ) && ~isempty( paramvalue )
 end
 
 
-% --- Executes on button press in pushbutton4. DEBUGGING
+% --- Executes on button press in pushbutton4. REMOVE_PARAMETER
 function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% posVecTable_withGET = get(handles.t,'Position')
-% load('posVecTable')
-% posVecTable
-% posVecPanel_withGET = get(handles.uipanel1,'Position')
-% load('posVecPanel')
-% posVectorPanel
-% posVecFigure_withGET = get(handles.figure1,'Position')
-% load('posVecFigure')
-% posVector
 
 try
     if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
@@ -420,18 +415,141 @@ try
         return
     end
     IDX = handles.selected_cells; % Contains indices of the selected cells
-    rowIDX = IDX(:,1);
+    if size( IDX,1 ) > 1
+       errordlg('Please select only one cell to delete parameter values');
+       return
+    end
+    rowIDX = IDX(1);
+    colIDX = IDX(2);
     %     rowname = get(handles.t,'RowName');
     cellData = get(handles.t,'Data');
     % Getting access to a specific block in the model, whose name is contained
-    % in handls.sysname; the block name is contained in the first row
-    get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
-    
-    
-    
+    % in handles.sysname; the block name is contained in the first row
+%     get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
+    if colIDX == 1
+        pushbutton2_Callback(hObject, eventdata, handles);
+    end
+    % determine colIDXs to delete entries    
+    if rem( colIDX,2 ) == 0
+        colIDX = [colIDX colIDX+1];
+    else
+        colIDX = [colIDX-1 colIDX];
+    end
+    if or( isempty( cellData{rowIDX,colIDX(1)} ),...
+            isempty( cellData{rowIDX,colIDX(2)} ))
+        errordlg('No parameter contained in selected cell(s)');
+        return
+    else
+        cellData{rowIDX,colIDX(1)} = [];
+        cellData{rowIDX,colIDX(2)} = [];
+        % Check if table contains empty cols; if yes, remove them
+        if all( all( cellfun(@isempty, cellData(:,colIDX(1:2)) ) ) )
+            if size( cellData,2 ) > colIDX(2)
+                % shift all cols on the RHS to the left by 2
+                cellData(:,colIDX(1):end-2) = cellData(:,colIDX(2)+1:end);
+                cellData = cellData(:,1:end-2);
+            else
+                % simply remove these two cols
+                cellData = cellData(:,1:colIDX(1)-1);               
+            end
+        end
+        colNames = get(handles.t,'ColumnName');
+        dimCellCols = size( cellData,2 );
+        colNames = colNames(1:dimCellCols);
+        set(handles.t,'Data',cellData,'ColumnName',colNames);
+    end
     
 catch
    % 
+end
+
+% --- Executes on button press in pushbutton5. TESTING
+function pushbutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Checking if there is always a parameter value stored
+misses = 0;
+notValid = 0;
+Data = get(handles.t,'Data');
+for ii = 1:size( Data,1 )
+    for jj = 2:2:size( Data,2 )
+        paramExists = ~isempty( Data{ii,jj} );
+        valueExists = ~isempty( Data{ii,jj+1} );
+        if paramExists && ~valueExists
+            misses = misses + 1;     
+        end
+        if paramExists && valueExists
+            isValid = isValidData( handles, ii, jj+1 );
+            if ~isValid
+                notValid = notValid + 1;
+            end
+        end
+    end
+end
+if misses
+   errordlg(['At least one parameter values is missing.'...
+       'Please add it (them).']);
+   return
+end
+if notValid
+   errordlg(['At least one parameter value is not feasible '...
+       'for its specific block type. Please correct it (them).']);
+   return
+end
+
+% Collecting all parameters and writing it into a copy of the Model
+
+save_system( handles.sysname, [pwd filesep 'templates' filesep handles.sysname '_tempCopy']);
+Data = get(handles.t,'Data');
+for ii = 1:size( Data,1 )
+    for jj = 2:2:size( Data,2 )
+        paramExists = ~isempty( Data{ii,jj} );
+        valueExists = ~isempty( Data{ii,jj+1} );        
+        % store numerical values into temporal copy of model
+        if paramExists && valueExists
+            set_param([handles.sysname '_tempCopy/' Data{ii,1} ], Data{ii,jj}, Data{ii,jj+1} );
+        end      
+    end
+end
+
+% Perform simulation with model
+try
+    simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1');
+    if ~isempty( simout )
+        title = 'Testing suceeded';
+        qstring = {'Variable and explicit model simulation test suceeded.',...
+            'Should the template import to MTIDS be finished?' };
+        choice = questdlg(qstring,title,'Yes','No','No');
+        switch choice
+            case 'Yes';
+                % close model without saving
+                bdclose;
+                delete([pwd filesep 'templates' filesep handles.sysname '_tempCopy.mdl']);
+                % copy model to \import
+                % ask for new filename
+                prompt = {'Enter name of imported template:'};
+                dlg_title = 'Name of imported template';
+                num_lines = 1;
+                def = {handles.sysname};
+                answer = inputdlg(prompt,dlg_title,num_lines,def);
+                load_system( [pwd filesep 'templates' filesep handles.sysname] );
+                save_system( handles.sysname, [pwd filesep 'templates' filesep ...
+                    'import' filesep answer{1} '_CHECKED']);
+                bdclose
+                % copy also date=>use existing table
+                
+                % close figure
+                
+            case 'No';
+                
+        end
+    end
+catch ME_testSimulation
+    errordlg(['The explicit test simulation of the simulink model failed. '...
+        'Maybe this message will help you finding the error: '...
+        ME_testSimulation.message ]);
 end
 
 
@@ -460,50 +578,14 @@ guidata(src, handles);
 
 % --- Executes when cell(s) is (are) edited
 function table_CellEditCallbackFcn(src,evt,handles)
-success = 0;
+% success = 0;
 % Get indices of edited cell
 IDX = evt.Indices;
 rowIDX = IDX(1);
 colIDX = IDX(2);
-% Get cell data
 cellData = get(handles.t,'Data');
-
-% Check in free hand input of parameter value is possible OR if there is a
-% list / enum value for this parameter
-
-paramCellArray = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ], 'DialogParameters');
-paramName = cellData{ rowIDX,colIDX-1 };
-paramField = getfield( paramCellArray, paramName );
-
-switch paramField.Type
-    case 'boolean';
-        % Value can be on / off
-        if ~any( strcmp( cellData{ rowIDX,colIDX }, {'on','off'} ))
-            success = 0;
-        else
-            success = 1;
-        end
-    case 'enum';
-        idxValue = find( strcmp( cellData{ rowIDX,colIDX }, paramField.Enum ));
-        if isempty( idxValue )
-            success = 0;
-        else
-            success = 1;
-        end
-    case 'string';
-        if isnan( str2num( cellData{ rowIDX,colIDX } ))
-            success = 0;
-        else
-            success = 1;
-        end
-        
-    otherwise;
-        
-end
-
-if success
-    
-else
+success = isValidData( handles, rowIDX, colIDX );
+if ~success
     errordlg('Parameter value not possible');
     % Restore old data
     cellData{ rowIDX,colIDX } = evt.PreviousData;
