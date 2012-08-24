@@ -202,7 +202,7 @@ guidata(hObject, handles);
 
 
 % UIWAIT makes import_dynamic_params wait for user response (see UIRESUME)
-%     uiwait(handles.figure1); 
+uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -213,7 +213,7 @@ function varargout = import_dynamic_params_OutputFcn(hObject, eventdata, handles
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+varargout{1} = 1; %handles.output;
 
 
 % --- Executes on button press in pushbutton1. ADD BLOCK
@@ -500,8 +500,7 @@ if notValid
 end
 
 % Collecting all parameters and writing it into a copy of the Model
-
-save_system( handles.sysname, [pwd filesep 'templates' filesep handles.sysname '_tempCopy']);
+save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy']);
 Data = get(handles.t,'Data');
 for ii = 1:size( Data,1 )
     for jj = 2:2:size( Data,2 )
@@ -515,41 +514,63 @@ for ii = 1:size( Data,1 )
 end
 
 % Perform simulation with model
+choice = 'No';
 try
-    simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1');
+    simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
+        'SaveState','on','StateSaveName','xoutNew');
     if ~isempty( simout )
         title = 'Testing suceeded';
-        qstring = {'Variable and explicit model simulation test suceeded.',...
+        qstring = {'Variable check and explicit model simulation test suceeded.',...
             'Should the template import to MTIDS be finished?' };
         choice = questdlg(qstring,title,'Yes','No','No');
-        switch choice
-            case 'Yes';
-                % close model without saving
-                bdclose;
-                delete([pwd filesep 'templates' filesep handles.sysname '_tempCopy.mdl']);
-                % copy model to \import
-                % ask for new filename
-                prompt = {'Enter name of imported template:'};
-                dlg_title = 'Name of imported template';
-                num_lines = 1;
-                def = {handles.sysname};
-                answer = inputdlg(prompt,dlg_title,num_lines,def);
-                load_system( [pwd filesep 'templates' filesep handles.sysname] );
-                save_system( handles.sysname, [pwd filesep 'templates' filesep ...
-                    'import' filesep answer{1} '_CHECKED']);
-                bdclose
-                % copy also date=>use existing table
-                
-                % close figure
-                
-            case 'No';
-                
-        end
     end
 catch ME_testSimulation
     errordlg(['The explicit test simulation of the simulink model failed. '...
         'Maybe this message will help you finding the error: '...
         ME_testSimulation.message ]);
+end
+bdclose;
+delete([pwd filesep handles.sysname '_tempCopy.mdl']);
+load_system( [pwd filesep handles.sysname] );
+if strcmp(choice,'Yes')
+    % copy model to \import
+    % ask for new filename
+    prompt = {'Enter name of imported template:'};
+    dlg_title = 'Name of imported template';
+    num_lines = 1;
+    def = {handles.sysname};
+    answer = inputdlg(prompt,dlg_title,num_lines,def);
+    pathname = [pwd filesep 'import' filesep];
+    save_system( handles.sysname, [pathname answer{1} '_CHECKED']);    
+    % copy also date=>use existing table
+    flagEqual = 0;
+    if exist([pathname answer{1} '_paramValues.mat'],'file')
+        load([pathname answer{1} '_paramValues']);
+        % check if the paramSet still exists        
+        eval(['idx = length( ' answer{1} '_paramValues);']);
+        for ii = 1:idx
+            cmd2 = ['flagEqual = isequal(Data,' answer{1} ...
+                '_paramValues(' num2str(ii) ').set);'];
+            eval( cmd2 );
+            if flagEqual == 1
+%                msgbox('Parameter set still exists');
+               break 
+            end
+        end
+        if flagEqual == 0
+            cmd1 = [answer{1} '_paramValues(' num2str(idx+1) ').set = '...
+                'Data;'];
+            eval( cmd1 );
+        end
+    else
+        eval([answer{1} '_paramValues.set = Data;']);       
+    end
+    if flagEqual == 0
+        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
+    end
+    % close figure
+    bdclose;
+    figure1_CloseRequestFcn(handles.figure1, eventdata, handles);
 end
 
 
@@ -591,7 +612,6 @@ if ~success
     cellData{ rowIDX,colIDX } = evt.PreviousData;
     set(handles.t,'Data',cellData);
 end
-
 
 
 function geo_params = get_initialGeometry
