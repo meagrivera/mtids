@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 29-May-2012 10:01:55
+% Last Modified by GUIDE v2.5 24-Aug-2012 10:21:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -83,6 +83,7 @@ addpath(strcat(pwd,'/tools/matgraph'));                     % Folder with a copy
 addpath(strcat(pwd,'/templates'));                          % Folder for Simulink templates
 addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs and functions
 addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with various import/export functions
+addpath(strcat(pwd,'/subfunctions/mtids_main'));
 addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
 
 %initialize graph
@@ -132,9 +133,13 @@ switch flagLoadSet
         data.flag_showSimMod = 1;
         data.template_list = cell(0,3);
         data.modus = 'undirected';
-        data.template_list{1,1} = 'LTI';
-        data.template_list{1,2} = [245 245 245]/255; % node face color for template
-        data.template_list{1,3} = [0 0 0]; % node edge color for template
+%         % template_list-data for debugging/testing-purpose
+%         data.template_list{1,1} = 'LTI';
+%         data.template_list{1,2} = [245 245 245]/255; % node face color for template
+%         data.template_list{1,3} = [0 0 0]; % node edge color for template
+%         paramValues(1).set = cell( 1,3 ); % param values
+%         data.template_list{1,4} = paramValues;
+%         data.template_list{1,5} = 1; % is active (or not), logical
         data.templates = cell(0,1);
         data.printCell = cell(0,2);
         data.nodeColor = cell(0,2);
@@ -142,6 +147,8 @@ switch flagLoadSet
         resize(g,0);
         data.g = g;
 end
+
+data.template_list = readImportedTemplates(data.template_list);
 
 data.move_index = 0;
 data.expSucc = 0;
@@ -183,11 +190,6 @@ elseif data.flag_showSimMod == 1
     set(handles.showSimMod,'Checked','on')
 end
 
-for k = 1:size(data.template_list,1)
-    
-end
-
-
 %grid on;
 %zoom on;
 set(handles.numberview,'Check','on');
@@ -200,6 +202,7 @@ set(handles.text16,'String', 'Graph density:');
 setappdata(hObject,'appData',data);
 
 refresh_dynamics(eventdata, handles);
+refresh_valueSet(handles);
 refresh_graph(0, eventdata, handles,hObject);
 % Choose default command line output for mtids
 handles.output = hObject;
@@ -292,10 +295,11 @@ if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'
 end
 
 label(g, new_vertex, lab_string); 
-
-n_template = get(handles.selector_dynamic, 'Value'); % Get number of template name from list
-
+% Get number of template name from list
+n_template = get(handles.selector_dynamic, 'Value'); 
+n_valueSet = get(handles.selector_valueSet, 'Value');
 templates{nv(g),1} = template_list{n_template,1};
+templates{nv(g),2} = n_valueSet;
 %{
 switch templates{nv(g),1};
     case 'LTI'; col = [245 245 245]/255;
@@ -1674,29 +1678,36 @@ function selector_dynamic_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-template_list = cell(0,1);
-template_list{1,1} = 'LTI';
-
-drop_string = cell(0,0);
-
-[ny, nx] = size(template_list);
-
-
-for i=1:ny
-    if i == 1
-        drop_string = template_list{1,1};
-    elseif i == ny
-        drop_string = strcat(drop_string,'|',template_list{i,1});
-    else        
-        drop_string = strcat(drop_string,'|',template_list{i,1});
-    end
-end
-
-set(hObject, 'String', drop_string);
+% refresh_dynamics(eventdata, handles);
+% data = getappdata(handles.figure1,'appData');
+% template_list = cell(0,1);
+% template_list{1,1} = 'LTI';
+% drop_string = cell(0,0);
+% [ny, nx] = size(data.template_list);
+% for i=1:ny
+%     if i == 1
+%         drop_string = data.template_list{1,1};
+%     elseif i == ny
+%         drop_string = strcat(drop_string,'|',data.template_list{i,1});
+%     else        
+%         drop_string = strcat(drop_string,'|',data.template_list{i,1});
+%     end
+% end
+% set(hObject, 'String', drop_string);
 %set(handles.selector_dynamic, 'String', drop_string);
 %guidata(hObject, handles);
 
+% --- Executes during object creation, after setting all properties.
+function selector_valueSet_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to selector_valueSet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 
 
 function refresh_dynamics(eventdata, handles)
@@ -1704,14 +1715,8 @@ function refresh_dynamics(eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
 template_list = data.template_list;
-
-%global g;
-%global template_list;
-
 [ny, nx] = size(template_list);
-
 for i=1:ny
     if i == 1
         drop_string = template_list{1,1};
@@ -1721,12 +1726,41 @@ for i=1:ny
         drop_string = strcat(drop_string,'|',template_list{i,1});
     end
 end
-
 set(handles.selector_dynamic, 'String', drop_string);
+refresh_valueSet(handles);
 %guidata(hObject, handles);
 %no data storage needed, because this can be seen as a "void" function.
  
+function refresh_valueSet(handles)
+% This function refreshes the graph window
 
+%load application data
+data = getappdata(handles.figure1,'appData');
+
+%Check which template is chosen
+idxDynSelector = get(handles.selector_dynamic,'Value');
+stringDynSelector = get(handles.selector_dynamic,'String');
+
+% Choose param struct
+temp = ~cellfun( @isempty, regexp( data.template_list(:,1), ...
+    regexp( stringDynSelector(idxDynSelector,:),'\w+','match') ) );
+nrOfParamSets = length( data.template_list{temp,4} );
+
+% template_list = data.template_list;
+% [ny, nx] = size(data.template_list);
+drop_string = cell( nrOfParamSets,1 );
+for i=1:nrOfParamSets
+    drop_string{i} = ['Value set ' num2str(i)];
+%     if i == 1
+%         drop_string = {['Set: ' num2str(i)]}; %template_list{1,1};
+%     else
+%         drop_string = strcat(drop_string,'|', ['Set: ' num2str(i)]);
+%     end
+end
+
+set(handles.selector_valueSet, 'String', drop_string);
+%guidata(hObject, handles);
+%no data storage needed, because this can be seen as a "void" function.
 
 % --- Executes on button press in circular_graph.
 function circular_graph_Callback(hObject, eventdata, handles)
@@ -2605,7 +2639,6 @@ function template_import_wizard_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-
 % next step: load template invisibly from mdl-file
 oldFolder = cd(strcat(pwd,'/templates'));
 
@@ -2616,8 +2649,12 @@ oldFolder = cd(strcat(pwd,'/templates'));
    'MultiSelect', 'on');
 
 % disp(['Filename: ' filename]);
-load_system(filename);
-
+if all( filename ~= 0 )
+    load_system(filename);
+else
+    cd(oldFolder);
+    return
+end
 
 % check this file for unset parameter values - this is a prestep to the
 % dialog of asking for all needed parameters for this template
@@ -2640,7 +2677,6 @@ listnms( ~cellfun( @isempty, regexp( listblks,...
 listblks( ~cellfun( @isempty, regexp( listblks,...
     'Inport|Outport|Sum|Mux|Math|Scope|ToWorkspace','start')) ) = [];
 
-
 % create new figure and place found blocks in table environment
 if ~cellfun( @isempty, listblks )
     argout = import_dynamic_params(listblks,listnms,filename);
@@ -2650,6 +2686,10 @@ end
 
 close_system(filename);
 cd(oldFolder);
+data = getappdata(handles.figure1,'appData');
+data.template_list = readImportedTemplates(data.template_list);
+setappdata(handles.figure1,'appData',data);
+refresh_dynamics(eventdata, handles);
 
 % --------------------------------------------------------------------
 function saveGraph(hObject, eventdata, handles, pathname, filename)
@@ -2692,21 +2732,9 @@ refresh_graph(0, eventdata, handles,hObject);
 
 
 
-
-
-
-
-
-
-
-
-%%%%%%%%%
-
-
 %--------------------------------------------------------------------------
 %-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
 %--------------------------------------------------------------------------
-
 
 % --- Executes on button press in radiobutton7.
 function radiobutton7_Callback(hObject, eventdata, handles)
@@ -2818,9 +2846,9 @@ function checkbox2_Callback(hObject, eventdata, handles)
 function figure1_KeyPressFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  structure with the following fields (see FIGURE)
-%	Key: name of the key that was pressed, in lower case
-%	Character: character interpretation of the key(s) that was pressed
-%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+%       Key: name of the key that was pressed, in lower case
+%       Character: character interpretation of the key(s) that was pressed
+%       Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
 
 % --------------------------------------------------------------------
@@ -2887,10 +2915,17 @@ function number_of_nodes_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of number_of_nodes as text
 %        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
 
+% --- Executes on selection change in selector_valueSet.
+function selector_valueSet_Callback(hObject, eventdata, handles)
+% hObject    handle to selector_valueSet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns selector_valueSet contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from selector_valueSet
 
 
-
-
+%%%%%%%%%
 
 
 

@@ -69,31 +69,30 @@ for i=1:nodeNumber
     if strcmp(templates{i},'LTI')
         templates{i} = strcat('Copy_of_',templates{i});
     end
-    load_system(templates{i}); % Loads an invisible Simulink model
+    invSysName = [ templates{i,1} '_CHECKED']; 
+    load_system( invSysName ); % Loads an invisible Simulink model
+    % Choose the valueSet according to the stored entries in templates
+    idxOfTemplate = ~cellfun( @isempty, ...
+        regexp( templateList(:,1), templates{i,1} ) );
+    
+    valueSet = templateList{idxOfTemplate,4};
+    valueSet = valueSet( templates{i,2} ).set;
+    
+    for jj = 1:size(valueSet,1)
+       for kk = 2:2:size( valueSet(jj,:),2 )
+           if ~isempty( valueSet(jj,kk) )
+               set_param( [invSysName '/' valueSet{jj,1}], ...
+                   valueSet{jj,kk},valueSet{jj,kk+1} );
+           end
+       end
+    end   
     
     nodeConnections= find(A(:,i)); % Find in-degree
     
-    templateModify2(length(nodeConnections),nodeConnections,templates{i});
+    templateModify2(length(nodeConnections),nodeConnections,invSysName);
     %Numbers the To Workspace blocks, which have been added to every
     %template
-    set_param( [ templates{i} '/To Workspace'], 'VariableName', ['nodeout' num2str(i)] );
-    %The next lines are modifying the templates variables, so that they can
-    %be differed from each other node.
-    %problem is, that 
-    if strcmp(templates{i},'Copy_of_LTI') 
-        set_param( [ templates{i} '/State-Space'],...
-            'A', ['A' num2str(i)],...
-            'B', ['B' num2str(i)],...
-            'C', ['C' num2str(i)],...
-            'D', ['D' num2str(i)],...
-            'X0', ['x0' num2str(i) '+var' num2str(i) '*rand(1)'] );
-    elseif strcmp(templates{i},'kuramoto')
-        set_param( [ templates{i} '/Gain'], 'Gain',['K' num2str(i) '/' 'N' num2str(i)]);
-        set_param( [ templates{i} '/angle speed'], 'Value', ['omega' num2str(i)] ) ;
-        set_param( [ templates{i} '/rho0'], 'Value', ['rho0' num2str(i) '+rand(1)*var' num2str(i)] ) ;
-        set_param( [ templates{i} '/Threshold'], 'Value', ['threshold' num2str(i)] ) ;
-    end
-    
+    set_param( [ invSysName '/To Workspace'], 'VariableName', ['nodeout' num2str(i)] );
    
     if x(i)>0
         nodePosAngle= atan(-y(i)/x(i)) ;
@@ -107,10 +106,10 @@ for i=1:nodeNumber
 
     %modify template of subsystem call a function
 
-    Simulink.BlockDiagram.copyContentsToSubSystem(templates{i}, [sys ['/' labs{i}]]);
+    Simulink.BlockDiagram.copyContentsToSubSystem(invSysName, [sys ['/' labs{i}]]);
 
     %close template
-    close_system(templates{i},0)
+    close_system(invSysName,0)
 
 end
 
