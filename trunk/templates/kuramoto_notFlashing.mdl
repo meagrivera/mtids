@@ -12,11 +12,10 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
-      SignalName	      "Nodeout"
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.30"
+    ComputedModelVersion    "1.31"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -38,9 +37,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "trommsdorff"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Aug 20 12:30:49 2012"
-  RTWModifiedTimeStamp	  267366645
-  ModelVersionFormat	  "1.%<AutoIncrement:30>"
+  LastModifiedDate	  "Mon Aug 27 09:19:33 2012"
+  RTWModifiedTimeStamp	  267959962
+  ModelVersionFormat	  "1.%<AutoIncrement:31>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -803,7 +802,7 @@ Model {
   }
   System {
     Name		    "kuramoto_notFlashing"
-    Location		    [345, 259, 1343, 776]
+    Location		    [1847, 228, 2845, 745]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -869,12 +868,6 @@ Model {
       Ports		      [2, 1]
       Position		      [580, 152, 610, 183]
       InitialConditionSource  "external"
-      Port {
-	PortNumber		1
-	Name			"Nodeout"
-	RTWStorageClass		"Auto"
-	DataLoggingNameMode	"SignalName"
-      }
     }
     Block {
       BlockType		      Math
@@ -1060,8 +1053,6 @@ Model {
       DstPort		      1
     }
     Line {
-      Name		      "Nodeout"
-      Labels		      [0, 0]
       SrcBlock		      "Integrator"
       SrcPort		      1
       Points		      [25, 0; 0, -10]

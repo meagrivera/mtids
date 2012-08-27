@@ -73,6 +73,7 @@ nrBlks = length(listBlks);
 
 topGap = 1/12*screenSize(4);
 left = screenSize(3)*0.1;
+% Compute height only depending on the table
 height = get_figureHeight( nrBlks );
 
 if screenSize(3)*0.9 > 760
@@ -87,9 +88,14 @@ posVector = [left bottom width height]; %do this dynamically % [left, bottom, wi
 
 %% Creating Figure
 
-% creatint elements
+% creating elements
 handles.uipanel1 = uipanel;
 handles.t = uitable;
+handles.PanelTextInputSpecs = uipanel;
+handles.TextField1InputSpecs = uicontrol;
+handles.TextField2InputSpecs = uicontrol;
+handles.TextField1Descrptn = uicontrol;
+handles.TextField2Descrptn = uicontrol;
 % handles.textBlockType = uicontrol;
 
 % setting figure parameters manually
@@ -161,7 +167,7 @@ set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
     {@table_CellSelectionCallback,handles},'CellEditCallback',...
     {@table_CellEditCallbackFcn,handles});
 
-% parameters for pushbuttons
+%% parameters for pushbuttons
 horPosPushbutton1 = 0.1*widthFigure;
 posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 120 35];
 set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
@@ -183,10 +189,38 @@ set(handles.pushbutton4,'Units','pixels','String','Remove Parameter',...
                 'Position',posVectorDebugButton);
             
 horPosPushbutton5 = 0.4*widthFigure;
-posVectorDebugButton = [horPosPushbutton5 5.0*bottomFrame 120 35];
+posVectorDebugButton1 = [horPosPushbutton5 5.0*bottomFrame 120 35];
 set(handles.pushbutton5,'Units','pixels','String','TESTING',...
-                'Position',posVectorDebugButton); 
+                'Position',posVectorDebugButton1); 
+
+%% Text fields for input specifications
+% Position of design elements
+posVecPanelTextInputSpecs = [2*sideFrame 5.5*bottomFrame+35 width-2*sideFrame 50]; % [left, bottom, width, height]
+% posVecTextField1InputSpecs ('Style': edit)
+posVecTextField1InputSpecs = [170 8 80 22];
+% posVecTextField2InputSpecs ('Style': edit)
+posVecTextField2InputSpecs = [370 8 80 22];
+% posVecTextField1Descrptn ('Style': text )
+posVecTextField1Descrptn = [20 3 150 30];
+% posVecTextField2Descrptn ('Style': text )
+posVecTextField2Descrptn = [270 3 100 30];
             
+% Setting design elements
+set(handles.PanelTextInputSpecs,'Parent',hObject,'Title','Input Specifications',...
+    'Units','pixel','Position',posVecPanelTextInputSpecs);
+set(handles.TextField1InputSpecs,'Parent',handles.PanelTextInputSpecs,...
+    'Style','edit','Units','pixel','Position',posVecTextField1InputSpecs,...
+    'BackgroundColor',[1 1 1],'Callback',{@TextField1InputSpecs_Callback,handles});
+TextField1Descrptn_String = 'Parameters depending on number of external inputs';
+set(handles.TextField1Descrptn,'Style','text','Parent',handles.PanelTextInputSpecs,...
+    'Units','pixel','Position',posVecTextField1Descrptn,'String',TextField1Descrptn_String);
+TextField2Descrptn_String = 'Thereof number of internal inputs';
+set(handles.TextField2Descrptn,'Style','text','Parent',handles.PanelTextInputSpecs,...
+    'Units','pixel','Position',posVecTextField2Descrptn,'String',TextField2Descrptn_String);
+set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,...
+    'Style','edit','Units','pixel','Position',posVecTextField2InputSpecs,...
+    'BackgroundColor',[1 1 1],'Callback',{@TextField2InputSpecs_Callback,handles});
+
 % handles.handles.textBlockType = uicontrol('Style','text','FontWeight','demi','FontSize',10,...
 %     'Position',[45 height-1.725*topFrame 100 18],... % [left, bottom, width, height]
 %     'String','Block Type');
@@ -516,8 +550,13 @@ end
 % Perform simulation with model
 choice = 'No';
 try
+    % Adapt "/Mux" according to specified inputs
+    
     simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
-        'SaveState','on','StateSaveName','xoutNew');
+        'SaveState','on','StateSaveName','xoutNew','SaveOutput','on',...
+        'OutputSaveName','youtNew');
+    dimension.states = size( simout.get('xoutNew'),2 );
+    dimension.outputs = size( simout.get('youtNew'),2 );
     if ~isempty( simout )
         title = 'Testing suceeded';
         qstring = {'Variable check and explicit model simulation test suceeded.',...
@@ -566,7 +605,8 @@ if strcmp(choice,'Yes')
         eval([answer{1} '_paramValues.set = Data;']);       
     end
     if flagEqual == 0
-        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
+        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues'],...
+            dimension);
     end
     % close figure
     bdclose;
@@ -588,7 +628,7 @@ delete(hObject);
 
 function height = get_figureHeight( nrBlks )
 % Set the height of the figure
-fixedHeight = 170;
+fixedHeight = 170 + 60; % + 60 due to new elements
 rowHeight = 25;
 height = fixedHeight + nrBlks*rowHeight;
 
