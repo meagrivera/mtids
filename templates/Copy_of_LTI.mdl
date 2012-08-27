@@ -12,20 +12,12 @@ Model {
     Outport {
       BusObject		      ""
       BusOutputAsStruct	      "off"
-      SignalName	      "Nodeout"
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.8"
+    ComputedModelVersion    "1.11"
     NumModelReferences	    0
-    NumTestPointedSignals   1
-    TestPointedSignal {
-      SignalName	      "Nodeout"
-      FullBlockPath	      "Copy_of_LTI/State-Space"
-      LogSignal		      1
-      MaxPoints		      5000
-      Decimation	      2
-    }
+    NumTestPointedSignals   0
   }
   SavedCharacterEncoding  "UTF-8"
   SaveDefaultBlockParams  on
@@ -42,11 +34,11 @@ Model {
   Creator		  "chepeadan"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "Tigervilla"
+  LastModifiedBy	  "trommsdorff"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sat Jan 14 13:45:33 2012"
-  RTWModifiedTimeStamp	  248449528
-  ModelVersionFormat	  "1.%<AutoIncrement:8>"
+  LastModifiedDate	  "Mon Aug 27 09:55:24 2012"
+  RTWModifiedTimeStamp	  267958545
+  ModelVersionFormat	  "1.%<AutoIncrement:11>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -738,7 +730,7 @@ Model {
   }
   System {
     Name		    "Copy_of_LTI"
-    Location		    [70, 200, 650, 460]
+    Location		    [2735, 336, 3315, 596]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -752,12 +744,12 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "6"
+    SIDHighWatermark	    "8"
     Block {
       BlockType		      Inport
       Name		      "In1"
       SID		      "1"
-      Position		      [90, 113, 120, 127]
+      Position		      [60, 103, 90, 117]
       IconDisplay	      "Port number"
     }
     Block {
@@ -765,7 +757,7 @@ Model {
       Name		      "Mux"
       SID		      "2"
       Ports		      [2, 1]
-      Position		      [205, 101, 210, 139]
+      Position		      [175, 101, 180, 139]
       ShowName		      off
       Inputs		      "2"
       DisplayOption	      "bar"
@@ -800,13 +792,6 @@ Model {
       C			      "C"
       D			      "D"
       X0		      "x0+var*rand(1)"
-      Port {
-	PortNumber		1
-	Name			"Nodeout"
-	RTWStorageClass		"Auto"
-	DataLogging		on
-	DataLoggingNameMode	"SignalName"
-      }
     }
     Block {
       BlockType		      ToWorkspace
@@ -828,31 +813,17 @@ Model {
       IconDisplay	      "Port number"
     }
     Line {
-      SrcBlock		      "Mux"
-      SrcPort		      1
-      DstBlock		      "State-Space"
-      DstPort		      1
-    }
-    Line {
       SrcBlock		      "In1"
       SrcPort		      1
-      Points		      [65, 0]
       DstBlock		      "Mux"
       DstPort		      1
     }
     Line {
-      Name		      "Nodeout"
-      Labels		      [0, 0]
       SrcBlock		      "State-Space"
       SrcPort		      1
-      Points		      [35, 0]
+      Points		      [40, 0]
       Branch {
 	DstBlock		"Out1"
-	DstPort			1
-      }
-      Branch {
-	Points			[0, -50]
-	DstBlock		"Scope1"
 	DstPort			1
       }
       Branch {
@@ -860,6 +831,17 @@ Model {
 	DstBlock		"To Workspace"
 	DstPort			1
       }
+      Branch {
+	Points			[0, -50]
+	DstBlock		"Scope1"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      DstBlock		      "State-Space"
+      DstPort		      1
     }
   }
 }
