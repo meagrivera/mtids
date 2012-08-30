@@ -36,7 +36,7 @@ listblks( ~cellfun( @isempty, regexp( listblks,...
 
 % create new figure and place found blocks in table environment
 if ~cellfun( @isempty, listblks )
-    argout = import_dynamic_params(listblks,listnms,filename);
+    argout = import_dynamic_params(listblks,listnms,filename,pathname);
 else
     % errordlg('No editable blocks ');
 end

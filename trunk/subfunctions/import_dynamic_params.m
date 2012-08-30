@@ -60,6 +60,7 @@ handles.output = hObject;
 listBlks = varargin{1};
 listnms = varargin{2};
 filename = varargin{3};
+handles.pathname = varargin{4};
 m=regexp( filename, '\.', 'split','once');
 handles.sysname = m{1};
 
@@ -155,12 +156,12 @@ set(hObject,'Position',posVector);
 % posVectorPanel = get_panelPosition(widthTable, height);
 posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
 
-save('posVecPanel','posVectorPanel');
+% save('posVecPanel','posVectorPanel');
 set(handles.uipanel1,'Parent',hObject,'Title',['Collecting parameters for model ''',...
     handles.sysname char(39)],'Units','pixel','Position',posVectorPanel);
 
 set(handles.t,'Units','pixel');
-save('posVecTable');
+% save('posVecTable');
 set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
     'ColumnWidth',columnwidth,'Data',dat, 'ColumnEditable', columneditable,...
     'BackgroundColor',[1 1 1],'ColumnFormat',columnformat,'CellSelectionCallback',...
@@ -217,7 +218,7 @@ set(handles.TextField1Descrptn,'Style','text','Parent',handles.PanelTextInputSpe
 TextField2Descrptn_String = 'Thereof number of internal inputs';
 set(handles.TextField2Descrptn,'Style','text','Parent',handles.PanelTextInputSpecs,...
     'Units','pixel','Position',posVecTextField2Descrptn,'String',TextField2Descrptn_String);
-set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,...
+set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,'String','0',...
     'Style','edit','Units','pixel','Position',posVecTextField2InputSpecs,...
     'BackgroundColor',[1 1 1],'Callback',{@TextField2InputSpecs_Callback,handles});
 
@@ -551,7 +552,15 @@ end
 choice = 'No';
 try
     % Adapt "/Mux" according to specified inputs
+    Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
+    noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
+    if ~( isempty( Vars ) && isempty( noOfIntInputs ) )
+        noOfInputsToMux = length( getNumericValue( Vars{1},handles ) ) - noOfIntInputs;
+        set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
+            num2str(noOfInputsToMux) );
+    end
     
+    % set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
     simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
         'SaveState','on','StateSaveName','xoutNew','SaveOutput','on',...
         'OutputSaveName','youtNew');
@@ -570,7 +579,7 @@ catch ME_testSimulation
 end
 bdclose;
 delete([pwd filesep handles.sysname '_tempCopy.mdl']);
-load_system( [pwd filesep handles.sysname] );
+load_system( [handles.pathname handles.sysname] );
 if strcmp(choice,'Yes')
     % copy model to \import
     % ask for new filename
@@ -583,6 +592,9 @@ if strcmp(choice,'Yes')
     save_system( handles.sysname, [pathname answer{1} '_CHECKED']);    
     % copy also date=>use existing table
     flagEqual = 0;
+    % Prepare storing of input specifications
+    inputSpec.Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
+    inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
     if exist([pathname answer{1} '_paramValues.mat'],'file')
         load([pathname answer{1} '_paramValues']);
         % check if the paramSet still exists        
@@ -599,14 +611,21 @@ if strcmp(choice,'Yes')
         if flagEqual == 0
             cmd1 = [answer{1} '_paramValues(' num2str(idx+1) ').set = '...
                 'Data;'];
+            cmd3 = [answer{1} '_paramValues(' num2str(idx+1) ').dimension = '...
+                'dimension;'];
+            cmd4 = [answer{1} '_paramValues(' num2str(idx+1) ').inputSpec = '...
+                'inputSpec;'];
             eval( cmd1 );
+            eval( cmd3 );
+            eval( cmd4 );
         end
     else
-        eval([answer{1} '_paramValues.set = Data;']);       
+        eval([answer{1} '_paramValues.set = Data;']);
+        eval([answer{1} '_paramValues.dimension = dimension;']);
+        eval([answer{1} '_paramValues.inputSpec = inputSpec;']);
     end
     if flagEqual == 0
-        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues'],...
-            dimension);
+        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
     end
     % close figure
     bdclose;

@@ -2679,12 +2679,12 @@ listblks( ~cellfun( @isempty, regexp( listblks,...
 
 % create new figure and place found blocks in table environment
 if ~cellfun( @isempty, listblks )
-    argout = import_dynamic_params(listblks,listnms,filename);
+    argout = import_dynamic_params(listblks,listnms,filename,pathname);
 else
     % errordlg('No blocks with editable');
 end
 
-close_system(filename);
+close_system(filename,0);
 cd(oldFolder);
 data = getappdata(handles.figure1,'appData');
 data.template_list = readImportedTemplates(data.template_list);
