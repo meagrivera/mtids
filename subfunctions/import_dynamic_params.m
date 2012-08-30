@@ -101,7 +101,7 @@ handles.TextField2Descrptn = uicontrol;
 
 % setting figure parameters manually
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
-save('posVecFigure','posVector');
+% save('posVecFigure','posVector');
 set(hObject,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
     'MenuBar','none','Resize','on','ResizeFcn',{@figResize,handles},'Color',...
     defaultBackground,'Units','pixels');%,'CloseRequestFcn',{@figure1_CloseRequestFcn,handles});
