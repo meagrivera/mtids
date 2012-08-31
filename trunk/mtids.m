@@ -202,7 +202,7 @@ set(handles.text16,'String', 'Graph density:');
 setappdata(hObject,'appData',data);
 
 refresh_dynamics(eventdata, handles);
-refresh_valueSet(handles);
+% refresh_valueSet(handles);
 refresh_graph(0, eventdata, handles,hObject);
 % Choose default command line output for mtids
 handles.output = hObject;
@@ -1697,6 +1697,16 @@ end
 %set(handles.selector_dynamic, 'String', drop_string);
 %guidata(hObject, handles);
 
+% --- Executes on selection change in selector_dynamic.
+function selector_dynamic_Callback(hObject, eventdata, handles)
+% hObject    handle to selector_dynamic (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from selector_dynamic
+%get(hObject,'Value')
+refresh_valueSet(handles);
+
 % --- Executes during object creation, after setting all properties.
 function selector_valueSet_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selector_valueSet (see GCBO)
@@ -1751,14 +1761,9 @@ nrOfParamSets = length( data.template_list{temp,4} );
 drop_string = cell( nrOfParamSets,1 );
 for i=1:nrOfParamSets
     drop_string{i} = ['Value set ' num2str(i)];
-%     if i == 1
-%         drop_string = {['Set: ' num2str(i)]}; %template_list{1,1};
-%     else
-%         drop_string = strcat(drop_string,'|', ['Set: ' num2str(i)]);
-%     end
 end
 
-set(handles.selector_valueSet, 'String', drop_string);
+set(handles.selector_valueSet, 'String', drop_string,'Value',1);
 %guidata(hObject, handles);
 %no data storage needed, because this can be seen as a "void" function.
 
@@ -2130,18 +2135,12 @@ g = data.g;
 templates = data.templates;
 template_list = data.template_list;
 
-%global g;
-%global templates;
-%global template_list;
-%global expSucc;
-
 disp('Export mode 2');
 A  = double(matrix(g));
 
 % Makes the graph a circle
 rmxy(g);
 embed(g);
-%
 
 xy = getxy(g);
 
@@ -2756,15 +2755,6 @@ function fromnode_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of fromnode as text
 %        str2double(get(hObject,'String')) returns contents of fromnode as a double
-
-% --- Executes on selection change in selector_dynamic.
-function selector_dynamic_Callback(hObject, eventdata, handles)
-% hObject    handle to selector_dynamic (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from selector_dynamic
-%get(hObject,'Value')
 
 % --------------------------------------------------------------------
 function Untitled_10_Callback(hObject, eventdata, handles)
