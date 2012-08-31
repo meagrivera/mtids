@@ -7,7 +7,7 @@ handles     = varargin{2};
 
 % Search for variable names in the table
 Data = get(handles.t,'Data');
-
+flag = 0;
 for ii = 1:size( Data,1 )
     for jj = 2:2:size( Data,2 )
         paramExists = ~isempty( Data{ii,jj} );
@@ -15,7 +15,11 @@ for ii = 1:size( Data,1 )
         if paramExists && valueExists
             if isequal( var, Data{ii,jj} )
                 varargout{1} = str2num( Data{ii,jj+1} );
+                flag = 1;
             end
         end
     end
+end
+if ~flag
+    varargout{1} = [];
 end

@@ -554,7 +554,7 @@ try
     % Adapt "/Mux" according to specified inputs
     Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
     noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
-    if ~( isempty( Vars ) && isempty( noOfIntInputs ) )
+    if ~isempty( Vars{:} ) && noOfIntInputs ~= 0
         noOfInputsToMux = length( getNumericValue( Vars{1},handles ) ) - noOfIntInputs;
         set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
             num2str(noOfInputsToMux) );
@@ -574,7 +574,7 @@ try
     end
 catch ME_testSimulation
     errordlg(['The explicit test simulation of the simulink model failed. '...
-        'Maybe this message will help you finding the error: '...
+        'Maybe this message will help you to find the error: '...
         ME_testSimulation.message ]);
 end
 bdclose;
