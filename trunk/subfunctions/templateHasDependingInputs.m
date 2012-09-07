@@ -11,10 +11,10 @@ function varargout = templateHasDependingInputs( varargin )
 %
 
 nodeIDX     = varargin{1};
-data        = varargin{2};
+template    = varargin{2};
 
-tempIDX = getTemplateIDX( nodeIDX,data );
-paramIDX = getParamIDX(nodeIDX,data);
+% tempIDX = getTemplateIDX( nodeIDX,data );
+% paramIDX = getParamIDX(nodeIDX,data);
 
 varargout{1} = any( ~cellfun( @isempty, ...
-    data.template_list{tempIDX,4}(paramIDX).inputSpec.Vars ) );
+    template{ 1,2 }.inputSpec.Vars ) );

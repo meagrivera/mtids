@@ -276,7 +276,7 @@ labs = get_label(g);
 lab_string =  get(handles.newnodelabel,'String');
 
 % check if any of the existing names is equal as the new one
-if any(strncmp(lab_string,labs,length(lab_string))) % strmatch(lab_string,labs,'exact') % strmatch is scalar in contrast to strcmp
+if any(strncmp(lab_string,labs,length(lab_string))) 
     n = find(strcmp(lab_string,labs)); % find index of node, which
     % contains the used name
     if n
@@ -299,7 +299,7 @@ label(g, new_vertex, lab_string);
 n_template = get(handles.selector_dynamic, 'Value'); 
 n_valueSet = get(handles.selector_valueSet, 'Value');
 templates{nv(g),1} = template_list{n_template,1};
-templates{nv(g),2} = n_valueSet;
+templates{nv(g),2} = template_list{n_template,4}(n_valueSet);
 %{
 switch templates{nv(g),1};
     case 'LTI'; col = [245 245 245]/255;
@@ -1881,7 +1881,8 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
     % Opens node modification dialog
    [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector,plotParams] = ...
-       edit_node(I, get_label(g,I), templates{I}, template_list, g(I), printCell(I,:) );
+       edit_node(I, get_label(g,I), templates(I,:), template_list, g(I), printCell(I,:),...
+       matrix( g ) );
 
    %DEBUGGING
    %{
@@ -2737,7 +2738,7 @@ function check = systemConsistencyTest( handles )
 % This function checks the system, consisting of the graph and its
 % numerical dynamic parameters, which are hidden inside the node templates,
 % for consistency
-% INPUT:    none - system date will be loaded directly using the structure
+% INPUT:    none - system data will be loaded directly using the structure
 % 'data'
 % OUTPUT:   (1) 1 for no errors found, 0 for errors found
 data = getappdata(handles.figure1,'appData');
@@ -2750,10 +2751,10 @@ if nv(data.g) ~= 0
     if any( ~isCorrect )
         check = 0;
         % Display errors
-        disp('Node number     error type: dimension mismatch    not found uniquely');
+        disp('Errors occured for node number...');
         for kk = 1:nv(data.g)
             if ~isCorrect(kk)
-                disp([num2str(kk)    error{kk}.DimMismatch    error{kk}.ParamNotFound ]);             
+                disp([num2str(kk) ', concerning the variables: ' error{kk}.DimMismatch   ]);
             end
         end
     else
