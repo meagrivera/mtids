@@ -12,11 +12,20 @@ function varargout = checkNodeInput( varargin )
 %                   error.DimMismatch: cell with names of input depending
 %                   variables, which do not obtain the correct dimension
 
-nodeIDX = varargin{1};
-data = varargin{2};
+if size( varargin,2 ) == 2
+    nodeIDX = varargin{1};
+    data = varargin{2};
+    mat = matrix( data.g );
+    template = data.templates(nodeIDX,:);
+end
+if size( varargin,2 ) == 3
+    nodeIDX = varargin{1};
+    mat = varargin{2};
+    template = varargin{3};
+end
 
 % sparse admittanz matrix
-[row col ~]= find( matrix( data.g ) );
+[row col ~] = find( mat );
 
 % indices of node, which have incoming edges to the current node
 incomingIDX = row( col == nodeIDX );
@@ -24,23 +33,21 @@ incomingIDX = row( col == nodeIDX );
 % check out size of incoming signal
 signalSize = zeros( length(incomingIDX),1 );
 for ii = 1:length( incomingIDX )
-    % index of template
-    tempIDX = getTemplateIDX( incomingIDX(ii), data);
-    % index of param value set
-    paramIDX = getParamIDX(incomingIDX(ii),data);
     % access to output dimension
-    signalSize(ii) = data.template_list{ tempIDX,4 }(paramIDX).dimension.outputs;
+    signalSize(ii) = template{ 1,2 }.dimension.outputs;
 end
     
-if templateHasDependingInputs( nodeIDX,data )
+if templateHasDependingInputs( nodeIDX,template )
+%    if ~isempty( incomingIDX )
+       
    % Get cell with strings of depending variables
-   Vars = data.template_list{tempIDX,4}(paramIDX).inputSpec.Vars;
+   Vars = template{1,2}.inputSpec.Vars;
    errorDimMismatch = zeros( length( Vars ),1 );
    errorParamNotFound = zeros( length( Vars ),1 );
-   noOfIntInputs = data.template_list{tempIDX,4}(paramIDX).inputSpec.noOfIntInputs;
+   noOfIntInputs = template{1,2}.inputSpec.noOfIntInputs;
    % Text 2nd dimension of all depending input parameters
    for ii = 1:length( Vars )
-       tempSet = data.template_list{tempIDX,4}(paramIDX).set;
+       tempSet = template{1,2}.set;
        [tempRow tempCol] = find( strcmp(tempSet,Vars{ii}) );
        if length(tempRow) > 1 || length(tempCol) > 1
            % Error: there is more than one parameter with name Vars{ii},

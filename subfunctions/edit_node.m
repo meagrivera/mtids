@@ -22,7 +22,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 03-May-2012 10:43:26
+% Last Modified by GUIDE v2.5 07-Sep-2012 09:51:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,6 +61,7 @@ data.template = varargin{3};
 data.template_list = varargin{4};
 data.neighbours = varargin{5};
 data.printCell = varargin{6};
+data.matrix = varargin{7};
 data.plotParamsOld = data.printCell{:,2};
 %Minimum length of print vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
@@ -81,15 +82,15 @@ for i=1:ny
 end
 
 %set(handles.selector_dynamics, 'String', data.drop_string);
-n1 = find(strcmp(data.template, data.template_list));
-set(handles.selector_dynamics, 'String', data.template); % Get number of template name from list
+n1 = find(strcmp(data.template{1}, data.template_list));
+set(handles.selector_dynamics, 'String', data.template{1}); % Get number of template name from list
 set(handles.number_node, 'String', num2str(data.nodenumber));
 set(handles.edit_label, 'String', data.nodelabel);
 set(handles.connections, 'String', matrix_to_string(data.neighbours));
 
 %Initialize figure with information contained in printCell
 temp = data.printCell{1,1};
-data.intStates = length(temp)-1;
+data.intStates = data.template{1,2}.dimension.states;
 set(handles.edit_intStates,'String',num2str(data.intStates));
 if temp(1) == 1
     data.flagCheck1 = 1;
@@ -741,11 +742,42 @@ switch choice
         data = getappdata(handles.figure1,'appData');
 end
 
-
-
 setappdata(handles.figure1,'appData',data);
 
 
+% --- Executes on button press in push_editParams.
+function push_editParams_Callback(hObject, eventdata, handles)
+% hObject    handle to push_editParams (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+try
+    newTemplate = edit_paramValues(data.template);
+    flagOkay = 1;
+catch
+    flagOkay = 0;
+end
+if flagOkay
+    data.template = newTemplate;
+end
+
+% --- Executes on button press in push_consistency.
+function push_consistency_Callback(hObject, eventdata, handles) %#ok<*INUSL>
+% hObject    handle to push_consistency (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+[isCorrect error]=checkNodeInput(data.nodenumber,data.matrix,data.template);
+if ~isCorrect
+    errStrg = [];
+    for kk = 1:length( error.DimMismatch )
+        errStrg = [errStrg ', ' error.DimMismatch{kk}];
+    end
+    errStrg = errStrg(3:end);
+    disp(['For node ' num2str(data.nodenumber) ': Input variable(s) "' errStrg '" has (have) not correct dimension(s).']);
+else
+    disp(['For node ' num2str(data.nodenumber) ': Input variables are consistent.']);
+end
 
 
-%%%
+%%%%%
