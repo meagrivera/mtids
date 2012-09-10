@@ -22,7 +22,7 @@ function varargout = edit_paramValues(varargin)
 
 % Edit the above text to modify the response to help edit_paramValues
 
-% Last Modified by GUIDE v2.5 07-Sep-2012 11:48:56
+% Last Modified by GUIDE v2.5 10-Sep-2012 10:26:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -53,18 +53,19 @@ function edit_paramValues_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to edit_paramValues (see VARARGIN)
 
 data.template = varargin{1};
-handles.sysname = data.template{1,1};
-load_system(handles.sysname);
+handles.sysname = [data.template{1,1} '_CHECKED'];
+handles.pathname = [pwd filesep 'templates' filesep 'import' filesep];
+load_system( [handles.pathname handles.sysname] );
 % Standard: output will not be saved
 handles.flagOutput = 0;
 % Initialise ui elements
-set(handles.edit_noOfIntInputs,'String', ...
+set(handles.TextField2InputSpecs,'String', ...
     num2str( data.template{1,2}.inputSpec.noOfIntInputs ) );
 inputStrg = [];
 for kk = 1:length( data.template{1,2}.inputSpec.Vars )
     inputStrg = [inputStrg ', ' data.template{1,2}.inputSpec.Vars{kk}]; %#ok<AGROW>
 end
-set(handles.edit_inputParams,'String', inputStrg(3:end) );
+set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
 
 tableRowNames = data.template{1,2}.set(:,1);
 tableData = data.template{1,2}.set;
@@ -105,29 +106,25 @@ function varargout = edit_paramValues_OutputFcn(hObject, eventdata, handles)  %#
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
 if handles.flagOutput == 1
-    set = get(handles.t,'Data');
-%     dimension = 
-    inputSpec.Vars = regexp( get(handles.edit_inputParams,'String'), ',|\s','split');
-    inputSpec.noOfIntInputs = str2double(get(handles.edit_noOfIntInputs,'string'));
-    varargout{1} = {handles.sysname, get(handles.t,'Data')};
+    varargout{1} = data.new_template;
 else
     varargout{1} = data.template;
 end
 delete(hObject);
 
 
-function edit_inputParams_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_inputParams (see GCBO)
+function TextField1InputSpecs_Callback(hObject, eventdata, handles)
+% hObject    handle to TextField1InputSpecs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_inputParams as text
-%        str2double(get(hObject,'String')) returns contents of edit_inputParams as a double
+% Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text
+%        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit_inputParams_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_inputParams (see GCBO)
+function TextField1InputSpecs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextField1InputSpecs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -138,18 +135,18 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-function edit_noOfIntInputs_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_noOfIntInputs (see GCBO)
+function TextField2InputSpecs_Callback(hObject, eventdata, handles)
+% hObject    handle to TextField2InputSpecs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit_noOfIntInputs as text
-%        str2double(get(hObject,'String')) returns contents of edit_noOfIntInputs as a double
+% Hints: get(hObject,'String') returns contents of TextField2InputSpecs as text
+%        str2double(get(hObject,'String')) returns contents of TextField2InputSpecs as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit_noOfIntInputs_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit_noOfIntInputs (see GCBO)
+function TextField2InputSpecs_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextField2InputSpecs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -194,9 +191,27 @@ function pushbutton_save_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUS
 % hObject    handle to pushbutton_save (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.flagOutput = 1;
-guidata(hObject, handles);
-uiresume(handles.figure1);
+data = getappdata(handles.figure1,'appData');
+
+% If succ == 'yes', test simulation with param value set was successfull
+[dimension succ ME_testSimulation] = testingValueSet( handles,0 );
+if strcmp( succ, 'yes' )
+    inputSpec.Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
+    inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
+    data.new_template{1,1} = data.template{1,1};
+    data.new_template{1,2}.set = get(handles.t,'Data');
+    data.new_template{1,2}.dimension = dimension;
+    data.new_template{1,2}.inputSpec = inputSpec;
+    handles.flagOutput = 1;
+    setappdata(handles.figure1,'appData',data);
+    guidata(hObject, handles);
+    uiresume(handles.figure1);
+else
+    errordlg(['The test using the new system parameters failed. '...
+        'Maybe this message will help you to find the error: '...
+        ME_testSimulation.message ]);
+end
+
 
 % --- Executes on button press in pushbutton_cancel.
 function pushbutton_cancel_Callback(hObject, eventdata, handles)

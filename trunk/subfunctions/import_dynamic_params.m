@@ -504,82 +504,9 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Checking if there is always a parameter value stored
-misses = 0;
-notValid = 0;
+[dimension choice ] = testingValueSet( handles,1 );
 Data = get(handles.t,'Data');
-for ii = 1:size( Data,1 )
-    for jj = 2:2:size( Data,2 )
-        paramExists = ~isempty( Data{ii,jj} );
-        valueExists = ~isempty( Data{ii,jj+1} );
-        if paramExists && ~valueExists
-            misses = misses + 1;     
-        end
-        if paramExists && valueExists
-            isValid = isValidData( handles, ii, jj+1 );
-            if ~isValid
-                notValid = notValid + 1;
-            end
-        end
-    end
-end
-if misses
-   errordlg(['At least one parameter values is missing.'...
-       'Please add it (them).']);
-   return
-end
-if notValid
-   errordlg(['At least one parameter value is not feasible '...
-       'for its specific block type. Please correct it (them).']);
-   return
-end
-
-% Collecting all parameters and writing it into a copy of the Model
-save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy']);
-Data = get(handles.t,'Data');
-for ii = 1:size( Data,1 )
-    for jj = 2:2:size( Data,2 )
-        paramExists = ~isempty( Data{ii,jj} );
-        valueExists = ~isempty( Data{ii,jj+1} );        
-        % store numerical values into temporal copy of model
-        if paramExists && valueExists
-            set_param([handles.sysname '_tempCopy/' Data{ii,1} ], Data{ii,jj}, Data{ii,jj+1} );
-        end      
-    end
-end
-
-% Perform simulation with model
-choice = 'No';
-try
-    % Adapt "/Mux" according to specified inputs
-    Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
-    noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
-    if ~isempty( Vars{:} ) && noOfIntInputs ~= 0
-        noOfInputsToMux = length( getNumericValue( Vars{1},handles ) ) - noOfIntInputs;
-        set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
-            num2str(noOfInputsToMux) );
-    end
-    
-    % set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
-    simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
-        'SaveState','on','StateSaveName','xoutNew','SaveOutput','on',...
-        'OutputSaveName','youtNew');
-    dimension.states = size( simout.get('xoutNew'),2 );
-    dimension.outputs = size( simout.get('youtNew'),2 );
-    if ~isempty( simout )
-        title = 'Testing suceeded';
-        qstring = {'Variable check and explicit model simulation test suceeded.',...
-            'Should the template import to MTIDS be finished?' };
-        choice = questdlg(qstring,title,'Yes','No','No');
-    end
-catch ME_testSimulation
-    errordlg(['The explicit test simulation of the simulink model failed. '...
-        'Maybe this message will help you to find the error: '...
-        ME_testSimulation.message ]);
-end
-bdclose;
-delete([pwd filesep handles.sysname '_tempCopy.mdl']);
-load_system( [handles.pathname handles.sysname] );
+% In case of being successful, store parameters
 if strcmp(choice,'Yes')
     % copy model to \import
     % ask for new filename
@@ -589,14 +516,16 @@ if strcmp(choice,'Yes')
     def = {handles.sysname};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
     pathname = [pwd filesep 'import' filesep];
-    save_system( handles.sysname, [pathname answer{1} '_CHECKED']);    
-    % copy also date=>use existing table
+    if ~exist( [answer{1} '_CHECKED'],'file')
+        save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+    end
+    % copy also data=>use existing table
     flagEqual = 0;
     % Prepare storing of input specifications
     inputSpec.Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
-    if exist([pathname answer{1} '_paramValues.mat'],'file')
-        load([pathname answer{1} '_paramValues']);
+    if exist([answer{1} '_paramValues.mat'],'file')
+        load([answer{1} '_paramValues.mat']);
         % check if the paramSet still exists        
         eval(['idx = length( ' answer{1} '_paramValues);']);
         for ii = 1:idx
@@ -684,7 +613,12 @@ else
     geo_params.width = screenSize(3)*0.85;
 end
 
-
+function TextField2InputSpecs_Callback( src,evt,handles )
+temp = str2double( get(handles.TextField2InputSpecs,'String'));
+if isnan( temp ) || rem(temp,1) || temp < 0
+    errordlg('Number of internal inputs must be a non-negative integer value');
+    set(handles.TextField2InputSpecs,'String',num2str(0));
+end
 
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%

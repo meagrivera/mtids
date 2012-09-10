@@ -72,11 +72,12 @@ for i=1:nodeNumber
     invSysName = [ templates{i,1} '_CHECKED']; 
     load_system( invSysName ); % Loads an invisible Simulink model
     % Choose the valueSet according to the stored entries in templates
-    idxOfTemplate = ~cellfun( @isempty, ...
-        regexp( templateList(:,1), templates{i,1} ) );
-    
-    valueSet = templateList{idxOfTemplate,4};
-    valueSet = valueSet( templates{i,2} ).set;
+%     idxOfTemplate = ~cellfun( @isempty, ...
+%         regexp( templateList(:,1), templates{i,1} ) );
+%     
+%     valueSet = templateList{idxOfTemplate,4};
+%     valueSet = valueSet( templates{i,2} ).set;
+    valueSet = templates{i,2}.set;
     
     for jj = 1:size(valueSet,1)
        for kk = 2:2:size( valueSet(jj,:),2 )
