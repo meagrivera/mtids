@@ -1849,12 +1849,12 @@ radius = d_x.*d_x+d_y.*d_y;
 [C,I] = min(radius);
 if C <= 0.05; % Hardcoded value!
  
-if strcmp(get(handles.output, 'SelectionType'), 'normal')
- %  disp(I);
-    move_index = I;
-    botton_down = 1;
-    start_index = 0; % Reset starting index
-
+    if strcmp(get(handles.output, 'SelectionType'), 'normal')
+        %  disp(I);
+        move_index = I;
+        botton_down = 1;
+        start_index = 0; % Reset starting index
+        
     elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
         if start_index
             if has(g, start_index, I) %no additional request for the case of directed graphs necessary
@@ -1877,15 +1877,16 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
         else
             start_index = I;
         end
-    
+        
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
-    % Opens node modification dialog
-   [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,printVector,plotParams] = ...
-       edit_node(I, get_label(g,I), templates(I,:), template_list, g(I), printCell(I,:),...
-       matrix( g ) );
-
-   %DEBUGGING
-   %{
+        % Opens node modification dialog
+        [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,...
+            printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
+            templates(I,:), template_list, g(I), printCell(I,:),matrix( g ) );
+        templates(I,:) = newTemplate;
+        
+        %DEBUGGING
+        %{
    display(['Nodenumber: ' num2str(nodenumber)]);
    display(['PrintCell: ' printCell(nodenumber)]);
    %assignin('base','neighbours',neighbours);
@@ -1904,78 +1905,78 @@ if strcmp(get(handles.output, 'SelectionType'), 'normal')
     %display(['@figure1_WindowButtonDownFcn: intStates = ' num2str(intStates) ]);
    display(['@figure1_WindowButtonDownFcn: length of printVector = ' num2str(length(printVector)) ]);
     display(['@figure1_WindowButtonDownFcn: printVector = ' num2str(printVector) ]);
-   %}
-   if destroy == 0
-       if ~strcmp(nodelabel, get_label(g,I))
-            if(strmatch(nodelabel,get_label(g),'exact'))
-                for i=1:nv(g)
-                    if (strmatch(strcat(nodelabel, num2str(i)),get_label(g),'exact'))
-                        continue;
-                    else
-                        nodelabel = strcat(nodelabel, num2str(i));
-                        break;
+        %}
+        if destroy == 0
+            if ~strcmp(nodelabel, get_label(g,I))
+                if(strmatch(nodelabel,get_label(g),'exact'))
+                    for i=1:nv(g)
+                        if (strmatch(strcat(nodelabel, num2str(i)),get_label(g),'exact'))
+                            continue;
+                        else
+                            nodelabel = strcat(nodelabel, num2str(i));
+                            break;
+                        end
                     end
                 end
             end
-       end
-       
-        label(g,I, nodelabel);
-
-        templates{I} = template;
-        e_delete = g(I);
-        size_ne = size(e_delete,2);
-        
-        if ~strcmp('double',class(neighbours))
-            %display(['Class of variable "neighbour" is not "double".']);
-            neighbours = eval(neighbours); %neighbours must be of type "double"
-        end
-   
-        for i=1:size_ne
-           delete(g,I,e_delete(i)); 
-        end
-
-        size_ne = size(neighbours,2);
-
-        if ~strcmp(neighbours, '[]')
+            
+            label(g,I, nodelabel);
+            
+            templates{I} = template;
+            e_delete = g(I);
+            size_ne = size(e_delete,2);
+            
+            if ~strcmp('double',class(neighbours))
+                %display(['Class of variable "neighbour" is not "double".']);
+                neighbours = eval(neighbours); %neighbours must be of type "double"
+            end
+            
             for i=1:size_ne
-                add(g,I,neighbours(i)); 
+                delete(g,I,e_delete(i));
             end
-        end
-        %assignin('base','printVector',printVector);
-        %Provide here the new plotting information
-        printCell(nodenumber,1) = num2cell(printVector,2);
-        printCell{nodenumber,2} = plotParams;
             
-        refresh_graph(0, eventdata, handles,hObject);
+            size_ne = size(neighbours,2);
             
-   elseif destroy == 1
-            if nv(g) && (I <= nv(g))
-            templates(I,:) = []; % Deleting a template
-
-            delete(g,I);
-            
-            %Here, the i-th entry of the printCell must be deleted too
-            if size(printCell,1) == 1
-                printCell = cell(0,2);
-            else
-                length_printCell = size(printCell,1);
-                % display(['Length of printCell: ' num2str(length_printCell) ]);
-                temp_printCell = printCell;
-                printCell = cell(length_printCell-1,2);
-                for i = 1:(nodenumber-1)
-                    printCell(i,:) = temp_printCell(i,:);
-                end
-                for i = (nodenumber+1):length_printCell
-                    printCell(i-1,:) = temp_printCell(i,:);
+            if ~strcmp(neighbours, '[]')
+                for i=1:size_ne
+                    add(g,I,neighbours(i));
                 end
             end
-
+            %assignin('base','printVector',printVector);
+            %Provide here the new plotting information
+            printCell(nodenumber,1) = num2cell(printVector,2);
+            printCell{nodenumber,2} = plotParams;
+            
             refresh_graph(0, eventdata, handles,hObject);
+            
+        elseif destroy == 1
+            if nv(g) && (I <= nv(g))
+                templates(I,:) = []; % Deleting a template
+                
+                delete(g,I);
+                
+                %Here, the i-th entry of the printCell must be deleted too
+                if size(printCell,1) == 1
+                    printCell = cell(0,2);
+                else
+                    length_printCell = size(printCell,1);
+                    % display(['Length of printCell: ' num2str(length_printCell) ]);
+                    temp_printCell = printCell;
+                    printCell = cell(length_printCell-1,2);
+                    for i = 1:(nodenumber-1)
+                        printCell(i,:) = temp_printCell(i,:);
+                    end
+                    for i = (nodenumber+1):length_printCell
+                        printCell(i-1,:) = temp_printCell(i,:);
+                    end
+                end
+                
+                refresh_graph(0, eventdata, handles,hObject);
             end
-
-   end %if destroy == 0
-   %}
-end
+            
+        end %if destroy == 0
+        %}
+    end
 
 else % do nothing?
   

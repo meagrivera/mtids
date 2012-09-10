@@ -58,6 +58,7 @@ data.destroy = 0; %means, node should NOT be destroyed and changes should be app
 data.nodenumber = varargin{1};
 data.nodelabel  = varargin{2};
 data.template = varargin{3};
+data.oldTemplate = varargin{3};
 data.template_list = varargin{4};
 data.neighbours = varargin{5};
 data.printCell = varargin{6};
@@ -113,6 +114,7 @@ set(handles.edit_selectedStates,'String',stringSelectedStates);
 setappdata(handles.figure1,'appData',data);
 % Choose default command line output for edit_node
 handles.output = hObject;
+handles.flagEditParams = 0;
 guidata(hObject, handles);
 %set(handles.selector_dynamics, 'Value', '2');
 % UIWAIT makes edit_node wait for user response (see UIRESUME)
@@ -173,8 +175,14 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{6} = data.destroy;
     varargout{7} = data.intStates;
     varargout{8} = data.printVectorOld;
-    varargout{9} = data.plotParamsOld;
- end
+    varargout{9} = data.plotParamsOld; 
+end
+ 
+if handles.flagEditParams
+    varargout{10} = data.newTemplate;
+else
+    varargout{10} = data.oldTemplate;
+end
 
 delete(hObject)
 
@@ -758,7 +766,10 @@ catch
     flagOkay = 0;
 end
 if flagOkay
-    data.template = newTemplate;
+    data.newTemplate = newTemplate;
+    setappdata(handles.figure1,'appData',data);
+    handles.flagEditParams = 1;
+    guidata(hObject, handles);
 end
 
 % --- Executes on button press in push_consistency.
@@ -767,7 +778,12 @@ function push_consistency_Callback(hObject, eventdata, handles) %#ok<*INUSL>
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
-[isCorrect error]=checkNodeInput(data.nodenumber,data.matrix,data.template);
+if handles.flagEditParams
+    templ = data.newTemplate;
+else
+    templ = data.oldTemplate;
+end
+[isCorrect error]=checkNodeInput(data.nodenumber,data.matrix,templ);
 if ~isCorrect
     errStrg = [];
     for kk = 1:length( error.DimMismatch )
