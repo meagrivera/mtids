@@ -1,4 +1,4 @@
-function[] =exportSimulink2(name, templates, templateList, A, xy, labs, flag_showSimMod)
+function varargout = exportSimulink2( varargin )
 % exportSimulink.m 
 %
 % Project: MTIDS
@@ -16,6 +16,16 @@ function[] =exportSimulink2(name, templates, templateList, A, xy, labs, flag_sho
 % 
 % This function takes the data produced in mtids and generates an interconnected 
 % dynamical system in simulink. The system is generated as a circle formation.
+
+%% Read in variables
+
+name            = varargin{1};
+templates       = varargin{2};
+templateList    = varargin{3};
+A               = varargin{4};
+xy              = varargin{5};
+labs            = varargin{6};
+flag_showSimMod = varargin{7};
 
 %% options
 vizMaxNodeNumber=50;    % maximal number of nodes where Simulink opens
@@ -133,7 +143,7 @@ for i=1:nodeNumber
 end
 
 %% open system
-% NO VISULALIZATION FOR LARGE NUMBER OF NODES
+% NO VISUALIZATION FOR LARGE NUMBER OF NODES
 if(nodeNumber<=vizMaxNodeNumber && flag_showSimMod == 1)
     open_system(sys);
     %Enables state saving to workspace
@@ -141,22 +151,36 @@ if(nodeNumber<=vizMaxNodeNumber && flag_showSimMod == 1)
 end
 
 %% save model ....if model exist the whole thing gives an error (need unique name for model)
-if(nodeNumber>vizMaxNodeNumber || flag_showSimMod == 0)
- [filename, pathname] = uiputfile( ...
-{'*.mdl','Simulink Model (*.mdl)';
-   '*.*',  'All Files (*.*)'}, ...
-   'Save model');
-
- %file = strcat(pathname, filename);
-try
-save_system(sys,filename);
-catch
-   close_system(sys,0);
+saveSucc = 0;
+if nodeNumber>vizMaxNodeNumber || ~flag_showSimMod
+    if strcmp( name,'untitled' )
+        [filename, pathname] = uiputfile( ...
+            {'*.mdl','Simulink Model (*.mdl)';
+            '*.*',  'All Files (*.*)'}, ...
+            'Save model');
+    else
+        filename = [name '.mdl'];
+        pathname = [pwd filesep];
+    end    
+    %file = strcat(pathname, filename);
+    try
+        save_system(sys,[pathname filename]);
+        saveSucc = 1;
+    catch
+        close_system(sys,0);
+        saveSucc = 0;
+    end    
+    if saveSucc
+        close_system(sys,0);
+        close_system([pathname filename],0);
+    end
 end
 
-close_system(sys,0)
+if saveSucc
+    varargout{1} = filename(1:end-4);
+else
+    varargout{1} = [];
 end
-
 
 
 %%%%%%%%

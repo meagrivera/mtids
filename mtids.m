@@ -1884,28 +1884,6 @@ if C <= 0.05; % Hardcoded value!
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
             templates(I,:), template_list, g(I), printCell(I,:),matrix( g ) );
         templates(I,:) = newTemplate;
-        
-        %DEBUGGING
-        %{
-   display(['Nodenumber: ' num2str(nodenumber)]);
-   display(['PrintCell: ' printCell(nodenumber)]);
-   %assignin('base','neighbours',neighbours);
-   %neighbours = eval(neighbours); %save variable to workspace
-   disp('------------------------------------------------------------------');
-    display(['@figure1_WindowButtonDownFcn: nodenumber = ' num2str(nodenumber)]);
-    display(['@figure1_WindowButtonDownFcn: nodelabel = ' nodelabel]);
-    display(['@figure1_WindowButtonDownFcn: template = ' template]);
-    display(['@figure1_WindowButtonDownFcn: class of "neighbours": ' class(neighbours) ]);
-   if strcmp(class(neighbours), 'double')
-        display(['@figure1_WindowButtonDownFcn: neighbours = ' num2str(neighbours) ]);
-   else
-        display(['@figure1_WindowButtonDownFcn: neighbours = ' neighbours]);
-   end
-    display(['@figure1_WindowButtonDownFcn: destroy = ' num2str(destroy) ]);
-    %display(['@figure1_WindowButtonDownFcn: intStates = ' num2str(intStates) ]);
-   display(['@figure1_WindowButtonDownFcn: length of printVector = ' num2str(length(printVector)) ]);
-    display(['@figure1_WindowButtonDownFcn: printVector = ' num2str(printVector) ]);
-        %}
         if destroy == 0
             if ~strcmp(nodelabel, get_label(g,I))
                 if(strmatch(nodelabel,get_label(g),'exact'))
@@ -1939,7 +1917,11 @@ if C <= 0.05; % Hardcoded value!
             
             if ~strcmp(neighbours, '[]')
                 for i=1:size_ne
-                    add(g,I,neighbours(i));
+                    if strcmp( data.modus,'directed')
+                        add(g,I,neighbours(i),1);
+                    else
+                        add(g,I,neighbours(i));
+                    end
                 end
             end
             %assignin('base','printVector',printVector);
@@ -2155,6 +2137,9 @@ if check
     num_lines = 1;
     def = {'untitled'};
     name = inputdlg(prompt,dlg_title,num_lines,def);
+    if isempty( name )
+        name = def;
+    end
     % template =	'LTI';
     if nv(g) > 200
         disp('Exporting...this may take some time...');
@@ -2162,7 +2147,7 @@ if check
         disp('Exporting...');
     end
     disp('  ');
-    exportSimulink2(name, templates, template_list, A, xy, labs, data.flag_showSimMod);
+    filename = exportSimulink2(name{:}, templates, template_list, A, xy, labs, data.flag_showSimMod);
     disp('Done exporting');
     expSucc = 1;
 else
@@ -2170,13 +2155,14 @@ else
     expSucc = 0;
 end
 
+if expSucc && ~isempty( filename )
+    data.sysFilename = filename;
+end
 
 %store application data
 data.expSucc = expSucc;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles); 
-
 
 
 % --- Executes when selected object is changed in uipanel9.
@@ -2257,6 +2243,9 @@ expSucc = data.expSucc;
 printCell = data.printCell;
 templates = data.templates;
 
+% Simulation parameters
+simPrms.stopTime = 10;
+
 %global g;
 %global printCell;
 %global templates;
@@ -2265,7 +2254,7 @@ templates = data.templates;
 %After export to simulink is complete, start the simulation, using the
 %plotting parameters in printCell
 if expSucc ~= 1
-    msgbox('Please start Export to Simulink2 before using this function.','Notice');
+    msgbox('Please start ''Export to Simulink'' before using this function.','Notice');
 end
 
 if expSucc == 1
@@ -2278,52 +2267,97 @@ if expSucc == 1
 
     %t contains the simulation time, x the states in order of the nodenumbers.
     %The output of each %node is contained in the To Workspace struct nodeouti, 
-    %where i stands for the nodenumber
-    [t,x]=sim(gcs);
+    %where i stands for the nodenumber.
+    currSysName = gcs;
+    if isfield( data, 'sysFilename' ) && ...
+            ~strcmp( gcs, data.sysFilename ) && ...
+            exist( [data.sysFilename '.mdl'], 'file' )
+        load_system( data.sysFilename );
+        warning('off', 'all');
+        simOut = sim( data.sysFilename,'StopTime',num2str(simPrms.stopTime),...
+            'SaveState','on','StateSaveName','xout','SaveOutput','on',...
+        'OutputSaveName','yout');
+        close_system( data.sysFilename );
+        warning('on', 'all');
+    elseif ~isempty( currSysName )
+        warning('off', 'all');
+        simOut=sim(gcs,'StopTime',num2str(simPrms.stopTime),...
+            'SaveState','on','StateSaveName','xout','SaveOutput','on',...
+        'OutputSaveName','yout');
+        warning('on', 'all');
+    else
+        errordlg('Systen not ready for simulation');
+        return
+    end
 
     %Plotting of the simulation result can be done on different ways. For now,
     %every state gets its own figure
-
+    t = simOut.get('tout');
+    % reshaping the states signals into X(value,noOfStates,noOfNode)
+    Xtemp = simOut.get('xout');
+    counter = 1;
     for i = 1:nrNodes
-        %Check printCell to see if visualization of state i is wanted
+        noOfStates = data.templates{i,2}.dimension.states;
+        X(:,:,i) = Xtemp(:,counter:counter+noOfStates-1);
+        counter = counter + noOfStates;
+    end
+    for i = 1:nrNodes
         temp = printCell{i,1};
         if any(temp)
-        figure;
-        hold on;
-        y = evalin('base',['nodeout' num2str(i) '.signals.values']);
-        plot(t,y,'Linewidth',2.0);
-        %legend(['Output signal of node' num2str(i)]);
-        xlabel('Simulation time in [s]');
-
-        if strcmp(templates{i},'LTI')
-            if i == 1
-                index = 1;
-            else
-                index = 1+sum(intStates(1:(i-1)));
-            end
-            x_loc = x(:,index:index+intStates(i)-1); 
-            %Build string matrix for legend
+            figure;
+            hold on;               
+            %Check if output of node i should be plotted
             stringMatrix = cell(1,1);
-            stringMatrix{1} = ['Output signal of node ' num2str(i)];
+            if temp(1)
+                eval(['y = simOut.get(''nodeout' num2str(i) ''').signals.values;']);
+                plot(t,y,'Linewidth',2.0);
+                stringMatrix{1} = ['Output signal of node ' num2str(i)];
+            end
+            %legend(['Output signal of node' num2str(i)]);
             counterStringMatrix = 1;
-            for j=2:intStates(i)+1
-                if temp(j) == 1
+            for kk = 2:length( temp )
+                if temp(kk)
                     counterStringMatrix = counterStringMatrix + 1;
-                    stringMatrix = [stringMatrix; cell(1,1)];
-                    p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+                    p=plot(t,X(:,kk,i),'Linewidth',1.2);
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk) ' of node ' num2str(i)];
                     R = 0.1 + 0.5*rand;
                     G = 0.1 + 0.5*rand;
                     B = 0.1 + 0.5*rand;
                     set(p,'Color', [R G B] );
-                    stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
                 end
             end
             legend(stringMatrix,'Location','NorthEastOutside');
-        else
-            legend(['Output signal of node ' num2str(i)]);
-        end
-
-        hold off;
+            xlabel('Simulation time in [s]');
+            ylabel(['Output and/or state of node ' num2str(i)]);
+%             if strcmp(templates{i},'LTI')
+%                 if i == 1
+%                     index = 1;
+%                 else
+%                     index = 1+sum(intStates(1:(i-1)));
+%                 end
+%                 x_loc = x(:,index:index+intStates(i)-1);
+                %Build string matrix for legend
+%                 stringMatrix = cell(1,1);
+%                 stringMatrix{1} = ['Output signal of node ' num2str(i)];
+%                 counterStringMatrix = 1;
+%                 for j=2:intStates(i)+1
+%                     if temp(j) == 1
+%                         counterStringMatrix = counterStringMatrix + 1;
+%                         stringMatrix = [stringMatrix; cell(1,1)];
+%                         p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
+%                         R = 0.1 + 0.5*rand;
+%                         G = 0.1 + 0.5*rand;
+%                         B = 0.1 + 0.5*rand;
+%                         set(p,'Color', [R G B] );
+%                         stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
+%                     end
+%                 end
+%                 legend(stringMatrix,'Location','NorthEastOutside');
+%             else
+%                 legend(['Output signal of node ' num2str(i)]);
+%             end
+            
+            hold off;
         end
     end
 end
@@ -2940,7 +2974,7 @@ function number_of_nodes_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
 
 % --- Executes on selection change in selector_valueSet.
-function selector_valueSet_Callback(hObject, eventdata, handles)
+function selector_valueSet_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUSD>
 % hObject    handle to selector_valueSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
