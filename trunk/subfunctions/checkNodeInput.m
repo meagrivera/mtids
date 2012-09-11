@@ -37,7 +37,7 @@ for ii = 1:length( incomingIDX )
     signalSize(ii) = template{ 1,2 }.dimension.outputs;
 end
     
-if templateHasDependingInputs( nodeIDX,template )
+if templateHasDependingInputs( nodeIDX,template ) && sum( signalSize )
 %    if ~isempty( incomingIDX )
        
    % Get cell with strings of depending variables
