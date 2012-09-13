@@ -194,7 +194,7 @@ function pushbutton_save_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUS
 data = getappdata(handles.figure1,'appData');
 
 % If succ == 'yes', test simulation with param value set was successfull
-[dimension succ ME_testSimulation] = testingValueSet( handles,0 );
+[dimension succ ME_testSimulation ME_paramsFeasible] = testingValueSet( handles,0 );
 if strcmp( succ, 'yes' )
     inputSpec.Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
@@ -207,9 +207,17 @@ if strcmp( succ, 'yes' )
     guidata(hObject, handles);
     uiresume(handles.figure1);
 else
-    errordlg(['The test using the new system parameters failed. '...
-        'Maybe this message will help you to find the error: '...
-        ME_testSimulation.message ]);
+    error = {};
+    if ~isempty( ME_testSimulation )
+        error = {error, ME_testSimulation.message };
+    end
+    if ~isempty( ME_paramsFeasible )
+        error = {error, ME_paramsFeasible.message };
+    end
+    error = error(~cellfun(@isempty,error));
+    errordlg({'The test using the new system parameters failed. ',...
+        'Maybe the following messages will help you to find the error: ',...
+        error{:} }); %#ok<*CCAT>
 end
 
 

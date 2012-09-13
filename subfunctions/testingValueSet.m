@@ -10,7 +10,12 @@ function varargout = testingValueSet( varargin )
 %         (2) choice - user's choice if value set should be saved and
 %                           figure be closed or if the set should edited
 %                           again
-%         (3) ME_testSimulation - Error message of simulink test simulation
+%         (3) ME_testSimulation - Error message of simulink test
+%                                   simulation, ; is empty if
+%                                   everything's alright
+%         (4) ME_paramsFeasible - Error message of proper settings in each
+%                                   template block; is empty if
+%                                   everything's alright
 %
 
 handles             = varargin{1};
@@ -53,50 +58,64 @@ end
 % Collecting all parameters and writing it into a copy of the Model
 save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy']);
 Data = get(handles.t,'Data');
-for ii = 1:size( Data,1 )
-    for jj = 2:2:size( Data,2 )
-        paramExists = ~isempty( Data{ii,jj} );
-        valueExists = ~isempty( Data{ii,jj+1} );        
-        % store numerical values into temporal copy of model
-        if paramExists && valueExists
-            set_param([handles.sysname '_tempCopy/' Data{ii,1} ], Data{ii,jj}, Data{ii,jj+1} );
-        end      
+flagParamsFeasible = 0;
+try
+    for ii = 1:size( Data,1 )
+        for jj = 2:2:size( Data,2 )
+            paramExists = ~isempty( Data{ii,jj} );
+            valueExists = ~isempty( Data{ii,jj+1} );
+            % store numerical values into temporal copy of model
+            if paramExists && valueExists
+                set_param([handles.sysname '_tempCopy/' Data{ii,1} ], Data{ii,jj}, Data{ii,jj+1} );
+            end
+        end
+    end
+    flagParamsFeasible = 1;
+catch ME_paramsFeasible
+    if ask4choice
+        errordlg({'An error occurred during insertion of the prompted template parameters.',...
+            'Maybe this message will help you to find the error: ',...
+            ME_paramsFeasible.message});
     end
 end
 
 % Perform simulation with model
 choice = 'No';
-try
-    % Adapt "/Mux" according to specified inputs
-    Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
-    noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
-    if ~isempty( Vars )
-        noOfInputsToMux = length( getNumericValue( Vars{1},handles ) ) - noOfIntInputs;
-        set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
-            num2str(noOfInputsToMux) );
-    end
-    
-    % set_param([template '/Mux'],'Inputs',num2str(nodeNumber));
-    simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
-        'SaveState','on','StateSaveName','xoutNew','SaveOutput','on',...
-        'OutputSaveName','youtNew');
-    dimension.states = size( simout.get('xoutNew'),2 );
-    dimension.outputs = size( simout.get('youtNew'),2 );
-    if ~isempty( simout )
-        if ask4choice
-            title = 'Testing suceeded';
-            qstring = {'Variable check and explicit model simulation test suceeded.',...
-                'Should the template import to MTIDS be finished?' };
-            choice = questdlg(qstring,title,'Yes','No','No');
-        else
-            choice = 'yes';
+if flagParamsFeasible
+    try
+        % Adapt "/Mux" according to specified inputs
+        Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
+        noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
+        if ~isempty( Vars )
+            noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
+            set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
+                num2str(noOfInputsToMux) );
         end
-    end
-catch ME_testSimulation
-    if ask4choice
-    errordlg(['The explicit test simulation of the simulink model failed. '...
-        'Maybe this message will help you to find the error: '...
-        ME_testSimulation.message ]);
+        
+        % set_param([template '/Mux'],'Inputs',num2str(nodeNumber));#
+        warning('off','all');
+        simout = sim( [handles.sysname '_tempCopy'],'StopTime','0.1',...
+            'SaveState','on','StateSaveName','xoutNew','SaveOutput','on',...
+            'OutputSaveName','youtNew');
+        warning('on','all');
+        dimension.states = size( simout.get('xoutNew'),2 );
+        dimension.outputs = size( simout.get('youtNew'),2 );
+        if ~isempty( simout )
+            if ask4choice
+                title = 'Testing suceeded';
+                qstring = {'Variable check and explicit model simulation test suceeded.',...
+                    'Should the template import to MTIDS be finished?' };
+                choice = questdlg(qstring,title,'Yes','No','No');
+            else
+                choice = 'yes';
+            end
+        end
+    catch ME_testSimulation
+        if ask4choice
+            errordlg(['The explicit test simulation of the simulink model failed. '...
+                'Maybe this message will help you to find the error: '...
+                ME_testSimulation.message ]);
+        end
     end
 end
 bdclose;
@@ -110,9 +129,18 @@ else
 end
 varargout{2} = choice;
 if strcmp( choice, 'no' )
-    varargout{3} = ME_testSimulation;
+    if flagParamsFeasible
+        varargout{3} = ME_testSimulation;
+    else
+        varargout{3} = [];
+    end
 else
     varargout{3} = [];
+end
+if flagParamsFeasible
+    varargout{4} = [];
+else
+    varargout{4} = ME_paramsFeasible;
 end
 
 %%%%%%%%%%%%

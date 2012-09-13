@@ -99,19 +99,19 @@ else
     data.flagCheck1 = 0;
 end
 set(handles.checkbox1,'Value',data.flagCheck1);
-if any(temp(2:length(temp)))
-    data.flagCheck2 = 1;
-    stringSelectedStates = num2str(find(temp(2:length(temp))));
-else
-    data.flagCheck2 = 0;
-    stringSelectedStates = '';
-end
-set(handles.checkbox2,'Value',data.flagCheck2);
-set(handles.edit_selectedStates,'String',stringSelectedStates);
-
-
-% store input data and figure handles
+% if any(temp(2:length(temp)))
+%     data.flagCheck2 = 1;
+%     stringSelectedStates = num2str(find(temp(2:length(temp))));
+% else
+%     data.flagCheck2 = 0;
+%     stringSelectedStates = '';
+% end
 setappdata(handles.figure1,'appData',data);
+set_stringSelectedStates( data.printCell,handles );
+% set(handles.checkbox2,'Value',data.flagCheck2);
+% set(handles.edit_selectedStates,'String',stringSelectedStates);
+
+
 % Choose default command line output for edit_node
 handles.output = hObject;
 handles.flagEditParams = 0;
@@ -363,12 +363,27 @@ function edit_selectedStates_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of edit_selectedStates as text
 %        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double
-if max( str2num( get(hObject,'String'))) > str2num( get(handles.edit_intStates,'String'))
-    set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
-end
-set(handles.checkbox2,'Value',1.0);
+% if max( str2num( get(hObject,'String'))) > str2num( get(handles.edit_intStates,'String'))
+%     set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );
+% end
 data=getappdata(handles.figure1,'appData');
-data.flagCheck2 = 1;
+if isfield(data,'newTemplate')
+    intStates = data.newTemplate{1,2}.dimension.states;
+else
+    intStates = data.oldTemplate{1,2}.dimension.states;
+end
+if max( str2num( get(hObject,'String'))) >  intStates %#ok<*ST2NM>
+    errordlg({'There are not as many internal states as selected.',...
+        'Resetting ''Selected States'' to previous value.'});
+    set(handles.edit_selectedStates,'String',data.stringSelectedStates);
+    set(handles.checkbox2,'Value', data.flagCheck2 );
+    return
+end
+if ~isempty( str2num( get(hObject,'String')))
+    set(handles.checkbox2,'Value',1.0);
+    data.flagCheck2 = 1;
+end
+data.stringSelectedStates = get(hObject,'String');
 setappdata(handles.figure1,'appData',data);
 
 
@@ -393,11 +408,11 @@ function edit_plot_parameters_Callback(hObject, eventdata, handles)
 
 
 %case distinction for different templates needed
-temp = get(handles.selector_dynamics,'String');
+% temp = get(handles.selector_dynamics,'String');
 %temp = data.template_list{n_temp,1};
 
-switch temp;
-    case 'LTI';
+% switch temp;
+%     case 'LTI';
 
         setPlotParams(hObject,handles);
         data = getappdata(handles.figure1,'appData');
@@ -462,32 +477,32 @@ switch temp;
             data.plotParams = plotParams; %minimum plotParams configuration
         end
         
-    case 'kuramoto';
-        % only one output state must be considered
+%     case 'kuramoto';
+%         % only one output state must be considered
+%         
+%         data = getappdata(handles.figure1,'appData');
+%         
+%         if get(handles.checkbox1,'Value') % just check if output should be plotted
+%             plotString = cell(1,1);
+%             plotString{1} = 'Node output';
+%             if ~isfield(data,{'plotParams'})
+%                 data.plotParams = data.plotParamsOld;
+%             end
+%             
+%             if size(data.plotParams,2) > 1
+%                 data.plotParams = data.plotParams(1);
+%             end
+%             
+%             temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
+%             
+%             if ~isempty(temp)
+%                 data.plotParams = temp;
+%             end
+%         else
+%             
+%         end
         
-        data = getappdata(handles.figure1,'appData');
-        
-        if get(handles.checkbox1,'Value') % just check if output should be plotted
-            plotString = cell(1,1);
-            plotString{1} = 'Node output';
-            if ~isfield(data,{'plotParams'})
-                data.plotParams = data.plotParamsOld;
-            end
-            
-            if size(data.plotParams,2) > 1
-                data.plotParams = data.plotParams(1);
-            end
-            
-            temp = pp2(data.nodenumber, 1,plotString,data.plotParams);
-            
-            if ~isempty(temp)
-                data.plotParams = temp;
-            end
-        else
-            
-        end
-        
-end
+% end
 
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
@@ -687,7 +702,7 @@ else %Checkbox 1 is not checked
     data.printVector(1) = 0;
 end
 
-if data.flagCheck2 && strcmp(data.template,'LTI') %check is needed, because at the moment, only the LTI template
+if data.flagCheck2 % && strcmp(data.template,'LTI') %check is needed, because at the moment, only the LTI template
     %can provide more than one internal state
     for i = 1:data.intStates
         if find(data.temp == i)
@@ -698,7 +713,6 @@ if data.flagCheck2 && strcmp(data.template,'LTI') %check is needed, because at t
 else %Checkbox 2 is not checked
     data.printVector(2:data.intStates+1) = zeros(1,data.intStates);
 end
-
 setappdata(handles.figure1,'appData',data);
 
 function setPlotParams(hObject,handles)
@@ -760,13 +774,18 @@ function push_editParams_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
 try
-    newTemplate = edit_paramValues(data.template);
+    if isfield(data,'newTemplate')
+        newTemplate = edit_paramValues(data.newTemplate);
+    else
+        newTemplate = edit_paramValues(data.oldTemplate);
+    end
     flagOkay = 1;
-catch
+catch %#ok<CTCH>
     flagOkay = 0;
 end
 if flagOkay
     data.newTemplate = newTemplate;
+    set(handles.edit_intStates,'String',num2str(data.newTemplate{1,2}.dimension.states));
     setappdata(handles.figure1,'appData',data);
     handles.flagEditParams = 1;
     guidata(hObject, handles);

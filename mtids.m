@@ -342,6 +342,7 @@ data.templates = templates;
 data.template_list = template_list;
 data.printCell = printCell;
 data.plotAllOutput = plotAllOutput;
+data.expSucc = 0;
 setappdata(handles.figure1,'appData',data);
 
 %debugging output
@@ -1883,6 +1884,9 @@ if C <= 0.05; % Hardcoded value!
         [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,...
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
             templates(I,:), template_list, g(I), printCell(I,:),matrix( g ) );
+        if ~all( cellfun(@isequal,newTemplate,templates(I,:)) )
+            data.expSucc = 0;
+        end
         templates(I,:) = newTemplate;
         if destroy == 0
             if ~strcmp(nodelabel, get_label(g,I))
@@ -2296,9 +2300,10 @@ if expSucc == 1
     % reshaping the states signals into X(value,noOfStates,noOfNode)
     Xtemp = simOut.get('xout');
     counter = 1;
+    X = cell(nrNodes,1);
     for i = 1:nrNodes
         noOfStates = data.templates{i,2}.dimension.states;
-        X(:,:,i) = Xtemp(:,counter:counter+noOfStates-1);
+        X(i) = { Xtemp(:,counter:counter+noOfStates-1) };
         counter = counter + noOfStates;
     end
     for i = 1:nrNodes
@@ -2310,7 +2315,13 @@ if expSucc == 1
             stringMatrix = cell(1,1);
             if temp(1)
                 eval(['y = simOut.get(''nodeout' num2str(i) ''').signals.values;']);
-                plot(t,y,'Linewidth',2.0);
+                plot(t,y,...
+                    'Color',printCell{i,2}(1).lineColor,...
+                    'Linewidth',str2num(printCell{i,2}(1).lineWidth),...
+                    'LineStyle',printCell{i,2}(1).lineStyle,...
+                    'Marker',printCell{i,2}(1).marker,...
+                    'MarkerEdgeColor',printCell{i,2}(1).edgeColor ,...
+                    'MarkerFaceColor',printCell{i,2}(1).faceColor);
                 stringMatrix{1} = ['Output signal of node ' num2str(i)];
             end
             %legend(['Output signal of node' num2str(i)]);
@@ -2318,12 +2329,18 @@ if expSucc == 1
             for kk = 2:length( temp )
                 if temp(kk)
                     counterStringMatrix = counterStringMatrix + 1;
-                    p=plot(t,X(:,kk,i),'Linewidth',1.2);
-                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk) ' of node ' num2str(i)];
-                    R = 0.1 + 0.5*rand;
-                    G = 0.1 + 0.5*rand;
-                    B = 0.1 + 0.5*rand;
-                    set(p,'Color', [R G B] );
+                    plot(t,X{i}(:,kk-1),...
+                        'Color',printCell{i,2}(kk).lineColor,...
+                        'Linewidth',str2num(printCell{i,2}(kk).lineWidth),...
+                        'LineStyle',printCell{i,2}(kk).lineStyle,...
+                        'Marker',printCell{i,2}(kk).marker,...
+                        'MarkerEdgeColor',printCell{i,2}(kk).edgeColor ,...
+                        'MarkerFaceColor',printCell{i,2}(kk).faceColor);
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-1) ' of node ' num2str(i)];
+%                     R = 0.1 + 0.5*rand;
+%                     G = 0.1 + 0.5*rand;
+%                     B = 0.1 + 0.5*rand;
+%                     set(p,'Color', [R G B] );
                 end
             end
             legend(stringMatrix,'Location','NorthEastOutside');
