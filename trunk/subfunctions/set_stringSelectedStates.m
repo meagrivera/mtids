@@ -7,9 +7,10 @@ handles         = varargin{2};
 
 data = getappdata(handles.figure1,'appData');
 temp = printCell{1,1};
-if any(temp(2:length(temp)))
+outputDim = data.oldTemplate{1,2}.dimension.outputs;
+if any(temp(outputDim+1:length(temp)))
     data.flagCheck2 = 1;
-    data.stringSelectedStates = num2str(find(temp(2:length(temp))));
+    data.stringSelectedStates = num2str(find(temp(outputDim+1:length(temp))));
 else
     data.flagCheck2 = 0;
     data.stringSelectedStates = '';

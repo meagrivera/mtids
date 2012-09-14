@@ -47,11 +47,19 @@ end
 if misses
    errordlg(['At least one parameter values is missing.'...
        'Please add it (them).']);
+   varargout{1} = [];
+   varargout{2} = 'no';
+   varargout{3} = [];
+   varargout{4} = [];
    return
 end
 if notValid
    errordlg(['At least one parameter value is not feasible '...
        'for its specific block type. Please correct it (them).']);
+   varargout{1} = [];
+   varargout{2} = 'no';
+   varargout{3} = [];
+   varargout{4} = [];
    return
 end
 

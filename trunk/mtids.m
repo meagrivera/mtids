@@ -300,13 +300,6 @@ n_template = get(handles.selector_dynamic, 'Value');
 n_valueSet = get(handles.selector_valueSet, 'Value');
 templates{nv(g),1} = template_list{n_template,1};
 templates{nv(g),2} = template_list{n_template,4}(n_valueSet);
-%{
-switch templates{nv(g),1};
-    case 'LTI'; col = [245 245 245]/255;
-    case 'kuramoto'; col = [230 230 250]/255;
-    otherwise; col = [0 149 237]/255; 
-end
-%}
 length_nodeColor = size(data.nodeColor,1);
 tempNodeColor = data.nodeColor;
 data.nodeColor = cell(length_nodeColor+1,2);
@@ -328,8 +321,12 @@ for i = 1:length_cellPrint
 end
 
 %Initially, the printVector and the plotParams are the same for all templates
-printCell(length_cellPrint+1,1) = num2cell([plotAllOutput 0],2);
-printCell{length_cellPrint+1,2} = initPlotParams;
+statesDim = templates{nv(g),2}.dimension.states;
+outputDim = templates{nv(g),2}.dimension.outputs;
+printVector = zeros(1,outputDim + statesDim);
+printVector(1:outputDim) = ones(1:outputDim)*plotAllOutput;
+printCell(length_cellPrint+1,1) = num2cell(printVector,2);
+printCell{length_cellPrint+1,2} = initPlotParams(outputDim);
 setappdata(handles.figure1,'appData',data);
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles,hObject);
@@ -1880,12 +1877,13 @@ if C <= 0.05; % Hardcoded value!
         end
         
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
-        % Opens node modification dialog
+        % Opens EDIT_NODE(): node modification dialog
         [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,...
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
-            templates(I,:), template_list, g(I), printCell(I,:),matrix( g ) );
+            templates(I,:), template_list, g(I), printCell(I,:),handles.figure1 );
         if ~all( cellfun(@isequal,newTemplate,templates(I,:)) )
             data.expSucc = 0;
+            data.simOut = [];
         end
         templates(I,:) = newTemplate;
         if destroy == 0
@@ -2247,9 +2245,6 @@ expSucc = data.expSucc;
 printCell = data.printCell;
 templates = data.templates;
 
-% Simulation parameters
-simPrms.stopTime = 10;
-
 %global g;
 %global printCell;
 %global templates;
@@ -2264,34 +2259,11 @@ end
 if expSucc == 1
     %We need: number of nodes, number of internal states per node
     nrNodes = nv(g);
-    intStates = zeros(nrNodes,1);
-    for i = 1:nrNodes
-        intStates(i) = length(printCell{i,1})-1;
-    end
-
-    %t contains the simulation time, x the states in order of the nodenumbers.
-    %The output of each %node is contained in the To Workspace struct nodeouti, 
-    %where i stands for the nodenumber.
-    currSysName = gcs;
-    if isfield( data, 'sysFilename' ) && ...
-            ~strcmp( gcs, data.sysFilename ) && ...
-            exist( [data.sysFilename '.mdl'], 'file' )
-        load_system( data.sysFilename );
-        warning('off', 'all');
-        simOut = sim( data.sysFilename,'StopTime',num2str(simPrms.stopTime),...
-            'SaveState','on','StateSaveName','xout','SaveOutput','on',...
-        'OutputSaveName','yout');
-        close_system( data.sysFilename );
-        warning('on', 'all');
-    elseif ~isempty( currSysName )
-        warning('off', 'all');
-        simOut=sim(gcs,'StopTime',num2str(simPrms.stopTime),...
-            'SaveState','on','StateSaveName','xout','SaveOutput','on',...
-        'OutputSaveName','yout');
-        warning('on', 'all');
+    if ~isfield(data,'simOut') || isempty(data.simOut)
+        simOut = performSimulation( handles );
+        data.simOut = simOut;
     else
-        errordlg('Systen not ready for simulation');
-        return
+        simOut = data.simOut;
     end
 
     %Plotting of the simulation result can be done on different ways. For now,
@@ -2310,74 +2282,47 @@ if expSucc == 1
         temp = printCell{i,1};
         if any(temp)
             figure;
-            hold on;               
+            hold on;
             %Check if output of node i should be plotted
             stringMatrix = cell(1,1);
-            if temp(1)
+            if any(temp(1:data.templates{i,2}.dimension.outputs))
                 eval(['y = simOut.get(''nodeout' num2str(i) ''').signals.values;']);
-                plot(t,y,...
-                    'Color',printCell{i,2}(1).lineColor,...
-                    'Linewidth',str2num(printCell{i,2}(1).lineWidth),...
-                    'LineStyle',printCell{i,2}(1).lineStyle,...
-                    'Marker',printCell{i,2}(1).marker,...
-                    'MarkerEdgeColor',printCell{i,2}(1).edgeColor ,...
-                    'MarkerFaceColor',printCell{i,2}(1).faceColor);
-                stringMatrix{1} = ['Output signal of node ' num2str(i)];
+                outputsToPlot = size(y,2);
+                for kk = 1:size(y,2)
+                    plot(t,y(:,kk),...
+                        'Color',printCell{i,2}(kk).lineColor,...
+                        'Linewidth',str2num(printCell{i,2}(kk).lineWidth),...
+                        'LineStyle',printCell{i,2}(kk).lineStyle,...
+                        'Marker',printCell{i,2}(kk).marker,...
+                        'MarkerEdgeColor',printCell{i,2}(kk).edgeColor ,...
+                        'MarkerFaceColor',printCell{i,2}(kk).faceColor); %#ok<*ST2NM>
+                    stringMatrix{kk} = ['Output signal ' num2str(kk) ' of node ' num2str(i)];
+                end
             end
             %legend(['Output signal of node' num2str(i)]);
-            counterStringMatrix = 1;
-            for kk = 2:length( temp )
+            counterStringMatrix = outputsToPlot;
+            for kk = outputsToPlot+1:length( temp )
                 if temp(kk)
                     counterStringMatrix = counterStringMatrix + 1;
-                    plot(t,X{i}(:,kk-1),...
+                    plot(t,X{i}(:,kk-outputsToPlot),...
                         'Color',printCell{i,2}(kk).lineColor,...
                         'Linewidth',str2num(printCell{i,2}(kk).lineWidth),...
                         'LineStyle',printCell{i,2}(kk).lineStyle,...
                         'Marker',printCell{i,2}(kk).marker,...
                         'MarkerEdgeColor',printCell{i,2}(kk).edgeColor ,...
                         'MarkerFaceColor',printCell{i,2}(kk).faceColor);
-                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-1) ' of node ' num2str(i)];
-%                     R = 0.1 + 0.5*rand;
-%                     G = 0.1 + 0.5*rand;
-%                     B = 0.1 + 0.5*rand;
-%                     set(p,'Color', [R G B] );
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-outputsToPlot) ' of node ' num2str(i)];
                 end
             end
             legend(stringMatrix,'Location','NorthEastOutside');
             xlabel('Simulation time in [s]');
             ylabel(['Output and/or state of node ' num2str(i)]);
-%             if strcmp(templates{i},'LTI')
-%                 if i == 1
-%                     index = 1;
-%                 else
-%                     index = 1+sum(intStates(1:(i-1)));
-%                 end
-%                 x_loc = x(:,index:index+intStates(i)-1);
-                %Build string matrix for legend
-%                 stringMatrix = cell(1,1);
-%                 stringMatrix{1} = ['Output signal of node ' num2str(i)];
-%                 counterStringMatrix = 1;
-%                 for j=2:intStates(i)+1
-%                     if temp(j) == 1
-%                         counterStringMatrix = counterStringMatrix + 1;
-%                         stringMatrix = [stringMatrix; cell(1,1)];
-%                         p=plot(t,x_loc(:,j-1),'Linewidth',1.2);
-%                         R = 0.1 + 0.5*rand;
-%                         G = 0.1 + 0.5*rand;
-%                         B = 0.1 + 0.5*rand;
-%                         set(p,'Color', [R G B] );
-%                         stringMatrix{counterStringMatrix} = ['State ' num2str(j-1) ' of node ' num2str(i)];
-%                     end
-%                 end
-%                 legend(stringMatrix,'Location','NorthEastOutside');
-%             else
-%                 legend(['Output signal of node ' num2str(i)]);
-%             end
             
             hold off;
         end
     end
 end
+setappdata(handles.figure1,'appData',data);
 
 
 
@@ -2395,11 +2340,9 @@ else
     set(handles.plotAllOutput,'Checked','on')
     plotAllOutput = 1;
 end
-
 %store application data
 data.plotAllOutput = plotAllOutput;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles); 
 
 
@@ -2508,17 +2451,18 @@ assignin('base','data',data);
 
 
 % -- this function initializes the plot parameters for a node
-function [argout] = initPlotParams()
+function [argout] = initPlotParams( dim )
 % output is a (1+n) element struct containing six elements, where
 %n is the amount of internal states to plot. At start of mtids, n=1 for
 %each node
-plotParams.lineWidth = '1.0';
-plotParams.lineStyle = '-';
-plotParams.marker = 'none';
-plotParams.lineColor = [0 0 1];
-plotParams.edgeColor = [0 0 1];
-plotParams.faceColor = [0 0 1];
-
+for kk = 1:dim
+    plotParams(kk).lineWidth = '1.0'; %#ok<*AGROW>
+    plotParams(kk).lineStyle = '-';
+    plotParams(kk).marker = 'none';
+    plotParams(kk).lineColor = [0 0 1];
+    plotParams(kk).edgeColor = [0 0 1];
+    plotParams(kk).faceColor = [0 0 1];
+end
 %at start of mtids, no int. states should be plotted, thus no 2nd struct
 %exists
 
@@ -2527,7 +2471,7 @@ argout = plotParams;
 
 
 % --------------------------------------------------------------------
-function showSimMod_Callback(hObject, eventdata, handles)
+function showSimMod_Callback(hObject, eventdata, handles) %#ok<*INUSL>
 % hObject    handle to showSimMod (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
