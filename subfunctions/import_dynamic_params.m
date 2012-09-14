@@ -22,7 +22,7 @@ function varargout = import_dynamic_params(varargin)
 
 % Edit the above text to modify the response to help import_dynamic_params
 
-% Last Modified by GUIDE v2.5 20-Aug-2012 09:56:01
+% Last Modified by GUIDE v2.5 14-Sep-2012 17:32:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -170,41 +170,46 @@ set(handles.t,'RowName',listBlks,'ColumnName',cnames,'Position',posVecTable,...
 
 %% parameters for pushbuttons
 horPosPushbutton1 = 0.1*widthFigure;
-posVectorSubmitButton = [horPosPushbutton1 1.7*bottomFrame 120 35];
+posVectorSubmitButton = [horPosPushbutton1 5.0*bottomFrame 120 35];
 set(handles.pushbutton1,'Units','pixels','Position',posVectorSubmitButton,...
     'String','Add Block');
 
-horPosPushbutton2 = 0.4*widthFigure;
+horPosPushbutton2 = 0.1*widthFigure;
 posVectorCancelButton = [horPosPushbutton2 1.7*bottomFrame 120 35];
 set(handles.pushbutton2,'Units','pixels','String','Remove Block',...
                 'Position',posVectorCancelButton);
 
-horPosPushbutton3 = 0.7*widthFigure;
-posVectorAddParamButton = [horPosPushbutton3 1.7*bottomFrame 120 35];
+horPosPushbutton3 = 0.4*widthFigure;
+posVectorAddParamButton = [horPosPushbutton3 5.0*bottomFrame 120 35];
 set(handles.pushbutton3,'Units','pixels','String','Add Parameter',...
                 'Position',posVectorAddParamButton);
             
-horPosPushbutton4 = 0.1*widthFigure;
-posVectorDebugButton = [horPosPushbutton4 5.0*bottomFrame 120 35];
+horPosPushbutton4 = 0.4*widthFigure;
+posVectorDebugButton = [horPosPushbutton4 1.7*bottomFrame 120 35];
 set(handles.pushbutton4,'Units','pixels','String','Remove Parameter',...
                 'Position',posVectorDebugButton);
             
-horPosPushbutton5 = 0.4*widthFigure;
+horPosPushbutton5 = 0.7*widthFigure;
 posVectorDebugButton1 = [horPosPushbutton5 5.0*bottomFrame 120 35];
-set(handles.pushbutton5,'Units','pixels','String','TESTING',...
-                'Position',posVectorDebugButton1); 
+set(handles.pushbutton5,'Units','pixels','String','Test Value Set',...
+                'Position',posVectorDebugButton1);
+            
+horPosPushbutton6 = 0.7*widthFigure;
+posVectorFinishButton = [horPosPushbutton6 1.7*bottomFrame 120 35];
+set(handles.pushbutton6,'Units','pixels','String','Finish Import',...
+    'Position',posVectorFinishButton);
 
 %% Text fields for input specifications
 % Position of design elements
 posVecPanelTextInputSpecs = [2*sideFrame 5.5*bottomFrame+35 width-2*sideFrame 50]; % [left, bottom, width, height]
 % posVecTextField1InputSpecs ('Style': edit)
-posVecTextField1InputSpecs = [170 8 80 22];
+posVecTextField1InputSpecs = [200 8 80 22];
 % posVecTextField2InputSpecs ('Style': edit)
-posVecTextField2InputSpecs = [370 8 80 22];
+posVecTextField2InputSpecs = [440 8 80 22];
 % posVecTextField1Descrptn ('Style': text )
-posVecTextField1Descrptn = [20 3 150 30];
+posVecTextField1Descrptn = [10 3 200 30];
 % posVecTextField2Descrptn ('Style': text )
-posVecTextField2Descrptn = [270 3 100 30];
+posVecTextField2Descrptn = [290 3 140 30];
             
 % Setting design elements
 set(handles.PanelTextInputSpecs,'Parent',hObject,'Title','Input Specifications',...
@@ -235,7 +240,6 @@ set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,'String','
 % Update handles structure
 guidata(hObject, handles);
 
-
 % UIWAIT makes import_dynamic_params wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
@@ -246,7 +250,6 @@ function varargout = import_dynamic_params_OutputFcn(hObject, eventdata, handles
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 varargout{1} = 1; %handles.output;
 
@@ -560,6 +563,12 @@ if strcmp(choice,'Yes')
     bdclose;
     figure1_CloseRequestFcn(handles.figure1, eventdata, handles);
 end
+
+% --- Executes on button press in pushbutton6 FINISHIMPORT
+function pushbutton6_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes when user attempts to close figure1.

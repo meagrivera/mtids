@@ -20,7 +20,8 @@ if size( varargin,2 ) == 2
 end
 if size( varargin,2 ) == 3
     nodeIDX = varargin{1};
-    mat = varargin{2};
+    data = getappdata(varargin{2},'appData');
+    mat = matrix( data.g );
     template = varargin{3};
 end
 
@@ -32,9 +33,9 @@ incomingIDX = row( col == nodeIDX );
 
 % check out size of incoming signal
 signalSize = zeros( length(incomingIDX),1 );
-for ii = 1:length( incomingIDX )
-    % access to output dimension
-    signalSize(ii) = template{ 1,2 }.dimension.outputs;
+for ii = 1:size( incomingIDX,1 )
+    % access to output dimension of incoming nodes
+    signalSize(ii) = data.templates{ incomingIDX(ii),2 }.dimension.outputs;
 end
     
 if templateHasDependingInputs( nodeIDX,template ) && sum( signalSize )
