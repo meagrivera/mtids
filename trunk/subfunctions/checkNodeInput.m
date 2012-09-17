@@ -11,6 +11,7 @@ function varargout = checkNodeInput( varargin )
 %                   the template
 %                   error.DimMismatch: cell with names of input depending
 %                   variables, which do not obtain the correct dimension
+%           (3) signal size of node input
 
 if size( varargin,2 ) == 2
     nodeIDX = varargin{1};
@@ -37,7 +38,7 @@ for ii = 1:size( incomingIDX,1 )
     % access to output dimension of incoming nodes
     signalSize(ii) = data.templates{ incomingIDX(ii),2 }.dimension.outputs;
 end
-    
+varargout{3} = sum( signalSize );    
 if templateHasDependingInputs( nodeIDX,template ) && sum( signalSize )
 %    if ~isempty( incomingIDX )
        
