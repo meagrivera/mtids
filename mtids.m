@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 24-Aug-2012 10:21:01
+% Last Modified by GUIDE v2.5 17-Sep-2012 09:58:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -156,6 +156,7 @@ data.botton_down = 0;
 data.add_connection = 0;
 data.start_index = 0;
 data.graph_refresh = 1;
+data.adaptInputParams = 'ones';
 
 %container for plot information - 
 % 1.column: printVector -- containes the information about node number,
@@ -202,14 +203,12 @@ set(handles.text16,'String', 'Graph density:');
 setappdata(hObject,'appData',data);
 
 refresh_dynamics(eventdata, handles);
-% refresh_valueSet(handles);
-refresh_graph(0, eventdata, handles,hObject);
 % Choose default command line output for mtids
 handles.output = hObject;
-
 % Update handles structure
 guidata(hObject, handles);
-
+% refresh_valueSet(handles);
+refresh_graph(0, eventdata, handles,hObject);
 % UIWAIT makes mtids wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -331,7 +330,6 @@ setappdata(handles.figure1,'appData',data);
 if graph_refresh == 1
     refresh_graph(0, eventdata, handles,hObject);
 end
-
 % store changed data back to structure 'data'
 data.g = g;
 data.graph_refresh = graph_refresh;
@@ -341,20 +339,8 @@ data.printCell = printCell;
 data.plotAllOutput = plotAllOutput;
 data.expSucc = 0;
 setappdata(handles.figure1,'appData',data);
-
-%debugging output
-%{
-display(['DEBUGGING - "Add node",']);
-display(['End of callback function:']);
-display(['___________________________________________________________']);
-display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
-for k = 1:numel(templates)
-    display(['data.templates{' num2str(k) '} = ' templates(k)]);
-end
-%}
-
 guidata(hObject, handles);
-
+computeInputSizes( handles );
 
 
 % --- Executes when user attempts to close figure1.
@@ -428,9 +414,8 @@ end
 data.modus = modus;
 data.g = g;
 setappdata(handles.figure1,'appData', data);
-
 guidata(hObject, handles);
-
+computeInputSizes(handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -475,61 +460,37 @@ function randomconnection_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
-
 switch modus
     case 'undirected';
         dir = 0;
     case 'directed';
         dir = 1;
 end
-
 a = ceil(nv(g)*rand());
 b = floor(nv(g)*rand());
-
 add(g,a,b,dir);
-
 %store application data
 data.modus = modus;
 data.g = g;
 setappdata(handles.figure1,'appData', data);
-
-refresh_graph(0, eventdata, handles,hObject);
-
 guidata(hObject, handles);
+refresh_graph(0, eventdata, handles,hObject);
+computeInputSizes(handles);
+
 
 % --- Executes on button press in removeconnection.
 function removeconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to removeconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-%load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
 
 % Arreglar conexiones
 % Buscar en labels
 label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
-
-%debugging output
-%{
-display(['DEBUGGING - "removeconnection_Callback",']);
-display(['Before evaluating the buttons "Label" and "Node number":']);
-display(['_____________________________________________________________']);
-display(['Removing... ']);
-display(['From: ' label1 ' to: ' label2]);
-display(['_____________________________________________________________']);
-%}
-
-
 %the radio buttons "Label" and "Node number" evaluates, if a node is
 %adressed via its number or label
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max')) 
@@ -543,55 +504,21 @@ elseif (get(handles.number_button,'Value') == get(handles.label_button,'Max'))
     n1 = str2num(label1);
     n2 = str2num(label2);
 end
-
-
-%debugging output
-%{
-display(['DEBUGGING - "removeconnection_Callback",']);
-display(['After evaluating the buttons "Label" and "Node number":']);
-display(['_____________________________________________________________']);
-display(['Evaluation of button "Label": ' num2str(get(handles.label_button,'Value'))]);
-display(['If 0: value is a number, if 1: value is a string. ']);
-display(['---------------']);
-if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
-    display(['Displaying the content of the structure "labels" of graph:']);
-    display(['---------------']);
-    for k = 1:numel(labs)
-       display(['Entry' num2str(k) 'of "labs": ' labs(k)]); 
-    end
-    display(['---------------']);
-    %display(['Class of the variables n1 and n2, which are used ']);
-    %display(['to delete the chosen edge: ']);
-    display(['Class of n1: ' class(n1) ', Class of n2: ' class(n2) ]);
-    display(['If numbers are visible, validation was correct: ']);
-    display(['From: n1 = ' int2str(n1) ' to: n2 = ' num2str(n2) ]);
-else
-    display(['Class of n1: ' class(n1) ', Class of n2: ' class(n2) ]);
-    display(['If numbers are visible, validation was correct: ']);
-    display(['From: n1 = ' num2str(n1) ' to: n2 = ' num2str(n2) ]);
-end
-
-display(['_____________________________________________________________']);
-%}
-
 switch modus
     case 'undirected';
-        delete(g,n1(1),n2(1));
-        %dir = 0;      
+        delete(g,n1(1),n2(1));     
     case 'directed';
         dir = 1;
         delete(g,n1(1), n2(1), dir);
 end
 
-
 %store application data
 data.g = g;
 data.modus = modus;
 setappdata(handles.figure1,'appData',data);
-
-refresh_graph(0, eventdata, handles,hObject);
-
 guidata(hObject, handles);
+refresh_graph(0, eventdata, handles,hObject);
+computeInputSizes(handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -617,20 +544,14 @@ function removenode_Callback(hObject, eventdata, handles)
 
 % load application data
 data = getappdata(handles.figure1,'appData');
-
-%global g;
 g = data.g;
-%global templates;
 templates = data.templates;
-%global printCell;
 printCell = data.printCell;
 
 a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
     templates(a,:) = []; % Deleting the template for the node, which should be deleted
-
     delete(g,a);
-
     %Here, the i-th entry of the printCell must be deleted too
     length_printCell = size(printCell,1);
     temp_printCell = printCell;
@@ -641,7 +562,6 @@ if nv(g) && (a <= nv(g))
     for i = (a+1):length_printCell
         printCell(i-1,:) = temp_printCell(i,:);
     end
-
     refresh_graph(0, eventdata, handles,hObject);
 end
 
@@ -650,9 +570,8 @@ data.g = g;
 data.templates = templates;
 data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
-
+computeInputSizes(handles);
 
 
 % --- Executes on button press in trimgraph.
@@ -668,10 +587,8 @@ trim(data.g);
 
 %store application data
 setappdata(handles.figure1,'appData',data);
-
-refresh_graph(0, eventdata, handles,hObject);
-
 guidata(hObject, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 
 % --- Executes on button press in clearconnections.
@@ -690,10 +607,8 @@ clear_edges(g);
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
-refresh_graph(0, eventdata, handles,hObject);
-
 guidata(hObject, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 
 % --- Executes on button press in completegraph.
@@ -711,10 +626,9 @@ complete(g);
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
+guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
-guidata(hObject, handles);
 
 % --- Executes on button press in randomgraph.
 function randomgraph_Callback(hObject, eventdata, handles)
@@ -724,20 +638,17 @@ function randomgraph_Callback(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-
 switch data.modus
     case 'undirected';
         random(data.g,1/2);
     case 'directed';
         random(data.g);
 end
-
 %store application data
 setappdata(handles.figure1,'appData',data);
-
-refresh_graph(0, eventdata, handles,hObject)
 guidata(hObject, handles);
-
+refresh_graph(0, eventdata, handles,hObject)
+computeInputSizes(handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -772,8 +683,8 @@ templates = cell(0,1);
 data.g = g;
 data.templates = templates;
 setappdata(handles.figure1,'appData',data);
-
 refresh_graph(1, eventdata, handles,hObject);
+
 
 % --------------------------------------------------------------------
 function loadgraph_Callback(hObject, eventdata, handles)
@@ -1055,7 +966,6 @@ function refresh_graph(reset, eventdata, handles,hObject)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-
 g = data.g;
 modus = data.modus;
 
@@ -1067,7 +977,6 @@ checkblank = get(handles.blankview,'Check');
  
 % rmxy(g);
 cla;
-
 if reset == 1
     rmxy(g); %rmxy: erase g's embedding
 end
@@ -1124,7 +1033,6 @@ switch modus
             set(handles.algebraic_connectivity,'String', '-');
         end    
 end
-
 % set node color
 
 % check for choice of vertex-layout
@@ -1137,15 +1045,14 @@ elseif strcmp(checknumber, 'on')
 else
     draw(g,dir,'-',data.nodeColor(:,1), data.nodeColor(:,2) );
 end
-
 set(handles.nedges,'String', num2str(ne(g,dir)));
 set(handles.nvertices,'String',num2str(nv(g)));
-
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
+% If graph changed, input sizes of nodes must be computed newly
 guidata(hObject, handles);
+% computeInputSizes( handles );
 
 
 % --- Executes on button press in laplacianvisualize.
@@ -1356,9 +1263,8 @@ data.g = g;
 data.template_list = template_list;
 data.templates = templates;
 setappdata(handles.figure1,'appData',data);
-
-refresh_graph(0, eventdata, handles,hObject);
 guidata(hObject, handles);
+refresh_graph(0, eventdata, handles,hObject);
 
 
 % --------------------------------------------------------------------
@@ -1372,9 +1278,7 @@ data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
 templates = data.templates;
-
 disp('Export mode 1');
-
 A  = double(matrix(g));
 
 % Makes the graph a circle
@@ -1413,51 +1317,18 @@ function add_multiple_nodes_Callback(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-templates = data.templates;
-%g = data.g;
-%global g;
-%global graph_refresh;
 n_nodes = str2num(get(handles.number_of_nodes,'String'));
-
-%debugging output
-%{
-display(['DEBUGGING - "Add multiple nodes",']);
-display(['directly after loading the application data:']);
-display(['_____________________________________________________________']);
-display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
-for k = 1:numel(templates)
-    display(['data.templates{' num2str(k) '} = ' templates(k)]);
-end
-display(['_____________________________________________________________']);
-%}
-
 % this is needed, because during creation of the nodes the graph isn't build
 % newly; only at the end the graph should built new.
 data.graph_refresh = 0;
 setappdata(handles.figure1,'appData',data);
-
 for i=1:n_nodes
    newnode_Callback(hObject, eventdata, handles); 
 end
-
 data = getappdata(handles.figure1,'appData');
 %store application data
-%data.g = g;
 data.graph_refresh = 1;
 setappdata(handles.figure1,'appData',data);
-
-%debugging output
-%{
-display(['DEBUGGING - "Add multiple nodes"']);
-display(['End of callback function:']);
-display(['_____________________________________________________________']);
-display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
-for k = 1:numel(templates)
-    display(['data.templates{' num2str(k) '} = ' templates(k)]);
-end
-display(['_____________________________________________________________']);
-%}
-
 refresh_graph(0, eventdata, handles, hObject);
 
 
@@ -1797,9 +1668,8 @@ add(g,nv(g),1,dir)
 data.g = g;
 data.modus = modus;
 setappdata(handles.figure1,'appData',data);
-    
+guidata(hObject, handles);    
 refresh_graph(0, eventdata, handles,hObject);
-guidata(hObject, handles);
 
 
 
@@ -2108,7 +1978,6 @@ function update_graph_button_Callback(hObject, eventdata, handles)
 refresh_graph(1, eventdata, handles,hObject);
 
 
-
 % --------------------------------------------------------------------
 function export_to_simulink2_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink2 (see GCBO)
@@ -2201,8 +2070,8 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
                 data.printCell = cell(0,2);
                 data.nodeColor = cell(0,2);                
         end     
-        refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
+        refresh_graph(0, eventdata, handles,hObject);
     case 'button_directed'
         data.modus = 'directed';
         qstring = {'Preserve vertices?','(Edges will be deleted in both cases)'};
@@ -2218,8 +2087,8 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
                 data.printCell = cell(0,2);
                 data.nodeColor = cell(0,2);
         end
-        refresh_graph(0, eventdata, handles,hObject);
         guidata(hObject, handles);
+        refresh_graph(0, eventdata, handles,hObject);
     % Continue with more cases as necessary.
     otherwise
         % Code for when there is no match.
@@ -2727,16 +2596,21 @@ if filename
         disp(strcat('Saved graph as Matgraph file ("', file,'")'));
      end
 end
- 
 refresh_graph(0, eventdata, handles,hObject);
 
-function check = systemConsistencyTest( handles )
+function varargout = systemConsistencyTest( handles,varargin )
 % This function checks the system, consisting of the graph and its
 % numerical dynamic parameters, which are hidden inside the node templates,
 % for consistency
-% INPUT:    none - system data will be loaded directly using the structure
-% 'data'
+% INPUT:    handles
 % OUTPUT:   (1) 1 for no errors found, 0 for errors found
+%           (2) vector containing if node has consistent input depending
+%               parameters
+if size( varargin,2 ) == 1
+    plotBadNodes = varargin{1};
+else
+    plotBadNodes = 1;
+end
 data = getappdata(handles.figure1,'appData');
 if nv(data.g) ~= 0
     isCorrect = zeros( nv(data.g),1 );
@@ -2747,10 +2621,13 @@ if nv(data.g) ~= 0
     if any( ~isCorrect )
         check = 0;
         % Display errors
-        disp('Errors occured for node number...');
-        for kk = 1:nv(data.g)
-            if ~isCorrect(kk)
-                disp([num2str(kk) ', concerning the variables: ' error{kk}.DimMismatch   ]);
+        if plotBadNodes
+            disp('Errors occured for node number...');
+            for kk = 1:nv(data.g)
+                if ~isCorrect(kk)
+                    disp([num2str(kk) ', concerning the variables: ',...
+                        error{kk}.DimMismatch   ]);
+                end
             end
         end
     else
@@ -2758,7 +2635,87 @@ if nv(data.g) ~= 0
     end
 else
     check = 0;
+    isCorrect = [];
 end
+varargout{1} = check;
+varargout{2} = isCorrect;
+
+function computeInputSizes( handles )
+%COMPUTEINPUTSIZES
+%
+% This function computes the number of input signals of each node, which is
+% a necessary information for linear systems, due to the input signal size
+% must be known to set the node parameters correctly.
+%
+% INPUT:    (figure) handles
+%
+% OUTPUT:   none - node input signal size will be written into node i's
+%           template, in the field: data.templates{i,2}.nodeInputs
+data = getappdata(handles.figure1,'appData');
+if nv(data.g) == 0
+    return
+end
+for ii = 1:nv(data.g)
+    [dontuseA dontuseB temp] = checkNodeInput(ii,data); %#ok<ASGLU>
+    data.templates{ii,2}.nodeInputs = temp;
+end
+setappdata(handles.figure1,'appData',data);
+
+
+% --------------------------------------------------------------------
+function input_parameter_adaptation_Callback(hObject, eventdata, handles)
+% hObject    handle to input_parameter_adaptation (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+
+% get node which don't have consistent input depending parameters
+[isCorrect consistentNodes] = systemConsistencyTest( handles,0 ); %#ok<ASGLU>
+badNodes = ~consistentNodes;
+
+% ask for adaptation method
+[mode check] = inputParamsAdaptation;
+if ~check
+    return
+end
+for ii = 1:nv(data.g)
+    if badNodes(ii)
+        vars = data.templates{ii,2}.inputSpec.Vars;
+        tempSet = data.templates{ii,2}.set;
+        nodeInputs = data.templates{ii,2}.nodeInputs;
+        for kk = 1:length(vars)
+            [tempRow tempCol] = find( strcmp(tempSet,vars{kk}) );
+            if length(tempRow) > 1 || length(tempCol) > 1
+                % error
+                return
+            end
+            valOld = str2num( tempSet{ tempRow,tempCol+1 } );
+            switch mode
+                case 'ones';
+                    valNew = ones( size(valOld,1),nodeInputs );
+                case 'neanNodes';
+                    valNew = ones( size(valOld,1),nodeInputs )/nodeInputs;
+                case 'meanValues';
+                    valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
+                case 'random';
+                    valNew = rand( size(valOld,1),nodeInputs );
+                case 'preserve';
+                    if size( valOld,2 ) < nodeInputs
+                        valNew = [valOld ones(size(valOld,1),nodeInputs-size(valOld,2))];
+                    elseif size( valOld,2 ) > nodeInputs
+                        valNew = valOld(:,1:nodeInputs);
+                    end
+            end
+%             tempSet{ tempRow,tempCol+1 } = valNew;
+            data.templates{ii,2}.set{tempRow,tempCol+1} = num2str(valNew);
+        end
+    end
+end
+
+
+
+
+setappdata(handles.figure1,'appData',data);
 
 %--------------------------------------------------------------------------
 %-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
@@ -2944,10 +2901,5 @@ function selector_valueSet_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*IN
 %        contents{get(hObject,'Value')} returns selected item from selector_valueSet
 
 
+
 %%%%%%%%%
-
-
-
-
-
-
