@@ -22,7 +22,7 @@ function varargout = import_dynamic_params(varargin)
 
 % Edit the above text to modify the response to help import_dynamic_params
 
-% Last Modified by GUIDE v2.5 14-Sep-2012 17:32:47
+% Last Modified by GUIDE v2.5 18-Sep-2012 11:23:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,6 +63,8 @@ filename = varargin{3};
 handles.pathname = varargin{4};
 m=regexp( filename, '\.', 'split','once');
 handles.sysname = m{1};
+% flag if testing param set was successful
+handles.testSuccess = 0;
 
 %% Geometry
 screenSize = get( 0, 'ScreenSize' );
@@ -93,16 +95,19 @@ posVector = [left bottom width height]; %do this dynamically % [left, bottom, wi
 handles.uipanel1 = uipanel;
 handles.t = uitable;
 handles.PanelTextInputSpecs = uipanel;
+handles.PanelSetName = uipanel;
 handles.TextField1InputSpecs = uicontrol;
 handles.TextField2InputSpecs = uicontrol;
 handles.TextField1Descrptn = uicontrol;
 handles.TextField2Descrptn = uicontrol;
+handles.TextFieldSetNameHelp = uicontrol;
+handles.EditFieldSetName = uicontrol;
 % handles.textBlockType = uicontrol;
 
 % setting figure parameters manually
 defaultBackground = get(0,'defaultUicontrolBackgroundColor');
 % save('posVecFigure','posVector');
-set(hObject,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
+set(handles.fig_importTemplate,'Position',posVector,'Name','Import Dynamic Wizard','Toolbar','none',...
     'MenuBar','none','Resize','on','ResizeFcn',{@figResize,handles},'Color',...
     defaultBackground,'Units','pixels');%,'CloseRequestFcn',{@figure1_CloseRequestFcn,handles});
 
@@ -125,7 +130,7 @@ end
 %% Set Column names and "edit cell" properties
 cnames = cell( size(dat,2) , 1 );
 cnames{1} = 'Block Name';
-columneditable = logical( zeros(1, size(dat,2) ));
+columneditable = logical( zeros(1, size(dat,2) )); %#ok<LOGL>
 for i = 1:floor( size(dat,2) / 2)
     cnames{2*i} = 'Parameter Name';
     cnames{2*i + 1} = 'Value';
@@ -137,8 +142,8 @@ columnformat = repmat( {'char'}, 1,size(dat,2) );
 %% Column and cell format computations
 % width of table should be adapted on content or column cells
 % idea: compute number of symbols which are spread horizontally
-heightTable = 1.25*sizeChar2Pixel(hObject, 'h', ( nrBlks + 2 ) );
-[ widthTable columnwidth] = get_tableColumnWidth(hObject,listBlks,dat,cnames);
+heightTable = 1.25*sizeChar2Pixel(handles.fig_importTemplate, 'h', ( nrBlks + 2 ) );
+[ widthTable columnwidth] = get_tableColumnWidth(handles.fig_importTemplate,listBlks,dat,cnames);
 widthFigure = widthTable + 140;
 
 %% Prepare table position properties
@@ -150,14 +155,14 @@ end
 
 %% Creating Figure Content
 posVector(3) = widthFigure;
-set(hObject,'Position',posVector);
+set(handles.fig_importTemplate,'Position',posVector);
 
 % parameters for panel, in which all other control elements are positioned
 % posVectorPanel = get_panelPosition(widthTable, height);
 posVectorPanel = [sideFrame bottomFrame width-2*sideFrame height-topFrame]; % [left, bottom, width, height]
 
 % save('posVecPanel','posVectorPanel');
-set(handles.uipanel1,'Parent',hObject,'Title',['Collecting parameters for model ''',...
+set(handles.uipanel1,'Parent',handles.fig_importTemplate,'Title',['Collecting parameters for model ''',...
     handles.sysname char(39)],'Units','pixel','Position',posVectorPanel);
 
 set(handles.t,'Units','pixel');
@@ -202,6 +207,9 @@ set(handles.pushbutton6,'Units','pixels','String','Finish Import',...
 %% Text fields for input specifications
 % Position of design elements
 posVecPanelTextInputSpecs = [2*sideFrame 5.5*bottomFrame+35 width-2*sideFrame 50]; % [left, bottom, width, height]
+posVecPanelSetName = [2*sideFrame 5.5*bottomFrame+95 width-2*sideFrame 50];
+posVecTextFieldSetNameHelp = [10 3 200 30];
+posVecEditFieldSetName = [210 3 200 30];
 % posVecTextField1InputSpecs ('Style': edit)
 posVecTextField1InputSpecs = [200 8 80 22];
 % posVecTextField2InputSpecs ('Style': edit)
@@ -210,17 +218,33 @@ posVecTextField2InputSpecs = [440 8 80 22];
 posVecTextField1Descrptn = [10 3 200 30];
 % posVecTextField2Descrptn ('Style': text )
 posVecTextField2Descrptn = [290 3 140 30];
-            
+
 % Setting design elements
-set(handles.PanelTextInputSpecs,'Parent',hObject,'Title','Input Specifications',...
+set(handles.PanelTextInputSpecs,'Parent',handles.fig_importTemplate,'Title','Input Specifications',...
     'Units','pixel','Position',posVecPanelTextInputSpecs);
+set(handles.PanelSetName,'Parent',handles.fig_importTemplate,'Title','Name for parameter set',...
+    'Units','pixel','Position',posVecPanelSetName);
+TextFieldSetNameHelp_String = 'Use significant names for different value sets:';
+set(handles.TextFieldSetNameHelp,'Style','text','Parent',handles.PanelSetName,...
+    'Units','pixel','Position',posVecTextFieldSetNameHelp,'String',TextFieldSetNameHelp_String);
+% % check number of still existing value sets
+% if exist([handles.sysname '_paramValues.mat'],'file')
+%     load([handles.sysname '_paramValues.mat']);
+%     % check if the paramSet still exists
+%     eval(['idx = length( ' answer{1} '_paramValues);']);
+% end
+editFieldSetNameInitString = 'Value Set #';
+set(handles.EditFieldSetName,'Parent',handles.PanelSetName,...
+    'Style','edit','Units','pixel','Position',posVecEditFieldSetName,...
+    'BackgroundColor',[1 1 1],'Callback',{@EditFieldSetName_Callback,handles},...
+    'String',editFieldSetNameInitString);
 set(handles.TextField1InputSpecs,'Parent',handles.PanelTextInputSpecs,...
     'Style','edit','Units','pixel','Position',posVecTextField1InputSpecs,...
     'BackgroundColor',[1 1 1],'Callback',{@TextField1InputSpecs_Callback,handles});
-TextField1Descrptn_String = 'Linear depending parameters on number of external inputs';
+TextField1Descrptn_String = 'Linear depending parameters on number of external inputs:';
 set(handles.TextField1Descrptn,'Style','text','Parent',handles.PanelTextInputSpecs,...
     'Units','pixel','Position',posVecTextField1Descrptn,'String',TextField1Descrptn_String);
-TextField2Descrptn_String = 'Thereof number of internal inputs';
+TextField2Descrptn_String = 'Thereof number of internal inputs:';
 set(handles.TextField2Descrptn,'Style','text','Parent',handles.PanelTextInputSpecs,...
     'Units','pixel','Position',posVecTextField2Descrptn,'String',TextField2Descrptn_String);
 set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,'String','0',...
@@ -238,14 +262,14 @@ set(handles.TextField2InputSpecs,'Parent',handles.PanelTextInputSpecs,'String','
 % uistack(handles.textBlockType,'top');
 
 % Update handles structure
-guidata(hObject, handles);
+guidata(handles.fig_importTemplate, handles);
 
 % UIWAIT makes import_dynamic_params wait for user response (see UIRESUME)
-uiwait(handles.figure1);
+uiwait(handles.fig_importTemplate);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = import_dynamic_params_OutputFcn(hObject, eventdata, handles) 
+function varargout = import_dynamic_params_OutputFcn(hObject, eventdata, handles)  %#ok<INUSD>
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -497,20 +521,100 @@ try
         set(handles.t,'Data',cellData,'ColumnName',colNames);
     end
     
-catch
+catch %#ok<CTCH>
    % 
 end
 
 % --- Executes on button press in pushbutton5. TESTING
-function pushbutton5_Callback(hObject, eventdata, handles)
+function pushbutton5_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-[dimension choice ] = testingValueSet( handles,1 );
-Data = get(handles.t,'Data');
+[dimension choice ] = testingValueSet( handles,0 );
+if strcmp( choice, 'yes' )
+    handles.testSuccess = 1;
+    handles.dimension = dimension;
+    guidata(handles.fig_importTemplate, handles);
+end
+% Data = get(handles.t,'Data'); %#ok<NASGU>
 % In case of being successful, store parameters
-if strcmp(choice,'Yes')
+% if strcmp(choice,'Yes')
+%     % copy model to \import
+%     % ask for new filename
+%     prompt = {'Enter name of imported template:'};
+%     dlg_title = 'Name of imported template';
+%     num_lines = 1;
+%     def = {handles.sysname};
+%     answer = inputdlg(prompt,dlg_title,num_lines,def);
+%     pathname = [pwd filesep 'import' filesep];
+%     if ~exist( [answer{1} '_CHECKED'],'file')
+%         save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+%     end
+%     % copy also data=>use existing table
+%     flagEqual = 0;
+%     % Prepare storing of input specifications
+%     inputSpec.Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
+%     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
+%     if exist([answer{1} '_paramValues.mat'],'file')
+%         load([answer{1} '_paramValues.mat']);
+%         % check if the paramSet still exists        
+%         eval(['idx = length( ' answer{1} '_paramValues);']);
+%         for ii = 1:idx
+%             cmd2 = ['flagEqual = isequal(Data,' answer{1} ...
+%                 '_paramValues(' num2str(ii) ').set);'];
+%             eval( cmd2 );
+%             if flagEqual == 1
+% %                msgbox('Parameter set still exists');
+%                break 
+%             end
+%         end
+%         if flagEqual == 0
+%             cmd1 = [answer{1} '_paramValues(' num2str(idx+1) ').set = '...
+%                 'Data;'];
+%             cmd3 = [answer{1} '_paramValues(' num2str(idx+1) ').dimension = '...
+%                 'dimension;'];
+%             cmd4 = [answer{1} '_paramValues(' num2str(idx+1) ').inputSpec = '...
+%                 'inputSpec;'];
+%             tempString = get(handles.EditFieldSetName,'String');
+%             if regexp( tempString, 'Value Set')
+%                 tempString = ['Value Set ' num2str(dx+1) ];
+%             end
+%             cmd5 = [answer{1} '_paramValues(' num2str(idx+1) ').setName = '...
+%                 tempString ';'];
+%             eval( cmd1 );
+%             eval( cmd3 );
+%             eval( cmd4 );
+%             eval( cmd5 );
+%         end
+%     else
+%         eval([answer{1} '_paramValues.set = Data;']);
+%         eval([answer{1} '_paramValues.dimension = dimension;']);
+%         eval([answer{1} '_paramValues.inputSpec = inputSpec;']);
+%         eval([answer{1} '_paramValues.setName = ' get(handles.EditFieldSetName,'String') ';']);
+%     end
+%     if flagEqual == 0
+%         save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
+%     end
+%     % close figure
+%     bdclose;
+%     figure1_CloseRequestFcn(handles.fig_importTemplate, eventdata, handles);
+% end
+
+% --- Executes on button press in pushbutton6 FINISHIMPORT
+function pushbutton6_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.testSuccess
+    choice = 'yes';
+    dimension = handles.dimension; %#ok<NASGU>
+else
+    [dimension choice ] = testingValueSet( handles,0 ); %#ok<ASGLU>
+end
+
+% In case of being successful, store parameters
+if strcmp(choice,'yes')
+    Data = get(handles.t,'Data'); %#ok<NASGU>
     % copy model to \import
     % ask for new filename
     prompt = {'Enter name of imported template:'};
@@ -547,45 +651,46 @@ if strcmp(choice,'Yes')
                 'dimension;'];
             cmd4 = [answer{1} '_paramValues(' num2str(idx+1) ').inputSpec = '...
                 'inputSpec;'];
+            tempString = get(handles.EditFieldSetName,'String');
+            if regexp( tempString, 'Value Set')
+                tempString = ['Value Set ' num2str(idx+1) ];
+            end
+            cmd5 = [answer{1} '_paramValues(' num2str(idx+1) ').setName = '''...
+                tempString ''';'];
             eval( cmd1 );
             eval( cmd3 );
             eval( cmd4 );
+            eval( cmd5 );
         end
     else
         eval([answer{1} '_paramValues.set = Data;']);
         eval([answer{1} '_paramValues.dimension = dimension;']);
         eval([answer{1} '_paramValues.inputSpec = inputSpec;']);
+        eval([answer{1} '_paramValues.setName = ' get(handles.EditFieldSetName,'String') ';']);
     end
     if flagEqual == 0
         save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
     end
     % close figure
     bdclose;
-    figure1_CloseRequestFcn(handles.figure1, eventdata, handles);
+    fig_importTemplate_CloseRequestFcn(handles.fig_importTemplate, eventdata, handles);
 end
 
-% --- Executes on button press in pushbutton6 FINISHIMPORT
-function pushbutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes when user attempts to close figure1.
-function figure1_CloseRequestFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
+% --- Executes when user attempts to close fig_importTemplate.
+function fig_importTemplate_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to fig_importTemplate (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: delete(hObject) closes the figure
 handles.OutputFlag = 1;
 guidata(hObject, handles);
-%     uiresume(handles.figure1);
+%     uiresume(handles.fig_importTemplate);
 delete(hObject);
      
 
 function height = get_figureHeight( nrBlks )
 % Set the height of the figure
-fixedHeight = 170 + 60; % + 60 due to new elements
+fixedHeight = 170 + 120; % + 60 due to new elements
 rowHeight = 25;
 height = fixedHeight + nrBlks*rowHeight;
 
@@ -595,7 +700,7 @@ handles.selected_cells = evt.Indices;
 guidata(src, handles);
 
 % --- Executes when cell(s) is (are) edited
-function table_CellEditCallbackFcn(src,evt,handles)
+function table_CellEditCallbackFcn(src,evt,handles) %#ok<*INUSL>
 % success = 0;
 % Get indices of edited cell
 IDX = evt.Indices;
@@ -628,6 +733,8 @@ if isnan( temp ) || rem(temp,1) || temp < 0
     errordlg('Number of internal inputs must be a non-negative integer value');
     set(handles.TextField2InputSpecs,'String',num2str(0));
 end
+
+function EditFieldSetName_Callback( src,evt,handles )
 
 
 %%%%%ENDOFSCRIPT%%%%%%%%%%%

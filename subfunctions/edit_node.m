@@ -179,7 +179,7 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{9} = data.plotParamsOld; 
 end
  
-if handles.flagEditParams
+if handles.flagEditParams && handles.OutputFlag == 2
     varargout{10} = data.newTemplate;
 else
     varargout{10} = data.oldTemplate;

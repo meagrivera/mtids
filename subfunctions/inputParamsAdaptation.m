@@ -105,7 +105,7 @@ function panel_setMode_SelectionChangeFcn(hObject, eventdata, handles) %#ok<DEFN
 switch get(eventdata.NewValue,'Tag')
     case 'radiobutton_ones';
         handles.mode = 'ones';
-    case 'radiobutton_neanNodes';
+    case 'radiobutton_meanNodes';
         handles.mode = 'meanNodes';
     case 'radiobutton_meanValues';
         handles.mode = 'meanValues';

@@ -127,7 +127,6 @@ switch flagLoadSet
         
     case 2;
         
-        
     otherwise;
         data.plotAllOutput = 1;
         data.flag_showSimMod = 1;
@@ -149,7 +148,6 @@ switch flagLoadSet
 end
 
 data.template_list = readImportedTemplates(data.template_list);
-
 data.move_index = 0;
 data.expSucc = 0;
 data.botton_down = 0;
@@ -256,18 +254,6 @@ template_list = data.template_list;
 printCell = data.printCell;
 plotAllOutput = data.plotAllOutput;
 
-%debugging output
-%{
-display(['DEBUGGING - "Add node']);
-display(['After loading the application data:']);
-display(['______________________________________________________________']);
-display(['Number of elements in "templates": ' num2str(numel(templates)) ]);
-display(['Number of elements in "template_list": ' num2str(numel(template_list)) ]);
-for k = 1:numel(templates)
-    display(['data.templates{' num2str(k) '} = ' templates(k)]);
-end
-%}
-
 rmxy(g);
 new_vertex = nv(g) + 1;
 resize(g, new_vertex);
@@ -299,6 +285,10 @@ n_template = get(handles.selector_dynamic, 'Value');
 n_valueSet = get(handles.selector_valueSet, 'Value');
 templates{nv(g),1} = template_list{n_template,1};
 templates{nv(g),2} = template_list{n_template,4}(n_valueSet);
+if ~isfield(templates{nv(g),2},'setName') || isempty(templates{nv(g),2}.setName)
+    temp = get(handles.selector_valueSet,'String');
+    templates{nv(g),2}.setName = temp{n_valueSet};
+end
 length_nodeColor = size(data.nodeColor,1);
 tempNodeColor = data.nodeColor;
 data.nodeColor = cell(length_nodeColor+1,2);
@@ -1229,8 +1219,7 @@ file = strcat(pathname, filename);
 
 addpath(pathname);
  
-[pathname, model, ext] = fileparts(file);
- 
+[pathname, model, ext] = fileparts(file); 
  
 [A, nverts, nedges, xy, labs ] = importSimulink(model);
 
@@ -1590,8 +1579,7 @@ end
 
 
 function refresh_dynamics(eventdata, handles)
-% This function refreshes the graph window
-
+% This function refreshes the drop down menu of the dynamic templates
 %load application data
 data = getappdata(handles.figure1,'appData');
 template_list = data.template_list;
@@ -1611,7 +1599,8 @@ refresh_valueSet(handles);
 %no data storage needed, because this can be seen as a "void" function.
  
 function refresh_valueSet(handles)
-% This function refreshes the graph window
+% This function refreshes the drop down menu of the parameter value sets
+% for the dynamic templates
 
 %load application data
 data = getappdata(handles.figure1,'appData');
@@ -1629,9 +1618,14 @@ nrOfParamSets = length( data.template_list{temp,4} );
 % [ny, nx] = size(data.template_list);
 drop_string = cell( nrOfParamSets,1 );
 for i=1:nrOfParamSets
-    drop_string{i} = ['Value set ' num2str(i)];
+    % Check if template contains a name for a set
+    if isfield(data.template_list{idxDynSelector,4}(i),'setName') &&...
+            ~isempty(data.template_list{idxDynSelector,4}(i).setName)
+        drop_string{i} = data.template_list{idxDynSelector,4}(i).setName;
+    else
+        drop_string{i} = ['Value set ' num2str(i)];
+    end
 end
-
 set(handles.selector_valueSet, 'String', drop_string,'Value',1);
 %guidata(hObject, handles);
 %no data storage needed, because this can be seen as a "void" function.
@@ -1646,9 +1640,6 @@ function circular_graph_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
 
 switch modus
     case 'undirected';
@@ -1690,17 +1681,6 @@ templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
 printCell = data.printCell;
-
-%global g;
-%global botton_down;
-%global add_connection;
-%global move_index;
-%global start_index;
-%global templates;
-%global template_list;
-%global modus;
-%global printCell;
-
 
 CP = get(handles.axes1, 'CurrentPoint');
 x_c = CP(1,1);
@@ -1839,13 +1819,16 @@ end
 if strcmp(get(handles.output, 'SelectionType'), 'extend')
     start_button = 0;
     button_down = 0;
-    
     newnode_Callback(hObject, eventdata, handles);
-    
+    data = getappdata(handles.figure1,'appData');
     XY(nv(g),1) = x_c;
     XY(nv(g),2) = y_c;
     embed(g,XY);
     refresh_graph(0, eventdata, handles,hObject);
+    data.g = g;
+    setappdata(handles.figure1,'appData',data);
+    guidata(hObject, handles);
+    return
 end
 
 %store application data
@@ -1859,10 +1842,8 @@ data.template_list = template_list;
 data.modus = modus;
 data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
-
-
+computeInputSizes(handles);
 
 
 % --- Executes on mouse press over figure background, over a disabled or
@@ -1874,12 +1855,7 @@ function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
 
 %load application data
 data = getappdata(handles.figure1,'appData');
-%botton_down = data.botton_down;
 g = data.g;
-
-%global botton_down;
-%global g;
-
 botton_down = 0;
 
 %store application data
@@ -1899,10 +1875,6 @@ data = getappdata(handles.figure1,'appData');
 botton_down = data.botton_down;
 move_index = data.move_index;
 g = data.g;
-
-%global botton_down;
-%global move_index;
-%global g;
 
 if botton_down
     CP = get(handles.axes1, 'CurrentPoint');
@@ -1936,17 +1908,9 @@ g = data.g;
 templates = data.templates;
 template_list = data.template_list;
 
-%global g;
-%global templates;
-%global template_list;
-
 A  = double(matrix(g));
-
-%
 rmxy(g);
 embed(g);
-
-%
 xy = getxy(g);
 
 labs = get_label(g);
@@ -2693,12 +2657,12 @@ for ii = 1:nv(data.g)
             switch mode
                 case 'ones';
                     valNew = ones( size(valOld,1),nodeInputs );
-                case 'neanNodes';
+                case 'meanNodes';
                     valNew = ones( size(valOld,1),nodeInputs )/nodeInputs;
                 case 'meanValues';
                     valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
                 case 'random';
-                    valNew = rand( size(valOld,1),nodeInputs );
+                    valNew = randn( size(valOld,1),nodeInputs );
                 case 'preserve';
                     if size( valOld,2 ) < nodeInputs
                         valNew = [valOld ones(size(valOld,1),nodeInputs-size(valOld,2))];
@@ -2706,14 +2670,17 @@ for ii = 1:nv(data.g)
                         valNew = valOld(:,1:nodeInputs);
                     end
             end
-%             tempSet{ tempRow,tempCol+1 } = valNew;
-            data.templates{ii,2}.set{tempRow,tempCol+1} = num2str(valNew);
+            % wrap 'valNew' into correct format for writing the values into
+            % simulink blocks
+            str = '[';
+            for jj = 1:size(valNew,1) % for each line of 'valNew'
+                str = [str num2str(valNew(jj,:)) ';'];
+            end
+            str(end) = ']';
+            data.templates{ii,2}.set{tempRow,tempCol+1} = str;
         end
     end
 end
-
-
-
 
 setappdata(handles.figure1,'appData',data);
 
