@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 17-Sep-2012 09:58:09
+% Last Modified by GUIDE v2.5 19-Sep-2012 12:08:37
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,6 +85,7 @@ addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs a
 addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with various import/export functions
 addpath(strcat(pwd,'/subfunctions/mtids_main'));
 addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
+addpath(strcat(pwd,'/subfunctions/figures'));
 
 %initialize graph
 graph_init;
@@ -1058,22 +1059,16 @@ modus = data.modus;
 
 switch modus
     case 'undirected';
-
         L = laplacian(g);
-
         rank_L = rank(L);       % Matrix rank
         dim_L  = mean(size(L)); % Matrix dimension
-
         null_L = dim_L - rank(L); %Rank of the null-space (from rank-nullity theorem)
                                     %Gives us number of connected (sub) graphs
         degree_vector = diag(L);
-
         D = diag(diag(L));
         A = D - L; % Adjacency matrix
-
         rank_A = rank(A);       % Matrix rank
         dim_A  = mean(size(A)); % Matrix dimension
-
         null_A = dim_A - rank(A); %Rank of the null-space (from rank-nullity theorem)
                                     %Gives us number of connected (sub) graphs
         set(handles.text22,'String', 'Independent Graphs:');
@@ -1130,14 +1125,6 @@ switch modus
         dim_L = mean(size(LaplacianIn)); %matrix-dimension
         
         set(handles.text22,'String', 'Weak connected subgraphs:');
-        %if rank_L_In ~= rank_L_Out
-        %    set(handles.connected_graphs,'String', 'Error!');
-        %elseif rank_L_In == rank_L_Out
-            %rank of the nullspace, gives the number of connected subgraphs
-        %    null_L = dim_L-rank_L_In;
-        %    set(handles.connected_graphs,'String', num2str(null_L,'%d')); 
-        %end
-        
         set(handles.connected_graphs,'String', num2str( length( compute_WCC( data.g))));
         
         minInDeg = min(InDeg);
@@ -1160,8 +1147,7 @@ switch modus
             isCyclic = 'Yes';
         else
             isCyclic = 'No';
-        end
-        
+        end       
         set(handles.text32,'String','Strong connected subgraphs:');
         set(handles.strong_connections,'String', strongCons);
         set(handles.text9,'String', 'Minimum In-Degree:');
@@ -1213,7 +1199,6 @@ templates = data.templates;
 {'*.mdl','Simulink Model (*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
    'Import Simulink model');
-
 
 file = strcat(pathname, filename);
 
@@ -1348,9 +1333,7 @@ function label_button_Callback(hObject, eventdata, handles)
 % hObject    handle to label_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of label_button
-
 set(handles.number_button,'Value', 0);
 set(handles.label_button,'Value', 1);
 
@@ -1360,11 +1343,9 @@ function number_button_Callback(hObject, eventdata, handles)
 % hObject    handle to number_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of number_button
 set(handles.label_button,'Value', 0);
 set(handles.number_button,'Value', 1);
-
 
 
 % --------------------------------------------------------------------
@@ -1372,15 +1353,10 @@ function export_to_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
-%global g;
-%global modus;
-
 uiwait( export_as_matrix(laplacian(g),g,modus));
 
 
@@ -1404,21 +1380,18 @@ num_lines = 1;
 def = {'base','matrix'};
 answer = inputdlg(prompt,dlg_title,num_lines,def);
 
-if isempty(answer)
-
-else
+if ~isempty(answer)
     M = evalin(answer{1},answer{2});
     switch modus
         case 'undirected';
             elist = any_matrix_to_elist(M);
         case 'directed';
             elist = any_matrix_to_elist(M,1);
-    end
-
+    end    
     %Corrects the problem posed by a zero-adj-matrix!
-     if ( elist(1,:) == zeros(1,2)  )
+    if ( elist(1,:) == zeros(1,2)  )
         g = graph( size(M,1) );
-     else
+    else
         switch modus
             case 'undirected';
                 g = graph(elist);
@@ -1429,16 +1402,13 @@ else
                     add(g,elist(i,1),elist(i,2),1);
                 end
         end
-     end
-
+    end
     templates = cell(0,1);
     n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
-
     for i=1:nv(g)
         templates{i,1}=template_list{n_template,1};
     end
 end
-
 %Initialize the printCell
 nrNodes = nv(g);
 printCell = cell(nrNodes,2);
@@ -1446,7 +1416,6 @@ for i = 1:nrNodes
     printCell(i,1) = num2cell([1 0],2);
     printCell{i,1} = initPlotParams;
 end
-
 %store application data
 data.g = g;
 data.templates = templates;
@@ -1454,7 +1423,6 @@ data.template_list = template_list;
 data.modus = modus;
 data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
@@ -1464,7 +1432,6 @@ function add_mdl_template_Callback(hObject, eventdata, handles)
 % hObject    handle to add_mdl_template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 template_list = data.template_list;
@@ -1513,13 +1480,10 @@ elseif filename %filename is not a cell (it's a string) and not 0
         disp(strcat('ERROR: "',filename, '" is not a Simulink model'));
     end
 end
-
 cd(oldFolder);
-
 %store application data
 data.template_list = template_list;
 setappdata(handles.figure1,'appData',data);
-
 refresh_dynamics(eventdata, handles);
 guidata(hObject, handles);
  
@@ -1536,24 +1500,7 @@ function selector_dynamic_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-% refresh_dynamics(eventdata, handles);
-% data = getappdata(handles.figure1,'appData');
-% template_list = cell(0,1);
-% template_list{1,1} = 'LTI';
-% drop_string = cell(0,0);
-% [ny, nx] = size(data.template_list);
-% for i=1:ny
-%     if i == 1
-%         drop_string = data.template_list{1,1};
-%     elseif i == ny
-%         drop_string = strcat(drop_string,'|',data.template_list{i,1});
-%     else        
-%         drop_string = strcat(drop_string,'|',data.template_list{i,1});
-%     end
-% end
-% set(hObject, 'String', drop_string);
-%set(handles.selector_dynamic, 'String', drop_string);
-%guidata(hObject, handles);
+
 
 % --- Executes on selection change in selector_dynamic.
 function selector_dynamic_Callback(hObject, eventdata, handles)
@@ -1728,7 +1675,7 @@ if C <= 0.05; % Hardcoded value!
         
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
         % Opens EDIT_NODE(): node modification dialog
-        [s1,nodenumber,nodelabel,template,neighbours,destroy,intStates,...
+        [s1,nodenumber,nodelabel,template,neighbours,destroy,templateSaved,...
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
             templates(I,:), template_list, g(I), printCell(I,:),handles.figure1 );
         if ~all( cellfun(@isequal,newTemplate,templates(I,:)) )
@@ -1763,10 +1710,8 @@ if C <= 0.05; % Hardcoded value!
             
             for i=1:size_ne
                 delete(g,I,e_delete(i));
-            end
-            
-            size_ne = size(neighbours,2);
-            
+            end           
+            size_ne = size(neighbours,2);          
             if ~strcmp(neighbours, '[]')
                 for i=1:size_ne
                     if strcmp( data.modus,'directed')
@@ -1779,16 +1724,12 @@ if C <= 0.05; % Hardcoded value!
             %assignin('base','printVector',printVector);
             %Provide here the new plotting information
             printCell(nodenumber,1) = num2cell(printVector,2);
-            printCell{nodenumber,2} = plotParams;
-            
-            refresh_graph(0, eventdata, handles,hObject);
-            
+            printCell{nodenumber,2} = plotParams;           
+            refresh_graph(0, eventdata, handles,hObject);            
         elseif destroy == 1
             if nv(g) && (I <= nv(g))
-                templates(I,:) = []; % Deleting a template
-                
-                delete(g,I);
-                
+                templates(I,:) = []; % Deleting a template               
+                delete(g,I);              
                 %Here, the i-th entry of the printCell must be deleted too
                 if size(printCell,1) == 1
                     printCell = cell(0,2);
@@ -1803,15 +1744,15 @@ if C <= 0.05; % Hardcoded value!
                     for i = (nodenumber+1):length_printCell
                         printCell(i-1,:) = temp_printCell(i,:);
                     end
-                end
-                
+                end               
                 refresh_graph(0, eventdata, handles,hObject);
-            end
-            
+            end           
         end %if destroy == 0
+        if templateSaved
+            template_list = readImportedTemplates( template_list );
+        end
         %}
     end
-
 else % do nothing?
   
 end
@@ -1844,6 +1785,7 @@ data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 computeInputSizes(handles);
+refresh_valueSet( handles );
 
 
 % --- Executes on mouse press over figure background, over a disabled or
@@ -1869,7 +1811,6 @@ function figure1_WindowButtonMotionFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 botton_down = data.botton_down;
@@ -1892,7 +1833,6 @@ data.botton_down = botton_down;
 data.move_index = move_index;
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);  
 
 
@@ -1938,7 +1878,6 @@ function update_graph_button_Callback(hObject, eventdata, handles)
 % hObject    handle to update_graph_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 refresh_graph(1, eventdata, handles,hObject);
 
 
@@ -1993,7 +1932,6 @@ end
 if expSucc && ~isempty( filename )
     data.sysFilename = filename;
 end
-
 %store application data
 data.expSucc = expSucc;
 setappdata(handles.figure1,'appData',data);
@@ -2058,10 +1996,8 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         % Code for when there is no match.
         data.modus = 'undirected';
 end
-
 %store application data
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles); 
 
 
@@ -2282,34 +2218,12 @@ display(['Number of nodes: ' num2str(nv(data.g)) ]);
 assignin('base','data',data);
 
 
-
-% -- this function initializes the plot parameters for a node
-function [argout] = initPlotParams( dim )
-% output is a (1+n) element struct containing six elements, where
-%n is the amount of internal states to plot. At start of mtids, n=1 for
-%each node
-for kk = 1:dim
-    plotParams(kk).lineWidth = '1.0'; %#ok<*AGROW>
-    plotParams(kk).lineStyle = '-';
-    plotParams(kk).marker = 'none';
-    plotParams(kk).lineColor = [0 0 1];
-    plotParams(kk).edgeColor = [0 0 1];
-    plotParams(kk).faceColor = [0 0 1];
-end
-%at start of mtids, no int. states should be plotted, thus no 2nd struct
-%exists
-
-argout = plotParams;
-
-
-
 % --------------------------------------------------------------------
 function showSimMod_Callback(hObject, eventdata, handles) %#ok<*INUSL>
 % hObject    handle to showSimMod (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
-
 if strcmp(get(handles.showSimMod,'Checked'),'on')
     set(handles.showSimMod,'Checked','off')
     data.flag_showSimMod = 0;
@@ -2317,7 +2231,6 @@ else
     set(handles.showSimMod,'Checked','on')
     data.flag_showSimMod = 1;
 end
-
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);         
         
@@ -2562,311 +2475,64 @@ if filename
 end
 refresh_graph(0, eventdata, handles,hObject);
 
-function varargout = systemConsistencyTest( handles,varargin )
-% This function checks the system, consisting of the graph and its
-% numerical dynamic parameters, which are hidden inside the node templates,
-% for consistency
-% INPUT:    handles
-% OUTPUT:   (1) 1 for no errors found, 0 for errors found
-%           (2) vector containing if node has consistent input depending
-%               parameters
-if size( varargin,2 ) == 1
-    plotBadNodes = varargin{1};
-else
-    plotBadNodes = 1;
-end
-data = getappdata(handles.figure1,'appData');
-if nv(data.g) ~= 0
-    isCorrect = zeros( nv(data.g),1 );
-    error = cell( nv(data.g),1 );
-    for kk = 1:nv(data.g)
-       [isCorrect(kk) error{kk}] = checkNodeInput(kk,data);  
-    end
-    if any( ~isCorrect )
-        check = 0;
-        % Display errors
-        if plotBadNodes
-            disp('Errors occured for node number...');
-            for kk = 1:nv(data.g)
-                if ~isCorrect(kk)
-                    disp([num2str(kk) ', concerning the variables: ',...
-                        error{kk}.DimMismatch   ]);
-                end
-            end
-        end
-    else
-        check = 1;
-    end
-else
-    check = 0;
-    isCorrect = [];
-end
-varargout{1} = check;
-varargout{2} = isCorrect;
-
-function computeInputSizes( handles )
-%COMPUTEINPUTSIZES
-%
-% This function computes the number of input signals of each node, which is
-% a necessary information for linear systems, due to the input signal size
-% must be known to set the node parameters correctly.
-%
-% INPUT:    (figure) handles
-%
-% OUTPUT:   none - node input signal size will be written into node i's
-%           template, in the field: data.templates{i,2}.nodeInputs
-data = getappdata(handles.figure1,'appData');
-if nv(data.g) == 0
-    return
-end
-for ii = 1:nv(data.g)
-    [dontuseA dontuseB temp] = checkNodeInput(ii,data); %#ok<ASGLU>
-    data.templates{ii,2}.nodeInputs = temp;
-end
-setappdata(handles.figure1,'appData',data);
-
-
-% --------------------------------------------------------------------
-function input_parameter_adaptation_Callback(hObject, eventdata, handles)
-% hObject    handle to input_parameter_adaptation (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-data = getappdata(handles.figure1,'appData');
-
-% get node which don't have consistent input depending parameters
-[isCorrect consistentNodes] = systemConsistencyTest( handles,0 ); %#ok<ASGLU>
-badNodes = ~consistentNodes;
-
-% ask for adaptation method
-[mode check] = inputParamsAdaptation;
-if ~check
-    return
-end
-for ii = 1:nv(data.g)
-    if badNodes(ii)
-        vars = data.templates{ii,2}.inputSpec.Vars;
-        tempSet = data.templates{ii,2}.set;
-        nodeInputs = data.templates{ii,2}.nodeInputs;
-        for kk = 1:length(vars)
-            [tempRow tempCol] = find( strcmp(tempSet,vars{kk}) );
-            if length(tempRow) > 1 || length(tempCol) > 1
-                % error
-                return
-            end
-            valOld = str2num( tempSet{ tempRow,tempCol+1 } );
-            switch mode
-                case 'ones';
-                    valNew = ones( size(valOld,1),nodeInputs );
-                case 'meanNodes';
-                    valNew = ones( size(valOld,1),nodeInputs )/nodeInputs;
-                case 'meanValues';
-                    valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
-                case 'random';
-                    valNew = randn( size(valOld,1),nodeInputs );
-                case 'preserve';
-                    if size( valOld,2 ) < nodeInputs
-                        valNew = [valOld ones(size(valOld,1),nodeInputs-size(valOld,2))];
-                    elseif size( valOld,2 ) > nodeInputs
-                        valNew = valOld(:,1:nodeInputs);
-                    end
-            end
-            % wrap 'valNew' into correct format for writing the values into
-            % simulink blocks
-            str = '[';
-            for jj = 1:size(valNew,1) % for each line of 'valNew'
-                str = [str num2str(valNew(jj,:)) ';'];
-            end
-            str(end) = ']';
-            data.templates{ii,2}.set{tempRow,tempCol+1} = str;
-        end
-    end
-end
-
-setappdata(handles.figure1,'appData',data);
 
 %--------------------------------------------------------------------------
 %-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
 %--------------------------------------------------------------------------
 
-% --- Executes on button press in radiobutton7.
 function radiobutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hint: get(hObject,'Value') returns toggle state of radiobutton7
 
 function tonode_Callback(hObject, eventdata, handles)
-% hObject    handle to tonode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of tonode as text
-%        str2double(get(hObject,'String')) returns contents of tonode as a double
 
 function fromnode_Callback(hObject, eventdata, handles)
-% hObject    handle to fromnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of fromnode as text
-%        str2double(get(hObject,'String')) returns contents of fromnode as a double
 
-% --------------------------------------------------------------------
 function Untitled_10_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function file_Callback(hObject, eventdata, handles)
-% hObject    handle to file (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_9_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_11_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function generatesimulinkmdl_Callback(hObject, eventdata, handles)
-% hObject    handle to generatesimulinkmdl (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_12_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --- Executes when figure1 is resized.
 function figure1_ResizeFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --- Executes on selection change in listbox1.
 function listbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = get(hObject,'String') returns listbox1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox1
-
-% --------------------------------------------------------------------
 function about_Callback(hObject, eventdata, handles)
-% hObject    handle to about (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function adddynamics_Callback(hObject, eventdata, handles)
-% hObject    handle to adddynamics (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function dynamicsimporter_Callback(hObject, eventdata, handles)
-% hObject    handle to dynamicsimporter (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --- Executes on button press in checkbox2.
 function checkbox2_Callback(hObject, eventdata, handles)
-% hObject    handle to checkbox2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hint: get(hObject,'Value') returns toggle state of checkbox2
 
-% --- Executes on key press with focus on figure1 and none of its controls.
 function figure1_KeyPressFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
-% eventdata  structure with the following fields (see FIGURE)
-%       Key: name of the key that was pressed, in lower case
-%       Character: character interpretation of the key(s) that was pressed
-%       Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Savegraph_Callback(hObject, eventdata, handles)
-% hObject    handle to Savegraph (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_17_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_17 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function viewmenu_Callback(hObject, eventdata, handles)
-% hObject    handle to viewmenu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function editnode_Callback(hObject, eventdata, handles)
-% hObject    handle to editnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_13_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function Untitled_14_Callback(hObject, eventdata, handles)
-% hObject    handle to Untitled_14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% --------------------------------------------------------------------
 function click_add_node_long_Callback(hObject, eventdata, handles)
-% hObject    handle to click_add_node_long (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 function remnode_Callback(hObject, eventdata, handles)
-% hObject    handle to remnode (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of remnode as text
-%        str2double(get(hObject,'String')) returns contents of remnode as a double
 
 function dynamic_label_Callback(hObject, eventdata, handles)
-% hObject    handle to dynamic_label (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of dynamic_label as text
-%        str2double(get(hObject,'String')) returns contents of dynamic_label as a double
 
 function number_of_nodes_Callback(hObject, eventdata, handles)
-% hObject    handle to number_of_nodes (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of number_of_nodes as text
-%        str2double(get(hObject,'String')) returns contents of number_of_nodes as a double
-
-% --- Executes on selection change in selector_valueSet.
 function selector_valueSet_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUSD>
-% hObject    handle to selector_valueSet (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns selector_valueSet contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from selector_valueSet
-
 
 
 %%%%%%%%%

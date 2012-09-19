@@ -91,8 +91,8 @@ set(handles.connections, 'String', matrix_to_string(data.neighbours));
 
 %Initialize figure with information contained in printCell
 temp = data.printCell{1,1};
-data.intStates = data.template{1,2}.dimension.states;
-set(handles.edit_intStates,'String',num2str(data.intStates));
+data.templateSaved = 0;
+set(handles.edit_intStates,'String',num2str(data.template{1,2}.dimension.states));
 set(handles.text_noOfOutputSignals,'String',num2str(data.template{1,2}.dimension.outputs));
 if temp(1) == 1
     data.flagCheck1 = 1;
@@ -133,18 +133,6 @@ compute_printVector(handles);
 %load application data
 data = getappdata(handles.figure1,'appData');
 
-%DEBUGGING
-%{
-disp('------------------------------------------------------------------');
-display(['@edit_node_OutputFcn: data.nodenumber = ' num2str(data.nodenumber)]);
-display(['@edit_node_OutputFcn: data.nodelabel = ' data.nodelabel]);
-display(['@edit_node_OutputFcn: data.template = ' data.template]);
-display(['@edit_node_OutputFcn: data.neighbours = ' data.neighbours]);
-display(['@edit_node_OutputFcn: data.destroy = ' data.destroy]);
-display(['@edit_node_OutputFcn: data.intStates = ' data.intStates]);
-display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}) ]);
-%}
-
 if handles.OutputFlag == 2 % "apply changes"
     varargout{1} = handles.output;
     varargout{2} = data.nodenumber;
@@ -152,7 +140,7 @@ if handles.OutputFlag == 2 % "apply changes"
     varargout{4} = data.template;
     varargout{5} = data.neighbours;
     varargout{6} = data.destroy;
-    varargout{7} = data.intStates;
+    varargout{7} = data.templateSaved;
     varargout{8} = data.printVector;
     varargout{9} = data.plotParams;
     
@@ -163,7 +151,7 @@ elseif handles.OutputFlag == 1 % "cancel changes"
     varargout{4} = data.template;
     varargout{5} = data.neighbours;
     varargout{6} = data.destroy;
-    varargout{7} = data.intStates;
+    varargout{7} = data.templateSaved;
     varargout{8} = data.printVectorOld;
     varargout{9} = data.plotParamsOld;
     
@@ -174,7 +162,7 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{4} = data.template;
     varargout{5} = data.neighbours;
     varargout{6} = data.destroy;
-    varargout{7} = data.intStates;
+    varargout{7} = data.templateSaved;
     varargout{8} = data.printVectorOld;
     varargout{9} = data.plotParamsOld; 
 end
@@ -510,19 +498,6 @@ data.destroy = 2; %graph should NOT be destroyed, but changes should NOT be appl
 setappdata(handles.figure1,'appData',data);
 handles.OutputFlag = 1;
 guidata(hObject, handles);
-
-%DEBUGGING
-%{
-disp('------------------------------------------------------------------');
-display(['@edit_node_OutputFcn: data.nodenumber = ' num2str(data.nodenumber)]);
-display(['@edit_node_OutputFcn: data.nodelabel = ' data.nodelabel]);
-display(['@edit_node_OutputFcn: data.template = ' data.template]);
-display(['@edit_node_OutputFcn: data.neighbours = ' data.neighbours]);
-display(['@edit_node_OutputFcn: data.destroy = ' data.destroy]);
-display(['@edit_node_OutputFcn: data.intStates = ' data.intStates]);
-display(['@edit_node_OutputFcn: data.printVector = ' num2str(data.printVector{:}) ]);
-%}
-
 uiresume(handles.figure1);
 %delete(hObject);
 
@@ -674,13 +649,6 @@ setappdata(handles.figure1,'appData',data);
 function compute_printVector(handles)
 %TODO: case distinction for templates with only one internal state
 data = getappdata(handles.figure1,'appData');
-
-%Get number of internal states
-% data.intStates = str2num(get(handles.edit_intStates,'String'));
-
-%Set length of printVector, depending on number of internal states
-%ATTENTION: value of intStates must be an integer and of the minimum of 1!
-%display(['@button_edit_node: number of intStates: ' num2str(data.intStates) ]);
 if handles.flagEditParams
     outputDim = data.newTemplate{1,2}.dimension.outputs;
     statesDim = data.newTemplate{1,2}.dimension.states;
@@ -778,9 +746,9 @@ function push_editParams_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 try
     if isfield(data,'newTemplate')
-        newTemplate = edit_paramValues(data.newTemplate);
+        [newTemplate data.templateSaved] = edit_paramValues(data.newTemplate);
     else
-        newTemplate = edit_paramValues(data.oldTemplate);
+        [newTemplate data.templateSaved] = edit_paramValues(data.oldTemplate);
     end
     flagOkay = 1;
 catch %#ok<CTCH>

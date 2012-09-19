@@ -22,7 +22,7 @@ function varargout = edit_paramValues(varargin)
 
 % Edit the above text to modify the response to help edit_paramValues
 
-% Last Modified by GUIDE v2.5 18-Sep-2012 11:38:45
+% Last Modified by GUIDE v2.5 19-Sep-2012 08:45:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -53,6 +53,7 @@ function edit_paramValues_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to edit_paramValues (see VARARGIN)
 
 data.template = varargin{1};
+data.data.templateSaved = 0;
 handles.sysname = [data.template{1,1} '_CHECKED'];
 handles.pathname = [pwd filesep 'templates' filesep 'import' filesep];
 load_system( [handles.pathname handles.sysname] );
@@ -111,6 +112,7 @@ if handles.flagOutput == 1
 else
     varargout{1} = data.template;
 end
+varargout{2} = data.templateSaved;
 delete(hObject);
 
 
@@ -187,9 +189,9 @@ function figure1_DeleteFcn(hObject, eventdata, handles) %#ok<INUSL>
 close_system(handles.sysname,0);
 
 
-% --- Executes on button press in pushbutton_save.
-function pushbutton_save_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUSD>
-% hObject    handle to pushbutton_save (see GCBO)
+% --- Executes on button press in pushbutton_save2Template.
+function pushbutton_save2Template_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUSD>
+% hObject    handle to pushbutton_save2Template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
@@ -259,3 +261,37 @@ function edit_setName_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in pushbutton_save2File.
+function pushbutton_save2File_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_save2File (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+templName = handles.sysname(1:regexp(handles.sysname,'(_CHECKED)')-1);
+[dimension testSucc ME1 ME2] = testingValueSet( handles,0 );
+pathname = [pwd filesep 'templates' filesep 'import' filesep];
+if strcmp(testSucc,'yes')
+    [succ errMess ] = saveParamSet2File(handles.TextField1InputSpecs,...
+        handles.TextField2InputSpecs,templName, handles.edit_setName,...
+        get(handles.t,'Data'), dimension, pathname);
+else
+    disp('Testing the parameter set failed.');
+    disp('Maybe the following message will help you to find the error:');
+    if ~isempty(ME1)
+        disp(ME1.message);
+    end
+    if ~isempty(ME2)
+        disp(ME2.message);
+    end
+end
+if ~succ
+    disp('Could not save parameter set due to following reason:');
+    if ~isempty(errMess)
+        disp(errMess);
+    end
+else
+    data.templateSaved = 1;
+end
+setappdata(handles.figure1,'appData',data);

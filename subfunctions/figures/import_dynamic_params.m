@@ -470,7 +470,6 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 try
     if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
         errordlg('No row(s) selected');
@@ -530,75 +529,21 @@ function pushbutton5_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[dimension choice ] = testingValueSet( handles,0 );
+[dimension choice ME1 ME2] = testingValueSet( handles,0 );
 if strcmp( choice, 'yes' )
     handles.testSuccess = 1;
     handles.dimension = dimension;
     guidata(handles.fig_importTemplate, handles);
+    disp('Parameter tested successfully');
+else
+    disp('Testing failed. Maybe the following message will help you to find the error:');
+    if ~isempty(ME1)
+        disp(ME1.message);
+    end
+    if ~isempty(ME2)
+        disp(ME2.message);
+    end
 end
-% Data = get(handles.t,'Data'); %#ok<NASGU>
-% In case of being successful, store parameters
-% if strcmp(choice,'Yes')
-%     % copy model to \import
-%     % ask for new filename
-%     prompt = {'Enter name of imported template:'};
-%     dlg_title = 'Name of imported template';
-%     num_lines = 1;
-%     def = {handles.sysname};
-%     answer = inputdlg(prompt,dlg_title,num_lines,def);
-%     pathname = [pwd filesep 'import' filesep];
-%     if ~exist( [answer{1} '_CHECKED'],'file')
-%         save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
-%     end
-%     % copy also data=>use existing table
-%     flagEqual = 0;
-%     % Prepare storing of input specifications
-%     inputSpec.Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
-%     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
-%     if exist([answer{1} '_paramValues.mat'],'file')
-%         load([answer{1} '_paramValues.mat']);
-%         % check if the paramSet still exists        
-%         eval(['idx = length( ' answer{1} '_paramValues);']);
-%         for ii = 1:idx
-%             cmd2 = ['flagEqual = isequal(Data,' answer{1} ...
-%                 '_paramValues(' num2str(ii) ').set);'];
-%             eval( cmd2 );
-%             if flagEqual == 1
-% %                msgbox('Parameter set still exists');
-%                break 
-%             end
-%         end
-%         if flagEqual == 0
-%             cmd1 = [answer{1} '_paramValues(' num2str(idx+1) ').set = '...
-%                 'Data;'];
-%             cmd3 = [answer{1} '_paramValues(' num2str(idx+1) ').dimension = '...
-%                 'dimension;'];
-%             cmd4 = [answer{1} '_paramValues(' num2str(idx+1) ').inputSpec = '...
-%                 'inputSpec;'];
-%             tempString = get(handles.EditFieldSetName,'String');
-%             if regexp( tempString, 'Value Set')
-%                 tempString = ['Value Set ' num2str(dx+1) ];
-%             end
-%             cmd5 = [answer{1} '_paramValues(' num2str(idx+1) ').setName = '...
-%                 tempString ';'];
-%             eval( cmd1 );
-%             eval( cmd3 );
-%             eval( cmd4 );
-%             eval( cmd5 );
-%         end
-%     else
-%         eval([answer{1} '_paramValues.set = Data;']);
-%         eval([answer{1} '_paramValues.dimension = dimension;']);
-%         eval([answer{1} '_paramValues.inputSpec = inputSpec;']);
-%         eval([answer{1} '_paramValues.setName = ' get(handles.EditFieldSetName,'String') ';']);
-%     end
-%     if flagEqual == 0
-%         save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
-%     end
-%     % close figure
-%     bdclose;
-%     figure1_CloseRequestFcn(handles.fig_importTemplate, eventdata, handles);
-% end
 
 % --- Executes on button press in pushbutton6 FINISHIMPORT
 function pushbutton6_Callback(hObject, eventdata, handles)
@@ -607,14 +552,14 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 if handles.testSuccess
     choice = 'yes';
-    dimension = handles.dimension; %#ok<NASGU>
+    dimension = handles.dimension;
 else
-    [dimension choice ] = testingValueSet( handles,0 ); %#ok<ASGLU>
+    [dimension choice ] = testingValueSet( handles,0 );
 end
 
 % In case of being successful, store parameters
 if strcmp(choice,'yes')
-    Data = get(handles.t,'Data'); %#ok<NASGU>
+    Data = get(handles.t,'Data');
     % copy model to \import
     % ask for new filename
     prompt = {'Enter name of imported template:'};
@@ -622,58 +567,29 @@ if strcmp(choice,'yes')
     num_lines = 1;
     def = {handles.sysname};
     answer = inputdlg(prompt,dlg_title,num_lines,def);
+    if isempty(answer)
+        return
+    end
     pathname = [pwd filesep 'import' filesep];
     if ~exist( [answer{1} '_CHECKED'],'file')
         save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
     end
     % copy also data=>use existing table
-    flagEqual = 0;
-    % Prepare storing of input specifications
-    inputSpec.Vars =regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
-    inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
-    if exist([answer{1} '_paramValues.mat'],'file')
-        load([answer{1} '_paramValues.mat']);
-        % check if the paramSet still exists        
-        eval(['idx = length( ' answer{1} '_paramValues);']);
-        for ii = 1:idx
-            cmd2 = ['flagEqual = isequal(Data,' answer{1} ...
-                '_paramValues(' num2str(ii) ').set);'];
-            eval( cmd2 );
-            if flagEqual == 1
-%                msgbox('Parameter set still exists');
-               break 
-            end
-        end
-        if flagEqual == 0
-            cmd1 = [answer{1} '_paramValues(' num2str(idx+1) ').set = '...
-                'Data;'];
-            cmd3 = [answer{1} '_paramValues(' num2str(idx+1) ').dimension = '...
-                'dimension;'];
-            cmd4 = [answer{1} '_paramValues(' num2str(idx+1) ').inputSpec = '...
-                'inputSpec;'];
-            tempString = get(handles.EditFieldSetName,'String');
-            if regexp( tempString, 'Value Set')
-                tempString = ['Value Set ' num2str(idx+1) ];
-            end
-            cmd5 = [answer{1} '_paramValues(' num2str(idx+1) ').setName = '''...
-                tempString ''';'];
-            eval( cmd1 );
-            eval( cmd3 );
-            eval( cmd4 );
-            eval( cmd5 );
-        end
-    else
-        eval([answer{1} '_paramValues.set = Data;']);
-        eval([answer{1} '_paramValues.dimension = dimension;']);
-        eval([answer{1} '_paramValues.inputSpec = inputSpec;']);
-        eval([answer{1} '_paramValues.setName = ' get(handles.EditFieldSetName,'String') ';']);
-    end
-    if flagEqual == 0
-        save([pathname answer{1} '_paramValues'],[answer{1} '_paramValues']);
-    end
+    [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
+        handles.TextField2InputSpecs, answer{1}, handles.EditFieldSetName,...
+        Data, dimension, pathname);
     % close figure
-    bdclose;
-    fig_importTemplate_CloseRequestFcn(handles.fig_importTemplate, eventdata, handles);
+    if success
+        bdclose;
+        fig_importTemplate_CloseRequestFcn(handles.fig_importTemplate, eventdata, handles);
+    else
+        disp('Could not save parameter set due to following reason:');
+        if ~isempty(errMessage)
+           disp(errMessage); 
+        end
+    end
+else
+    disp('Testing of parameter set failed.');
 end
 
 % --- Executes when user attempts to close fig_importTemplate.
