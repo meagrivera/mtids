@@ -12,7 +12,7 @@ success = 0;
 cellData = get(handles.t,'Data');
 paramCellArray = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ], 'DialogParameters');
 paramName = cellData{ rowIDX,colIDX-1 };
-paramField = getfield( paramCellArray, paramName );
+paramField = getfield( paramCellArray, paramName ); %#ok<*GFLD>
 
 switch paramField.Type
     case 'boolean';
@@ -23,7 +23,7 @@ switch paramField.Type
             success = 1;
         end
     case 'enum';
-        idxValue = find( strcmp( cellData{ rowIDX,colIDX }, paramField.Enum ));
+        idxValue = find( strcmp( cellData{ rowIDX,colIDX }, paramField.Enum )); %#ok<EFIND>
         if isempty( idxValue )
             success = 0;
         else
@@ -31,7 +31,7 @@ switch paramField.Type
         end
     case 'string';
         if isempty( str2num( cellData{ rowIDX,colIDX } ) )  || ...
-                isempty( cellData{ rowIDX,colIDX } )
+                isempty( cellData{ rowIDX,colIDX } ) %#ok<ST2NM>
             success = 0;
         else
             success = 1;

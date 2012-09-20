@@ -22,7 +22,7 @@ function varargout = edit_paramValues(varargin)
 
 % Edit the above text to modify the response to help edit_paramValues
 
-% Last Modified by GUIDE v2.5 19-Sep-2012 08:45:59
+% Last Modified by GUIDE v2.5 20-Sep-2012 09:28:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,9 +51,8 @@ function edit_paramValues_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to edit_paramValues (see VARARGIN)
-
 data.template = varargin{1};
-data.data.templateSaved = 0;
+data.templateSaved = 0;
 handles.sysname = [data.template{1,1} '_CHECKED'];
 handles.pathname = [pwd filesep 'templates' filesep 'import' filesep];
 load_system( [handles.pathname handles.sysname] );
@@ -67,10 +66,8 @@ for kk = 1:length( data.template{1,2}.inputSpec.Vars )
     inputStrg = [inputStrg ', ' data.template{1,2}.inputSpec.Vars{kk}]; %#ok<AGROW>
 end
 set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
-
 tableRowNames = data.template{1,2}.set(:,1);
 tableData = data.template{1,2}.set;
-
 cnames = cell( size(tableData,2) , 1 );
 cnames{1} = 'Block Name';
 columneditable = logical( zeros(1, size(tableData,2) )); %#ok<LOGL>
@@ -81,23 +78,19 @@ for i = 1:floor( size(tableData,2) / 2)
     columneditable(2*i + 1) = true;
 end
 columnformat = repmat( {'char'}, 1,size(tableData,2) );
-
 set(handles.t,'CellSelectionCallback',...
     {@table_CellSelectionCallback,handles},'CellEditCallback',...
     {@table_CellEditCallbackFcn,handles},'RowName',tableRowNames,...
     'Data',tableData,'ColumnName',cnames,...
     'ColumnEditable', columneditable,'ColumnFormat',columnformat);
 set(handles.edit_setName,'String',data.template{1,2}.setName);
-
 % Choose default command line output for edit_paramValues
 handles.output = hObject;
-
 % Update handles structure
-setappdata(handles.figure1,'appData',data);
+setappdata(handles.main_editParamValues,'appData',data);
 guidata(hObject, handles);
-
 % UIWAIT makes edit_paramValues wait for user response (see UIRESUME)
-uiwait(handles.figure1);
+uiwait(handles.main_editParamValues);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -106,14 +99,14 @@ function varargout = edit_paramValues_OutputFcn(hObject, eventdata, handles)  %#
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-data = getappdata(handles.figure1,'appData');
+data = getappdata(handles.main_editParamValues,'appData');
 if handles.flagOutput == 1
     varargout{1} = data.new_template;
 else
     varargout{1} = data.template;
 end
 varargout{2} = data.templateSaved;
-delete(hObject);
+delete(handles.main_editParamValues);
 
 
 function TextField1InputSpecs_Callback(hObject, eventdata, handles)
@@ -164,29 +157,14 @@ function table_CellSelectionCallback(src,evt,handles)
 handles.selected_cells = evt.Indices;
 guidata(src, handles);
 
-% --- Executes when cell(s) is (are) edited
-function table_CellEditCallbackFcn(src,evt,handles) %#ok<INUSL>
-% success = 0;
-% Get indices of edited cell
-IDX = evt.Indices;
-rowIDX = IDX(1);
-colIDX = IDX(2);
-cellData = get(handles.t,'Data');
-success = isValidData( handles, rowIDX, colIDX );
-if ~success
-    errordlg('Parameter value not possible');
-    % Restore old data
-    cellData{ rowIDX,colIDX } = evt.PreviousData;
-    set(handles.t,'Data',cellData);
-end
-
-
 % --- Executes during object deletion, before destroying properties.
-function figure1_DeleteFcn(hObject, eventdata, handles) %#ok<INUSL>
-% hObject    handle to figure1 (see GCBO)
+function main_editParamValues_DeleteFcn(hObject, eventdata, handles) %#ok<INUSL>
+% hObject    handle to main_editParamValues (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-close_system(handles.sysname,0);
+if isfield(handles,'sysname')
+    close_system(handles.sysname,0);
+end
 
 
 % --- Executes on button press in pushbutton_save2Template.
@@ -194,8 +172,7 @@ function pushbutton_save2Template_Callback(hObject, eventdata, handles) %#ok<*DE
 % hObject    handle to pushbutton_save2Template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-data = getappdata(handles.figure1,'appData');
-
+data = getappdata(handles.main_editParamValues,'appData');
 % If succ == 'yes', test simulation with param value set was successfull
 [dimension succ ME_testSimulation ME_paramsFeasible] = testingValueSet( handles,0 );
 if strcmp( succ, 'yes' )
@@ -207,9 +184,9 @@ if strcmp( succ, 'yes' )
     data.new_template{1,2}.inputSpec = inputSpec;
     data.new_template{1,2}.setName = get(handles.edit_setName,'String');
     handles.flagOutput = 1;
-    setappdata(handles.figure1,'appData',data);
+    setappdata(handles.main_editParamValues,'appData',data);
     guidata(hObject, handles);
-    uiresume(handles.figure1);
+    uiresume(handles.main_editParamValues);
 else
     error = {};
     if ~isempty( ME_testSimulation )
@@ -230,16 +207,16 @@ function pushbutton_cancel_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_cancel (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-uiresume(handles.figure1);
+uiresume(handles.main_editParamValues);
 
-% --- Executes when user attempts to close figure1.
-function figure1_CloseRequestFcn(hObject, eventdata, handles)
-% hObject    handle to figure1 (see GCBO)
+% --- Executes when user attempts to close main_editParamValues.
+function main_editParamValues_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to main_editParamValues (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: delete(hObject) closes the figure
-uiresume(handles.figure1);
+uiresume(handles.main_editParamValues);
 
 
 
@@ -268,7 +245,7 @@ function pushbutton_save2File_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_save2File (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-data = getappdata(handles.figure1,'appData');
+data = getappdata(handles.main_editParamValues,'appData');
 templName = handles.sysname(1:regexp(handles.sysname,'(_CHECKED)')-1);
 [dimension testSucc ME1 ME2] = testingValueSet( handles,0 );
 pathname = [pwd filesep 'templates' filesep 'import' filesep];
@@ -294,4 +271,4 @@ if ~succ
 else
     data.templateSaved = 1;
 end
-setappdata(handles.figure1,'appData',data);
+setappdata(handles.main_editParamValues,'appData',data);
