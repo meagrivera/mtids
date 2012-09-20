@@ -24,7 +24,7 @@ flagEqual = 0;
 varargout{1} = 0;
 varargout{2} = '';
 % Prepare storing of input specifications
-inputSpec.Vars =regexp( get(handle4InputSpecsVars,'String'), ',|\s','split');
+inputSpec.Vars =regexp( get(handle4InputSpecsVars,'String'),',\s|,|\s','split');
 inputSpec.noOfIntInputs = str2double(get(handle4InputSpecsNoOfIntInputs,'string'));
 if exist([templName '_paramValues.mat'],'file')
     load([templName '_paramValues.mat']);

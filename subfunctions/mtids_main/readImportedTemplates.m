@@ -49,7 +49,7 @@ for ii = 1:length( templateNames )
     end   
 end
 
-isEmptyVec = zeros( length(paramValueSets),1 );
+isEmptyVec = zeros( length(paramValueSets),1 ); %#ok<NODEF>
 for ii = 1:length(paramValueSets)
     isEmptyVec(ii) = isempty(paramValueSets(ii).name);
 end

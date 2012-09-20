@@ -172,7 +172,6 @@ if handles.flagEditParams && handles.OutputFlag == 2
 else
     varargout{10} = data.oldTemplate;
 end
-
 delete(hObject)
 
 
