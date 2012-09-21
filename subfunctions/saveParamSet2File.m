@@ -26,6 +26,13 @@ varargout{2} = '';
 % Prepare storing of input specifications
 inputSpec.Vars =regexp( get(handle4InputSpecsVars,'String'),',\s|,|\s','split');
 inputSpec.noOfIntInputs = str2double(get(handle4InputSpecsNoOfIntInputs,'string'));
+% check if name was prompted
+tempString = get(handle4SetName,'String');
+if isempty(tempString)
+    varargout{1} = 0;
+    varargout{2} = 'No name for parameter set prompted';
+    return
+end
 if exist([templName '_paramValues.mat'],'file')
     load([templName '_paramValues.mat']);
     % check if the paramSet still exists
@@ -47,17 +54,13 @@ if exist([templName '_paramValues.mat'],'file')
         cmd4 = [templName '_paramValues(' num2str(idx+1) ').inputSpec = '...
             'inputSpec;'];
         tempString = get(handle4SetName,'String');
-        if regexp( tempString, 'Value Set')
-            tempString = ['Value Set ' num2str(idx+1) ];
-        else
-            % check if set-name was used before
-            for kk = 1:idx
-                eval(['tmp = ' templName '_paramValues(' num2str(kk) ').setName;']);
-                if strcmp( tempString,tmp )
-%                     disp('Setname still exists - Please choose another one');
-                    varargout{2} = 'Name for parameter set still exists';
-                    return
-                end
+        % check if set-name was used before
+        for kk = 1:idx
+            eval(['tmp = ' templName '_paramValues(' num2str(kk) ').setName;']);
+            if strcmp( tempString,tmp )
+                %                     disp('Setname still exists - Please choose another one');
+                varargout{2} = 'Name for parameter set still exists';
+                return
             end
         end
         cmd5 = [templName '_paramValues(' num2str(idx+1) ').setName = '''...
@@ -71,8 +74,8 @@ else
     eval([templName '_paramValues.set = Data;']);
     eval([templName '_paramValues.dimension = dimension;']);
     eval([templName '_paramValues.inputSpec = inputSpec;']);
-    tempString = 'Value Set 1';
-    eval([templName '_paramValues.setName = ' tempString ';']);
+%     tempString = 'Value Set 1';
+    eval([templName '_paramValues.setName = ' char(39) tempString char(39) ';']);
 end
 if flagEqual == 0
     save([pathname templName '_paramValues'],[templName '_paramValues']);

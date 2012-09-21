@@ -79,6 +79,10 @@ disp(' ');
 %----------------INITIALISE PARAMETERS-------------------------------------
 %--------------------------------------------------------------------------
 
+initPath = mfilename('fullpath');
+% extract path where mtids is localized
+initPath = initPath(1:end-5);
+cd(initPath);
 addpath(strcat(pwd,'/tools/matgraph'));                     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/templates'));                          % Folder for Simulink templates
 addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs and functions
