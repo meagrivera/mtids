@@ -22,7 +22,7 @@ function varargout = manageParamSets(varargin)
 
 % Edit the above text to modify the response to help manageParamSets
 
-% Last Modified by GUIDE v2.5 20-Sep-2012 17:24:08
+% Last Modified by GUIDE v2.5 21-Sep-2012 10:29:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -312,6 +312,15 @@ function pushbutton_loadTemplate_Callback(hObject, eventdata, handles)
    '*.*',  'All Files (*.*)'}, ...
    'Import Simulink model templates', ...
    'MultiSelect', 'on');
+if any(~filename) || any(~pathname)
+    return
+elseif any(strcmp( handles.templateNames, regexp(filename,'\w*(?=.mdl)','match') ))
+    errordlg({'A template with this name still exists.',...
+        'Please check if the new template is not identical to the existing one.',...
+        'If so, use "Edit parameter set" to create new value sets.',...
+        'If not, rename new template.'});
+    return
+end
 if isfield(handles,'sys2Import')
     howManySys = length(handles.sys2Import(:,1));
 else
@@ -337,37 +346,227 @@ function pushbutton_addBlock_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_addBlock (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+nrOfRows = length( get(handles.t,'RowName') );
+% ask for new row (=block) name
+newRowName = inputdlg({'New Block Type: '},'Add Block',1);
+if isempty( newRowName )
+    return;
+end
+% check if block type exists before adding the row to the table
+if isempty( find_system(handles.sysname,'BlockType',newRowName{1}) )
+    errordlg(['No Block of Type ',newRowName,' found!']);
+    return;
+end
+% Data processing to row names and table data
+rownames = cell(nrOfRows+1,1);
+rownames(1:nrOfRows) = get(handles.t,'RowName');
+rownames(end) = newRowName;
+testCell=find_system(handles.sysname,'BlockType',newRowName{1});
+s=regexp(testCell,'/','split');
+listOutString = cell(size(s,1),1);
+for i = 1:size(s,1)
+    listOutString{i} = s{i}{2};
+end
+newBlockNameIndex = listdlg('PromptString','Select a Block Name:',...
+    'SelectionMode','single','ListString',listOutString);
+dataOld=get(handles.t,'Data');
+dataNew = cell( size(dataOld,1)+1, size(dataOld,2) );
+dataNew(1:end-1,:) = dataOld;
+newBlockName = listOutString(newBlockNameIndex);
+[ paramname paramvalue ] = get_BlockParams( newRowName{:},handles,newBlockName{:} );
+dataNew(end,1) = listOutString(newBlockNameIndex);
+for j = 1:length(paramname)
+    dataNew{end,2*j} = paramname{j};
+    dataNew{end,1+2*j} = paramvalue{j};
+end
+set(handles.t,'RowName',rownames,'Data',dataNew);
 
 % --- Executes on button press in pushbutton_removeBlock.
 function pushbutton_removeBlock_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_removeBlock (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+% Case handling: if no cells are selected
+try
+    if isempty(handles.selected_cells)
+        errordlg('No row(s) selected');
+        return
+    end
+    IDX = handles.selected_cells; % Contains indices of the selected cells
+    rowIDX = IDX(:,1);
+    % colIDX = IDX(:,2);
+    rownames = get(handles.t,'RowName');
+    % Perform request if cells should really be deleted
+    title = 'Sure? Delete block(s)?';
+    qstring = {'Should the following blocks be deleted?',...
+        rownames{rowIDX} };
+    choice = questdlg(qstring,title,'Yes','No','No');
+    switch choice
+        case 'Yes';
+            % adapt rownames
+            rownamesIDX = 1:1:length(rownames);
+            % delete rowname indices according to selected cells
+            for ii = 1:length(rowIDX)
+                rownamesIDX = rownamesIDX(rownamesIDX ~= rowIDX(ii));
+            end
+            rownamesNew = rownames( rownamesIDX );
+            % adapt table data
+            data=get(handles.t,'Data');
+            data = data( rownamesIDX,: );
+            % set new table
+            set(handles.t,'RowName',rownamesNew,'Data',data);
+        case 'No';
+            % do nothing
+    end
+catch
+    errordlg('No row(s) selected');
+    return
+end
 
 % --- Executes on button press in pushbutton_addParameter.
 function pushbutton_addParameter_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_addParameter (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
+    errordlg('No row(s) selected');
+    return
+end
+IDX = handles.selected_cells; % Contains indices of the selected cells
+rowIDX = IDX(:,1);
+% colIDX = IDX(:,2);
+if size( rowIDX,1 ) > 1
+    errordlg('Please choose only one block for adding a new parameter');
+    return
+end
+% Dialog if parameter out of list should be chosen or via free hand input
+% Construct a questdlg with three options
+choice = questdlg('How should the parameter be chosen?', ...
+ 'Add Parameter Menu', ...
+ 'Out of list','Free input','Cancel','Cancel');
+% Handle response
+cellData = get(handles.t,'Data');
+switch choice
+    case 'Out of list'
+        % Show list with available parameters        
+        allParams = get_param([handles.sysname '/' cellData{rowIDX,1}],'Dialogparameters');
+        namesAllParams = fieldnames( allParams );
+        newParamIndex = listdlg('PromptString','Select a parameter:',...
+            'SelectionMode','single','ListString',namesAllParams);
+        if isempty( newParamIndex )
+            return;
+        end
+        answer(1) = namesAllParams( newParamIndex );
+        paramvalue = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ],answer{1});
+    case 'Free input'
+        rowname = get(handles.t,'RowName');
+        % Perform request if parameter should be added
+        prompt = {'Enter parameter name:'};
+        title = ['Add new Parameter to Block ',rowname{rowIDX}];
+        num_lines = 1;
+        def = {'paramname'};
+        answer = inputdlg(prompt,title,num_lines,def);
+        % Check if parameter name really exists; if not, throw error
+        try
+            paramvalue = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ],answer{1});
+        catch
+            errordlg(['Parameter ',answer{1},' not found for block ',cellData{ rowIDX,1 },'!']);
+            return
+        end
+    case 'Cancel'
+        return;
+end
+if ~isempty( answer{1} ) && ~isempty( paramvalue )
+    cellData = get(handles.t,'Data');
+    % Determine next free position in cell data
+    % Check for length AND last empty cell
+    posLast = length( cellData( rowIDX,:));
+    while isempty( cellData{ rowIDX,posLast } )
+        posLast = posLast - 1;
+    end
+    posNew = posLast + 1;
+    cellData{ rowIDX, posNew } = answer{1};
+    cellData{ rowIDX, posNew+1 } = paramvalue;
+    % Adapt column names if necessary
+    cnames = get(handles.t,'ColumnName');
+    columneditable = get(handles.t,'ColumnEditable');
+    if length( cnames ) < posNew+1
+        %do something
+        cnames{posNew} = 'Parameter Name';
+        cnames{posNew + 1} = 'Value';
+        columneditable(posNew) = false;
+        columneditable(posNew + 1) = true;
+        set(handles.t,'ColumnName',cnames);
+        set(handles.t,'ColumnEditable',columneditable);
+    end
+    set(handles.t,'Data',cellData);
+end
 
 % --- Executes on button press in pushbutton_removeParameter.
 function pushbutton_removeParameter_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_removeParameter (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+try
+    if ~isfield(handles,'selected_cells') || isempty(handles.selected_cells)
+        errordlg('No row(s) selected');
+        return
+    end
+    IDX = handles.selected_cells; % Contains indices of the selected cells
+    if size( IDX,1 ) > 1
+       errordlg('Please select only one cell to delete parameter values');
+       return
+    end
+    rowIDX = IDX(1);
+    colIDX = IDX(2);
+    cellData = get(handles.t,'Data');
+    if colIDX == 1
+        pushbutton2_Callback(hObject, eventdata, handles);
+    end
+    % determine colIDXs to delete entries    
+    if rem( colIDX,2 ) == 0
+        colIDX = [colIDX colIDX+1];
+    else
+        colIDX = [colIDX-1 colIDX];
+    end
+    if or( isempty( cellData{rowIDX,colIDX(1)} ),...
+            isempty( cellData{rowIDX,colIDX(2)} ))
+        errordlg('No parameter contained in selected cell(s)');
+        return
+    else
+        cellData{rowIDX,colIDX(1)} = [];
+        cellData{rowIDX,colIDX(2)} = [];
+        % Check if table contains empty cols; if yes, remove them
+        if all( all( cellfun(@isempty, cellData(:,colIDX(1:2)) ) ) )
+            if size( cellData,2 ) > colIDX(2)
+                % shift all cols on the RHS to the left by 2
+                cellData(:,colIDX(1):end-2) = cellData(:,colIDX(2)+1:end);
+                cellData = cellData(:,1:end-2);
+            else
+                % simply remove these two cols
+                cellData = cellData(:,1:colIDX(1)-1);               
+            end
+        end
+        colNames = get(handles.t,'ColumnName');
+        dimCellCols = size( cellData,2 );
+        colNames = colNames(1:dimCellCols);
+        set(handles.t,'Data',cellData,'ColumnName',colNames);
+    end   
+catch %#ok<CTCH>
+   % 
+end
 
 % --- Executes on button press in pushbutton_testValueSet.
 function pushbutton_testValueSet_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_testValueSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-if regexp( handles.sysname, '_CHECKED')
+if ~isempty(regexp( handles.sysname, '_CHECKED', 'once'))
     handles.pathname = [pwd filesep 'templates' filesep 'import' filesep];
+else
+    handles.pathname = handles.sys2Import{end,2};
 end
+disp('Testing parameter set...');
 [dimension choice ME1 ME2] = testingValueSet( handles,0 );
 if strcmp( choice, 'yes' )
     handles.succTest = 1;
@@ -389,7 +588,65 @@ function pushbutton_finishImport_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_finishImport (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+if handles.succTest
+    choice = 'yes';
+    dimension = handles.dimension;
+else
+    handles.pathname = handles.sys2Import{end,2};
+    [dimension choice ] = testingValueSet( handles,0 );
+end
+% In case of being successful, store parameters
+if strcmp(choice,'yes')
+    Data = get(handles.t,'Data');
+    answer(1) = regexp( handles.sys2Import{1}, '\w*(?=.mdl)','match' );
+    pathname = [handles.pathname 'import' filesep];
+    % copy also data=>use existing table
+    [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
+        handles.TextField2InputSpecs, answer{1}, handles.edit_save2File,...
+        Data, dimension, pathname);
+    % close figure
+    if success
+        if ~exist( [answer{1} '_CHECKED'],'file')
+            save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+        else
+            errordlg({'A template with this name still exists.',...
+                'Please check if the new template is not identical to the existing one.',...
+                'If so, use "Edit parameter set" to create new value sets.',...
+                'If not, rename new template.'});
+            return
+        end
+        bdclose;
+        choice = questdlg('Import is finished. What do you like to do?', ...
+            'Import successful', ...
+            'Edit params sets','New import','Exit','New import');
+        switch choice
+            case 'Edit params sets';
+                % switch mode
+                evtdat.EventName = 'SelectionChanged';
+                evtdat.OldValue = handles.radiobutton_newImport;
+                evtdat.NewValue = handles.radiobutton_editParamSets;
+                set(handles.radiobutton_editParamSets,'Value',1.0);
+                set(handles.radiobutton_newImport,'Value',0.0);
+                % make new templates available internally before invoking
+                % "selectionChangeFcn"
+                uipanel_mode_SelectionChangeFcn(handles.uipanel_mode, evtdat, handles);
+            case 'New import';
+                % clean up table
+                
+            case 'Exit';
+                % leave 'manageParamSets'
+                
+        end
 
+    else
+        disp('Could not save parameter set due to following reason:');
+        if ~isempty(errMessage)
+           disp(errMessage); 
+        end
+    end
+else
+    disp('Testing of parameter set failed.');
+end
 
 % --- Executes on selection change in popupmenu_valueSet.
 function popupmenu_valueSet_Callback(hObject, eventdata, handles) %#ok<*INUSL>
@@ -418,7 +675,8 @@ function pushbutton_deleteSet_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_deleteSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+% delete struct
+% Copy_of_LTI_paramValues(5)=[]
 
 % --- Executes on button press in togglebutton_setActive.
 function togglebutton_setActive_Callback(hObject, eventdata, handles)
@@ -443,33 +701,33 @@ function loadTableFromStruct( hObject,handles )
 %  This function loads data into a table, which comes from a structure,
 %  describing the parameters of a dynamic template
 if strcmp( handles.mode,'edit')
-idxSelectedTemplate = get(handles.popupmenu_template,'Value');
-idxSelectedSet = get(hObject,'Value');
-set(handles.TextField2InputSpecs,'String', ...
-    num2str( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.noOfIntInputs ) );
-inputStrg = [];
-for kk = 1:length( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars )
-    inputStrg = [inputStrg ', ' handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars{kk}]; %#ok<AGROW>
-end
-set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
-tableRowNames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1);
-tableData = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set;
-cnames = cell( size(tableData,2) , 1 );
-cnames{1} = 'Block Name';
-columneditable = logical( zeros(1, size(tableData,2) )); %#ok<LOGL>
-for i = 1:floor( size(tableData,2) / 2)
-    cnames{2*i} = 'Parameter Name';
-    cnames{2*i + 1} = 'Value';
-    columneditable(2*i) = false;
-    columneditable(2*i + 1) = true;
-end
-columnformat = repmat( {'char'}, 1,size(tableData,2) );
-set(handles.t,'CellSelectionCallback',...
-    {@table_CellSelectionCallback,handles},'CellEditCallback',...
-    {@table_CellEditCallbackFcn,handles},'RowName',tableRowNames,...
-    'Data',tableData,'ColumnName',cnames,...
-    'ColumnEditable', columneditable,'ColumnFormat',columnformat);
-set(handles.edit_save2File,'String',handles.templateSets{idxSelectedTemplate}(idxSelectedSet).setName);
+    idxSelectedTemplate = get(handles.popupmenu_template,'Value');
+    idxSelectedSet = get(handles.popupmenu_valueSet,'Value');
+    set(handles.TextField2InputSpecs,'String', ...
+        num2str( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.noOfIntInputs ) );
+    inputStrg = [];
+    for kk = 1:length( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars )
+        inputStrg = [inputStrg ', ' handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars{kk}]; %#ok<AGROW>
+    end
+    set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
+    tableRowNames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1);
+    tableData = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set;
+    cnames = cell( size(tableData,2) , 1 );
+    cnames{1} = 'Block Name';
+    columneditable = logical( zeros(1, size(tableData,2) )); %#ok<LOGL>
+    for i = 1:floor( size(tableData,2) / 2)
+        cnames{2*i} = 'Parameter Name';
+        cnames{2*i + 1} = 'Value';
+        columneditable(2*i) = false;
+        columneditable(2*i + 1) = true;
+    end
+    columnformat = repmat( {'char'}, 1,size(tableData,2) );
+    set(handles.t,'CellSelectionCallback',...
+        {@table_CellSelectionCallback,handles},'CellEditCallback',...
+        {@table_CellEditCallbackFcn,handles},'RowName',tableRowNames,...
+        'Data',tableData,'ColumnName',cnames,...
+        'ColumnEditable', columneditable,'ColumnFormat',columnformat);
+    set(handles.edit_save2File,'String',handles.templateSets{idxSelectedTemplate}(idxSelectedSet).setName);
 else
     % clear table and according text fields
     set(handles.TextField2InputSpecs,'String', num2str(0) );
@@ -482,7 +740,7 @@ else
 end
 handles.noChanges = 1;
 handles.succTest = 1;
-guidata(hObject,handles);
+guidata(handles.figure1,handles);
 
 
 % --- Executes when cell(s) is (are) edited
@@ -582,7 +840,7 @@ set(handles.t,'RowName',listblks,'ColumnName',cnames,...
     {@table_CellEditCallbackFcn,handles});
 handles.noChanges = 1;
 handles.succTest = 0;
-guidata(hObject,handles);
+guidata(handles.figure1,handles);
 
 
 % --- Executes on button press in pushbutton_debug.
@@ -591,3 +849,12 @@ function pushbutton_debug_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 assignin('base','h',handles);
+
+
+
+function edit_save2File_Callback(hObject, eventdata, handles) %#ok<INUSD>
+% hObject    handle to edit_save2File (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of edit_save2File as text
+%        str2double(get(hObject,'String')) returns contents of edit_save2File as a double
