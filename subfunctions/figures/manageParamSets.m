@@ -22,7 +22,7 @@ function varargout = manageParamSets(varargin)
 
 % Edit the above text to modify the response to help manageParamSets
 
-% Last Modified by GUIDE v2.5 21-Sep-2012 10:29:05
+% Last Modified by GUIDE v2.5 24-Sep-2012 09:36:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -66,10 +66,10 @@ handles.newImportStarted = 0;
 handles.succTest = 0;
 % initialize dropdown menues
 initDropdownMenuTemplates( handles );
-popupmenu_template_Callback(handles.popupmenu_template, eventdata, handles);
+handles = popupmenu_template_Callback(handles.popupmenu_template, eventdata, handles);
 setPanelModeActions( handles,hObject );
 setObjectPositions( handles );
-loadTableFromStruct( handles.popupmenu_valueSet,handles );
+handles = loadTableFromStruct( handles.popupmenu_valueSet,handles );
 handles = handleOpenSystems( handles );
 % Update handles structure
 guidata(hObject, handles);
@@ -90,7 +90,7 @@ varargout{1} = handles.output;
 
 
 % --- Executes when selected object is changed in uipanel_mode.
-function uipanel_mode_SelectionChangeFcn(hObject, eventdata, handles) %#ok<*DEFNU>
+function handles = uipanel_mode_SelectionChangeFcn(hObject, eventdata, handles) %#ok<*DEFNU>
 % hObject    handle to the selected object in uipanel_mode 
 % eventdata  structure with the following fields (see UIBUTTONGROUP)
 %	EventName: string 'SelectionChanged' (read only)
@@ -122,6 +122,7 @@ switch get(eventdata.NewValue,'Tag')
             switch choice
                 case 'Yes';
                     handles.mode = 'import';
+%                     handles.noChanges = 1;
                 case 'No';
                     set(handles.radiobutton_editParamSets,'Value',1.0);
                     set(handles.radiobutton_newImport,'Value',0.0);                    
@@ -132,8 +133,8 @@ switch get(eventdata.NewValue,'Tag')
         end
 end
 setPanelModeActions( handles,hObject );
-handleOpenSystems( handles );
-loadTableFromStruct( hObject,handles );
+handles = handleOpenSystems( handles );
+handles = loadTableFromStruct( hObject,handles );
 guidata(hObject, handles);
 
 
@@ -156,7 +157,7 @@ switch handles.mode
         set(handles.pushbutton_addParameter,'Visible','off');
         set(handles.pushbutton_removeParameter,'Visible','off');
         set(handles.pushbutton_finishImport,'Visible','off');
-        % position for both dropdown-menues
+        set(handles.pushbutton_save2File,'Visible','on');
     case 'import';
         title = 'Load template from file';
         set(handles.pushbutton_loadTemplate,'Visible','on');
@@ -169,11 +170,9 @@ switch handles.mode
         set(handles.pushbutton_addParameter,'Visible','on');
         set(handles.pushbutton_removeParameter,'Visible','on');
         set(handles.pushbutton_finishImport,'Visible','on');
-        % position for load-button
-        
+        set(handles.pushbutton_save2File,'Visible','off');
 end
 set(handles.uipanel_modeActions,'Title',title);
-guidata(hObject, handles);
 
 
 function initDropdownMenuTemplates( handles )
@@ -189,7 +188,7 @@ end
 
 
 % --- Executes on selection change in popupmenu_template.
-function popupmenu_template_Callback(hObject, eventdata, handles)
+function handles = popupmenu_template_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu_template (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -216,8 +215,9 @@ for i=1:nrOfParamSets
     end
 end
 set(handles.popupmenu_valueSet, 'String', drop_string,'Value',1);
-handleOpenSystems( handles );
-popupmenu_valueSet_Callback(hObject, eventdata, handles);
+handles = handleOpenSystems( handles );
+handles = popupmenu_valueSet_Callback(hObject, eventdata, handles);
+guidata(handles.figure1, handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -331,7 +331,7 @@ handles.sys2Import{howManySys+1,2} = pathname;
 handleOpenSystems( handles );
 m=regexp( filename, '\.', 'split','once');
 handles.sysname = m{1};
-buildTableFromTemplate( handles );
+handles = buildTableFromTemplate( handles );
 guidata(hObject, handles);
 
 % --- Executes on button press in pushbutton_save2File.
@@ -339,7 +339,41 @@ function pushbutton_save2File_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_save2File (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+if handles.succTest && isfield( handles, 'dimension')
+    choice = 'yes';
+    dimension = handles.dimension;
+else
+    handles.pathname = [pwd filesep 'templates' filesep 'import' filesep];
+    [dimension choice ] = testingValueSet( handles,0 );
+end
+if strcmp( choice,'yes')
+    templName = handles.templateNames{get(handles.popupmenu_template,'Value')};
+    Data = get(handles.t,'Data');
+    [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
+        handles.TextField2InputSpecs, templName, handles.edit_save2File,...
+        Data, dimension, handles.pathname);
+    if ~success
+        disp('Could not save parameter set due to following reason:');
+        if ~isempty(errMessage)
+            disp(errMessage);
+        end
+    else
+        1
+        paramValueSetsNew = readImportedTemplates;
+        for kk = 1:length( paramValueSetsNew )
+            handles.templateNames{kk} = paramValueSetsNew(kk).name;
+            handles.templateSets{kk} =  paramValueSetsNew(kk).sets;
+        end
+        handles = popupmenu_template_Callback( handles.popupmenu_template,[],handles );
+        idxTemp = get(handles
+        idxSet
+        
+        
+        guidata(hObject,handles);
+    end
+else
+    disp('Testing of parameter set failed.');
+end
 
 % --- Executes on button press in pushbutton_addBlock.
 function pushbutton_addBlock_Callback(hObject, eventdata, handles)
@@ -469,7 +503,7 @@ switch choice
         % Check if parameter name really exists; if not, throw error
         try
             paramvalue = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ],answer{1});
-        catch
+        catch %#ok<CTCH>
             errordlg(['Parameter ',answer{1},' not found for block ',cellData{ rowIDX,1 },'!']);
             return
         end
@@ -616,6 +650,15 @@ if strcmp(choice,'yes')
             return
         end
         bdclose;
+        % read new template_list
+        paramValueSets = readImportedTemplates;
+        for kk = 1:length( paramValueSets )
+            handles.templateNames{kk} = paramValueSets(kk).name;
+            handles.templateSets{kk} = paramValueSets(kk).sets;
+        end
+        initDropdownMenuTemplates( handles );    
+        % clean up table
+        set(handles.edit_save2File,'String','');
         choice = questdlg('Import is finished. What do you like to do?', ...
             'Import successful', ...
             'Edit params sets','New import','Exit','New import');
@@ -629,14 +672,22 @@ if strcmp(choice,'yes')
                 set(handles.radiobutton_newImport,'Value',0.0);
                 % make new templates available internally before invoking
                 % "selectionChangeFcn"
-                uipanel_mode_SelectionChangeFcn(handles.uipanel_mode, evtdat, handles);
+                handles = uipanel_mode_SelectionChangeFcn(handles.uipanel_mode, evtdat, handles);
+                % select new imported set
+                idxNewTempl = find( strcmp( get(handles.popupmenu_template,'String'), answer{1} ));
+                idxNewSet = 1;
+                set(handles.popupmenu_template,'Value',idxNewTempl);
+                handles = popupmenu_template_Callback(handles.popupmenu_template, [], handles);
             case 'New import';
-                % clean up table
-                
+                % do nothing
             case 'Exit';
                 % leave 'manageParamSets'
-                
-        end
+                figure1_CloseRequestFcn(handles.figure1, [], handles);
+                return
+        end        
+        
+        % saving new handles
+        guidata(handles.figure1, handles);
 
     else
         disp('Could not save parameter set due to following reason:');
@@ -649,25 +700,26 @@ else
 end
 
 % --- Executes on selection change in popupmenu_valueSet.
-function popupmenu_valueSet_Callback(hObject, eventdata, handles) %#ok<*INUSL>
+function handles = popupmenu_valueSet_Callback(hObject, eventdata, handles) %#ok<*INUSL>
 % hObject    handle to popupmenu_valueSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_valueSet contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_valueSet
-if ~handles.noChanges
+if ~handles.noChanges && strcmp(handles.mode,'edit')
     choice = questdlg('Discard changes to current parameter set?', ...
         'Switch parameter set', ...
         'Yes','No','No');
     switch choice
         case 'Yes';
-            loadTableFromStruct( hObject,handles );
+            handles = loadTableFromStruct( hObject,handles );
         case 'No';
             return
     end
 else
-    loadTableFromStruct( hObject,handles );
+    handles = loadTableFromStruct( hObject,handles );
 end
+guidata(hObject,handles);
 
 
 % --- Executes on button press in pushbutton_deleteSet.
@@ -696,7 +748,7 @@ handles.selected_cells = evt.Indices;
 guidata(src, handles);
 
 
-function loadTableFromStruct( hObject,handles )
+function handles = loadTableFromStruct( hObject,handles )
 %LOADTABLEFROMSTRUCT
 %  This function loads data into a table, which comes from a structure,
 %  describing the parameters of a dynamic template
@@ -740,7 +792,6 @@ else
 end
 handles.noChanges = 1;
 handles.succTest = 1;
-guidata(handles.figure1,handles);
 
 
 % --- Executes when cell(s) is (are) edited
@@ -803,7 +854,7 @@ switch handles.mode
         end
 end
 
-function buildTableFromTemplate( handles )
+function handles = buildTableFromTemplate( handles )
 %BUILDTABLEFROMTEMPLATE
 % This function creates a new table from a dynamic template
 blks = find_system(gcs, 'Type', 'block');
@@ -840,7 +891,6 @@ set(handles.t,'RowName',listblks,'ColumnName',cnames,...
     {@table_CellEditCallbackFcn,handles});
 handles.noChanges = 1;
 handles.succTest = 0;
-guidata(handles.figure1,handles);
 
 
 % --- Executes on button press in pushbutton_debug.
@@ -849,6 +899,8 @@ function pushbutton_debug_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 assignin('base','h',handles);
+disp(['handles.noChanges : ' num2str( handles.noChanges ) ]);
+disp(['handles.succTest : ' num2str( handles.succTest ) ]);
 
 
 
@@ -858,3 +910,13 @@ function edit_save2File_Callback(hObject, eventdata, handles) %#ok<INUSD>
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: get(hObject,'String') returns contents of edit_save2File as text
 %        str2double(get(hObject,'String')) returns contents of edit_save2File as a double
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+delete(hObject);

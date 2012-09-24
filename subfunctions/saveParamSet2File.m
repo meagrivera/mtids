@@ -9,6 +9,7 @@ function varargout = saveParamSet2File( varargin )
 %           (4) handle4SetName
 %           (5) Data
 %           (6) dimension
+%           (7) Pathname
 % OUTPUT:   (1) 1 for being successful, 0 for fail
 %           (2) Error message in case of fail
 
@@ -58,7 +59,6 @@ if exist([templName '_paramValues.mat'],'file')
         for kk = 1:idx
             eval(['tmp = ' templName '_paramValues(' num2str(kk) ').setName;']);
             if strcmp( tempString,tmp )
-                %                     disp('Setname still exists - Please choose another one');
                 varargout{2} = 'Name for parameter set still exists';
                 return
             end

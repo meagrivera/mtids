@@ -1,9 +1,16 @@
-function template_list = readImportedTemplates( varargin )
+function varargout = readImportedTemplates( varargin )
 %READIMPORTEDTEMPLATES
 % This function checks the import/template folder, if there are any
 % templates, which were formerly imported (with paramValue sets)
 % This function is at least invoked by the initialization of MTIDS
 % template_list = [Type color1 color2 param_values active]
+% INPUT:    (1) template_list_old: in mtids, this variable is the
+%               initialized or stored template list.
+% OUTPUT:   (1) Either: template_list_new, where all old and new templates
+%               are contained
+%               Or: if no input argument is given, then just the names of
+%               the templates and the value sets are defined as an ouput
+%               (as a struct-variable)
 
 if size( varargin,2) == 1
     template_list_old = varargin{1};
@@ -56,22 +63,27 @@ end
 paramValueSets = paramValueSets( ~isEmptyVec );
 
 % prepare template-list in MTIDS-GUI
-template_list = cell( size( paramValueSets,2 ),5);
-for ii = 1:size( paramValueSets,2 )
-    template_list{ii,1} = paramValueSets(ii).name;
-    % Check if template still existed before, because then we must use the
-    % stored color(s)
-    idxTemplExists = ~cellfun( @isempty, ...
-        regexp( template_list_old(:,1), template_list{ii,1} ) );
-    if any( idxTemplExists )
-        template_list{ii,2} = template_list_old{idxTemplExists,2};
-        template_list{ii,3} = template_list_old{idxTemplExists,3};
-    else
-        template_list{ii,2} = [245 245 245]/255;
-        template_list{ii,3} = [0 0 0];
+if exist( 'template_list_old', 'var' )
+    template_list = cell( size( paramValueSets,2 ),5);
+    for ii = 1:size( paramValueSets,2 )
+        template_list{ii,1} = paramValueSets(ii).name;
+        % Check if template still existed before, because then we must use the
+        % stored color(s)
+        idxTemplExists = ~cellfun( @isempty, ...
+            regexp( template_list_old(:,1), template_list{ii,1} ) );
+        if any( idxTemplExists )
+            template_list{ii,2} = template_list_old{idxTemplExists,2};
+            template_list{ii,3} = template_list_old{idxTemplExists,3};
+        else
+            template_list{ii,2} = [245 245 245]/255;
+            template_list{ii,3} = [0 0 0];
+        end
+        template_list{ii,4} = paramValueSets(ii).sets;
+        template_list{ii,5} = 1;
+        varargout{1} = template_list;
     end
-    template_list{ii,4} = paramValueSets(ii).sets;
-    template_list{ii,5} = 1;
+else
+    varargout{1} = paramValueSets;
 end
 
 
