@@ -272,3 +272,24 @@ else
     data.templateSaved = 1;
 end
 setappdata(handles.main_editParamValues,'appData',data);
+
+% --- Executes when cell(s) is (are) edited
+function table_CellEditCallbackFcn(src,evt,handles) %#ok<INUSL>
+% success = 0;
+% Get indices of edited cell
+IDX = evt.Indices;
+rowIDX = IDX(1);
+colIDX = IDX(2);
+cellData = get(handles.t,'Data');
+handles.sysname = gcs;
+success = isValidData( handles, rowIDX, colIDX );
+if ~success
+    errordlg('Parameter value not possible');
+    % Restore old data
+    cellData{ rowIDX,colIDX } = evt.PreviousData;
+    set(handles.t,'Data',cellData);
+else
+    handles.noChanges = 0;
+    handles.succTest = 0;
+end
+guidata(src,handles);

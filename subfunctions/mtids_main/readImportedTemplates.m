@@ -43,16 +43,6 @@ for ii = 1:length( templateNames )
         cmd2 = ['paramValueSets(' num2str(ii) ...
             ').name = ''' templateNames{ii} ''';'];
         eval( cmd2 );
-%         cmd3 = ['paramValueSets(' num2str(ii) ...
-%             ').dimension = ' templateNames{ii} '_paramValues(:).dimension;'];
-%         eval( cmd3 );
-%         cmd4 = ['paramValueSets(' num2str(ii) ...
-%             ').inputSpec = ' templateNames{ii} '_paramValues(:).inputSpec;'];
-%         eval( cmd4 );
-    else
-%         disp(['Template "' templateNames{ii}...
-%             '" found, but no appendant parameter value file.'...
-%             ' Template will be ignored.']);
     end   
 end
 
@@ -79,6 +69,7 @@ if exist( 'template_list_old', 'var' )
             template_list{ii,3} = [0 0 0];
         end
         template_list{ii,4} = paramValueSets(ii).sets;
+        % isActive-flag for template itself
         template_list{ii,5} = 1;
         varargout{1} = template_list;
     end
