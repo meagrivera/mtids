@@ -22,7 +22,7 @@ function varargout = manageParamSets(varargin)
 
 % Edit the above text to modify the response to help manageParamSets
 
-% Last Modified by GUIDE v2.5 24-Sep-2012 09:36:44
+% Last Modified by GUIDE v2.5 26-Sep-2012 08:51:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -74,7 +74,7 @@ handles = handleOpenSystems( handles );
 % Update handles structure
 guidata(hObject, handles);
 % UIWAIT makes manageParamSets wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
+uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -86,7 +86,7 @@ function varargout = manageParamSets_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
+delete(hObject);
 
 
 % --- Executes when selected object is changed in uipanel_mode.
@@ -194,9 +194,6 @@ function handles = popupmenu_template_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_template contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_template
-if handles.readTemplateList
-    
-end
 idxDynSelector = get(hObject,'Value');
 if ~handles.flagNewTemplate
     nrOfParamSets = length(handles.templateSets{idxDynSelector});
@@ -339,6 +336,7 @@ function pushbutton_save2File_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_save2File (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+disp('Saving parameter set to file...');
 if handles.succTest && isfield( handles, 'dimension')
     choice = 'yes';
     dimension = handles.dimension;
@@ -347,28 +345,33 @@ else
     [dimension choice ] = testingValueSet( handles,0 );
 end
 if strcmp( choice,'yes')
+    handles.succTest = 1;
     templName = handles.templateNames{get(handles.popupmenu_template,'Value')};
     Data = get(handles.t,'Data');
     [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
         handles.TextField2InputSpecs, templName, handles.edit_save2File,...
-        Data, dimension, handles.pathname);
+        Data, dimension, handles.pathname,handles.togglebutton_setActive,1);
     if ~success
-        disp('Could not save parameter set due to following reason:');
+        disp('Parameter set not saved due to following reason:');
         if ~isempty(errMessage)
             disp(errMessage);
         end
     else
-        1
+        % read in updated param sets
         paramValueSetsNew = readImportedTemplates;
         for kk = 1:length( paramValueSetsNew )
             handles.templateNames{kk} = paramValueSetsNew(kk).name;
             handles.templateSets{kk} =  paramValueSetsNew(kk).sets;
         end
+        % choose entries in popupmenus to recent saved set
+        setName = get(handles.edit_save2File,'String');
+        handles.noChanges = 1;
         handles = popupmenu_template_Callback( handles.popupmenu_template,[],handles );
-        idxTemp = get(handles
-        idxSet
-        
-        
+        idxTemp = find( strcmp( get(handles.popupmenu_template,'String'),templName));
+        idxSet = find( strcmp( get(handles.popupmenu_valueSet,'String'),setName ));
+        set(handles.popupmenu_template,'Value',idxTemp);
+        set(handles.popupmenu_valueSet,'Value',idxSet);
+        handles = popupmenu_valueSet_Callback(handles.popupmenu_valueSet, [], handles);
         guidata(hObject,handles);
     end
 else
@@ -719,6 +722,15 @@ if ~handles.noChanges && strcmp(handles.mode,'edit')
 else
     handles = loadTableFromStruct( hObject,handles );
 end
+idxSet = get(handles.popupmenu_valueSet,'Value');
+idxTempl = get(handles.popupmenu_template,'Value');
+isActive = handles.templateSets{idxTempl}(idxSet).isActive;
+set(handles.togglebutton_setActive,'Value',isActive);
+if isActive
+    set(handles.togglebutton_setActive,'BackgroundColor',[0.702 0.85 0.443]);
+else
+    set(handles.togglebutton_setActive,'BackgroundColor',[.702 .702 .702]);
+end
 guidata(hObject,handles);
 
 
@@ -727,11 +739,53 @@ function pushbutton_deleteSet_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_deleteSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% delete struct
-% Copy_of_LTI_paramValues(5)=[]
+answer = questdlg(['Delete current parameter set "' get(handles.edit_save2File,'String') '"?' ],...
+    'Delete parameter set');
+if strcmp( answer,'Yes')
+    flagDelete = 0;
+    setName = get(handles.edit_save2File,'String');
+    templName = handles.templateNames{ get(handles.popupmenu_template,'Value') };
+    pathname = [pwd filesep 'templates' filesep 'import' filesep];
+    load([pathname templName '_paramValues.mat']);
+    varName = [templName '_paramValues'];
+    eval(['len = length(' varName ');']);
+    if len > 1
+        for kk = 1:len
+            eval(['match = strcmp(' varName '(kk).setName, setName );']);
+            if match
+                eval([varName '(kk) = [];']);
+                mess = ['Parameter set "' setName '" deleted'];
+                flagDelete = 1;
+                break
+            end
+        end
+        if ~flagDelete
+            mess = ['Parameter set "' setName '" not found'];
+        end
+    else
+        mess = 'At least one parameter set must remain';
+    end
+    if flagDelete
+        % store set struct
+        save([pathname varName],varName);
+        % read in updated param sets
+        paramValueSetsNew = readImportedTemplates;
+        for kk = 1:length( paramValueSetsNew )
+            handles.templateNames{kk} = paramValueSetsNew(kk).name;
+            handles.templateSets{kk} =  paramValueSetsNew(kk).sets;
+        end
+        handles.noChanges = 1;
+        handles = popupmenu_template_Callback( handles.popupmenu_template,[],handles );
+        idxTemp = find( strcmp( get(handles.popupmenu_template,'String'),templName));
+        set(handles.popupmenu_template,'Value',idxTemp);
+        handles = popupmenu_valueSet_Callback(handles.popupmenu_valueSet, [], handles);
+        guidata(hObject,handles);
+    end
+    disp(mess);
+end
 
 % --- Executes on button press in togglebutton_setActive.
-function togglebutton_setActive_Callback(hObject, eventdata, handles)
+function handles = togglebutton_setActive_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton_setActive (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -741,6 +795,8 @@ if get(hObject,'Value')
 else
     set(handles.togglebutton_setActive,'BackgroundColor',[.702 .702 .702]);
 end
+handles.noChanges = 0;
+guidata(hObject, handles);
 
 % --- Executes when selected cell(s) is changed
 function table_CellSelectionCallback(src,evt,handles)
@@ -893,16 +949,15 @@ handles.noChanges = 1;
 handles.succTest = 0;
 
 
-% --- Executes on button press in pushbutton_debug.
+% --- Executes on button press in pushbutton_debug.=>CLOSE-Button
 function pushbutton_debug_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_debug (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-assignin('base','h',handles);
-disp(['handles.noChanges : ' num2str( handles.noChanges ) ]);
-disp(['handles.succTest : ' num2str( handles.succTest ) ]);
-
-
+% assignin('base','h',handles);
+% disp(['handles.noChanges : ' num2str( handles.noChanges ) ]);
+% disp(['handles.succTest : ' num2str( handles.succTest ) ]);
+figure1_CloseRequestFcn(hObject, eventdata, handles);
 
 function edit_save2File_Callback(hObject, eventdata, handles) %#ok<INUSD>
 % hObject    handle to edit_save2File (see GCBO)
@@ -911,12 +966,35 @@ function edit_save2File_Callback(hObject, eventdata, handles) %#ok<INUSD>
 % Hints: get(hObject,'String') returns contents of edit_save2File as text
 %        str2double(get(hObject,'String')) returns contents of edit_save2File as a double
 
-
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: delete(hObject) closes the figure
-delete(hObject);
+uiresume(handles.figure1);
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over togglebutton_setActive.
+function togglebutton_setActive_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to togglebutton_setActive (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+function TextField1InputSpecs_Callback(hObject, eventdata, handles)
+% hObject    handle to TextField1InputSpecs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text
+%        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double
+handles.noChanges = 0;
+guidata(hObject,handles);
+
+function TextField2InputSpecs_Callback(hObject, eventdata, handles)
+% hObject    handle to TextField2InputSpecs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of TextField2InputSpecs as text
+%        str2double(get(hObject,'String')) returns contents of TextField2InputSpecs as a double
+handles.noChanges = 0;
+guidata(hObject,handles);

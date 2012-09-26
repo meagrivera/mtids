@@ -24,7 +24,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 19-Sep-2012 12:08:37
+% Last Modified by GUIDE v2.5 26-Sep-2012 15:38:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1552,34 +1552,31 @@ refresh_valueSet(handles);
 function refresh_valueSet(handles)
 % This function refreshes the drop down menu of the parameter value sets
 % for the dynamic templates
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-
 %Check which template is chosen
 idxDynSelector = get(handles.selector_dynamic,'Value');
 stringDynSelector = get(handles.selector_dynamic,'String');
-
 % Choose param struct
 temp = ~cellfun( @isempty, regexp( data.template_list(:,1), ...
     regexp( stringDynSelector(idxDynSelector,:),'\w+','match') ) );
 nrOfParamSets = length( data.template_list{temp,4} );
-
-% template_list = data.template_list;
-% [ny, nx] = size(data.template_list);
-drop_string = cell( nrOfParamSets,1 );
+% drop_string = cell( nrOfParamSets,1 );
+counter = 0;
 for i=1:nrOfParamSets
-    % Check if template contains a name for a set
-    if isfield(data.template_list{idxDynSelector,4}(i),'setName') &&...
-            ~isempty(data.template_list{idxDynSelector,4}(i).setName)
-        drop_string{i} = data.template_list{idxDynSelector,4}(i).setName;
-    else
-        drop_string{i} = ['Value set ' num2str(i)];
+    if data.template_list{idxDynSelector,4}(i).isActive
+        counter = counter + 1;
+        % Check if template contains a name for a set
+        if isfield(data.template_list{idxDynSelector,4}(i),'setName') &&...
+                ~isempty(data.template_list{idxDynSelector,4}(i).setName)
+            drop_string{counter} = data.template_list{idxDynSelector,4}(i).setName; %#ok<AGROW>
+        else
+            drop_string{counter} = ['Value set ' num2str(i)]; %#ok<AGROW>
+        end
     end
 end
 set(handles.selector_valueSet, 'String', drop_string,'Value',1);
-%guidata(hObject, handles);
-%no data storage needed, because this can be seen as a "void" function.
+
 
 % --- Executes on button press in circular_graph.
 function circular_graph_Callback(hObject, eventdata, handles)
@@ -2200,7 +2197,6 @@ if expSucc == 1
         else
             legend(['Output signal of node ' num2str(i)]);
         end
-
         hold off;
         end
     end
@@ -2258,32 +2254,16 @@ function loadGraphAtOpening(hObject, eventdata, handles)
 % hObject    handle to loadgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% load application data
 data = getappdata(handles.figure1,'appData');
-% g = data.g;
 template_list = data.template_list;
-
-% [filename, pathname] = uigetfile( ...
-% {'*.mat;','Graph/Network Files';
-%    '*.mat','MAT-files (*.mat)'; ...
-%     '*.*',  'All Files (*.*)'}, ...
-%    'Open');
 filename = 'lastgraph.mat';
 pathname = [pwd filesep 'resources' filesep];
-
-if filename       
+if ~isempty(filename)
     file = strcat(pathname, filename);
     [pathname, filename, ext] = fileparts(file);
-%     free(g);
-    
-    if strcmp(ext, '.mat') 
+    if strcmp(ext, '.mat')
         S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
             'printCell','template_list','modus','nodeColor') ;
-        %S = load(file, 'data' );
-        %data = S.data;
-        %assignin('base','data',data);
-        
         nverts = S.nverts;
         adj_matrix = S.adj_matrix;
         XY = S.XY;
@@ -2298,31 +2278,18 @@ if filename
             case 'undirected'; dir = 0;
             case 'directed'; dir = 1;
         end
-
         for i=1:nverts
             label(g,i,labs{i});
             for j=1:nverts
-              if adj_matrix(i,j)
-                 add(g,i,j,dir);
-                 adj_matrix(j,i) = 0;
-              end            
+                if adj_matrix(i,j)
+                    add(g,i,j,dir);
+                    adj_matrix(j,i) = 0;
+                end
             end
         end
-
         embed(g,XY);
-        
-%     elseif strcmp(ext, '.gr')
-%         load(g, file);
-%         templates = cell(0,1);
-%         % Temporary code...
-%         n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
-%         for i=1:nv(g)
-%             templates{i,1}=template_list{n_template,1};
-%         end
-        
     end
 end
-
 %set the uipanel according to stored value of "modus"
 switch data.modus
     case 'directed'
@@ -2332,16 +2299,13 @@ switch data.modus
         set(handles.button_undirected,'Value', 1.0);
         set(handles.button_directed,'Value', 0.0);        
 end
-
 %store application data
 data.g = g;
 data.templates = templates;
 data.template_list = template_list;
-
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
-% refresh_dynamics(eventdata, handles);
-% refresh_graph(0, eventdata, handles,hObject);
+
 
 % --------------------------------------------------------------------
 function set_node_color_Callback(hObject, eventdata, handles)
@@ -2479,6 +2443,28 @@ if filename
 end
 refresh_graph(0, eventdata, handles,hObject);
 
+% --------------------------------------------------------------------
+function menu_manageParamSets_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_manageParamSets (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+manageParamSets(readImportedTemplates(data.template_list));
+data.template_list = readImportedTemplates(data.template_list);
+setappdata(handles.figure1,'appData',data);
+refresh_dynamics([], handles);
+
+% --------------------------------------------------------------------
+function get_simParams_Callback(hObject, eventdata, handles)
+% hObject    handle to get_simParams (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+% sysname means the name of an arbitrary template, which is used in mtids.
+% it's just for getting a configuration set for simulink out of it
+sysname = [data.template_list{1,1} '_CHECKED'];
+data.simPrms = editSimParams( sysname );
+setappdata(handles.figure1,'appData',data);
 
 %--------------------------------------------------------------------------
 %-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
@@ -2540,3 +2526,4 @@ function selector_valueSet_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*IN
 
 
 %%%%%%%%%
+
