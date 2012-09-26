@@ -22,7 +22,7 @@ function varargout = editSimParams(varargin)
 
 % Edit the above text to modify the response to help editSimParams
 
-% Last Modified by GUIDE v2.5 26-Sep-2012 14:55:37
+% Last Modified by GUIDE v2.5 26-Sep-2012 16:21:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -635,4 +635,3 @@ function edit_noIter_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
