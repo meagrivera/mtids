@@ -83,7 +83,7 @@ initPath = mfilename('fullpath');
 % extract path where mtids is localized
 initPath = initPath(1:end-5);
 cd(initPath);
-addpath(strcat(pwd,'/tools/matgraph'));                     % Folder with a copy of Matgraph
+addpath(strcat(pwd,'/subfunctions/matgraph'));                     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/templates'));                          % Folder for Simulink templates
 addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs and functions
 addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with various import/export functions
