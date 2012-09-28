@@ -21,14 +21,14 @@ Model {
   MinMaxOverflowArchiveMode "Overwrite"
   FPTRunName		  "Run 1"
   MaxMDLFileLineLength	  120
-  Created		  "Wed Sep 26 16:08:48 2012"
+  Created		  "Fri Sep 28 17:12:02 2012"
   Creator		  "trommsdorff"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "trommsdorff"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Sep 26 16:09:03 2012"
-  RTWModifiedTimeStamp	  270576529
+  LastModifiedDate	  "Fri Sep 28 17:12:37 2012"
+  RTWModifiedTimeStamp	  270753126
   ModelVersionFormat	  "1.%<AutoIncrement:1>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
@@ -783,13 +783,13 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "50"
+    SIDHighWatermark	    "32"
     Block {
       BlockType		      SubSystem
       Name		      "Node1"
       SID		      "1"
-      Ports		      [3, 1]
-      Position		      [360, 184, 390, 216]
+      Ports		      [1, 1]
+      Position		      [280, 140, 310, 170]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -814,41 +814,25 @@ Model {
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
-	  Name			  "In2"
+	  Name			  "In4"
 	  SID			  "2"
 	  Position		  [60, 103, 90, 117]
 	  IconDisplay		  "Port number"
 	}
 	Block {
-	  BlockType		  Inport
-	  Name			  "In3"
-	  SID			  "3"
-	  Position		  [60, 165, 90, 195]
-	  Port			  "2"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In5"
-	  SID			  "4"
-	  Position		  [60, 225, 90, 255]
-	  Port			  "3"
-	  IconDisplay		  "Port number"
-	}
-	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
-	  SID			  "5"
-	  Ports			  [3, 1]
+	  SID			  "3"
+	  Ports			  [1, 1]
 	  Position		  [175, 101, 180, 139]
 	  ShowName		  off
-	  Inputs		  "3"
+	  Inputs		  "1"
 	  DisplayOption		  "bar"
 	}
 	Block {
 	  BlockType		  Scope
 	  Name			  "Scope1"
-	  SID			  "6"
+	  SID			  "4"
 	  Ports			  [1]
 	  Position		  [395, 54, 425, 86]
 	  Floating		  off
@@ -868,18 +852,18 @@ Model {
 	Block {
 	  BlockType		  StateSpace
 	  Name			  "State-Space"
-	  SID			  "7"
+	  SID			  "5"
 	  Position		  [245, 103, 305, 137]
 	  A			  "[0 -1;-1 0]"
-	  B			  "[0.33333     0.33333     0.33333;0.33333     0.33333     0.33333]"
+	  B			  "randn(2,1)"
 	  C			  "randn(1,2)"
-	  D			  "[0.33333     0.33333     0.33333]"
+	  D			  "zeros(1)"
 	  X0			  "randn(2,1)"
 	}
 	Block {
 	  BlockType		  ToWorkspace
 	  Name			  "To Workspace"
-	  SID			  "8"
+	  SID			  "6"
 	  Ports			  [1]
 	  Position		  [420, 190, 480, 220]
 	  ZOrder		  -7
@@ -891,23 +875,9 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "Out1"
-	  SID			  "9"
+	  SID			  "7"
 	  Position		  [435, 113, 465, 127]
 	  IconDisplay		  "Port number"
-	}
-	Line {
-	  SrcBlock		  "In5"
-	  SrcPort		  1
-	  Points		  [65, 0]
-	  DstBlock		  "Mux"
-	  DstPort		  3
-	}
-	Line {
-	  SrcBlock		  "In3"
-	  SrcPort		  1
-	  Points		  [30, 0; 0, -60]
-	  DstBlock		  "Mux"
-	  DstPort		  2
 	}
 	Line {
 	  SrcBlock		  "Mux"
@@ -935,8 +905,9 @@ Model {
 	  }
 	}
 	Line {
-	  SrcBlock		  "In2"
+	  SrcBlock		  "In4"
 	  SrcPort		  1
+	  Points		  [65, 0]
 	  DstBlock		  "Mux"
 	  DstPort		  1
 	}
@@ -945,9 +916,9 @@ Model {
     Block {
       BlockType		      SubSystem
       Name		      "Node2"
-      SID		      "10"
+      SID		      "8"
       Ports		      [2, 1]
-      Position		      [300, 77, 330, 108]
+      Position		      [200, 62, 230, 93]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -972,15 +943,15 @@ Model {
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
-	  Name			  "In1"
-	  SID			  "11"
+	  Name			  "In3"
+	  SID			  "9"
 	  Position		  [60, 103, 90, 117]
 	  IconDisplay		  "Port number"
 	}
 	Block {
 	  BlockType		  Inport
-	  Name			  "In5"
-	  SID			  "12"
+	  Name			  "In4"
+	  SID			  "10"
 	  Position		  [60, 165, 90, 195]
 	  Port			  "2"
 	  IconDisplay		  "Port number"
@@ -988,7 +959,7 @@ Model {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
-	  SID			  "13"
+	  SID			  "11"
 	  Ports			  [2, 1]
 	  Position		  [175, 101, 180, 139]
 	  ShowName		  off
@@ -998,7 +969,7 @@ Model {
 	Block {
 	  BlockType		  Scope
 	  Name			  "Scope1"
-	  SID			  "14"
+	  SID			  "12"
 	  Ports			  [1]
 	  Position		  [395, 54, 425, 86]
 	  Floating		  off
@@ -1018,18 +989,18 @@ Model {
 	Block {
 	  BlockType		  StateSpace
 	  Name			  "State-Space"
-	  SID			  "15"
+	  SID			  "13"
 	  Position		  [245, 103, 305, 137]
 	  A			  "[0 -1;-1 0]"
-	  B			  "[0.5         0.5;0.5         0.5]"
+	  B			  "[0.55253      1.5442;1.1006    0.085931]"
 	  C			  "randn(1,2)"
-	  D			  "[0.5         0.5]"
+	  D			  "[-1.4916     -0.7423]"
 	  X0			  "randn(2,1)"
 	}
 	Block {
 	  BlockType		  ToWorkspace
 	  Name			  "To Workspace"
-	  SID			  "16"
+	  SID			  "14"
 	  Ports			  [1]
 	  Position		  [420, 190, 480, 220]
 	  ZOrder		  -7
@@ -1041,12 +1012,12 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "Out1"
-	  SID			  "17"
+	  SID			  "15"
 	  Position		  [435, 113, 465, 127]
 	  IconDisplay		  "Port number"
 	}
 	Line {
-	  SrcBlock		  "In5"
+	  SrcBlock		  "In4"
 	  SrcPort		  1
 	  Points		  [30, 0; 0, -50]
 	  DstBlock		  "Mux"
@@ -1078,7 +1049,7 @@ Model {
 	  }
 	}
 	Line {
-	  SrcBlock		  "In1"
+	  SrcBlock		  "In3"
 	  SrcPort		  1
 	  DstBlock		  "Mux"
 	  DstPort		  1
@@ -1088,9 +1059,9 @@ Model {
     Block {
       BlockType		      SubSystem
       Name		      "Node3"
-      SID		      "18"
-      Ports		      [4, 1]
-      Position		      [180, 79, 210, 111]
+      SID		      "16"
+      Ports		      [2, 1]
+      Position		      [120, 142, 150, 173]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -1115,48 +1086,33 @@ Model {
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
-	  Name			  "In1"
-	  SID			  "19"
+	  Name			  "In2"
+	  SID			  "17"
 	  Position		  [60, 103, 90, 117]
 	  IconDisplay		  "Port number"
 	}
 	Block {
 	  BlockType		  Inport
 	  Name			  "In4"
-	  SID			  "20"
+	  SID			  "18"
 	  Position		  [60, 165, 90, 195]
 	  Port			  "2"
 	  IconDisplay		  "Port number"
 	}
 	Block {
-	  BlockType		  Inport
-	  Name			  "In5"
-	  SID			  "21"
-	  Position		  [60, 225, 90, 255]
-	  Port			  "3"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In6"
-	  SID			  "22"
-	  Position		  [60, 285, 90, 315]
-	  Port			  "4"
-	  IconDisplay		  "Port number"
-	}
-	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
-	  SID			  "23"
-	  Ports			  [4, 1]
+	  SID			  "19"
+	  Ports			  [2, 1]
 	  Position		  [175, 101, 180, 139]
 	  ShowName		  off
+	  Inputs		  "2"
 	  DisplayOption		  "bar"
 	}
 	Block {
 	  BlockType		  Scope
 	  Name			  "Scope1"
-	  SID			  "24"
+	  SID			  "20"
 	  Ports			  [1]
 	  Position		  [395, 54, 425, 86]
 	  Floating		  off
@@ -1176,18 +1132,18 @@ Model {
 	Block {
 	  BlockType		  StateSpace
 	  Name			  "State-Space"
-	  SID			  "25"
+	  SID			  "21"
 	  Position		  [245, 103, 305, 137]
 	  A			  "[0 -1;-1 0]"
-	  B			  "[0.25        0.25        0.25        0.25;0.25        0.25        0.25        0.25]"
+	  B			  "[-0.6156    -0.19242;0.74808     0.88861]"
 	  C			  "randn(1,2)"
-	  D			  "[0.25        0.25        0.25        0.25]"
+	  D			  "[-0.76485     -1.4023]"
 	  X0			  "randn(2,1)"
 	}
 	Block {
 	  BlockType		  ToWorkspace
 	  Name			  "To Workspace"
-	  SID			  "26"
+	  SID			  "22"
 	  Ports			  [1]
 	  Position		  [420, 190, 480, 220]
 	  ZOrder		  -7
@@ -1199,28 +1155,14 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "Out1"
-	  SID			  "27"
+	  SID			  "23"
 	  Position		  [435, 113, 465, 127]
 	  IconDisplay		  "Port number"
 	}
 	Line {
-	  SrcBlock		  "In6"
-	  SrcPort		  1
-	  Points		  [65, 0]
-	  DstBlock		  "Mux"
-	  DstPort		  4
-	}
-	Line {
-	  SrcBlock		  "In5"
-	  SrcPort		  1
-	  Points		  [65, 0]
-	  DstBlock		  "Mux"
-	  DstPort		  3
-	}
-	Line {
 	  SrcBlock		  "In4"
 	  SrcPort		  1
-	  Points		  [65, 0]
+	  Points		  [30, 0; 0, -50]
 	  DstBlock		  "Mux"
 	  DstPort		  2
 	}
@@ -1250,9 +1192,8 @@ Model {
 	  }
 	}
 	Line {
-	  SrcBlock		  "In1"
+	  SrcBlock		  "In2"
 	  SrcPort		  1
-	  Points		  [65, 0]
 	  DstBlock		  "Mux"
 	  DstPort		  1
 	}
@@ -1261,9 +1202,9 @@ Model {
     Block {
       BlockType		      SubSystem
       Name		      "Node4"
-      SID		      "28"
-      Ports		      [1, 1]
-      Position		      [120, 180, 150, 210]
+      SID		      "24"
+      Ports		      [3, 1]
+      Position		      [200, 224, 230, 256]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -1288,25 +1229,41 @@ Model {
 	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
-	  Name			  "In3"
-	  SID			  "29"
+	  Name			  "In1"
+	  SID			  "25"
 	  Position		  [60, 103, 90, 117]
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "In2"
+	  SID			  "26"
+	  Position		  [60, 165, 90, 195]
+	  Port			  "2"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Inport
+	  Name			  "In3"
+	  SID			  "27"
+	  Position		  [60, 225, 90, 255]
+	  Port			  "3"
 	  IconDisplay		  "Port number"
 	}
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
-	  SID			  "30"
-	  Ports			  [1, 1]
+	  SID			  "28"
+	  Ports			  [3, 1]
 	  Position		  [175, 101, 180, 139]
 	  ShowName		  off
-	  Inputs		  "1"
+	  Inputs		  "3"
 	  DisplayOption		  "bar"
 	}
 	Block {
 	  BlockType		  Scope
 	  Name			  "Scope1"
-	  SID			  "31"
+	  SID			  "29"
 	  Ports			  [1]
 	  Position		  [395, 54, 425, 86]
 	  Floating		  off
@@ -1326,18 +1283,18 @@ Model {
 	Block {
 	  BlockType		  StateSpace
 	  Name			  "State-Space"
-	  SID			  "32"
+	  SID			  "30"
 	  Position		  [245, 103, 305, 137]
 	  A			  "[0 -1;-1 0]"
-	  B			  "randn(2,1)"
+	  B			  "[-0.17738      1.4193     0.19781;-0.19605     0.29158      1.5877]"
 	  C			  "randn(1,2)"
-	  D			  "zeros(1)"
+	  D			  "[-0.80447     0.69662     0.83509]"
 	  X0			  "randn(2,1)"
 	}
 	Block {
 	  BlockType		  ToWorkspace
 	  Name			  "To Workspace"
-	  SID			  "33"
+	  SID			  "31"
 	  Ports			  [1]
 	  Position		  [420, 190, 480, 220]
 	  ZOrder		  -7
@@ -1349,152 +1306,7 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "Out1"
-	  SID			  "34"
-	  Position		  [435, 113, 465, 127]
-	  IconDisplay		  "Port number"
-	}
-	Line {
-	  SrcBlock		  "Mux"
-	  SrcPort		  1
-	  DstBlock		  "State-Space"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "State-Space"
-	  SrcPort		  1
-	  Points		  [40, 0]
-	  Branch {
-	    Points		    [0, -50]
-	    DstBlock		    "Scope1"
-	    DstPort		    1
-	  }
-	  Branch {
-	    Points		    [0, 85]
-	    DstBlock		    "To Workspace"
-	    DstPort		    1
-	  }
-	  Branch {
-	    DstBlock		    "Out1"
-	    DstPort		    1
-	  }
-	}
-	Line {
-	  SrcBlock		  "In3"
-	  SrcPort		  1
-	  Points		  [65, 0]
-	  DstBlock		  "Mux"
-	  DstPort		  1
-	}
-      }
-    }
-    Block {
-      BlockType		      SubSystem
-      Name		      "Node5"
-      SID		      "35"
-      Ports		      [3, 1]
-      Position		      [180, 289, 210, 321]
-      MinAlgLoopOccurrences   off
-      PropExecContextOutsideSubsystem off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      Opaque		      off
-      RequestExecContextInheritance off
-      MaskHideContents	      off
-      System {
-	Name			"Node5"
-	Location		[70, 200, 650, 460]
-	Open			off
-	ModelBrowserVisibility	off
-	ModelBrowserWidth	200
-	ScreenColor		"white"
-	PaperOrientation	"landscape"
-	PaperPositionMode	"auto"
-	PaperType		"usletter"
-	PaperUnits		"inches"
-	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
-	TiledPageScale		1
-	ShowPageBoundaries	off
-	ZoomFactor		"100"
-	Block {
-	  BlockType		  Inport
-	  Name			  "In1"
-	  SID			  "36"
-	  Position		  [60, 103, 90, 117]
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In2"
-	  SID			  "37"
-	  Position		  [60, 165, 90, 195]
-	  Port			  "2"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Inport
-	  Name			  "In3"
-	  SID			  "38"
-	  Position		  [60, 225, 90, 255]
-	  Port			  "3"
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Mux
-	  Name			  "Mux"
-	  SID			  "39"
-	  Ports			  [3, 1]
-	  Position		  [175, 101, 180, 139]
-	  ShowName		  off
-	  Inputs		  "3"
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "Scope1"
-	  SID			  "40"
-	  Ports			  [1]
-	  Position		  [395, 54, 425, 86]
-	  Floating		  off
-	  Location		  [126, 517, 450, 756]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  TimeRange		  "0.5847953216374258"
-	  YMin			  "-0.1657458563535892"
-	  YMax			  "1.21546961325967"
-	  DataFormat		  "StructureWithTime"
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  StateSpace
-	  Name			  "State-Space"
-	  SID			  "41"
-	  Position		  [245, 103, 305, 137]
-	  A			  "[0 -1;-1 0]"
-	  B			  "[0.33333     0.33333     0.33333;0.33333     0.33333     0.33333]"
-	  C			  "randn(1,2)"
-	  D			  "[0.33333     0.33333     0.33333]"
-	  X0			  "randn(2,1)"
-	}
-	Block {
-	  BlockType		  ToWorkspace
-	  Name			  "To Workspace"
-	  SID			  "42"
-	  Ports			  [1]
-	  Position		  [420, 190, 480, 220]
-	  ZOrder		  -7
-	  VariableName		  "nodeout5"
-	  MaxDataPoints		  "inf"
-	  SampleTime		  "-1"
-	  SaveFormat		  "Structure With Time"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "Out1"
-	  SID			  "43"
+	  SID			  "32"
 	  Position		  [435, 113, 465, 127]
 	  IconDisplay		  "Port number"
 	}
@@ -1545,162 +1357,22 @@ Model {
 	}
       }
     }
-    Block {
-      BlockType		      SubSystem
-      Name		      "Node6"
-      SID		      "44"
-      Ports		      [1, 1]
-      Position		      [300, 285, 330, 315]
-      MinAlgLoopOccurrences   off
-      PropExecContextOutsideSubsystem off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      Opaque		      off
-      RequestExecContextInheritance off
-      MaskHideContents	      off
-      System {
-	Name			"Node6"
-	Location		[70, 200, 650, 460]
-	Open			off
-	ModelBrowserVisibility	off
-	ModelBrowserWidth	200
-	ScreenColor		"white"
-	PaperOrientation	"landscape"
-	PaperPositionMode	"auto"
-	PaperType		"usletter"
-	PaperUnits		"inches"
-	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
-	TiledPageScale		1
-	ShowPageBoundaries	off
-	ZoomFactor		"100"
-	Block {
-	  BlockType		  Inport
-	  Name			  "In3"
-	  SID			  "45"
-	  Position		  [60, 103, 90, 117]
-	  IconDisplay		  "Port number"
-	}
-	Block {
-	  BlockType		  Mux
-	  Name			  "Mux"
-	  SID			  "46"
-	  Ports			  [1, 1]
-	  Position		  [175, 101, 180, 139]
-	  ShowName		  off
-	  Inputs		  "1"
-	  DisplayOption		  "bar"
-	}
-	Block {
-	  BlockType		  Scope
-	  Name			  "Scope1"
-	  SID			  "47"
-	  Ports			  [1]
-	  Position		  [395, 54, 425, 86]
-	  Floating		  off
-	  Location		  [126, 517, 450, 756]
-	  Open			  off
-	  NumInputPorts		  "1"
-	  List {
-	    ListType		    AxesTitles
-	    axes1		    "%<SignalLabel>"
-	  }
-	  TimeRange		  "0.5847953216374258"
-	  YMin			  "-0.1657458563535892"
-	  YMax			  "1.21546961325967"
-	  DataFormat		  "StructureWithTime"
-	  SampleTime		  "0"
-	}
-	Block {
-	  BlockType		  StateSpace
-	  Name			  "State-Space"
-	  SID			  "48"
-	  Position		  [245, 103, 305, 137]
-	  A			  "[0 -1;-1 0]"
-	  B			  "randn(2,1)"
-	  C			  "randn(1,2)"
-	  D			  "zeros(1)"
-	  X0			  "randn(2,1)"
-	}
-	Block {
-	  BlockType		  ToWorkspace
-	  Name			  "To Workspace"
-	  SID			  "49"
-	  Ports			  [1]
-	  Position		  [420, 190, 480, 220]
-	  ZOrder		  -7
-	  VariableName		  "nodeout6"
-	  MaxDataPoints		  "inf"
-	  SampleTime		  "-1"
-	  SaveFormat		  "Structure With Time"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "Out1"
-	  SID			  "50"
-	  Position		  [435, 113, 465, 127]
-	  IconDisplay		  "Port number"
-	}
-	Line {
-	  SrcBlock		  "Mux"
-	  SrcPort		  1
-	  DstBlock		  "State-Space"
-	  DstPort		  1
-	}
-	Line {
-	  SrcBlock		  "State-Space"
-	  SrcPort		  1
-	  Points		  [40, 0]
-	  Branch {
-	    Points		    [0, -50]
-	    DstBlock		    "Scope1"
-	    DstPort		    1
-	  }
-	  Branch {
-	    Points		    [0, 85]
-	    DstBlock		    "To Workspace"
-	    DstPort		    1
-	  }
-	  Branch {
-	    DstBlock		    "Out1"
-	    DstPort		    1
-	  }
-	}
-	Line {
-	  SrcBlock		  "In3"
-	  SrcPort		  1
-	  Points		  [65, 0]
-	  DstBlock		  "Mux"
-	  DstPort		  1
-	}
-      }
-    }
     Line {
       SrcBlock		      "Node1"
       SrcPort		      1
-      Points		      [0, 0]
-      Branch {
-	DstBlock		"Node2"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Node3"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Node5"
-	DstPort			1
-      }
+      DstBlock		      "Node4"
+      DstPort		      1
     }
     Line {
       SrcBlock		      "Node2"
       SrcPort		      1
       Points		      [0, 0]
       Branch {
-	DstBlock		"Node1"
+	DstBlock		"Node3"
 	DstPort			1
       }
       Branch {
-	DstBlock		"Node5"
+	DstBlock		"Node4"
 	DstPort			2
       }
     }
@@ -1709,35 +1381,21 @@ Model {
       SrcPort		      1
       Points		      [0, 0]
       Branch {
-	DstBlock		"Node1"
-	DstPort			2
+	DstBlock		"Node2"
+	DstPort			1
       }
       Branch {
 	DstBlock		"Node4"
-	DstPort			1
-      }
-      Branch {
-	DstBlock		"Node5"
 	DstPort			3
-      }
-      Branch {
-	DstBlock		"Node6"
-	DstPort			1
       }
     }
     Line {
       SrcBlock		      "Node4"
       SrcPort		      1
-      DstBlock		      "Node3"
-      DstPort		      2
-    }
-    Line {
-      SrcBlock		      "Node5"
-      SrcPort		      1
       Points		      [0, 0]
       Branch {
 	DstBlock		"Node1"
-	DstPort			3
+	DstPort			1
       }
       Branch {
 	DstBlock		"Node2"
@@ -1745,14 +1403,8 @@ Model {
       }
       Branch {
 	DstBlock		"Node3"
-	DstPort			3
+	DstPort			2
       }
-    }
-    Line {
-      SrcBlock		      "Node6"
-      SrcPort		      1
-      DstBlock		      "Node3"
-      DstPort		      4
     }
   }
 }

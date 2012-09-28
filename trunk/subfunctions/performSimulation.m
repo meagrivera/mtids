@@ -8,7 +8,7 @@ expSucc = data.expSucc;
 
 % Simulation parameters
 if ~isfield( data,'simPrms' )
-    data.simPrms = editSimtParams( [data.template_list{1,1} '_CHECKED'] );
+    data.simPrms = editSimParams( [data.template_list{1,1} '_CHECKED'],[] );
 end
 set_param(data.simPrms,'SaveState','on','StateSaveName','xout',...
     'SaveOutput','on','OutputSaveName','yout');
