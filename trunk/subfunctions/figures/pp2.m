@@ -66,7 +66,7 @@ oldParams = varargin{4};
 handles(1).nrOfPlotStates = length(plotStates);
 
 if handles(1).nrOfPlotStates ~= length(oldParams)
-    display(['ERROR - nrOfPlotStates and length(oldParams) must be equal!']);
+%     disp(['ERROR - nrOfPlotStates and length(oldParams) must be equal!']);
 end
 
 %DEBUGGING

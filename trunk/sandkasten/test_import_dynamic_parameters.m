@@ -1,4 +1,6 @@
-% test script for import_dynamic_params.m
+%IMPORTDYNAMICPARAMS standalone test script for import_dynamic_params.m
+% Use this script to test import_dynamic_params.m, which is normally
+% invoked by mtids.m.
 
 oldFolder = cd(strcat(pwd,'/templates'));
 
@@ -10,7 +12,6 @@ oldFolder = cd(strcat(pwd,'/templates'));
 
 % disp(['Filename: ' filename]);
 load_system(filename);
-
 
 % check this file for unset parameter values - this is a prestep to the
 % dialog of asking for all needed parameters for this template

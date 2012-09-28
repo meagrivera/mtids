@@ -1,6 +1,6 @@
 function varargout = mtids(varargin)
 %
-%      MTIDS 1.1
+%      MTIDS 1.2
 %      (C) 2011 The MTIDS Project (http://code.google.com/p/mtids)
 %      Matlab Toolbox for Interconnected Dynamical Systems
 %      Test Rig for Large-Scale Interconnected Systems.
@@ -55,7 +55,7 @@ function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to mtids (see VARARGIN)
 
 disp(' ');
-disp('MTIDS 1.1');
+disp('MTIDS 1.2');
 disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
 disp('<a href="http://code.google.com/p/mtids">http://code.google.com/p/mtids</a>');
 disp(' ');
@@ -99,7 +99,7 @@ graph_init;
 
 flagLoadSet = 0;
 try
-    load_settings('lastset',handles);
+    load_settings(['resources' filesep 'lastset'],handles);
     data = getappdata(handles.figure1,'appData');
     if ~isempty(data)
         choice = questdlg('Do you want to load the settings formerly used?', ...
@@ -347,7 +347,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % load application data
 data = getappdata(handles.figure1,'appData');
 
-save_settings('lastset',handles);
+save_settings(['resources' filesep 'lastset'],handles);
 filename = 'lastgraph.mat';
 pathname = [pwd filesep 'resources' filesep];
 saveGraph(hObject, eventdata, handles, pathname, filename);
@@ -2335,8 +2335,9 @@ function create_dynamic_Template_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % out = dialog('WindowStyle', 'normal', 'Name', 'Open');
 title = 'Creation of new dynamic template';
-message = ['A new model in Simulink will be loaded now. Please leave Inport, Outport ' ...
-    'and the Mux-Block at the Inport unmodified. Save your work afterwards and open the import ' ...
+message = ['A new model in Simulink will be loaded now. Please leave Inport, Outport, ' ...
+    'the Mux-Block at the Inport and the ''To Workspace''-Block unmodified. Save ',...
+    'your work afterwards and open the import ' ...
     'wizard to use the created dynamics in mtids.' ...
     'See ''help'' for detailed advise.'];
 h1=msgbox(message,title,'help');
@@ -2463,7 +2464,12 @@ data = getappdata(handles.figure1,'appData');
 % sysname means the name of an arbitrary template, which is used in mtids.
 % it's just for getting a configuration set for simulink out of it
 sysname = [data.template_list{1,1} '_CHECKED'];
-data.simPrms = editSimParams( sysname );
+if isfield( data,'simPrms' )
+    oldPrms = data.simPrms;
+else
+    oldPrms = [];
+end
+data.simPrms = editSimParams( sysname,oldPrms );
 setappdata(handles.figure1,'appData',data);
 
 %--------------------------------------------------------------------------
