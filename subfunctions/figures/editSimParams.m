@@ -65,7 +65,8 @@ set(handles.popup_solver,'Value',2.0);
 popup_Type_Callback(handles.popup_Type, [], handles);
 
 handles.sysname = varargin{1};
-
+handles.oldPrms = varargin{2};
+readInSimPrms(handles);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -237,11 +238,15 @@ set(handles.text_noIter  ,'Visible','on');
 set(handles.edit_noIter  ,'Visible','on');
 
 function cs = readOutSimPrms(handles)                       %here goes the spelling of the parameter
-%load system
-load_system(handles.sysname);
-cs = getActiveConfigSet(gcs);
-%close system
-close_system(handles.sysname,0);
+if isempty( handles.oldPrms )
+    %load system
+    load_system(handles.sysname);
+    cs = getActiveConfigSet(gcs);
+    %close system
+    close_system(handles.sysname,0);
+else
+    cs = handles.oldPrms;
+end
 StartTime = get(handles.edit_startTime,'String');           %StartTime
 StopTime = get(handles.edit_stopTime,'String');             %StopTime
 contSolverType = get(handles.popup_Type,'String');
@@ -298,8 +303,9 @@ if strcmp( get(handles.edit_fixedSize,'Visible'),'on')
 end
 if strcmp( get(handles.popup_solJacob,'Visible'),'on')
     contSolJacob = get(handles.popup_solJacob,'String');
-    SolverJacobianMethodControl = contSolJacob{get(handles.popup_solJacob  ,'Value')}; %SolverJacobianMethodControl
-    set_param(cs,'SolverJacobianMethodControl',SolverJacobianMethodControl);
+    tmp = contSolJacob{get(handles.popup_solJacob  ,'Value')}; %SolverJacobianMethodControl
+    tmp(regexp( tmp, '\s' ))=[];
+    set_param(cs,'SolverJacobianMethodControl',tmp);
 end
 if strcmp( get(handles.popup_extOrder,'Visible'),'on')
     contExtOrder = get(handles.popup_extOrder,'String');
@@ -338,6 +344,52 @@ else
 end
 varargout{2} = handles.output;
 delete(handles.figure1);
+
+function readInSimPrms(handles)
+%READINSIMPRMS
+% This function takes the old configuration settings and writes it into the
+% figures' editable elements
+if isempty( handles.oldPrms )
+    return
+end
+cs = handles.oldPrms.get('Components');
+set(handles.edit_startTime,'String',cs(1).StartTime);       %StartTime
+set(handles.edit_stopTime,'String',cs(1).StopTime);         %StopTime
+idxSolverType = find( strcmp( get(handles.popup_Type,'String'),cs(1).SolverType ) );%SolverType
+set(handles.popup_Type,'Value',idxSolverType);
+popup_Type_Callback(handles.popup_Type, [], handles);
+contSolver = get(handles.popup_solver,'String');            %Solver
+contSolver = regexp( contSolver,'\w*(?=\s)','match','once');
+idxSolver = find( strcmp( contSolver, cs(1).Solver ) );
+set(handles.popup_solver,'Value',idxSolver);
+popup_solver_Callback(handles.popup_solver, [], handles);
+set(handles.edit_maxStepSize,'String',cs(1).MaxStep);       %MaxStep
+set(handles.edit_minStepSize  ,'String',cs(1).MinStep);     %MinStep
+set(handles.edit_initialStepSize  ,'String',cs(1).InitialStep); %InitialStep
+set(handles.edit_relTol  ,'String',cs(1).RelTol);           %RelTol
+set(handles.edit_absTol  ,'String',cs(1).AbsTol);           %AbsTol
+if strcmp( cs(1).ShapePreserveControl(1),'D')               %ShapePreserveControl
+    set(handles.popup_shapePres,'Value',2.0);
+else
+    set(handles.popup_shapePres,'Value',1.0);
+end
+set(handles.edit_consecMinSteps  ,'String',cs(1).MaxConsecutiveMinStep); %MaxConsecutiveMinStep
+contSolReset = get(handles.popup_solReset,'String');                %SolverResetMethod
+idxSRM = find(strcmp( contSolReset, cs(1).SolverResetMethod ));
+set(handles.popup_solReset,'Value',idxSRM);
+set(handles.popup_maxOrder,'Value',cs(1).MaxOrder);                 %MaxOrder
+set(handles.edit_fixedSize  ,'String',cs(1).FixedStep);             %FixedStep
+contSolJacob = get(handles.popup_solJacob,'String');                %SolverJacobianMethodControl
+tmp = cs(1).SolverJacobianMethodControl;
+idxCapital = regexp( tmp,'[A-Z]' );
+if length( idxCapital ) > 1
+    tmp = [tmp(1:idxCapital(2)-1) ' ' tmp(idxCapital(2):end)];
+end
+idxSJMC = find( strcmpi( contSolJacob,tmp ) );
+set(handles.popup_solJacob,'Value',idxSJMC);
+set(handles.popup_extOrder,'Value',cs(1).ExtrapolationOrder);       %ExtrapolationOrder 
+set(handles.edit_noIter  ,'String',cs(1).NumberNewtonIterations);   %NumberNewtonIterations
+
 
 function edit_startTime_Callback(hObject, eventdata, handles) %#ok<*INUSD>
 % hObject    handle to edit_startTime (see GCBO)
