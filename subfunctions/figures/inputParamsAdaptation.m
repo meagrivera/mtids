@@ -1,26 +1,18 @@
 function varargout = inputParamsAdaptation(varargin)
-% INPUTPARAMSADAPTATION MATLAB code for inputParamsAdaptation.fig
-%      INPUTPARAMSADAPTATION, by itself, creates a new INPUTPARAMSADAPTATION or raises the existing
-%      singleton*.
+%INPUTPARAMSADAPTATION gui to choose how input parameters should corrected
 %
-%      H = INPUTPARAMSADAPTATION returns the handle to a new INPUTPARAMSADAPTATION or the handle to
-%      the existing singleton*.
+% This GUI request how parameters, which depend linearly of the size of the
+% input signal, should be corrected automatically. Different modes could be
+% chosen for that.
 %
-%      INPUTPARAMSADAPTATION('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in INPUTPARAMSADAPTATION.M with the given input arguments.
+% INPUT:    (none)
 %
-%      INPUTPARAMSADAPTATION('Property','Value',...) creates a new INPUTPARAMSADAPTATION or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before inputParamsAdaptation_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to inputParamsAdaptation_OpeningFcn via varargin.
+% OUTOUT:   (1) -- Chosen mode (as a char)
+%           (2) -- Boolean, '1' if button 'okay' was pressed, '0' if button
+%                   'cancel' was pressed
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help inputParamsAdaptation
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Last Modified by GUIDE v2.5 17-Sep-2012 10:18:21
 

@@ -1,11 +1,21 @@
 function [ paramname paramvalue ] = get_BlockParams( varargin )
+%GET_BLOCKPARAMS block and parameter names for predefined block types
+% 
 % This function gets the parameter names and values for predefined block
-% types.
+% types. Should be expanded with most general block types.
+%
+% INPUT:    (1)     -- Type of Simulink block
+%           (2)     -- Struct of figure handles of parent figure
+%           (3)     -- Name of Simulink block
+%
 % OUTPUT:
-%       paramname       -- Name of the Parameter
-%       paramvalue      -- Value of the Parameter - this is the Value, the
+%       paramname   -- Name of the Parameter
+%       paramvalue  -- Value of the Parameter - this is the Value, the
 %                           user has to set during his MTIDS session
-%       dat             -- Table (cell) data; one line of the uitable
+%       dat         -- Table (cell) data; one line of the uitable
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 if size( varargin,2 ) < 3
     error('Insufficient number of input arguments');

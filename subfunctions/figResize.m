@@ -1,5 +1,17 @@
-% Figure resize function
-function figResize(src,evt,handles)
+function figResize(src,evt,handles) %#ok<INUSL>
+%FIGRESIZE figure resize function for pp2.fig
+%
+% This function works as a resize function for the figure pp2.fig.
+%
+% INPUT:    src      -- Handles to invoking function
+%           evt      -- (unused)
+%           handles  -- Struct with handles of parent figure
+%
+% OUTPUT: (none)     -- Position elements are set directly
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 topFrame = 30;
 fpos = get(src,'Position');
 fposPanel = get(handles.uipanel1,'Position');

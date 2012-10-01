@@ -1,5 +1,22 @@
 function varargout = editSimParams(varargin)
-% EDITSIMPARAMS MATLAB code for editSimParams.fig
+%EDITSIMPARAMS gui for asking basic Simulink simulation parameters
+%
+% This GUI can be used as a function. It requests a basic set of simulation
+% parameters for Simulink, which is used in a subsequent of the MTIDS graph
+% system in Simulink.
+%
+% INPUT:    (1) -- Name of an arbitrary dynamic template in Simulink;
+%                   is used to generate an initial configuration set,
+%                   if no old parameters are passed to this function
+%           (2) -- Configurations set of Simulink parameters
+%                   (Simulink.SimulationOutput object); will be prompted in GUI and 
+%                   be overwritten at GUI closing
+%
+% OUTPUT:   (1) -- Configurations set of Simulink parameters
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 %      EDITSIMPARAMS, by itself, creates a new EDITSIMPARAMS or raises the existing
 %      singleton*.
 %
@@ -19,6 +36,7 @@ function varargout = editSimParams(varargin)
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
+%
 
 % Edit the above text to modify the response to help editSimParams
 
@@ -390,14 +408,6 @@ set(handles.popup_solJacob,'Value',idxSJMC);
 set(handles.popup_extOrder,'Value',cs(1).ExtrapolationOrder);       %ExtrapolationOrder 
 set(handles.edit_noIter  ,'String',cs(1).NumberNewtonIterations);   %NumberNewtonIterations
 
-
-function edit_startTime_Callback(hObject, eventdata, handles) %#ok<*INUSD>
-% hObject    handle to edit_startTime (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_startTime as text
-%        str2double(get(hObject,'String')) returns contents of edit_startTime as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_startTime_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_startTime (see GCBO)
@@ -408,13 +418,6 @@ function edit_startTime_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-function edit_stopTime_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_stopTime (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_stopTime as text
-%        str2double(get(hObject,'String')) returns contents of edit_stopTime as a double
 
 % --- Executes during object creation, after setting all properties.
 function edit_stopTime_CreateFcn(hObject, eventdata, handles)
@@ -427,13 +430,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit_fixedSize_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_fixedSize (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_fixedSize as text
-%        str2double(get(hObject,'String')) returns contents of edit_fixedSize as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_fixedSize_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_fixedSize (see GCBO)
@@ -444,13 +440,6 @@ function edit_fixedSize_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-function edit_consecMinSteps_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_consecMinSteps (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_consecMinSteps as text
-%        str2double(get(hObject,'String')) returns contents of edit_consecMinSteps as a double
 
 % --- Executes during object creation, after setting all properties.
 function edit_consecMinSteps_CreateFcn(hObject, eventdata, handles)
@@ -463,13 +452,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit_maxStepSize_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_maxStepSize (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_maxStepSize as text
-%        str2double(get(hObject,'String')) returns contents of edit_maxStepSize as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_maxStepSize_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_maxStepSize (see GCBO)
@@ -480,13 +462,6 @@ function edit_maxStepSize_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-function edit_minStepSize_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_minStepSize (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_minStepSize as text
-%        str2double(get(hObject,'String')) returns contents of edit_minStepSize as a double
 
 % --- Executes during object creation, after setting all properties.
 function edit_minStepSize_CreateFcn(hObject, eventdata, handles)
@@ -499,13 +474,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit_initialStepSize_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_initialStepSize (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_initialStepSize as text
-%        str2double(get(hObject,'String')) returns contents of edit_initialStepSize as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_initialStepSize_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_initialStepSize (see GCBO)
@@ -517,13 +485,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit_relTol_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_relTol (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_relTol as text
-%        str2double(get(hObject,'String')) returns contents of edit_relTol as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_relTol_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_relTol (see GCBO)
@@ -534,13 +495,6 @@ function edit_relTol_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-function edit_absTol_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_absTol (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_absTol as text
-%        str2double(get(hObject,'String')) returns contents of edit_absTol as a double
 
 % --- Executes during object creation, after setting all properties.
 function edit_absTol_CreateFcn(hObject, eventdata, handles)
@@ -575,14 +529,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on selection change in popup_shapePres.
-function popup_shapePres_Callback(hObject, eventdata, handles)
-% hObject    handle to popup_shapePres (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns popup_shapePres contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popup_shapePres
-
 % --- Executes during object creation, after setting all properties.
 function popup_shapePres_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popup_shapePres (see GCBO)
@@ -593,14 +539,6 @@ function popup_shapePres_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-% --- Executes on selection change in popup_solJacob.
-function popup_solJacob_Callback(hObject, eventdata, handles)
-% hObject    handle to popup_solJacob (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns popup_solJacob contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popup_solJacob
 
 % --- Executes during object creation, after setting all properties.
 function popup_solJacob_CreateFcn(hObject, eventdata, handles)
@@ -613,14 +551,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on selection change in popup_solReset.
-function popup_solReset_Callback(hObject, eventdata, handles)
-% hObject    handle to popup_solReset (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns popup_solReset contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popup_solReset
-
 % --- Executes during object creation, after setting all properties.
 function popup_solReset_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popup_solReset (see GCBO)
@@ -631,14 +561,6 @@ function popup_solReset_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-% --- Executes on selection change in popup_maxOrder.
-function popup_maxOrder_Callback(hObject, eventdata, handles)
-% hObject    handle to popup_maxOrder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns popup_maxOrder contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popup_maxOrder
 
 % --- Executes during object creation, after setting all properties.
 function popup_maxOrder_CreateFcn(hObject, eventdata, handles)
@@ -651,14 +573,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% --- Executes on selection change in popup_extOrder.
-function popup_extOrder_Callback(hObject, eventdata, handles)
-% hObject    handle to popup_extOrder (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: contents = cellstr(get(hObject,'String')) returns popup_extOrder contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popup_extOrder
-
 % --- Executes during object creation, after setting all properties.
 function popup_extOrder_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to popup_extOrder (see GCBO)
@@ -670,13 +584,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function edit_noIter_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_noIter (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of edit_noIter as text
-%        str2double(get(hObject,'String')) returns contents of edit_noIter as a double
-
 % --- Executes during object creation, after setting all properties.
 function edit_noIter_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_noIter (see GCBO)
@@ -687,3 +594,43 @@ function edit_noIter_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+%--------------------------------------------------------------------------
+%-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
+%--------------------------------------------------------------------------
+
+function edit_noIter_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in popup_extOrder.
+function popup_extOrder_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in popup_maxOrder.
+function popup_maxOrder_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in popup_solReset.
+function popup_solReset_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in popup_solJacob.
+function popup_solJacob_Callback(hObject, eventdata, handles)
+
+% --- Executes on selection change in popup_shapePres.
+function popup_shapePres_Callback(hObject, eventdata, handles)
+
+function edit_absTol_Callback(hObject, eventdata, handles)
+
+function edit_relTol_Callback(hObject, eventdata, handles)
+
+function edit_initialStepSize_Callback(hObject, eventdata, handles)
+
+function edit_startTime_Callback(hObject, eventdata, handles) %#ok<*INUSD>
+
+function edit_maxStepSize_Callback(hObject, eventdata, handles)
+
+function edit_consecMinSteps_Callback(hObject, eventdata, handles)
+
+function edit_stopTime_Callback(hObject, eventdata, handles)
+
+function edit_fixedSize_Callback(hObject, eventdata, handles)
+
+function edit_minStepSize_Callback(hObject, eventdata, handles)
+

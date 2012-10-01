@@ -1,11 +1,19 @@
-function SCC_sets = compute_SCC ( graph1 )
-% This script computes the sets of strong connected components of a
-% digraph, based on Matgraph.
-% Input: graph1 -- edited Matgraph Object, which represents a directed
+function SCC_sets = compute_SCC( graph1 )
+%COMPUTE_SCC Computes strong connected components of a digraph
+%
+% This function computes the sets of strong connected components of a
+% digraph, based on Matgraph. Sketch of algorithm is explained inside the
+% source code.
+%
+% INPUT:    graph1   -- edited Matgraph Object, which represents a directed
 %                       graph
-% Output: SCC_sets -- Cell vector, each cell contains the members of a SCC.
+%
+% OUTPUT:   SCC_sets -- Cell vector, each cell contains the members of a SCC.
 %                       By definition, a single node is a SCC. To get the
 %                       number of SCCs, use length(SCC_sets)
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Algorithm: start in an arbitrary node i - mark this node as first visited
 % in the SCC set j - perform a DFS twice: first with correct directed

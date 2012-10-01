@@ -1,5 +1,17 @@
 function varargout = set_stringPlotOutputSignals( varargin ) %#ok<STOUT>
-%SET_STRINGPLOTOUTPUTSIGNALS
+%SET_STRINGPLOTOUTPUTSIGNALS set visualization of which signals are to plot
+%
+% This function updates the uicontrol elements, which display which 
+% output signals of a node should be plotted.
+%
+% INPUT:    (1) -- Cell array, containing the information about the
+%                   plotting parameters
+%           (2) -- Struct, handles to elements of parent figure
+%
+% OUTPUT: (none)
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % function input
 printCell       = varargin{1};

@@ -1,16 +1,22 @@
 function varargout = readImportedTemplates( varargin )
-%READIMPORTEDTEMPLATES
-% This function checks the import/template folder, if there are any
+%READIMPORTEDTEMPLATES reads Simulink templates out of folder
+%
+% This function checks the import/template folder, if there are
 % templates, which were formerly imported (with paramValue sets)
 % This function is at least invoked by the initialization of MTIDS
 % template_list = [Type color1 color2 param_values active]
-% INPUT:    (1) template_list_old: in mtids, this variable is the
-%               initialized or stored template list.
-% OUTPUT:   (1) Either: template_list_new, where all old and new templates
-%               are contained
-%               Or: if no input argument is given, then just the names of
-%               the templates and the value sets are defined as an ouput
-%               (as a struct-variable)
+%
+% INPUT:    (1) -- template_list_old: in mtids, this variable is the
+%                   initialized or stored template list.
+%
+% OUTPUT:   (1) -- Either: template_list_new, where all old and new templates
+%                   are contained
+%                  Or: if no input argument is given, then just the names of
+%                   the templates and the value sets are defined as an ouput
+%                   (as a struct-variable)
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 if size( varargin,2) == 1
     template_list_old = varargin{1};

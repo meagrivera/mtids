@@ -1,26 +1,17 @@
 function varargout = setnodecolor(varargin)
-% SETNODECOLOR MATLAB code for setnodecolor.fig
-%      SETNODECOLOR, by itself, creates a new SETNODECOLOR or raises the existing
-%      singleton*.
+% SETNODECOLOR gui to set the appearance of the nodes in MTIDS
 %
-%      H = SETNODECOLOR returns the handle to a new SETNODECOLOR or the handle to
-%      the existing singleton*.
+% This GUI allows to set the face and edge color of node, considering the
+% different templates.
 %
-%      SETNODECOLOR('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in SETNODECOLOR.M with the given input arguments.
+% INPUT:    (1) -- Cell array, containing the list of templates, which are
+%                   available in MTIDS
 %
-%      SETNODECOLOR('Property','Value',...) creates a new SETNODECOLOR or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before setnodecolor_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to setnodecolor_OpeningFcn via varargin.
+% OUTPUT:   (2) -- Cell array, identical to INPUT, but with updated color
+%                   configurations
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help setnodecolor
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Last Modified by GUIDE v2.5 16-May-2012 20:56:32
 
@@ -169,7 +160,7 @@ end
 % data should be applied
 if handles.OutputFlag == 2
     varargout{1} = handles.template_list;
-% data should NOT be applied ('button' cancel or 'closerequest' was prompted    
+% data should NOT be applied ('button' cancel or 'closerequest' was pressed    
 elseif handles.OutputFlag == 1
     varargout{1} = [];
 end

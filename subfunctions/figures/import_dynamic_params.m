@@ -1,5 +1,26 @@
 function varargout = import_dynamic_params(varargin)
-% IMPORT_DYNAMIC_PARAMS MATLAB code for import_dynamic_params.fig
+%IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS
+%
+% This GUI reads in dynamic templates, which must obtain some exact
+% specifications, concerning the input and output ports. Templates, which
+% should be imported, may been desgined using the nodeTemplate.mdl-file, or
+% following the exact naming of the ports, which are containd in
+% nodeTemplate.mdl.
+%
+% INPUT:    (1) -- cell arry, containing blocks with editable numerical
+%                   parameters of template
+%           (2) -- cell array with according names of blocks in (1)
+%           (3) -- Filename of template
+%           (4) -- Pathname of template
+%
+% OUTPUT:   (none) -- After import is complete, template will be saved,
+%                       concatenating the postfix "_CHECKED". This will 
+%                       enable the function "readImportedTemplates" to 
+%                       read-in all tested templates to MITDS.
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 %      IMPORT_DYNAMIC_PARAMS, by itself, creates a new IMPORT_DYNAMIC_PARAMS or raises the existing
 %      singleton*.
 %

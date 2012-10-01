@@ -1,5 +1,15 @@
 function varargout = performSimulation( varargin )
-%PERFORMSIMULATION
+%PERFORMSIMULATION Simulates the MTIDS system in Simulink
+%
+% This function simulates the MTIDS system in Simulink.
+%
+% INPUT:    (1) -- struct of figure handles from MTIDS main function
+%
+% OUTPUT:   (1) -- Simulation results as Simulink.SimulationOutpu
+%                       object
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 handles = varargin{1};
 

@@ -1,18 +1,34 @@
 function varargout = saveParamSet2File( varargin )
-%SAVEPARAMSET2FILE
-% This function saves a parameter value set for a still existing dynamic
-% template
+%SAVEPARAMSET2FILE storing parameter set for a template
 %
-% INPUT:    (1) handle4InputSpecsVars
-%           (2) handle4InputSpecsNoOfIntInputs
-%           (3) templName
-%           (4) handle4SetName
-%           (5) Data
-%           (6) dimension
-%           (7) Pathname
-%           (8) Flag
-% OUTPUT:   (1) 1 for being successful, 0 for fail
-%           (2) Error message in case of fail
+% This function saves a parameter value set for a still existing dynamic
+% template.
+%
+% INPUT:    (1) -- Figure handle to uicontrol-object 'Edit Text', which 
+%                   specifies variables, which depend on the input signal 
+%                   size of the template
+%           (2) -- Figure handle to uicontrol-object 'Edit Text', which
+%                   specifies the number of internal inputs, e.g. feedback
+%                   loops
+%           (3) -- Name of template, to which a parameter set should be saved
+%           (4) -- Figure handle to uicontrol-object 'Edit Text', where
+%                   the name of the param set was prompted
+%           (5) -- Main part of the parameter set, is stored in table, if
+%                   a GUI is used.
+%           (6) -- States dimension of a template with an explicit
+%                   numerical parametrization
+%           (7) -- Pathname of the .mat-file, where at least one parameter
+%                   set must be stored yet
+%           (8) -- Flag 'enable overwrite'; if '1', the user will be asked,
+%                   if a still existing set (with identical name) should be
+%                   overwritten
+%
+% OUTPUT:   (1) -- Boolean; '1' for being successful
+%           (2) -- Char array with error message in case of fail; if saving
+%                   was sucessfull, the array is empty
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 handle4InputSpecsVars           = varargin{1}; % handles.TextField1InputSpecs
 handle4InputSpecsNoOfIntInputs  = varargin{2}; % handles.TextField2InputSpecs

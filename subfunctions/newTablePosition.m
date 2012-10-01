@@ -1,5 +1,18 @@
 function newTablePosition( varargin )
-% Compute and set new layout positions for the figure
+%NEWTABLEPOSITION set new layout position for import_dynamic_params
+%
+% Computes and sets new layout positions for the figure import_dynamic_params
+%
+% INPUT:    (1) -- Struct, containing handles to all elements of parent
+%                   figure
+%           (2) -- eventdata
+%           (3) -- Row names
+%           (4) -- New data table content
+%
+% OUTPUT: (none)
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 if size( varargin,2 ) < 4
     error('Insufficient number of arguments');

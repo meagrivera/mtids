@@ -1,5 +1,21 @@
 function varargout = export_as_matrix(varargin)
-% EXPORT_AS_MATRIX M-file for export_as_matrix.fig
+%EXPORT_AS_MATRIX gui to export a graph in mtids as a matrix
+%
+% Graphical user interface, which enables to save the MTIDS graph using an
+% array representation. Possible variants are: a Laplacian
+% matrix, an Adjacency matrix or a (N x 2) list of edges.
+%
+% INPUT:    (1)    -- Adjacency matrix of graph g
+%           (2)    -- Graph as matgraph-object
+%           (3)    -- string, 'directed' or 'undirected'
+%
+% OUTPUT:   (none) -- Data will be saved
+%
+% Authors: Francisco Llobet, Jose Rivera
+% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+%
+
 %      EXPORT_AS_MATRIX, by itself, creates a new EXPORT_AS_MATRIX or raises the existing
 %      singleton*.
 %
@@ -19,8 +35,6 @@ function varargout = export_as_matrix(varargin)
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help export_as_matrix
 
 % Last Modified by GUIDE v2.5 22-Nov-2011 20:06:15
 
@@ -51,7 +65,6 @@ function export_as_matrix_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to export_as_matrix (see VARARGIN)
-
 % Choose default command line output for export_as_matrix
 handles.output = hObject;
 
@@ -70,15 +83,12 @@ set(handles.export_as_laplacian,'Value', 1);
 set(handles.export_as_adjacency,'Value', 0);
 set(handles.export_as_edge_list,'Value', 0);
 set(handles.indegree,'Value',1);
-
 switch modus
     case 'undirected';
         set(handles.choiceDegree,'Visible','off');
     case 'directed';
         set(handles.choiceDegree,'Visible','on');
 end
-
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -92,19 +102,16 @@ function varargout = export_as_matrix_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
-
 varargout{1} = handles.output;
 uiresume(handles.output);
 
 
 % --- Executes on button press in export_to_workplace.
-function export_to_workplace_Callback(hObject, eventdata, handles)
+function export_to_workplace_Callback(hObject, eventdata, handles) %#ok<*INUSL,*DEFNU>
 % hObject    handle to export_to_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %%varargin
 global matrix;
 global modus;
@@ -113,7 +120,6 @@ global kindOfDegree;
 
 workspace  = get(handles.edit_workplace,'String');
 varname    = get(handles.edit_matrix,'String');
-
 
 if (get(handles.export_as_laplacian,'Value') == get(handles.export_as_laplacian,'Max'))
     switch modus
@@ -142,105 +148,63 @@ elseif (get(handles.export_as_edge_list,'Value') == get(handles.export_as_edge_l
             matrix = sortrows(edges(g,1),1);
     end
 end
-        assignin(workspace, varname, matrix);
+assignin(workspace, varname, matrix);
 
-    %    close(handles.export_as_matrix)
-   uiresume(handles.output);
-      close(handles.output);
-    
-function edit_workplace_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_workplace (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_workplace as text
-%        str2double(get(hObject,'String')) returns contents of edit_workplace as a double
-
+%    close(handles.export_as_matrix)
+uiresume(handles.output);
+close(handles.output);
 
 % --- Executes during object creation, after setting all properties.
 function edit_workplace_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-
-function edit_matrix_Callback(hObject, eventdata, handles)
-% hObject    handle to edit_matrix (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit_matrix as text
-%        str2double(get(hObject,'String')) returns contents of edit_matrix as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function edit_matrix_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_matrix (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes when selected object is changed in uipanel2.
-function uipanel2_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel2 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previousvararginly selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes on button press in export_as_laplacian.
 function export_as_laplacian_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_laplacian (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of export_as_laplacian
-
 set(handles.export_as_laplacian,'Value', 1);
 set(handles.export_as_adjacency,'Value', 0);
 set(handles.export_as_edge_list,'Value', 0);
-
-
 
 % --- Executes on button press in export_as_adjacency.
 function export_as_adjacency_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_adjacency (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of export_as_adjacency
 set(handles.export_as_laplacian,'Value', 0);
 set(handles.export_as_adjacency,'Value', 1);
 set(handles.export_as_edge_list,'Value', 0);
-
-
 
 % --- Executes on button press in export_as_edge_list.
 function export_as_edge_list_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_edge_list (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of export_as_edge_list
 set(handles.export_as_laplacian,'Value', 0);
 set(handles.export_as_adjacency,'Value', 0);
 set(handles.export_as_edge_list,'Value', 1);
-
 
 % --- Executes when selected object is changed in choiceDegree.
 function choiceDegree_SelectionChangeFcn(hObject, eventdata, handles)
@@ -250,14 +214,21 @@ function choiceDegree_SelectionChangeFcn(hObject, eventdata, handles)
 %	OldValue: handle of the previously selected object or empty if none was selected
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
-
 global kindOfDegree;
-
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object
     case 'indegree';
-        kindOfDegree = 'isIndegree';
-        
+        kindOfDegree = 'isIndegree';       
     case 'outdegree';
-        kindOfDegree = 'isOutdegree';
-        
+        kindOfDegree = 'isOutdegree';      
 end
+
+%--------------------------------------------------------------------------
+%-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------
+%--------------------------------------------------------------------------
+
+% --- Executes when selected object is changed in uipanel2.
+function uipanel2_SelectionChangeFcn(hObject, eventdata, handles)
+
+function edit_matrix_Callback(hObject, eventdata, handles)
+
+function edit_workplace_Callback(hObject, eventdata, handles) %#ok<*INUSD>

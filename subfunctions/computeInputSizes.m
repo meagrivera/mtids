@@ -1,5 +1,5 @@
 function computeInputSizes( handles )
-%COMPUTEINPUTSIZES
+%COMPUTEINPUTSIZES Computes signal sizes of nodes inputs
 %
 % This function computes the number of input signals of each node, which is
 % a necessary information for linear systems, due to the input signal size
@@ -9,6 +9,10 @@ function computeInputSizes( handles )
 %
 % OUTPUT:   none - node input signal size will be written into node i's
 %           template, in the field: data.templates{i,2}.nodeInputs
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 data = getappdata(handles.figure1,'appData');
 if nv(data.g) == 0
     return

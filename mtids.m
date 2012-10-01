@@ -1,12 +1,11 @@
 function varargout = mtids(varargin)
-%
-%      MTIDS 1.2
+%MTIDS Version 1.2
 %      (C) 2011 The MTIDS Project (http://code.google.com/p/mtids)
 %      Matlab Toolbox for Interconnected Dynamical Systems
 %      Test Rig for Large-Scale Interconnected Systems.
 %
 %      MTIDS uses and redistributes Matgraph (C) 2005 Ed Scheinermann (http://www.ams.jhu.edu/~ers/matgraph/)
-%
+
 %      This program is free software; you can redistribute it and/or
 %      modify it under the terms of the GNU General Public License
 %      as published by the Free Software Foundation; either version 2
@@ -25,6 +24,10 @@ function varargout = mtids(varargin)
 %       file.
 %
 % Last Modified by GUIDE v2.5 26-Sep-2012 15:38:36
+
+% Authors: Francisco Llobet, Jose Rivera
+% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,6 +88,7 @@ initPath = initPath(1:end-5);
 cd(initPath);
 addpath(strcat(pwd,'/subfunctions/matgraph'));                     % Folder with a copy of Matgraph
 addpath(strcat(pwd,'/templates'));                          % Folder for Simulink templates
+addpath(strcat(pwd,'/templates/import'));                   % Folder with importes templates
 addpath(strcat(pwd,'/subfunctions'));                       % Folder with GUIs and functions
 addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with various import/export functions
 addpath(strcat(pwd,'/subfunctions/mtids_main'));
@@ -1705,7 +1709,7 @@ if C <= 0.05; % Hardcoded value!
             size_ne = size(e_delete,2);
             
             if ~strcmp('double',class(neighbours))
-                %display(['Class of variable "neighbour" is not "double".']);
+                %disp(['Class of variable "neighbour" is not "double".']);
                 neighbours = eval(neighbours); %neighbours must be of type "double"
             end
             
@@ -1736,7 +1740,7 @@ if C <= 0.05; % Hardcoded value!
                     printCell = cell(0,2);
                 else
                     length_printCell = size(printCell,1);
-                    % display(['Length of printCell: ' num2str(length_printCell) ]);
+                    % disp(['Length of printCell: ' num2str(length_printCell) ]);
                     temp_printCell = printCell;
                     printCell = cell(length_printCell-1,2);
                     for i = 1:(nodenumber-1)
@@ -2202,7 +2206,6 @@ if expSucc == 1
     end
 end
 
-
 % --- Executes on button press in pushbutton17.
 % -- This button is only necessary for easily generating debugging output
 % -- it should be set to invisible or deleted after debugging
@@ -2212,11 +2215,9 @@ function pushbutton17_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
       %DEBUGGING
 data = getappdata(handles.figure1,'appData');
-      
-display(['Number of nodes: ' num2str(nv(data.g)) ]);
-%display(['PrintCell: ' printCell(nodenumber)]);
+disp(['Number of nodes: ' num2str(nv(data.g)) ]);
+%disp(['PrintCell: ' printCell(nodenumber)]);
 assignin('base','data',data);
-
 
 % --------------------------------------------------------------------
 function showSimMod_Callback(hObject, eventdata, handles) %#ok<*INUSL>
@@ -2394,7 +2395,7 @@ listblks( ~cellfun( @isempty, regexp( listblks,...
 
 % create new figure and place found blocks in table environment
 if ~cellfun( @isempty, listblks )
-    argout = import_dynamic_params(listblks,listnms,filename,pathname);
+    argout = import_dynamic_params(listblks,listnms,filename,pathname); %#ok<NASGU>
 else
     % errordlg('No blocks with editable');
 end

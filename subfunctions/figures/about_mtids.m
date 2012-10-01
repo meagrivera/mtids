@@ -1,5 +1,5 @@
 function varargout = about_mtids(varargin)
-% ABOUT_MTIDS M-file for about_mtids.fig
+%ABOUT_MTIDS M-file for about_mtids.fig
 %      ABOUT_MTIDS by itself, creates a new ABOUT_MTIDS or raises the
 %      existing singleton*.
 %
@@ -19,8 +19,10 @@ function varargout = about_mtids(varargin)
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help about_mtids
+%
+% Authors: Francisco Llobet, Jose Rivera
+% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Last Modified by GUIDE v2.5 28-Jun-2011 16:18:57
 
@@ -50,13 +52,10 @@ function about_mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to about_mtids (see VARARGIN)
-
 % Choose default command line output for about_mtids
 handles.output = 'Yes';
-
 % Update handles structure
 guidata(hObject, handles);
-
 % Insert custom Title and Text if specified by the user
 % Hint: when choosing keywords, be sure they are not easily confused 
 % with existing figure properties.  See the output of set(figure) for
@@ -72,7 +71,6 @@ if(nargin > 3)
         end
     end
 end
-
 % Determine the position of the dialog - centered on the callback figure
 % if available, else, centered on the screen
 FigPos=get(0,'DefaultFigurePosition');
@@ -86,7 +84,6 @@ if isempty(gcbf)
     set(0,'Units','pixels');
     ScreenSize=get(0,'ScreenSize');
     set(0,'Units',ScreenUnits);
-
     FigPos(1)=1/2*(ScreenSize(3)-FigWidth);
     FigPos(2)=2/3*(ScreenSize(4)-FigHeight);
 else
@@ -104,26 +101,20 @@ set(hObject, 'Units', OldUnits);
 % Show a question icon from dialogicons.mat - variables questIconData
 % and questIconMap
 load dialogicons.mat
-
-IconData=questIconData;
+% IconData=questIconData;
 questIconMap(256,:) = get(handles.figure1, 'Color');
 IconCMap=questIconMap;
-
 MTIDSLogo = imread('mtidslogo.png');
-
 Img=image(MTIDSLogo);
 set(handles.figure1, 'Colormap', IconCMap);
-
 set(handles.axes1, ...
     'Visible', 'off', ...
     'YDir'   , 'reverse'       , ...
     'XLim'   , get(Img,'XData'), ...
     'YLim'   , get(Img,'YData')  ...
     );
-
 % Make the GUI modal
 set(handles.figure1,'WindowStyle','modal')
-
 % UIWAIT makes about_mtids wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
@@ -133,10 +124,8 @@ function varargout = about_mtids_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
 % The figure can be deleted now
 delete(handles.figure1);
 
@@ -145,12 +134,9 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 handles.output = get(hObject,'String');
-
 % Update handles structure
 guidata(hObject, handles);
-
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
 uiresume(handles.figure1);
@@ -160,23 +146,18 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 handles.output = get(hObject,'String');
-
 % Update handles structure
 guidata(hObject, handles);
-
 % Use UIRESUME instead of delete because the OutputFcn needs
 % to get the updated handles structure.
 uiresume(handles.figure1);
-
 
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 if isequal(get(hObject, 'waitstatus'), 'waiting')
     % The GUI is still in UIWAIT, us UIRESUME
     uiresume(hObject);
@@ -191,18 +172,14 @@ function figure1_KeyPressFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Check for "enter" or "escape"
 if isequal(get(hObject,'CurrentKey'),'escape')
     % User said no by hitting escape
     handles.output = 'No';
-    
     % Update handles structure
     guidata(hObject, handles);
-    
     uiresume(handles.figure1);
 end    
-    
 if isequal(get(hObject,'CurrentKey'),'return')
     uiresume(handles.figure1);
 end    

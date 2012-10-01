@@ -1,6 +1,17 @@
-function TextField1InputSpecs_Callback( hObject, evtdata, handles )
+function TextField1InputSpecs_Callback( hObject, evtdata, handles ) %#ok<INUSL>
+%TEXTFIELD1INPUTSPECS_CALLBACK consistency check for user edit field
+%
 % This function checks if the prompted string contains names of specified
-% variables in the table above
+% variables in the table above.
+%
+% INPUT:    hObject -- Handle to invoking function
+%           evtdata -- (unused, set empty ([]) for manual use of function)
+%           handles -- Struct with handles of parent figure
+%
+% OUTPUT:   (none)  -- Direct warning message will show up
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Read-out string and separate it (empty spaces or comma), using regexp
 user_string = get(hObject,'String');

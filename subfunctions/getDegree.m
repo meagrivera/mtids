@@ -1,13 +1,19 @@
 function [inDegree,outDegree] = getDegree(matrix)
-% getDegree(matrix) -- Computes the in- and out-degree of a adjacency
-%                      matrix, which represents a directed graph
-% Input:
-%   matrix -- Must be an N-by-N matrix with zeros on the diagonal
-% Output:
-%   inDegree -- A Vector of Size N-by-1, which holds the in degree of each
-%               vertex of the graph, which is represented by 'matrix'
-%   outDegree -- Similar to inDegree, but for the out degree of each vertex
-
+%GETDEGREE Computes in- and outdegree of a node in a digraph
+%
+% Computes the in- and out-degree of a adjacency matrix, which represents 
+% a directed graph.
+%
+% INPUT:   matrix    -- Must be an N-by-N matrix with zeros on the diagonal
+%
+% OUTPUT:  inDegree  -- A Vector of Size N-by-1, which holds the in degree 
+%                       of each vertex of the graph, which is represented 
+%                       by 'matrix'
+%          outDegree -- Similar to inDegree, but for the outdegree of each 
+%                       vertex
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 n = size(matrix,1);
 
 inDegree = zeros(n,1);
