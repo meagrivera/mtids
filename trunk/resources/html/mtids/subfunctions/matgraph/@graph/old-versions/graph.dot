@@ -1,0 +1,14 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  chromatic_poly -> chromatic_poly;
+
+  README [URL="README.html"];
+  chromatic_poly [URL="chromatic_poly.html"];
+  color [URL="color.html"];
+  draw [URL="draw.html"];
+  euler_trail [URL="euler_trail.html"];
+  iso [URL="iso.html"];
+  mtimes [URL="mtimes.html"];
+  plus [URL="plus.html"];
+  uminus [URL="uminus.html"];
+}

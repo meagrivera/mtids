@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of splitter</title>
+  <meta name="keywords" content="splitter">
+  <meta name="description" content="% Splitting the vertex set of a graph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; splitter.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>splitter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Splitting the vertex set of a graph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Splitting the vertex set of a graph
+ We demonstrate how to split the vertex set of a graph into two parts
+ using the |split| method. The goal is to separate the vertices of the
+ graph into two natural clusters. The splitting is based on the Fiedler
+ vector of the Laplacian matrix. 
+% Create a random tree</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>	cdraw(g,dir,coloring) -- draw g with a given vertex coloring</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>	distxy(g) -- give g a distance based embedding</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>	grid(g,a,b) --- create an a-by-b grid graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/random_tree.html" class="code" title="function random_tree(t,n)">random_tree</a>	random_tree(t,n) --- overwrite t with a random tree on n vertices</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/split.html" class="code" title="function part = split(g,how)">split</a>	part = split(g) --- partition the vertices of g into two subsets</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Splitting the vertex set of a graph</span>
+0002 <span class="comment">% We demonstrate how to split the vertex set of a graph into two parts</span>
+0003 <span class="comment">% using the |split| method. The goal is to separate the vertices of the</span>
+0004 <span class="comment">% graph into two natural clusters. The splitting is based on the Fiedler</span>
+0005 <span class="comment">% vector of the Laplacian matrix.</span>
+0006 <span class="comment">%% Create a random tree</span>
+0007 g = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0008 <a href="../../../../mtids/subfunctions/matgraph/@graph/random_tree.html" class="code" title="function random_tree(t,n)">random_tree</a>(g,25);
+0009 <span class="comment">%% Find an embedding for the tree</span>
+0010 <span class="comment">% Note: This requires the Optimization Toolbox</span>
+0011 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(g);
+0012 <span class="comment">%% Partition the vertices</span>
+0013 p = <a href="../../../../mtids/subfunctions/matgraph/@graph/split.html" class="code" title="function part = split(g,how)">split</a>(g)
+0014 <span class="comment">%% Draw the result</span>
+0015 <a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>(g,p);
+0016 <span class="comment">%% Partition a grid graph</span>
+0017 <a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>(g,3,11);
+0018 p = <a href="../../../../mtids/subfunctions/matgraph/@graph/split.html" class="code" title="function part = split(g,how)">split</a>(g);
+0019 clf; <span class="comment">% erase the previous drawing</span>
+0020 <a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>(g,p)
+0021 <span class="comment">%% Release storage</span>
+0022 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(g);</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of create_ss_model</title>
+  <meta name="keywords" content="create_ss_model">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">interface2Simulink</a> &gt; create_ss_model.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\interface2Simulink&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>create_ss_model
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function create_ss_model(system_name, model_name, n_inputs, n_outputs, n_states) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+ create_ss_model.m:
+
+ Authors: Francisco Llobet, Jose Rivera
+ Project: MTIDS
+ Created: 26/5/2011
+ This function creates a (state-space) block which has a defined number of inputs,
+ outputs and states
+
+ Inputs:
+           system_name: System name for Simulink(String)
+           model_name:  Name for the model subsystem (String)
+           n_inputs:    Number of inputs (int)
+           n_outputs:   Number of outputs (int)
+           n_states:    Number of states  (int)
+ Outputs:</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function create_ss_model(system_name, model_name, n_inputs, n_outputs, n_states)</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% create_ss_model.m:</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Authors: Francisco Llobet, Jose Rivera</span>
+0006 <span class="comment">% Project: MTIDS</span>
+0007 <span class="comment">% Created: 26/5/2011</span>
+0008 <span class="comment">% This function creates a (state-space) block which has a defined number of inputs,</span>
+0009 <span class="comment">% outputs and states</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Inputs:</span>
+0012 <span class="comment">%           system_name: System name for Simulink(String)</span>
+0013 <span class="comment">%           model_name:  Name for the model subsystem (String)</span>
+0014 <span class="comment">%           n_inputs:    Number of inputs (int)</span>
+0015 <span class="comment">%           n_outputs:   Number of outputs (int)</span>
+0016 <span class="comment">%           n_states:    Number of states  (int)</span>
+0017 <span class="comment">% Outputs:</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">%open_system(system_name);</span>
+0021 
+0022 <span class="comment">%add_block('built-in/Subsystem', strcat(system_name,'/',model_name));</span>
+0023 
+0024 <span class="comment">%% Add a mux</span>
+0025 add_block(<span class="string">'built-in/Mux'</span>, strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Mux1'</span>));
+0026 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Mux1'</span>),<span class="string">'Inputs'</span>,num2str(n_inputs));
+0027 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Mux1'</span>),<span class="string">'Position'</span>,[120,15,135,195]);
+0028 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Mux1'</span>),<span class="string">'DisplayOption'</span>,<span class="string">'bar'</span>);
+0029 
+0030 <span class="keyword">for</span> i=1:n_inputs
+0031     x0 = 40;
+0032     y0 = 40;
+0033     add_block(<span class="string">'built-in/Inport'</span>, strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'In'</span>,num2str(i)));
+0034     set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'In'</span>,num2str(i)),<span class="string">'Position'</span>,[x0,i*y0,x0+20,i*y0+20]);
+0035     <span class="comment">%Add connections to mux:</span>
+0036     add_line(strcat(system_name,<span class="string">'/'</span>,model_name),strcat(<span class="string">'In'</span>,num2str(i),<span class="string">'/1'</span>),strcat(<span class="string">'Mux1/'</span>,num2str(i)),<span class="string">'autorouting'</span>,<span class="string">'on'</span>);  
+0037 <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% Add a demux</span>
+0040 add_block(<span class="string">'built-in/Demux'</span>, strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Demux1'</span>));
+0041 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Demux1'</span>),<span class="string">'Outputs'</span>,num2str(n_outputs));
+0042 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Demux1'</span>),<span class="string">'Position'</span>,[500,15,515,195]);
+0043 set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Demux1'</span>),<span class="string">'DisplayOption'</span>,<span class="string">'bar'</span>);
+0044 
+0045 
+0046 <span class="keyword">for</span> i=1:n_outputs
+0047     x0 = 550;
+0048     y0 = 40;
+0049     add_block(<span class="string">'built-in/Outport'</span>, strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Out'</span>,num2str(i)));
+0050     set_param( strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'Out'</span>,num2str(i)),<span class="string">'Position'</span>,[x0 i*y0 x0+20 (i*y0+20)]);
+0051     add_line(strcat(system_name,<span class="string">'/'</span>,model_name),strcat(<span class="string">'Demux1/'</span>,num2str(i)),strcat(<span class="string">'Out'</span>,num2str(i),<span class="string">'/1'</span>),<span class="string">'autorouting'</span>,<span class="string">'on'</span>);
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">%% Add State-Space block</span>
+0055  <span class="comment">% State-Space matrix creator</span>
+0056     A =  eye(n_states);
+0057     B = ones(n_states,n_inputs);
+0058     C =  eye(n_outputs,n_states);
+0059     D = zeros(n_outputs,n_inputs);
+0060 
+0061     A_str = <a href="matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>(A);
+0062     B_str = <a href="matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>(B);
+0063     C_str = <a href="matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>(C);
+0064     D_str = <a href="matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>(D);
+0065 
+0066     add_block(<span class="string">'built-in/State-Space'</span>, strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'State-Space'</span>));
+0067     set_param(strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'State-Space'</span>) , <span class="string">'Position'</span>,[375,95,435,125]);
+0068     set_param(strcat(system_name,<span class="string">'/'</span>,model_name,<span class="string">'/'</span>,<span class="string">'State-Space'</span>) , <span class="string">'A'</span>,A_str, <span class="string">'B'</span>, B_str, <span class="string">'C'</span>, C_str, <span class="string">'D'</span>, D_str);
+0069     
+0070     <span class="comment">% Connect to Mux and Demux</span>
+0071     add_line(strcat(system_name,<span class="string">'/'</span>,model_name),<span class="string">'State-Space/1'</span>,<span class="string">'Demux1/1'</span>,<span class="string">'autorouting'</span>,<span class="string">'on'</span>);
+0072     add_line(strcat(system_name,<span class="string">'/'</span>,model_name),<span class="string">'Mux1/1'</span>,<span class="string">'State-Space/1'</span>,<span class="string">'autorouting'</span>,<span class="string">'on'</span>);
+0073 
+0074</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

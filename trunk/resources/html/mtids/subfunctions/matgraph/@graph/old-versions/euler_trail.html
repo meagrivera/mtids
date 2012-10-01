@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of euler_trail</title>
+  <meta name="keywords" content="euler_trail">
+  <meta name="description" content="euler_trail(g) --- find an euler trail in g (if one exists)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">mtids</a> &gt; <a href="../../../index.html">subfunctions</a> &gt; <a href="../../index.html">matgraph</a> &gt; <a href="../index.html">@graph</a> &gt; <a href="index.html">old-versions</a> &gt; euler_trail.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\@graph\old-versions&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>euler_trail
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>euler_trail(g) --- find an euler trail in g (if one exists)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [elist, exists] = euler_trail(g) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> euler_trail(g) --- find an euler trail in g (if one exists)
+ This can be called with two output arguments: 
+    [elist, exists] = euler_trail(g)
+ the 2nd output argument is set to 0 if no trail exists.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../mtids/subfunctions/matgraph/@graph/add.html" class="code" title="function add(g,i,j,dir)">add</a>	add --- add edge(s) to the graph</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/components.html" class="code" title="function p = components(g)">components</a>	components(g) --- find the components of the graph g</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>	copy(g,h) --- overwrite g with a copy of h</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/deg.html" class="code" title="function d = deg(g,v)">deg</a>	deg: degree of a vertex or degree sequence</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>	delete --- delete vertices or edges from a graph</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/has_path.html" class="code" title="function yn = has_path(g,u,v)">has_path</a>	has_path(g,u,v) --- determine if there is a path from u to v in g</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a>	ne(g) --- number of edges in g</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/neighbors.html" class="code" title="function nlist = neighbors(g,v)">neighbors</a>	neighbors(g,v) --- neighbors of v as a list.</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/ne.html" class="code" title="function yn = ne(p,q)">ne</a>	ne(p,q) --- p ~= q checks if p and q are different</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/np.html" class="code" title="function m = np(p)">np</a>	np(p) --- number of parts in the partition p</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/parts.html" class="code" title="function cells = parts(p)">parts</a>	parts(p) --- returns the parts of p in a cell array</li><li><a href="../../../../../mtids/subfunctions/matgraph/@permutation/ne.html" class="code" title="function tf = ne(p,q)">ne</a>	test if p ~= q</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../mtids/subfunctions/matgraph/samples/eulerian.html" class="code" title="">eulerian</a>	% Eulerian tours</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [elist, exists] = euler_trail(g)</a>
+0002 <span class="comment">% euler_trail(g) --- find an euler trail in g (if one exists)</span>
+0003 <span class="comment">% This can be called with two output arguments:</span>
+0004 <span class="comment">%    [elist, exists] = euler_trail(g)</span>
+0005 <span class="comment">% the 2nd output argument is set to 0 if no trail exists.</span>
+0006 
+0007 n = <a href="../../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(g);
+0008 d = <a href="../../../../../mtids/subfunctions/matgraph/@graph/deg.html" class="code" title="function d = deg(g,v)">deg</a>(g);
+0009 d = mod(d,2);
+0010 <span class="keyword">if</span> sum(d) &gt; 2
+0011     elist = []; <span class="comment">% no trail possible, too many odd vertices</span>
+0012     exists = 0;
+0013     <span class="keyword">return</span>
+0014 <span class="keyword">end</span>
+0015 
+0016 <span class="comment">% if there are no edges in the graph, return an empty list, too</span>
+0017 
+0018 <span class="keyword">if</span> <a href="../../../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a>(g) == 0
+0019     elist = [];
+0020     exists = 1;
+0021     <span class="keyword">return</span>
+0022 <span class="keyword">end</span>
+0023 
+0024 <span class="comment">% we have to make sure there is exactly one nontrivial component</span>
+0025 
+0026 c = <a href="../../../../../mtids/subfunctions/matgraph/@graph/components.html" class="code" title="function p = components(g)">components</a>(g);
+0027 nc = <a href="../../../../../mtids/subfunctions/matgraph/@partition/np.html" class="code" title="function m = np(p)">np</a>(c);
+0028 c = <a href="../../../../../mtids/subfunctions/matgraph/@partition/parts.html" class="code" title="function cells = parts(p)">parts</a>(c); <span class="comment">% convert to cell array</span>
+0029 counts = zeros(nc,1);
+0030 <span class="keyword">for</span> k=1:nc
+0031     counts(k) = length(c{k});
+0032 <span class="keyword">end</span>
+0033 
+0034 big = find(counts &gt; 1);
+0035 <span class="keyword">if</span> (length(big) &gt; 1)
+0036     elist = [];
+0037     exists = 0;
+0038     <span class="keyword">return</span>
+0039 <span class="keyword">end</span>
+0040 
+0041 
+0042 <span class="comment">% if there are two odd vertices, we have to start on one of those.</span>
+0043 <span class="comment">% otherwise, we start at the first vertex in the big component.</span>
+0044 
+0045 <span class="keyword">if</span> sum(d)==2
+0046     odds = find(d);
+0047     start = odds(1);
+0048 <span class="keyword">else</span>
+0049     start = c{big};
+0050     start = start(1);
+0051 <span class="keyword">end</span>
+0052 
+0053 
+0054 <span class="comment">% we make an &quot;erasable&quot; copy of g</span>
+0055 h = <a href="../../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0056 <a href="../../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>(h,g);
+0057 
+0058 <span class="comment">% and now we start the tour</span>
+0059 
+0060 m = <a href="../../../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a>(g);
+0061 elist = zeros(m,2);
+0062 step = 0;
+0063 v = start;
+0064 
+0065 <span class="keyword">while</span> <a href="../../../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a>(h)
+0066     step = step+1;
+0067     next = <a href="../../../../../mtids/subfunctions/matgraph/@graph/neighbors.html" class="code" title="function nlist = neighbors(g,v)">neighbors</a>(h,v);
+0068     <span class="comment">% if v has even degree (or only one neighbor) any neighbor will do</span>
+0069     <span class="keyword">if</span> (mod(length(next),2) == 0) | (length(next) == 1)
+0070         w = next(1);
+0071     <span class="keyword">else</span>
+0072         <span class="keyword">for</span> w=next
+0073             <span class="comment">% make sure vw is not a cut edge</span>
+0074             <a href="../../../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>(h,v,w);
+0075             <span class="keyword">if</span> (<a href="../../../../../mtids/subfunctions/matgraph/@graph/has_path.html" class="code" title="function yn = has_path(g,u,v)">has_path</a>(h,v,w))
+0076                 <span class="keyword">break</span>
+0077             <span class="keyword">else</span>
+0078                 <a href="../../../../../mtids/subfunctions/matgraph/@graph/add.html" class="code" title="function add(g,i,j,dir)">add</a>(h,v,w) <span class="comment">% restore the edge</span>
+0079             <span class="keyword">end</span>
+0080         <span class="keyword">end</span>
+0081     <span class="keyword">end</span>
+0082     <a href="../../../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>(h,v,w);
+0083     elist(step,:) = [v,w];
+0084     v = w;
+0085 <span class="keyword">end</span>
+0086 <a href="../../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(h)</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of parts</title>
+  <meta name="keywords" content="parts">
+  <meta name="description" content="parts(p) --- returns the parts of p in a cell array">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">@partition</a> &gt; parts.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\@partition&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>parts
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>parts(p) --- returns the parts of p in a cell array</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function cells = parts(p) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> parts(p) --- returns the parts of p in a cell array</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/bipartition.html" class="code" title="function p = bipartition(g)">bipartition</a>	part = bipartition(g) --- find bipartition of a bipartite graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/bipmatch.html" class="code" title="function elist = bipmatch(g,X,Y)">bipmatch</a>	bipmatch --- maximum matching in a bipartite graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>	cdraw(g,dir,coloring) -- draw g with a given vertex coloring</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>	color(g,algo) --- color the graph g by a given algorithm</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/euler_trail.html" class="code" title="function [elist, exists] = euler_trail(g)">euler_trail</a>	euler_trail(g) --- find an euler trail in g (if one exists)</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>	[yn,p] = iso(g,h,options) --- is g isomorphic to h?</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/euler_trail.html" class="code" title="function [elist, exists] = euler_trail(g)">euler_trail</a>	euler_trail(g) --- find an euler trail in g (if one exists)</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/iso.html" class="code" title="function [yn,p] = iso(g,h)">iso</a>	[yn,p] = iso(g,h) --- is g isomorphic to h?</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>	renumber the vertices of a graph</li><li><a href="array.html" class="code" title="function a = array(p)">array</a>	array(p) --- return a single array showing the part numbers of elements.</li><li><a href="../../../../mtids/subfunctions/matgraph/samples/partn.html" class="code" title="">partn</a>	% Partitions in Matgraph</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function cells = parts(p)</a>
+0002 <span class="comment">% parts(p) --- returns the parts of p in a cell array</span>
+0003 
+0004 [m,n] = <a href="size.html" class="code" title="function s = size(p)">size</a>(p.array);
+0005 
+0006 cells = cell(1,m);
+0007 
+0008 <span class="keyword">for</span> k=1:m
+0009     cells{k} = find(p.array(m+1-k,:));
+0010 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

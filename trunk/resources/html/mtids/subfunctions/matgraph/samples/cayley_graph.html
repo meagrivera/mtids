@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cayley_graph</title>
+  <meta name="keywords" content="cayley_graph">
+  <meta name="description" content="% Creating a Cayley graph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; cayley_graph.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cayley_graph
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Creating a Cayley graph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Creating a Cayley graph
+% Specifying the group by its generators
+ We specify a finite group by giving a list of its generators. 
+ The generators are a cell array of permutations of a common ground set.
+ 
+ In this example, we create a graph using two generators from the
+ permutations of the set {1,2,3,4,5,6}.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>	cayley(g,perms) -- create a Cayley graph (undirected)</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>	distxy(g) -- give g a distance based embedding</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>	draw(g) --- draw g in a figure window</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/ldraw.html" class="code" title="function ldraw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">ldraw</a>	ldraw(g,dir) -- draw a graph with vertices marked with their labels</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/draw.html" class="code" title="function draw(g,line_style)">draw</a>	draw(g) --- draw g in a figure window</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>	constructor for the permutation class</li><li><a href="../../../../mtids/subfunctions/matgraph/swap.html" class="code" title="function p = swap(a,b)">swap</a>	swap(a,b) -- return a permutation that swaps a and b, i.e., (a,b)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Creating a Cayley graph</span>
+0002 <span class="comment">%% Specifying the group by its generators</span>
+0003 <span class="comment">% We specify a finite group by giving a list of its generators.</span>
+0004 <span class="comment">% The generators are a cell array of permutations of a common ground set.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% In this example, we create a graph using two generators from the</span>
+0007 <span class="comment">% permutations of the set {1,2,3,4,5,6}.</span>
+0008 
+0009 p1 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([1,3,6,4,5,2])
+0010 p2 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([6,3,2,5,4,1])
+0011 perms = {p1,p2};
+0012 
+0013 <span class="comment">%% Create the graph</span>
+0014 g = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0015 <a href="../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>(g,perms);
+0016 
+0017 <span class="comment">%% Draw the graph</span>
+0018 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(g);
+0019 clf;
+0020 <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g);
+0021 
+0022 <span class="comment">%% Another example</span>
+0023 p1 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([2 3 4 1])
+0024 p2 = <a href="../../../../mtids/subfunctions/matgraph/swap.html" class="code" title="function p = swap(a,b)">swap</a>(1,2)
+0025 <a href="../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>(g,{p1,p2},true) <span class="comment">% verbose output</span>
+0026 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(g);
+0027 clf;
+0028 <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g);
+0029 
+0030 <span class="comment">%% Showing the labels on vertices</span>
+0031 <span class="comment">% The vertices of a Cayley graph are labeled by the group elements</span>
+0032 <span class="comment">% (permutations) they represent.</span>
+0033 p1 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([3 2 4 1]);
+0034 p2 = <a href="../../../../mtids/subfunctions/matgraph/swap.html" class="code" title="function p = swap(a,b)">swap</a>(1,2)*<a href="../../../../mtids/subfunctions/matgraph/swap.html" class="code" title="function p = swap(a,b)">swap</a>(3,4)
+0035 <a href="../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>(g,{p1,p2})
+0036 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(g);
+0037 clf;
+0038 <a href="../../../../mtids/subfunctions/matgraph/@graph/ldraw.html" class="code" title="function ldraw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">ldraw</a>(g)
+0039 
+0040 <span class="comment">%% The cube as a Cayley graph</span>
+0041 p1 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([2 1 3 4 5 6])
+0042 p2 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([1 2 4 3 5 6])
+0043 p3 = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([1 2 3 4 6 5])
+0044 perms = {p1,p2,p3};
+0045 <a href="../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>(g,perms);
+0046 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(g);
+0047 clf;<a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g)
+0048 
+0049 <span class="comment">%% Free storage</span>
+0050 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(g);</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

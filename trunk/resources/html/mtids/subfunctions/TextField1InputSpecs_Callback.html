@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of TextField1InputSpecs_Callback</title>
+  <meta name="keywords" content="TextField1InputSpecs_Callback">
+  <meta name="description" content="TEXTFIELD1INPUTSPECS_CALLBACK consistency check for user edit field">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; TextField1InputSpecs_Callback.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>TextField1InputSpecs_Callback
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>TEXTFIELD1INPUTSPECS_CALLBACK consistency check for user edit field</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function TextField1InputSpecs_Callback( hObject, evtdata, handles ) %#ok<INUSL> </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TEXTFIELD1INPUTSPECS_CALLBACK consistency check for user edit field
+
+ This function checks if the prompted string contains names of specified
+ variables in the table above.
+
+ INPUT:    hObject -- Handle to invoking function
+           evtdata -- (unused, set empty ([]) for manual use of function)
+           handles -- Struct with handles of parent figure
+
+ OUTPUT:   (none)  -- Direct warning message will show up
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/figures/import_dynamic_params.html" class="code" title="function varargout = import_dynamic_params(varargin)">import_dynamic_params</a>	IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TextField1InputSpecs_Callback( hObject, evtdata, handles ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0002 <span class="comment">%TEXTFIELD1INPUTSPECS_CALLBACK consistency check for user edit field</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function checks if the prompted string contains names of specified</span>
+0005 <span class="comment">% variables in the table above.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUT:    hObject -- Handle to invoking function</span>
+0008 <span class="comment">%           evtdata -- (unused, set empty ([]) for manual use of function)</span>
+0009 <span class="comment">%           handles -- Struct with handles of parent figure</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% OUTPUT:   (none)  -- Direct warning message will show up</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0014 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0015 
+0016 <span class="comment">% Read-out string and separate it (empty spaces or comma), using regexp</span>
+0017 user_string = get(hObject,<span class="string">'String'</span>);
+0018 vars =regexp( user_string, <span class="string">',|\s'</span>,<span class="string">'split'</span>);
+0019 
+0020 <span class="comment">% Search for variable names in the table</span>
+0021 Data = get(handles.t,<span class="string">'Data'</span>);
+0022 <span class="keyword">if</span> ~isempty( vars)
+0023     <span class="keyword">for</span> ii = 1:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,1 )
+0024         <span class="keyword">for</span> jj = 2:2:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,2 )
+0025             paramExists = ~isempty( Data{ii,jj} );
+0026             valueExists = ~isempty( Data{ii,jj+1} );
+0027             <span class="keyword">if</span> paramExists &amp;&amp; valueExists
+0028                 temp = zeros( length( vars ),1 );
+0029                 <span class="keyword">for</span> kk = 1:length( vars )
+0030                     <span class="keyword">if</span> isequal( vars(kk), Data(ii,jj) )
+0031                         temp(kk) = 1;
+0032                     <span class="keyword">end</span>
+0033                 <span class="keyword">end</span>
+0034                 vars( logical(temp) ) = [];
+0035             <span class="keyword">end</span>
+0036             <span class="keyword">if</span> isempty( vars )
+0037                 <span class="keyword">break</span>
+0038             <span class="keyword">end</span>
+0039         <span class="keyword">end</span>
+0040     <span class="keyword">end</span>
+0041 <span class="keyword">end</span>
+0042 <span class="keyword">if</span> ~isempty( vars)
+0043     errordlg([<span class="string">'Parameter(s) '''</span> vars{:} <span class="string">''' not found in table'</span>],<span class="string">'Error on prompted parameter'</span>);
+0044 <span class="keyword">end</span>
+0045 
+0046 
+0047 <span class="comment">%%%%%%%%%%%%%%</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

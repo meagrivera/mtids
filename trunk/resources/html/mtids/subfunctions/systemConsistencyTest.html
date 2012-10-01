@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of systemConsistencyTest</title>
+  <meta name="keywords" content="systemConsistencyTest">
+  <meta name="description" content="SYSTEMCONSISTENCYTEST compares input signal with input depending parameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; systemConsistencyTest.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>systemConsistencyTest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SYSTEMCONSISTENCYTEST compares input signal with input depending parameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = systemConsistencyTest( handles,varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SYSTEMCONSISTENCYTEST compares input signal with input depending parameters
+
+ This function checks the system, consisting of the graph and its
+ numerical dynamic parameters, which are hidden inside the node templates,
+ for consistency
+
+ INPUT:    (1) -- Handles to parent figure
+
+ OUTPUT:   (1) -- Boolean, '1' for no errors found
+           (2) -- Vector containing if node has consistent input depending
+                   parameters
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="checkNodeInput.html" class="code" title="function varargout = checkNodeInput( varargin )">checkNodeInput</a>	CHECKNODEINPUT Tests input signal</li><li><a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/check.html" class="code" title="function yn = check(p)">check</a>	check(p) --- check that the datastructure holding p is a valid partition</li><li><a href="../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li><li><a href="input_parameter_adaptation_Callback.html" class="code" title="function input_parameter_adaptation_Callback(hObject, eventdata, handles) %#ok<INUSL>">input_parameter_adaptation_Callback</a>	INPUT_PARAMETER_ADAPTATION_CALLBACK automatic correction of numerical parameters</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = systemConsistencyTest( handles,varargin )</a>
+0002 <span class="comment">%SYSTEMCONSISTENCYTEST compares input signal with input depending parameters</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function checks the system, consisting of the graph and its</span>
+0005 <span class="comment">% numerical dynamic parameters, which are hidden inside the node templates,</span>
+0006 <span class="comment">% for consistency</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% INPUT:    (1) -- Handles to parent figure</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% OUTPUT:   (1) -- Boolean, '1' for no errors found</span>
+0011 <span class="comment">%           (2) -- Vector containing if node has consistent input depending</span>
+0012 <span class="comment">%                   parameters</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0015 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0016 
+0017 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( varargin,2 ) == 1
+0018     plotBadNodes = varargin{1};
+0019 <span class="keyword">else</span>
+0020     plotBadNodes = 1;
+0021 <span class="keyword">end</span>
+0022 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0023 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(data.g) ~= 0
+0024     isCorrect = zeros( <a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(data.g),1 );
+0025     error = cell( <a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(data.g),1 );
+0026     <span class="keyword">for</span> kk = 1:<a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(data.g)
+0027        [isCorrect(kk) error{kk}] = <a href="checkNodeInput.html" class="code" title="function varargout = checkNodeInput( varargin )">checkNodeInput</a>(kk,data);  
+0028     <span class="keyword">end</span>
+0029     <span class="keyword">if</span> any( ~isCorrect )
+0030         <a href="../../mtids/subfunctions/matgraph/@partition/check.html" class="code" title="function yn = check(p)">check</a> = 0;
+0031         <span class="comment">% Display errors</span>
+0032         <span class="keyword">if</span> plotBadNodes
+0033             disp(<span class="string">'Errors occured for node number...'</span>);
+0034             <span class="keyword">for</span> kk = 1:<a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(data.g)
+0035                 <span class="keyword">if</span> ~isCorrect(kk)
+0036                     disp([num2str(kk) <span class="string">', concerning the variables: '</span>,<span class="keyword">...</span>
+0037                         error{kk}.DimMismatch   ]);
+0038                 <span class="keyword">end</span>
+0039             <span class="keyword">end</span>
+0040         <span class="keyword">end</span>
+0041     <span class="keyword">else</span>
+0042         <a href="../../mtids/subfunctions/matgraph/@partition/check.html" class="code" title="function yn = check(p)">check</a> = 1;
+0043     <span class="keyword">end</span>
+0044 <span class="keyword">else</span>
+0045     <a href="../../mtids/subfunctions/matgraph/@partition/check.html" class="code" title="function yn = check(p)">check</a> = 0;
+0046     isCorrect = [];
+0047 <span class="keyword">end</span>
+0048 varargout{1} = <a href="../../mtids/subfunctions/matgraph/@partition/check.html" class="code" title="function yn = check(p)">check</a>;
+0049 varargout{2} = isCorrect;</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

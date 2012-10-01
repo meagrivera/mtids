@@ -1,0 +1,34 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  display -> cycles;
+  inv -> array;
+  inv -> permutation;
+  longest_cycle -> cycles;
+  miss -> array;
+  mpower -> inv;
+  mpower -> permutation;
+  mtimes -> permutation;
+  ne -> eq;
+  randomMATGRAPH -> permutation;
+  signMATGRAPH -> cycles;
+  sizeMATGRAPH -> cycles;
+
+  array [URL="array.html"];
+  cycles [URL="cycles.html"];
+  display [URL="display.html"];
+  eq [URL="eq.html"];
+  inv [URL="inv.html"];
+  isemptyMATGRAPH [URL="isemptyMATGRAPH.html"];
+  lengthMATGRAPH [URL="lengthMATGRAPH.html"];
+  longest_cycle [URL="longest_cycle.html"];
+  matrixPERM [URL="matrixPERM.html"];
+  miss [URL="miss.html"];
+  mpower [URL="mpower.html"];
+  mtimes [URL="mtimes.html"];
+  ne [URL="ne.html"];
+  permutation [URL="permutation.html"];
+  randomMATGRAPH [URL="randomMATGRAPH.html"];
+  signMATGRAPH [URL="signMATGRAPH.html"];
+  sizeMATGRAPH [URL="sizeMATGRAPH.html"];
+  subsref [URL="subsref.html"];
+}

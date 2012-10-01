@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compute_WCC</title>
+  <meta name="keywords" content="compute_WCC">
+  <meta name="description" content="COMPUTE_WCC Computes weak connected components of a digraph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; compute_WCC.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>compute_WCC
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>COMPUTE_WCC Computes weak connected components of a digraph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function WCC_sets = compute_WCC( graphINPUT ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">COMPUTE_WCC Computes weak connected components of a digraph
+
+ This function computes the weak connected components of a directed graph,
+ based on Matgraph. Sketch of algorithm is explained inside the source
+ code.
+
+ INPUT: graph1    --   Edited Matgraph graph object, which represents a
+                       directed graph
+ OUTPUT: WCC_sets --   Cell vector, each cell contains the numbers of
+                       nodes, which belong to its WCC. For the number WCC
+                       sets, use length(WCC_sets)
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>	copy(g,h) --- overwrite g with a copy of h</li><li><a href="../../mtids/subfunctions/matgraph/@graph/dfstree.html" class="code" title="function visited = dfstree(t,g,v)">dfstree</a>	dfstree(t,g,v) --- create a depth-first spanning tree of g</li><li><a href="../../mtids/subfunctions/matgraph/@graph/fast_set_matrix.html" class="code" title="function fast_set_matrix(g,A)">fast_set_matrix</a>	fast_set_matrix(g,A) --- overwrite the adjacency matrix of g with A</li><li><a href="../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>	matrix(g) --- return (a copy of) the adjacency matrix of g</li><li><a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function WCC_sets = compute_WCC( graphINPUT )</a>
+0002 <span class="comment">%COMPUTE_WCC Computes weak connected components of a digraph</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function computes the weak connected components of a directed graph,</span>
+0005 <span class="comment">% based on Matgraph. Sketch of algorithm is explained inside the source</span>
+0006 <span class="comment">% code.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% INPUT: graph1    --   Edited Matgraph graph object, which represents a</span>
+0009 <span class="comment">%                       directed graph</span>
+0010 <span class="comment">% OUTPUT: WCC_sets --   Cell vector, each cell contains the numbers of</span>
+0011 <span class="comment">%                       nodes, which belong to its WCC. For the number WCC</span>
+0012 <span class="comment">%                       sets, use length(WCC_sets)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0015 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0016 
+0017 <span class="comment">% Algorithm: for each node exchange the directed edges with andirected</span>
+0018 <span class="comment">% edges - perform a DFS and set all visited nodes, including the start</span>
+0019 <span class="comment">% node, to a set of WCC.</span>
+0020 <span class="comment">% Attention: due to the special Matgraph data storage, the input graph is a</span>
+0021 <span class="comment">% reference to the original graph in mtids. This means, that graph should</span>
+0022 <span class="comment">% not be edited. Thus a new copy must be generated.</span>
+0023 
+0024 <span class="comment">% set a new copy of graph</span>
+0025 graph1 = <a href="../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0026 <a href="../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>(graph1,graphINPUT);
+0027 
+0028 <span class="comment">% exchange all directed edges with undirected edges</span>
+0029 newAdj = logical(double( <a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>( graph1 )) + double( <a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>( graph1 ))');
+0030 <a href="../../mtids/subfunctions/matgraph/@graph/fast_set_matrix.html" class="code" title="function fast_set_matrix(g,A)">fast_set_matrix</a>( graph1, newAdj);
+0031 
+0032 <span class="comment">% prepare list of unvisited nodes</span>
+0033 listUnvisited = 1:1:<a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(graph1);
+0034 <span class="comment">% prepare sets of SCC</span>
+0035 WCC_sets = cell( <a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(graph1), 1);
+0036 <span class="comment">% use index counter for cell SCC_sets to obtain a cell where only the last</span>
+0037 <span class="comment">% elements are empty</span>
+0038 indexCounter = 0;
+0039 
+0040 <span class="comment">% create temporal graph structure, which is used by &quot;dfstree.m&quot;</span>
+0041 t = <a href="../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0042 
+0043 <span class="keyword">for</span> i = 1:<a href="../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(graph1)
+0044     <span class="comment">% check if node i isn't yet contained in a set of SCC</span>
+0045     <span class="keyword">if</span> ~isempty(listUnvisited ( listUnvisited == i))
+0046         foundWCCs = find( <a href="../../mtids/subfunctions/matgraph/@graph/dfstree.html" class="code" title="function visited = dfstree(t,g,v)">dfstree</a>(t,graph1,i));
+0047         <span class="comment">% increase indexCounter</span>
+0048         indexCounter = indexCounter + 1;
+0049         <span class="comment">% store found SCC sets in prepared cell vector</span>
+0050         WCC_sets{indexCounter} = num2str(foundWCCs');
+0051 
+0052         <span class="comment">% remove found nodes out of listUnvisited</span>
+0053         <span class="keyword">for</span> j = 1:length(foundWCCs)
+0054             listUnvisited(listUnvisited == foundWCCs(j)) = 0;
+0055         <span class="keyword">end</span>
+0056     <span class="keyword">end</span>
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">% reduce cell vector to non-empty elements</span>
+0060 posEmptyCells = find(cellfun(@isempty, WCC_sets));
+0061 <span class="keyword">if</span> ~isempty(posEmptyCells)
+0062     WCC_sets = WCC_sets(1:min(posEmptyCells)-1);
+0063 <span class="keyword">end</span>
+0064 
+0065 
+0066 
+0067 <span class="comment">%%%%%%%%%%%%%%</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

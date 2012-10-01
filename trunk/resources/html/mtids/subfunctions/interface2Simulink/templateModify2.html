@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of templateModify2</title>
+  <meta name="keywords" content="templateModify2">
+  <meta name="description" content="TEMPLATEMODIFY2 adapts the template according to given input">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">interface2Simulink</a> &gt; templateModify2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\interface2Simulink&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>templateModify2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>TEMPLATEMODIFY2 adapts the template according to given input</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [] = templateModify2(nodeNumber, nodeConnections, template) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TEMPLATEMODIFY2 adapts the template according to given input
+
+ INPUT:    nodeNumber      -- Index of node in MTIDS
+           nodeConnections -- Indegree of node, number of neighbouring
+                               nodes
+           template        -- The name of the current (opened) template
+
+ OUTPUT:   (none)          -- Changes are written directly into the open model
+
+ Authors: Francisco Llobet, Jose Rivera
+ Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>	blockVanvas.m, defines simulink  define Block position</li><li><a href="blockPos.html" class="code" title="function pos = blockPos(canvas)">blockPos</a>	blockPosition.m</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="exportLayer2.html" class="code" title="function[] =exportLayer2(name,template,templateList,A, xy, labs)">exportLayer2</a>	exportLayer.m</li><li><a href="exportSimulink2.html" class="code" title="function varargout = exportSimulink2( varargin )">exportSimulink2</a>	EXPORTSIMULINK2 creates Simulink system out of MTIDS graph</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [] = templateModify2(nodeNumber, nodeConnections, template)</a>
+0002 <span class="comment">%TEMPLATEMODIFY2 adapts the template according to given input</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% INPUT:    nodeNumber      -- Index of node in MTIDS</span>
+0005 <span class="comment">%           nodeConnections -- Indegree of node, number of neighbouring</span>
+0006 <span class="comment">%                               nodes</span>
+0007 <span class="comment">%           template        -- The name of the current (opened) template</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% OUTPUT:   (none)          -- Changes are written directly into the open model</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Authors: Francisco Llobet, Jose Rivera</span>
+0012 <span class="comment">% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0013 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0014 
+0015 <span class="comment">% Template is already opened</span>
+0016 <span class="comment">% degree of subsystem (number of outs and ins)</span>
+0017 <span class="comment">% case distinction: number of inputs equals zero</span>
+0018 
+0019 <span class="comment">% case distinction, if indegree equals zero</span>
+0020 <span class="keyword">if</span> (nodeNumber == 0)
+0021     <span class="comment">% task: delete input and mux</span>
+0022     <span class="comment">% get position for constant block with zero values</span>
+0023     constPos= get_param([template <span class="string">'/In1'</span>],<span class="string">'position'</span>);
+0024     <span class="comment">%constPos = constPos + [-20 -20 20 20];</span>
+0025     
+0026     <span class="comment">% delete line from Inport to Mux</span>
+0027     delete_line(template,<span class="string">'In1/1'</span>,<span class="string">'Mux/1'</span>);
+0028     <span class="comment">% delete line from Mux to first input-block</span>
+0029     
+0030     sigAll=find_system(template, <span class="string">'FindAll'</span>, <span class="string">'on'</span>,<span class="string">'type'</span>,<span class="string">'line'</span>);
+0031     <span class="keyword">for</span> n = 1:length(sigAll)
+0032        <span class="keyword">if</span> strcmp(get(sigAll(n),<span class="string">'SourcePort'</span>),<span class="string">'Mux:1'</span>)
+0033            endPoint = get(sigAll(n),<span class="string">'Points'</span>);
+0034            delete_line(sigAll(n));
+0035        <span class="keyword">end</span>    
+0036     <span class="keyword">end</span>  
+0037     
+0038     <span class="comment">% look for In1 before deletion</span>
+0039     <span class="keyword">if</span> any(strcmp(get_param(template,<span class="string">'Blocks'</span>), <span class="string">'In1'</span>))
+0040         delete_block([template <span class="string">'/In1'</span>])
+0041     <span class="keyword">end</span>
+0042     
+0043     <span class="comment">% look for Mux before deletion</span>
+0044     <span class="keyword">if</span> any(strcmp(get_param(template,<span class="string">'Blocks'</span>), <span class="string">'Mux'</span>))
+0045         delete_block([template <span class="string">'/Mux'</span>])
+0046     <span class="keyword">end</span>
+0047     
+0048     <span class="comment">% add constant block with value = 0</span>
+0049     add_block(<span class="string">'built-in/Constant'</span>,[template <span class="string">'/Const'</span>]);
+0050     set_param([template <span class="string">'/Const'</span>],<span class="string">'position'</span>,constPos,<span class="string">'Value'</span>,<span class="string">'0'</span>);
+0051     
+0052     <span class="comment">% add line from const block to first subsystem block</span>
+0053     add_line(template, [get_param([template <span class="string">'/Const'</span>],<span class="string">'Outport'</span>); endPoint(2,:)]);
+0054     
+0055 <span class="keyword">else</span> <span class="comment">% do job as before</span>
+0056     
+0057     set_param([template <span class="string">'/Mux'</span>],<span class="string">'Inputs'</span>,num2str(nodeNumber));
+0058     set_param( [template <span class="string">'/Mux'</span>],<span class="string">'DisplayOption'</span>,<span class="string">'bar'</span>);
+0059 
+0060 
+0061     <span class="comment">% get position of ins and outs</span>
+0062     <span class="comment">%  get_param('template/In1','position')</span>
+0063     inPos= <a href="blockPos.html" class="code" title="function pos = blockPos(canvas)">blockPos</a>(get_param([template <span class="string">'/In1'</span>],<span class="string">'position'</span>)) ;
+0064     <span class="comment">%outPos= blockPos(get_param('template/Out1','position'));</span>
+0065 
+0066     <span class="comment">% change name of in-port 1</span>
+0067     set_param( [template <span class="string">'/In1'</span>],<span class="string">'Name'</span>,[<span class="string">'In'</span> num2str(nodeConnections(1)) ] );
+0068 
+0069     <span class="keyword">for</span> i=2:nodeNumber
+0070         inPos= [inPos(1) inPos(2)+2];
+0071         <span class="comment">%outPos= [outPos(1) outPos(2)+2];</span>
+0072     add_block(<span class="string">'built-in/Inport'</span>,[template <span class="string">'/In'</span> num2str(nodeConnections(i))],<span class="string">'position'</span>,<a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>(inPos));
+0073     <span class="comment">%add_block('built-in/Outport',['template/Out' num2str(i)],'position',blockCanvas(outPos));</span>
+0074 
+0075 
+0076     add_line(template,[<span class="string">'In'</span> num2str(nodeConnections(i)) <span class="string">'/1'</span>], [<span class="string">'Mux/'</span> num2str(i)],<span class="string">'autorouting'</span>,<span class="string">'on'</span>)
+0077     <span class="comment">%add_line('template',[lastBlockBeforeOut '/1'], ['Out' num2str(i) '/1' ],'autorouting','on')</span>
+0078     <span class="keyword">end</span>
+0079 <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 
+0082 <span class="comment">% copy modified template to subsystem</span>
+0083</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

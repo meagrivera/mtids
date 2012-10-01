@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testingValueSet</title>
+  <meta name="keywords" content="testingValueSet">
+  <meta name="description" content="TESTINGVALUESET checking numerical parameters of template">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; testingValueSet.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>testingValueSet
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>TESTINGVALUESET checking numerical parameters of template</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = testingValueSet( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TESTINGVALUESET checking numerical parameters of template
+
+ This function tests the parameter value sets of a dynamic template on its
+ consistency.
+
+ INPUT: (1) handles    - handles structure of invoking figure
+        (2) ask4choice - boolean, if the routine should ask explicitly for
+                           going on with the program
+ OUTPUT: (1) dimension - structure with fields &quot;states&quot;, which determines
+                           the number of internal states, and &quot;outputs&quot;,
+                           which determines the size of the output signal
+         (2) choice - user's choice if value set should be saved and
+                           figure be closed or if the set should edited
+                           again
+         (3) ME_testSimulation - Error message of simulink test
+                                   simulation, ; is empty if
+                                   everything's alright
+         (4) ME_paramsFeasible - Error message of proper settings in each
+                                   template block; is empty if
+                                   everything's alright
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="getNumericValue.html" class="code" title="function varargout = getNumericValue( varargin )">getNumericValue</a>	GETNUMERICVALUE converts a table element from char to double</li><li><a href="isValidData.html" class="code" title="function varargout = isValidData( varargin )">isValidData</a>	ISVALIDDATA Test prompted user data for feasiblity</li><li><a href="../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>	delete --- delete vertices or edges from a graph</li><li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/figures/edit_paramValues.html" class="code" title="function varargout = edit_paramValues(varargin)">edit_paramValues</a>	EDIT_PARAMVALUES gui to edit numerical parameter values of a template</li><li><a href="../../mtids/subfunctions/figures/import_dynamic_params.html" class="code" title="function varargout = import_dynamic_params(varargin)">import_dynamic_params</a>	IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS</li><li><a href="../../mtids/subfunctions/figures/manageParamSets.html" class="code" title="function varargout = manageParamSets(varargin)">manageParamSets</a>	MANAGEPARAMSETS gui for managing templates and its numerical parameter sets</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = testingValueSet( varargin )</a>
+0002 <span class="comment">%TESTINGVALUESET checking numerical parameters of template</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function tests the parameter value sets of a dynamic template on its</span>
+0005 <span class="comment">% consistency.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUT: (1) handles    - handles structure of invoking figure</span>
+0008 <span class="comment">%        (2) ask4choice - boolean, if the routine should ask explicitly for</span>
+0009 <span class="comment">%                           going on with the program</span>
+0010 <span class="comment">% OUTPUT: (1) dimension - structure with fields &quot;states&quot;, which determines</span>
+0011 <span class="comment">%                           the number of internal states, and &quot;outputs&quot;,</span>
+0012 <span class="comment">%                           which determines the size of the output signal</span>
+0013 <span class="comment">%         (2) choice - user's choice if value set should be saved and</span>
+0014 <span class="comment">%                           figure be closed or if the set should edited</span>
+0015 <span class="comment">%                           again</span>
+0016 <span class="comment">%         (3) ME_testSimulation - Error message of simulink test</span>
+0017 <span class="comment">%                                   simulation, ; is empty if</span>
+0018 <span class="comment">%                                   everything's alright</span>
+0019 <span class="comment">%         (4) ME_paramsFeasible - Error message of proper settings in each</span>
+0020 <span class="comment">%                                   template block; is empty if</span>
+0021 <span class="comment">%                                   everything's alright</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0024 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0025 
+0026 handles             = varargin{1};
+0027 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( varargin,2 ) &gt; 1
+0028     ask4choice      = varargin{2};
+0029 <span class="keyword">else</span>
+0030     ask4choice      = 0;
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="comment">% Checking if there is always a parameter value stored</span>
+0034 misses = 0;
+0035 notValid = 0;
+0036 Data = get(handles.t,<span class="string">'Data'</span>);
+0037 <span class="keyword">for</span> ii = 1:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,1 )
+0038     <span class="keyword">for</span> jj = 2:2:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,2 )
+0039         paramExists = ~isempty( Data{ii,jj} );
+0040         valueExists = ~isempty( Data{ii,jj+1} );
+0041         <span class="keyword">if</span> paramExists &amp;&amp; ~valueExists
+0042             misses = misses + 1;     
+0043         <span class="keyword">end</span>
+0044         <span class="keyword">if</span> paramExists &amp;&amp; valueExists
+0045             isValid = <a href="isValidData.html" class="code" title="function varargout = isValidData( varargin )">isValidData</a>( handles, ii, jj+1 );
+0046             <span class="keyword">if</span> ~isValid
+0047                 notValid = notValid + 1;
+0048             <span class="keyword">end</span>
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span>
+0052 <span class="keyword">if</span> misses
+0053    errordlg([<span class="string">'At least one parameter values is missing.'</span><span class="keyword">...</span>
+0054        <span class="string">'Please add it (them).'</span>]);
+0055    varargout{1} = [];
+0056    varargout{2} = <span class="string">'no'</span>;
+0057    varargout{3} = [];
+0058    varargout{4} = [];
+0059    <span class="keyword">return</span>
+0060 <span class="keyword">end</span>
+0061 <span class="keyword">if</span> notValid
+0062    errordlg([<span class="string">'At least one parameter value is not feasible '</span><span class="keyword">...</span>
+0063        <span class="string">'for its specific block type. Please correct it (them).'</span>]);
+0064    varargout{1} = [];
+0065    varargout{2} = <span class="string">'no'</span>;
+0066    varargout{3} = [];
+0067    varargout{4} = [];
+0068    <span class="keyword">return</span>
+0069 <span class="keyword">end</span>
+0070 
+0071 <span class="comment">% Collecting all parameters and writing it into a copy of the Model</span>
+0072 save_system( handles.sysname, [pwd filesep handles.sysname <span class="string">'_tempCopy'</span>]);
+0073 Data = get(handles.t,<span class="string">'Data'</span>);
+0074 flagParamsFeasible = 0;
+0075 <span class="keyword">try</span>
+0076     <span class="keyword">for</span> ii = 1:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,1 )
+0077         <span class="keyword">for</span> jj = 2:2:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( Data,2 )
+0078             paramExists = ~isempty( Data{ii,jj} );
+0079             valueExists = ~isempty( Data{ii,jj+1} );
+0080             <span class="comment">% store numerical values into temporal copy of model</span>
+0081             <span class="keyword">if</span> paramExists &amp;&amp; valueExists
+0082                 set_param([handles.sysname <span class="string">'_tempCopy/'</span> Data{ii,1} ], Data{ii,jj}, Data{ii,jj+1} );
+0083             <span class="keyword">end</span>
+0084         <span class="keyword">end</span>
+0085     <span class="keyword">end</span>
+0086     flagParamsFeasible = 1;
+0087 <span class="keyword">catch</span> ME_paramsFeasible
+0088     <span class="keyword">if</span> ask4choice
+0089         errordlg({<span class="string">'An error occurred during insertion of the prompted template parameters.'</span>,<span class="keyword">...</span>
+0090             <span class="string">'Maybe this message will help you to find the error: '</span>,<span class="keyword">...</span>
+0091             ME_paramsFeasible.message});
+0092     <span class="keyword">end</span>
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">% Perform simulation with model</span>
+0096 choice = <span class="string">'No'</span>;
+0097 <span class="keyword">if</span> flagParamsFeasible
+0098     <span class="keyword">try</span>
+0099         <span class="comment">% Adapt &quot;/Mux&quot; according to specified inputs</span>
+0100         Vars = regexp( get(handles.TextField1InputSpecs,<span class="string">'String'</span>), <span class="string">'[a-zA-Z0-9]'</span>,<span class="string">'match'</span>);
+0101         noOfIntInputs = str2double( get(handles.TextField2InputSpecs,<span class="string">'string'</span>) );
+0102         <span class="keyword">if</span> ~isempty( Vars )
+0103             noOfInputsToMux = <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( <a href="getNumericValue.html" class="code" title="function varargout = getNumericValue( varargin )">getNumericValue</a>( Vars{1},handles ),2 ) - noOfIntInputs;
+0104             set_param([handles.sysname <span class="string">'_tempCopy/Mux'</span>],<span class="string">'Inputs'</span>,<span class="keyword">...</span>
+0105                 num2str(noOfInputsToMux) );
+0106         <span class="keyword">end</span>
+0107         
+0108         <span class="comment">% set_param([template '/Mux'],'Inputs',num2str(nodeNumber));#</span>
+0109         warning(<span class="string">'off'</span>,<span class="string">'all'</span>);
+0110         simout = sim( [handles.sysname <span class="string">'_tempCopy'</span>],<span class="string">'StopTime'</span>,<span class="string">'0.1'</span>,<span class="keyword">...</span>
+0111             <span class="string">'SaveState'</span>,<span class="string">'on'</span>,<span class="string">'StateSaveName'</span>,<span class="string">'xoutNew'</span>,<span class="string">'SaveOutput'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+0112             <span class="string">'OutputSaveName'</span>,<span class="string">'youtNew'</span>);
+0113         warning(<span class="string">'on'</span>,<span class="string">'all'</span>);
+0114         dimension.states = <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( simout.get(<span class="string">'xoutNew'</span>),2 );
+0115         dimension.outputs = <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( simout.get(<span class="string">'youtNew'</span>),2 );
+0116         <span class="keyword">if</span> ~isempty( simout )
+0117             <span class="keyword">if</span> ask4choice
+0118                 title = <span class="string">'Testing suceeded'</span>;
+0119                 qstring = {<span class="string">'Variable check and explicit model simulation test suceeded.'</span>,<span class="keyword">...</span>
+0120                     <span class="string">'Should the template import to MTIDS be finished?'</span> };
+0121                 choice = questdlg(qstring,title,<span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'No'</span>);
+0122             <span class="keyword">else</span>
+0123                 choice = <span class="string">'yes'</span>;
+0124             <span class="keyword">end</span>
+0125         <span class="keyword">end</span>
+0126     <span class="keyword">catch</span> ME_testSimulation
+0127         <span class="keyword">if</span> ask4choice
+0128             errordlg([<span class="string">'The explicit test simulation of the simulink model failed. '</span><span class="keyword">...</span>
+0129                 <span class="string">'Maybe this message will help you to find the error: '</span><span class="keyword">...</span>
+0130                 ME_testSimulation.message ]);
+0131         <span class="keyword">end</span>
+0132     <span class="keyword">end</span>
+0133 <span class="keyword">end</span>
+0134 bdclose;
+0135 <a href="../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>([pwd filesep handles.sysname <span class="string">'_tempCopy.mdl'</span>]);
+0136 load_system( [handles.pathname handles.sysname] );
+0137 
+0138 <span class="keyword">if</span> exist( <span class="string">'dimension'</span>,<span class="string">'var'</span> )
+0139     varargout{1} = dimension;
+0140 <span class="keyword">else</span>
+0141     varargout{1} = [];
+0142 <span class="keyword">end</span>
+0143 varargout{2} = choice;
+0144 <span class="keyword">if</span> strcmp( choice, <span class="string">'no'</span> )
+0145     <span class="keyword">if</span> flagParamsFeasible
+0146         varargout{3} = ME_testSimulation;
+0147     <span class="keyword">else</span>
+0148         varargout{3} = [];
+0149     <span class="keyword">end</span>
+0150 <span class="keyword">else</span>
+0151     varargout{3} = [];
+0152 <span class="keyword">end</span>
+0153 <span class="keyword">if</span> flagParamsFeasible
+0154     varargout{4} = [];
+0155 <span class="keyword">else</span>
+0156     varargout{4} = ME_paramsFeasible;
+0157 <span class="keyword">end</span>
+0158 
+0159 <span class="comment">%%%%%%%%%%%%</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
