@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of perm</title>
+  <meta name="keywords" content="perm">
+  <meta name="description" content="% Permutations in Matgraph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; perm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>perm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Permutations in Matgraph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Permutations in Matgraph
+ The Matgraph package includes a permutation data type. Here we illustrate
+ some of the features of that type.
+% Defining permutations
+ Permutations are created using the |permutation| function. The argument
+ can either be a positive integer (in which case we create the identity
+ permutation or a permuted version of |1:n|.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>	matrix(g) --- return (a copy of) the adjacency matrix of g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>	random --- overwrite g with a random graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@partition/array.html" class="code" title="function a = array(p)">array</a>	array(p) --- return a single array showing the part numbers of elements.</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/array.html" class="code" title="function a = array(p)">array</a>	array(p) --- return p as an array</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/cycles.html" class="code" title="function c = cycles(p)">cycles</a>	cycles(p) returns a cell array containing the cycle structure of p</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/inv.html" class="code" title="function q = inv(p)">inv</a>	inv(p) returns the inverse permutation of p</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>	constructor for the permutation class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>	renumber the vertices of a graph</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Permutations in Matgraph</span>
+0002 <span class="comment">% The Matgraph package includes a permutation data type. Here we illustrate</span>
+0003 <span class="comment">% some of the features of that type.</span>
+0004 <span class="comment">%% Defining permutations</span>
+0005 <span class="comment">% Permutations are created using the |permutation| function. The argument</span>
+0006 <span class="comment">% can either be a positive integer (in which case we create the identity</span>
+0007 <span class="comment">% permutation or a permuted version of |1:n|.</span>
+0008 p = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(6)
+0009 q = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([1 5 2 4 6 3])
+0010 <span class="comment">%% Random permutations</span>
+0011 <span class="comment">% Applying the function |random| to a permutation scrambles its elements.</span>
+0012 p = <a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(6))
+0013 <span class="comment">%% Applying a permutation to an element</span>
+0014 <span class="comment">% If |p| is a permutation and |k| is an integer, then |p(k)| is the result</span>
+0015 <span class="comment">% of applying |p| to |k|.</span>
+0016 disp(q(2))  <span class="comment">% This should give 5 since q = (1)(2,5,6,3)(4)</span>
+0017 <span class="comment">%% Composition</span>
+0018 <span class="comment">% Composition of permutations is given by the |*| operator.</span>
+0019 p = <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>([2 3 4 6 1 5])
+0020 q
+0021 p*q
+0022 q*p
+0023 <span class="comment">%% Inverses</span>
+0024 <span class="comment">% The inverse of a permutation can be calculated using |inv|.</span>
+0025 <a href="../../../../mtids/subfunctions/matgraph/@permutation/inv.html" class="code" title="function q = inv(p)">inv</a>(p)
+0026 p * <a href="../../../../mtids/subfunctions/matgraph/@permutation/inv.html" class="code" title="function q = inv(p)">inv</a>(p)
+0027 <span class="comment">%% Powers</span>
+0028 <span class="comment">% If |p| is a permutation and |k| is an integer, then |p^k| gives the</span>
+0029 <span class="comment">% |k|-fold composition of |p| with itself. |k| may be negative, giving a</span>
+0030 <span class="comment">% power of the inverse of |p|. So |p^-1| is the same as |inv(p)|.</span>
+0031 p^3
+0032 p*p*p
+0033 p^-1
+0034 <a href="../../../../mtids/subfunctions/matgraph/@permutation/inv.html" class="code" title="function q = inv(p)">inv</a>(p)
+0035 <span class="comment">%% Conversion to an array</span>
+0036 <span class="comment">% The |array| method converts a permutation back into an array.</span>
+0037 disp(<a href="../../../../mtids/subfunctions/matgraph/@partition/array.html" class="code" title="function a = array(p)">array</a>(p));
+0038 <span class="comment">%% Conversion into a list of cycles</span>
+0039 <span class="comment">% The |cycles| method creates a MATLAB cell array containing the cycles of</span>
+0040 <span class="comment">% the permutation.</span>
+0041 r = <a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(17))
+0042 cyc = <a href="../../../../mtids/subfunctions/matgraph/@permutation/cycles.html" class="code" title="function c = cycles(p)">cycles</a>(r);
+0043 <span class="keyword">for</span> k=1:length(cyc)
+0044     disp([<span class="string">'Cycle #'</span>, int2str(k), <span class="string">' is '</span>, int2str(cyc{k})]);
+0045 <span class="keyword">end</span>
+0046 <span class="comment">%% Conversion into a permutation matrix</span>
+0047 <span class="comment">% The |matrix| function converts a permutation into a permutation matrix.</span>
+0048 q
+0049 <a href="../../../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>(q)
+0050 <span class="comment">%% See also</span>
+0051 <span class="comment">% Here is a list of all the |permutation| methods.</span>
+0052 methods <a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

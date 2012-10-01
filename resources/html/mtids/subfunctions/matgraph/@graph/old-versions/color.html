@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of color</title>
+  <meta name="keywords" content="color">
+  <meta name="description" content="color(g,algo) --- color the graph g by a given algorithm">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">mtids</a> &gt; <a href="../../../index.html">subfunctions</a> &gt; <a href="../../index.html">matgraph</a> &gt; <a href="../index.html">@graph</a> &gt; <a href="index.html">old-versions</a> &gt; color.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\@graph\old-versions&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>color
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>color(g,algo) --- color the graph g by a given algorithm</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function p = color(g,algo) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> color(g,algo) --- color the graph g by a given algorithm
+ At present, the only algorithm (and the default) is 'greedy'.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../mtids/subfunctions/matgraph/@graph/deg.html" class="code" title="function d = deg(g,v)">deg</a>	deg: degree of a vertex or degree sequence</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/neighbors.html" class="code" title="function nlist = neighbors(g,v)">neighbors</a>	neighbors(g,v) --- neighbors of v as a list.</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/partition.html" class="code" title="function p = partition(param)">partition</a>	partition --- constructor for the partition class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../mtids/subfunctions/figures/edit_node.html" class="code" title="function varargout = edit_node(varargin)">edit_node</a>	EDIT_NODE gui to edit settings of a specific node in a MTIDS graph</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>	cdraw(g,dir,coloring) -- draw g with a given vertex coloring</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>	color(g,algo) --- color the graph g by a given algorithm</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/edge_color.html" class="code" title="function c = edge_color(g,algo)">edge_color</a>	edge_color(g,algo) --- find a proper edge coloring of the graph g</li><li><a href="../../../../../mtids/subfunctions/matgraph/samples/coloring.html" class="code" title="">coloring</a>	% Coloring graphs in Matgraph</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function p = greedy_color(g)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function p = color(g,algo)</a>
+0002 <span class="comment">% color(g,algo) --- color the graph g by a given algorithm</span>
+0003 <span class="comment">% At present, the only algorithm (and the default) is 'greedy'.</span>
+0004 
+0005 
+0006 <span class="keyword">if</span> nargin == 1
+0007     algo = <span class="string">'greedy'</span>;
+0008 <span class="keyword">end</span>
+0009 
+0010 <span class="keyword">if</span> strcmp(algo,<span class="string">'greedy'</span>)
+0011     p = <a href="#_sub1" class="code" title="subfunction p = greedy_color(g)">greedy_color</a>(g);
+0012     <span class="keyword">return</span>
+0013 <span class="keyword">end</span>
+0014 
+0015 error([<span class="string">'Algorithm &quot;'</span>, algo, <span class="string">'&quot; not implemented'</span>]);
+0016 
+0017 
+0018 
+0019 <a name="_sub1" href="#_subfunctions" class="code">function p = greedy_color(g)</a>
+0020 
+0021 n = <a href="../../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(g);
+0022 d = <a href="../../../../../mtids/subfunctions/matgraph/@graph/deg.html" class="code" title="function d = deg(g,v)">deg</a>(g);
+0023 [dd,vlist] = sort(-d);
+0024 
+0025 colors = zeros(1,n);
+0026 
+0027 <span class="comment">% scan vertices by decreasing degree</span>
+0028 <span class="keyword">for</span> k=1:n
+0029     v = vlist(k);
+0030     vneig = <a href="../../../../../mtids/subfunctions/matgraph/@graph/neighbors.html" class="code" title="function nlist = neighbors(g,v)">neighbors</a>(g,v);  <span class="comment">% neighbors of v</span>
+0031     cneig = unique(colors(vneig));  <span class="comment">% colors on neighbors</span>
+0032     <span class="keyword">if</span> length(cneig) == 0
+0033         mc = 0;
+0034     <span class="keyword">else</span>
+0035         mc = cneig(length(cneig)); <span class="comment">% max color seen on neighbors</span>
+0036     <span class="keyword">end</span>
+0037     avail = setdiff(1:mc,cneig); <span class="comment">% colors available (if any)</span>
+0038     <span class="keyword">if</span> isempty(avail)
+0039         colors(v) = mc+1;
+0040     <span class="keyword">else</span>
+0041         colors(v) = min(avail);
+0042     <span class="keyword">end</span>
+0043 <span class="keyword">end</span>
+0044 
+0045 mc = max(colors);
+0046 cpart = cell(1,mc);
+0047 <span class="keyword">for</span> k=1:mc
+0048     cpart{k} = find(colors==k);
+0049 <span class="keyword">end</span>
+0050 p = <a href="../../../../../mtids/subfunctions/matgraph/@partition/partition.html" class="code" title="function p = partition(param)">partition</a>(cpart);
+0051     
+0052</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of editSimParams</title>
+  <meta name="keywords" content="editSimParams">
+  <meta name="description" content="EDITSIMPARAMS gui for asking basic Simulink simulation parameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">figures</a> &gt; editSimParams.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\figures&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>editSimParams
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>EDITSIMPARAMS gui for asking basic Simulink simulation parameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = editSimParams(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EDITSIMPARAMS gui for asking basic Simulink simulation parameters
+
+ This GUI can be used as a function. It requests a basic set of simulation
+ parameters for Simulink, which is used in a subsequent of the MTIDS graph
+ system in Simulink.
+
+ INPUT:    (1) -- Name of an arbitrary dynamic template in Simulink;
+                   is used to generate an initial configuration set,
+                   if no old parameters are passed to this function
+           (2) -- Configurations set of Simulink parameters
+                   (Simulink.SimulationOutput object); will be prompted in GUI and 
+                   be overwritten at GUI closing
+
+ OUTPUT:   (1) -- Configurations set of Simulink parameters
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>	delete --- delete vertices or edges from a graph</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li><li><a href="../../../mtids/subfunctions/performSimulation.html" class="code" title="function varargout = performSimulation( varargin )">performSimulation</a>	PERFORMSIMULATION Simulates the MTIDS system in Simulink</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function editSimParams_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function popup_Type_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function popup_solver_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function resetPanelSolOptions(handles)</a></li><li><a href="#_sub5" class="code">function setPanelODE45(handles)</a></li><li><a href="#_sub6" class="code">function setPanelODE15(handles)</a></li><li><a href="#_sub7" class="code">function setPanelODE23s(handles)</a></li><li><a href="#_sub8" class="code">function setPanelODE23t(handles)</a></li><li><a href="#_sub9" class="code">function setPanelODE8(handles)</a></li><li><a href="#_sub10" class="code">function setPanelODE14(handles)</a></li><li><a href="#_sub11" class="code">function cs = readOutSimPrms(handles)</a></li><li><a href="#_sub12" class="code">function push_close_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub13" class="code">function varargout = editSimParams_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub14" class="code">function readInSimPrms(handles)</a></li><li><a href="#_sub15" class="code">function edit_startTime_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub16" class="code">function edit_stopTime_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub17" class="code">function edit_fixedSize_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub18" class="code">function edit_consecMinSteps_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub19" class="code">function edit_maxStepSize_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub20" class="code">function edit_minStepSize_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub21" class="code">function edit_initialStepSize_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub22" class="code">function edit_relTol_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub23" class="code">function edit_absTol_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub24" class="code">function popup_Type_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub25" class="code">function popup_solver_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub26" class="code">function popup_shapePres_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub27" class="code">function popup_solJacob_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub28" class="code">function popup_solReset_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub29" class="code">function popup_maxOrder_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub30" class="code">function popup_extOrder_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub31" class="code">function edit_noIter_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub32" class="code">function edit_noIter_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub33" class="code">function popup_extOrder_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub34" class="code">function popup_maxOrder_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub35" class="code">function popup_solReset_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub36" class="code">function popup_solJacob_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub37" class="code">function popup_shapePres_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub38" class="code">function edit_absTol_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub39" class="code">function edit_relTol_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub40" class="code">function edit_initialStepSize_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub41" class="code">function edit_startTime_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub42" class="code">function edit_maxStepSize_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub43" class="code">function edit_consecMinSteps_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub44" class="code">function edit_stopTime_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub45" class="code">function edit_fixedSize_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub46" class="code">function edit_minStepSize_Callback(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = editSimParams(varargin)</a>
+0002 <span class="comment">%EDITSIMPARAMS gui for asking basic Simulink simulation parameters</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This GUI can be used as a function. It requests a basic set of simulation</span>
+0005 <span class="comment">% parameters for Simulink, which is used in a subsequent of the MTIDS graph</span>
+0006 <span class="comment">% system in Simulink.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% INPUT:    (1) -- Name of an arbitrary dynamic template in Simulink;</span>
+0009 <span class="comment">%                   is used to generate an initial configuration set,</span>
+0010 <span class="comment">%                   if no old parameters are passed to this function</span>
+0011 <span class="comment">%           (2) -- Configurations set of Simulink parameters</span>
+0012 <span class="comment">%                   (Simulink.SimulationOutput object); will be prompted in GUI and</span>
+0013 <span class="comment">%                   be overwritten at GUI closing</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% OUTPUT:   (1) -- Configurations set of Simulink parameters</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0018 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0019 
+0020 <span class="comment">%      EDITSIMPARAMS, by itself, creates a new EDITSIMPARAMS or raises the existing</span>
+0021 <span class="comment">%      singleton*.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%      H = EDITSIMPARAMS returns the handle to a new EDITSIMPARAMS or the handle to</span>
+0024 <span class="comment">%      the existing singleton*.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%      EDITSIMPARAMS('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0027 <span class="comment">%      function named CALLBACK in EDITSIMPARAMS.M with the given input arguments.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%      EDITSIMPARAMS('Property','Value',...) creates a new EDITSIMPARAMS or raises the</span>
+0030 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0031 <span class="comment">%      applied to the GUI before editSimParams_OpeningFcn gets called.  An</span>
+0032 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0033 <span class="comment">%      stop.  All inputs are passed to editSimParams_OpeningFcn via varargin.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0036 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0039 <span class="comment">%</span>
+0040 
+0041 <span class="comment">% Edit the above text to modify the response to help editSimParams</span>
+0042 
+0043 <span class="comment">% Last Modified by GUIDE v2.5 26-Sep-2012 16:21:14</span>
+0044 
+0045 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0046 gui_Singleton = 1;
+0047 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0048                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0049                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction editSimParams_OpeningFcn(hObject, eventdata, handles, varargin)">editSimParams_OpeningFcn</a>, <span class="keyword">...</span>
+0050                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub13" class="code" title="subfunction varargout = editSimParams_OutputFcn(hObject, eventdata, handles)">editSimParams_OutputFcn</a>, <span class="keyword">...</span>
+0051                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0052                    <span class="string">'gui_Callback'</span>,   []);
+0053 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0054     gui_State.gui_Callback = str2func(varargin{1});
+0055 <span class="keyword">end</span>
+0056 
+0057 <span class="keyword">if</span> nargout
+0058     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0059 <span class="keyword">else</span>
+0060     gui_mainfcn(gui_State, varargin{:});
+0061 <span class="keyword">end</span>
+0062 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0063 
+0064 
+0065 <span class="comment">% --- Executes just before editSimParams is made visible.</span>
+0066 <a name="_sub1" href="#_subfunctions" class="code">function editSimParams_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0067 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0068 <span class="comment">% hObject    handle to figure</span>
+0069 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0070 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0071 <span class="comment">% varargin   command line arguments to editSimParams (see VARARGIN)</span>
+0072 <span class="comment">% Choose default command line output for editSimParams</span>
+0073 handles.output = hObject;
+0074 
+0075 <span class="comment">% init of popupmenus as in simulink</span>
+0076 contentSolverVar = {<span class="string">'discrete (no continuous states)'</span>,<span class="keyword">...</span>
+0077     <span class="string">'ode45 (Dormand-Prince)'</span>,<span class="string">'ode23 (Bogacki-Shampine)'</span>,<span class="string">'ode113 (Adams)'</span>,<span class="keyword">...</span>
+0078     <span class="string">'ode15s (stiff/NDF)'</span>,<span class="string">'ode23s (stiff/Mod. Rosenbrock)'</span>,<span class="keyword">...</span>
+0079     <span class="string">'ode23t (mod. stiff/Trapezoidal)'</span>,<span class="string">'ode23tb (stiff/TR-BDF2)'</span>};
+0080 set(handles.popup_solver,<span class="string">'String'</span>,contentSolverVar);
+0081 set(handles.popup_Type,<span class="string">'Value'</span>,1.0);
+0082 set(handles.popup_solver,<span class="string">'Value'</span>,2.0);
+0083 <a href="#_sub2" class="code" title="subfunction popup_Type_Callback(hObject, eventdata, handles)">popup_Type_Callback</a>(handles.popup_Type, [], handles);
+0084 
+0085 handles.sysname = varargin{1};
+0086 handles.oldPrms = varargin{2};
+0087 <a href="#_sub14" class="code" title="subfunction readInSimPrms(handles)">readInSimPrms</a>(handles);
+0088 <span class="comment">% Update handles structure</span>
+0089 guidata(hObject, handles);
+0090 
+0091 <span class="comment">% UIWAIT makes editSimParams wait for user response (see UIRESUME)</span>
+0092 uiwait(handles.figure1);
+0093 
+0094 <span class="comment">% --- Executes on selection change in popup_Type.</span>
+0095 <a name="_sub2" href="#_subfunctions" class="code">function popup_Type_Callback(hObject, eventdata, handles)</a>
+0096 <span class="comment">% hObject    handle to popup_Type (see GCBO)</span>
+0097 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0098 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0099 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popup_Type contents as cell array</span>
+0100 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popup_Type</span>
+0101 contentSolverVar = {<span class="string">'discrete (no continuous states)'</span>,<span class="keyword">...</span>
+0102     <span class="string">'ode45 (Dormand-Prince)'</span>,<span class="string">'ode23 (Bogacki-Shampine)'</span>,<span class="string">'ode113 (Adams)'</span>,<span class="keyword">...</span>
+0103     <span class="string">'ode15s (stiff/NDF)'</span>,<span class="string">'ode23s (stiff/Mod. Rosenbrock)'</span>,<span class="keyword">...</span>
+0104     <span class="string">'ode23t (mod. stiff/Trapezoidal)'</span>,<span class="string">'ode23tb (stiff/TR-BDF2)'</span>};
+0105 contentSolverFix = {<span class="string">'Discrete (no continuous states)'</span>,<span class="keyword">...</span>
+0106     <span class="string">'ode8 (Dormand-Prince)'</span>,<span class="string">'ode5 (Dormand-Prince)'</span>,<span class="keyword">...</span>
+0107     <span class="string">'ode4 (Runge-Kutta)'</span>,<span class="string">'ode3 (Bogacki-Shampine)'</span>,<span class="string">'ode2 (Heun)'</span>,<span class="keyword">...</span>
+0108     <span class="string">'ode1 (Euler)'</span>,<span class="string">'ode14x (extrapolation)'</span>};
+0109 
+0110 <span class="comment">% set elements in panel_solOptions to invisible</span>
+0111 <a href="#_sub4" class="code" title="subfunction resetPanelSolOptions(handles)">resetPanelSolOptions</a>(handles);
+0112 
+0113 contents = cellstr(get(hObject,<span class="string">'String'</span>));
+0114 choice = contents{get(hObject,<span class="string">'Value'</span>)};
+0115 <span class="keyword">switch</span> choice
+0116     <span class="keyword">case</span> <span class="string">'Variable-step'</span>;
+0117         set(handles.popup_solver,<span class="string">'String'</span>,contentSolverVar);
+0118         set(handles.popup_solver,<span class="string">'Value'</span>,2.0);        
+0119     <span class="keyword">case</span> <span class="string">'Fixed-step'</span>;
+0120         set(handles.popup_solver,<span class="string">'String'</span>,contentSolverFix);
+0121         set(handles.popup_solver,<span class="string">'Value'</span>,5.0);        
+0122 <span class="keyword">end</span>
+0123 <a href="#_sub3" class="code" title="subfunction popup_solver_Callback(hObject, eventdata, handles)">popup_solver_Callback</a>(hObject,[],handles);
+0124 
+0125 <span class="comment">% --- Executes on selection change in popup_solver.</span>
+0126 <a name="_sub3" href="#_subfunctions" class="code">function popup_solver_Callback(hObject, eventdata, handles)</a>
+0127 <span class="comment">% hObject    handle to popup_solver (see GCBO)</span>
+0128 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0129 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0130 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popup_solver contents as cell array</span>
+0131 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popup_solver</span>
+0132 <span class="comment">% set elements in panel_solOptions to invisible</span>
+0133 <a href="#_sub4" class="code" title="subfunction resetPanelSolOptions(handles)">resetPanelSolOptions</a>(handles);
+0134 contents = cellstr(get(handles.popup_Type,<span class="string">'String'</span>));
+0135 choiceType = contents{get(handles.popup_Type,<span class="string">'Value'</span>)};
+0136 contentsType = cellstr(get(handles.popup_solver,<span class="string">'String'</span>));
+0137 choice = contentsType{get(handles.popup_solver,<span class="string">'Value'</span>)};
+0138 <span class="keyword">switch</span> choiceType
+0139     <span class="keyword">case</span> <span class="string">'Variable-step'</span>;
+0140         <span class="keyword">switch</span> choice
+0141             <span class="keyword">case</span> <span class="string">'discrete (no continuous states)'</span>;
+0142                 set(handles.text_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0143                 set(handles.edit_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0144             <span class="keyword">case</span> <span class="string">'ode45 (Dormand-Prince)'</span>;
+0145                 <a href="#_sub5" class="code" title="subfunction setPanelODE45(handles)">setPanelODE45</a>(handles);
+0146             <span class="keyword">case</span> <span class="string">'ode23 (Bogacki-Shampine)'</span>;
+0147                 <a href="#_sub5" class="code" title="subfunction setPanelODE45(handles)">setPanelODE45</a>(handles);
+0148             <span class="keyword">case</span> <span class="string">'ode113 (Adams)'</span>;
+0149                 <a href="#_sub5" class="code" title="subfunction setPanelODE45(handles)">setPanelODE45</a>(handles);
+0150             <span class="keyword">case</span> <span class="string">'ode15s (stiff/NDF)'</span>;
+0151                 <a href="#_sub6" class="code" title="subfunction setPanelODE15(handles)">setPanelODE15</a>(handles);
+0152             <span class="keyword">case</span> <span class="string">'ode23s (stiff/Mod. Rosenbrock)'</span>;
+0153                 <a href="#_sub7" class="code" title="subfunction setPanelODE23s(handles)">setPanelODE23s</a>(handles);
+0154             <span class="keyword">case</span> <span class="string">'ode23t (mod. stiff/Trapezoidal)'</span>;
+0155                 <a href="#_sub8" class="code" title="subfunction setPanelODE23t(handles)">setPanelODE23t</a>(handles);
+0156             <span class="keyword">case</span> <span class="string">'ode23tb (stiff/TR-BDF2)'</span>;
+0157                 <a href="#_sub8" class="code" title="subfunction setPanelODE23t(handles)">setPanelODE23t</a>(handles);
+0158         <span class="keyword">end</span>        
+0159     <span class="keyword">case</span> <span class="string">'Fixed-step'</span>;
+0160         <span class="keyword">switch</span> choice
+0161             <span class="keyword">case</span> <span class="string">'Discrete (no continuous states)'</span>;
+0162                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0163             <span class="keyword">case</span> <span class="string">'ode8 (Dormand-Prince)'</span>;
+0164                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0165             <span class="keyword">case</span> <span class="string">'ode5 (Dormand-Prince)'</span>;
+0166                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0167             <span class="keyword">case</span> <span class="string">'ode4 (Runge-Kutta)'</span>;
+0168                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0169             <span class="keyword">case</span> <span class="string">'ode3 (Bogacki-Shampine)'</span>;
+0170                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0171             <span class="keyword">case</span> <span class="string">'ode2 (Heun)'</span>;
+0172                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0173             <span class="keyword">case</span> <span class="string">'ode1 (Euler)'</span>;
+0174                 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles);
+0175             <span class="keyword">case</span> <span class="string">'ode14x (extrapolation)'</span>;
+0176                 <a href="#_sub10" class="code" title="subfunction setPanelODE14(handles)">setPanelODE14</a>(handles);
+0177         <span class="keyword">end</span>
+0178 <span class="keyword">end</span>
+0179 
+0180 <a name="_sub4" href="#_subfunctions" class="code">function resetPanelSolOptions(handles)</a>
+0181 <span class="comment">% sets elements in panel_solOptions to invisible</span>
+0182 set(handles.text_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0183 set(handles.edit_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0184 set(handles.text_minStepSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0185 set(handles.edit_minStepSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0186 set(handles.text_initialStepSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0187 set(handles.edit_initialStepSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0188 set(handles.text_relTol  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0189 set(handles.edit_relTol  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0190 set(handles.text_absTol  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0191 set(handles.edit_absTol  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0192 set(handles.text_shapePres  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0193 set(handles.popup_shapePres  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0194 set(handles.text_consecMinSteps  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0195 set(handles.edit_consecMinSteps  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0196 set(handles.text_solReset  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0197 set(handles.popup_solReset  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0198 set(handles.text_maxOrder  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0199 set(handles.popup_maxOrder  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0200 set(handles.text_fixedSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0201 set(handles.edit_fixedSize  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0202 set(handles.text_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0203 set(handles.popup_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0204 set(handles.text_extOrder  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0205 set(handles.popup_extOrder  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0206 set(handles.text_noIter  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0207 set(handles.edit_noIter  ,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0208 <span class="comment">% set(handles.  ,'Visible','off');</span>
+0209 
+0210 <a name="_sub5" href="#_subfunctions" class="code">function setPanelODE45(handles)</a>
+0211 set(handles.text_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0212 set(handles.edit_maxStepSize,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0213 set(handles.text_minStepSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0214 set(handles.edit_minStepSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0215 set(handles.text_initialStepSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0216 set(handles.edit_initialStepSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0217 set(handles.text_relTol  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0218 set(handles.edit_relTol  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0219 set(handles.text_absTol  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0220 set(handles.edit_absTol  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0221 set(handles.text_shapePres  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0222 set(handles.popup_shapePres  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0223 set(handles.text_consecMinSteps  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0224 set(handles.edit_consecMinSteps  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0225 
+0226 <a name="_sub6" href="#_subfunctions" class="code">function setPanelODE15(handles)</a>
+0227 <a href="#_sub5" class="code" title="subfunction setPanelODE45(handles)">setPanelODE45</a>(handles);
+0228 set(handles.text_solReset  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0229 set(handles.popup_solReset  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0230 set(handles.text_maxOrder  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0231 set(handles.popup_maxOrder  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0232 set(handles.text_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0233 set(handles.popup_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0234 
+0235 <a name="_sub7" href="#_subfunctions" class="code">function setPanelODE23s(handles)</a>
+0236 <a href="#_sub5" class="code" title="subfunction setPanelODE45(handles)">setPanelODE45</a>(handles);
+0237 set(handles.text_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0238 set(handles.popup_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0239 
+0240 <a name="_sub8" href="#_subfunctions" class="code">function setPanelODE23t(handles)</a>
+0241 <a href="#_sub7" class="code" title="subfunction setPanelODE23s(handles)">setPanelODE23s</a>(handles);
+0242 set(handles.text_solReset  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0243 set(handles.popup_solReset  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0244 
+0245 <a name="_sub9" href="#_subfunctions" class="code">function setPanelODE8(handles)</a>
+0246 set(handles.text_fixedSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0247 set(handles.edit_fixedSize  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0248 
+0249 <a name="_sub10" href="#_subfunctions" class="code">function setPanelODE14(handles)</a>
+0250 <a href="#_sub9" class="code" title="subfunction setPanelODE8(handles)">setPanelODE8</a>(handles)
+0251 set(handles.text_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0252 set(handles.popup_solJacob  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0253 set(handles.text_extOrder  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0254 set(handles.popup_extOrder  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0255 set(handles.text_noIter  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0256 set(handles.edit_noIter  ,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0257 
+0258 <a name="_sub11" href="#_subfunctions" class="code">function cs = readOutSimPrms(handles)                       </a><span class="comment">%here goes the spelling of the parameter</span>
+0259 <span class="keyword">if</span> isempty( handles.oldPrms )
+0260     <span class="comment">%load system</span>
+0261     load_system(handles.sysname);
+0262     cs = getActiveConfigSet(gcs);
+0263     <span class="comment">%close system</span>
+0264     close_system(handles.sysname,0);
+0265 <span class="keyword">else</span>
+0266     cs = handles.oldPrms;
+0267 <span class="keyword">end</span>
+0268 StartTime = get(handles.edit_startTime,<span class="string">'String'</span>);           <span class="comment">%StartTime</span>
+0269 StopTime = get(handles.edit_stopTime,<span class="string">'String'</span>);             <span class="comment">%StopTime</span>
+0270 contSolverType = get(handles.popup_Type,<span class="string">'String'</span>);
+0271 SolverType = contSolverType{get(handles.popup_Type,<span class="string">'Value'</span>)};
+0272 contSolver = get(handles.popup_solver,<span class="string">'String'</span>);
+0273 Solver = contSolver{get(handles.popup_solver,<span class="string">'Value'</span>)};
+0274 Solver = regexp( Solver,<span class="string">'\w*(?=\s)'</span>,<span class="string">'match'</span>);
+0275 set_param(cs,<span class="string">'StartTime'</span>,StartTime,<span class="string">'StopTime'</span>,StopTime,<span class="keyword">...</span>
+0276     <span class="string">'Solver'</span>,Solver{:},<span class="string">'SolverType'</span>,SolverType);
+0277 <span class="keyword">if</span> strcmp( get(handles.edit_maxStepSize,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0278     MaxStep = get(handles.edit_maxStepSize,<span class="string">'String'</span>);       <span class="comment">%MaxStep</span>
+0279     set_param(cs,<span class="string">'MaxStep'</span>,MaxStep);
+0280 <span class="keyword">end</span>
+0281 <span class="keyword">if</span> strcmp( get(handles.edit_minStepSize,<span class="string">'Visible'</span>), <span class="string">'on'</span>)
+0282     MinStep = get(handles.edit_minStepSize  ,<span class="string">'String'</span>);     <span class="comment">%MinStep</span>
+0283     set_param(cs,<span class="string">'MinStep'</span>,MinStep);
+0284 <span class="keyword">end</span>
+0285 <span class="keyword">if</span> strcmp( get(handles.edit_initialStepSize,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0286     InitialStep = get(handles.edit_initialStepSize  ,<span class="string">'String'</span>);<span class="comment">%InitialStep</span>
+0287     set_param(cs,<span class="string">'InitialStep'</span>,InitialStep);
+0288 <span class="keyword">end</span>
+0289 <span class="keyword">if</span> strcmp( get(handles.edit_relTol,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0290     RelTol = get(handles.edit_relTol  ,<span class="string">'String'</span>);           <span class="comment">%RelTol</span>
+0291     set_param(cs,<span class="string">'RelTol'</span>,RelTol);
+0292 <span class="keyword">end</span>
+0293 <span class="keyword">if</span> strcmp( get(handles.edit_absTol,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0294     AbsTol = get(handles.edit_absTol  ,<span class="string">'String'</span>);           <span class="comment">%AbsTol</span>
+0295     set_param(cs,<span class="string">'AbsTol'</span>,AbsTol);
+0296 <span class="keyword">end</span>
+0297 <span class="keyword">if</span> strcmp( get(handles.popup_shapePres,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0298     contShapePres = get(handles.popup_shapePres,<span class="string">'String'</span>);
+0299     tmp = contShapePres{get(handles.popup_shapePres  ,<span class="string">'Value'</span>)};<span class="comment">%ShapePreserveControl</span>
+0300     tmp = regexp( tmp,<span class="string">'\w*(?=\s)'</span>,<span class="string">'match'</span>);
+0301     ShapePreserveControl = [tmp{:} <span class="string">'All'</span>];
+0302     set_param(cs,<span class="string">'ShapePreserveControl'</span>,ShapePreserveControl);
+0303 <span class="keyword">end</span>
+0304 <span class="keyword">if</span> strcmp( get(handles.edit_consecMinSteps,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0305     MaxConsecutiveMinStep = get(handles.edit_consecMinSteps  ,<span class="string">'String'</span>);<span class="comment">%MaxConsecutiveMinStep</span>
+0306     set_param(cs,<span class="string">'MaxConsecutiveMinStep'</span>,MaxConsecutiveMinStep);
+0307 <span class="keyword">end</span>
+0308 <span class="keyword">if</span> strcmp( get(handles.popup_solReset,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0309     contSolReset = get(handles.popup_solReset,<span class="string">'String'</span>);
+0310     SolverResetMethod = contSolReset{get(handles.popup_solReset  ,<span class="string">'Value'</span>)};<span class="comment">%SolverResetMethod</span>
+0311     set_param(cs,<span class="string">'SolverResetMethod'</span>,SolverResetMethod);
+0312 <span class="keyword">end</span>
+0313 <span class="keyword">if</span> strcmp( get(handles.popup_maxOrder,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0314     contMaxOrder = get(handles.popup_maxOrder,<span class="string">'String'</span>);
+0315     MaxOrder = contMaxOrder{get(handles.popup_maxOrder  ,<span class="string">'Value'</span>)}; <span class="comment">%MaxOrder</span>
+0316     set_param(cs,<span class="string">'MaxOrder'</span>,MaxOrder);
+0317 <span class="keyword">end</span>
+0318 <span class="keyword">if</span> strcmp( get(handles.edit_fixedSize,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0319     FixedStep = get(handles.edit_fixedSize  ,<span class="string">'String'</span>);         <span class="comment">%FixedStep</span>
+0320     set_param(cs,<span class="string">'FixedStep'</span>,FixedStep);
+0321 <span class="keyword">end</span>
+0322 <span class="keyword">if</span> strcmp( get(handles.popup_solJacob,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0323     contSolJacob = get(handles.popup_solJacob,<span class="string">'String'</span>);
+0324     tmp = contSolJacob{get(handles.popup_solJacob  ,<span class="string">'Value'</span>)}; <span class="comment">%SolverJacobianMethodControl</span>
+0325     tmp(regexp( tmp, <span class="string">'\s'</span> ))=[];
+0326     set_param(cs,<span class="string">'SolverJacobianMethodControl'</span>,tmp);
+0327 <span class="keyword">end</span>
+0328 <span class="keyword">if</span> strcmp( get(handles.popup_extOrder,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0329     contExtOrder = get(handles.popup_extOrder,<span class="string">'String'</span>);
+0330     ExtrapolationOrder = contExtOrder{get(handles.popup_extOrder  ,<span class="string">'Value'</span>)}; <span class="comment">%ExtrapolationOrder</span>
+0331     set_param(cs,<span class="string">'ExtrapolationOrder'</span>,ExtrapolationOrder);
+0332 <span class="keyword">end</span>
+0333 <span class="keyword">if</span> strcmp( get(handles.edit_noIter,<span class="string">'Visible'</span>),<span class="string">'on'</span>)
+0334     NumberNewtonIterations = get(handles.edit_noIter  ,<span class="string">'String'</span>); <span class="comment">%NumberNewtonIterations</span>
+0335     set_param(cs,<span class="string">'NumberNewtonIterations'</span>,NumberNewtonIterations);
+0336 <span class="keyword">end</span>
+0337 
+0338 <span class="comment">% --- Executes on button press in push_close.</span>
+0339 <a name="_sub12" href="#_subfunctions" class="code">function push_close_Callback(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;*INUSL,*DEFNU&gt;</span>
+0340 <span class="comment">% hObject    handle to push_close (see GCBO)</span>
+0341 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0342 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0343 <span class="keyword">try</span>
+0344     handles.simPrms = <a href="#_sub11" class="code" title="subfunction cs = readOutSimPrms(handles)                       ">readOutSimPrms</a>(handles);
+0345     uiresume(handles.figure1);
+0346 <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0347     disp(<span class="string">'Reading of simulation parameter failed - please check prompted value'</span>);
+0348 <span class="keyword">end</span>
+0349 guidata(hObject, handles);
+0350 
+0351 
+0352 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0353 <a name="_sub13" href="#_subfunctions" class="code">function varargout = editSimParams_OutputFcn(hObject, eventdata, handles) </a>
+0354 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0355 <span class="comment">% hObject    handle to figure</span>
+0356 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0357 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0358 <span class="keyword">if</span> isfield(handles,<span class="string">'simPrms'</span>)
+0359     varargout{1} = handles.simPrms;
+0360 <span class="keyword">else</span>
+0361     varargout{1} = [];
+0362 <span class="keyword">end</span>
+0363 varargout{2} = handles.output;
+0364 <a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>(handles.figure1);
+0365 
+0366 <a name="_sub14" href="#_subfunctions" class="code">function readInSimPrms(handles)</a>
+0367 <span class="comment">%READINSIMPRMS</span>
+0368 <span class="comment">% This function takes the old configuration settings and writes it into the</span>
+0369 <span class="comment">% figures' editable elements</span>
+0370 <span class="keyword">if</span> isempty( handles.oldPrms )
+0371     <span class="keyword">return</span>
+0372 <span class="keyword">end</span>
+0373 cs = handles.oldPrms.get(<span class="string">'Components'</span>);
+0374 set(handles.edit_startTime,<span class="string">'String'</span>,cs(1).StartTime);       <span class="comment">%StartTime</span>
+0375 set(handles.edit_stopTime,<span class="string">'String'</span>,cs(1).StopTime);         <span class="comment">%StopTime</span>
+0376 idxSolverType = find( strcmp( get(handles.popup_Type,<span class="string">'String'</span>),cs(1).SolverType ) );<span class="comment">%SolverType</span>
+0377 set(handles.popup_Type,<span class="string">'Value'</span>,idxSolverType);
+0378 <a href="#_sub2" class="code" title="subfunction popup_Type_Callback(hObject, eventdata, handles)">popup_Type_Callback</a>(handles.popup_Type, [], handles);
+0379 contSolver = get(handles.popup_solver,<span class="string">'String'</span>);            <span class="comment">%Solver</span>
+0380 contSolver = regexp( contSolver,<span class="string">'\w*(?=\s)'</span>,<span class="string">'match'</span>,<span class="string">'once'</span>);
+0381 idxSolver = find( strcmp( contSolver, cs(1).Solver ) );
+0382 set(handles.popup_solver,<span class="string">'Value'</span>,idxSolver);
+0383 <a href="#_sub3" class="code" title="subfunction popup_solver_Callback(hObject, eventdata, handles)">popup_solver_Callback</a>(handles.popup_solver, [], handles);
+0384 set(handles.edit_maxStepSize,<span class="string">'String'</span>,cs(1).MaxStep);       <span class="comment">%MaxStep</span>
+0385 set(handles.edit_minStepSize  ,<span class="string">'String'</span>,cs(1).MinStep);     <span class="comment">%MinStep</span>
+0386 set(handles.edit_initialStepSize  ,<span class="string">'String'</span>,cs(1).InitialStep); <span class="comment">%InitialStep</span>
+0387 set(handles.edit_relTol  ,<span class="string">'String'</span>,cs(1).RelTol);           <span class="comment">%RelTol</span>
+0388 set(handles.edit_absTol  ,<span class="string">'String'</span>,cs(1).AbsTol);           <span class="comment">%AbsTol</span>
+0389 <span class="keyword">if</span> strcmp( cs(1).ShapePreserveControl(1),<span class="string">'D'</span>)               <span class="comment">%ShapePreserveControl</span>
+0390     set(handles.popup_shapePres,<span class="string">'Value'</span>,2.0);
+0391 <span class="keyword">else</span>
+0392     set(handles.popup_shapePres,<span class="string">'Value'</span>,1.0);
+0393 <span class="keyword">end</span>
+0394 set(handles.edit_consecMinSteps  ,<span class="string">'String'</span>,cs(1).MaxConsecutiveMinStep); <span class="comment">%MaxConsecutiveMinStep</span>
+0395 contSolReset = get(handles.popup_solReset,<span class="string">'String'</span>);                <span class="comment">%SolverResetMethod</span>
+0396 idxSRM = find(strcmp( contSolReset, cs(1).SolverResetMethod ));
+0397 set(handles.popup_solReset,<span class="string">'Value'</span>,idxSRM);
+0398 set(handles.popup_maxOrder,<span class="string">'Value'</span>,cs(1).MaxOrder);                 <span class="comment">%MaxOrder</span>
+0399 set(handles.edit_fixedSize  ,<span class="string">'String'</span>,cs(1).FixedStep);             <span class="comment">%FixedStep</span>
+0400 contSolJacob = get(handles.popup_solJacob,<span class="string">'String'</span>);                <span class="comment">%SolverJacobianMethodControl</span>
+0401 tmp = cs(1).SolverJacobianMethodControl;
+0402 idxCapital = regexp( tmp,<span class="string">'[A-Z]'</span> );
+0403 <span class="keyword">if</span> length( idxCapital ) &gt; 1
+0404     tmp = [tmp(1:idxCapital(2)-1) <span class="string">' '</span> tmp(idxCapital(2):end)];
+0405 <span class="keyword">end</span>
+0406 idxSJMC = find( strcmpi( contSolJacob,tmp ) );
+0407 set(handles.popup_solJacob,<span class="string">'Value'</span>,idxSJMC);
+0408 set(handles.popup_extOrder,<span class="string">'Value'</span>,cs(1).ExtrapolationOrder);       <span class="comment">%ExtrapolationOrder</span>
+0409 set(handles.edit_noIter  ,<span class="string">'String'</span>,cs(1).NumberNewtonIterations);   <span class="comment">%NumberNewtonIterations</span>
+0410 
+0411 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0412 <a name="_sub15" href="#_subfunctions" class="code">function edit_startTime_CreateFcn(hObject, eventdata, handles)</a>
+0413 <span class="comment">% hObject    handle to edit_startTime (see GCBO)</span>
+0414 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0415 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0416 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0417 <span class="comment">%       See ISPC and COMPUTER.</span>
+0418 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0419     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0420 <span class="keyword">end</span>
+0421 
+0422 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0423 <a name="_sub16" href="#_subfunctions" class="code">function edit_stopTime_CreateFcn(hObject, eventdata, handles)</a>
+0424 <span class="comment">% hObject    handle to edit_stopTime (see GCBO)</span>
+0425 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0426 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0427 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0428 <span class="comment">%       See ISPC and COMPUTER.</span>
+0429 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0430     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0431 <span class="keyword">end</span>
+0432 
+0433 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0434 <a name="_sub17" href="#_subfunctions" class="code">function edit_fixedSize_CreateFcn(hObject, eventdata, handles)</a>
+0435 <span class="comment">% hObject    handle to edit_fixedSize (see GCBO)</span>
+0436 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0437 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0438 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0439 <span class="comment">%       See ISPC and COMPUTER.</span>
+0440 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0441     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0442 <span class="keyword">end</span>
+0443 
+0444 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0445 <a name="_sub18" href="#_subfunctions" class="code">function edit_consecMinSteps_CreateFcn(hObject, eventdata, handles)</a>
+0446 <span class="comment">% hObject    handle to edit_consecMinSteps (see GCBO)</span>
+0447 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0448 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0449 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0450 <span class="comment">%       See ISPC and COMPUTER.</span>
+0451 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0452     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0453 <span class="keyword">end</span>
+0454 
+0455 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0456 <a name="_sub19" href="#_subfunctions" class="code">function edit_maxStepSize_CreateFcn(hObject, eventdata, handles)</a>
+0457 <span class="comment">% hObject    handle to edit_maxStepSize (see GCBO)</span>
+0458 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0459 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0460 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0461 <span class="comment">%       See ISPC and COMPUTER.</span>
+0462 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0463     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0464 <span class="keyword">end</span>
+0465 
+0466 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0467 <a name="_sub20" href="#_subfunctions" class="code">function edit_minStepSize_CreateFcn(hObject, eventdata, handles)</a>
+0468 <span class="comment">% hObject    handle to edit_minStepSize (see GCBO)</span>
+0469 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0470 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0471 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0472 <span class="comment">%       See ISPC and COMPUTER.</span>
+0473 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0474     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0475 <span class="keyword">end</span>
+0476 
+0477 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0478 <a name="_sub21" href="#_subfunctions" class="code">function edit_initialStepSize_CreateFcn(hObject, eventdata, handles)</a>
+0479 <span class="comment">% hObject    handle to edit_initialStepSize (see GCBO)</span>
+0480 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0481 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0482 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0483 <span class="comment">%       See ISPC and COMPUTER.</span>
+0484 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0485     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0486 <span class="keyword">end</span>
+0487 
+0488 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0489 <a name="_sub22" href="#_subfunctions" class="code">function edit_relTol_CreateFcn(hObject, eventdata, handles)</a>
+0490 <span class="comment">% hObject    handle to edit_relTol (see GCBO)</span>
+0491 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0492 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0493 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0494 <span class="comment">%       See ISPC and COMPUTER.</span>
+0495 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0496     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0497 <span class="keyword">end</span>
+0498 
+0499 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0500 <a name="_sub23" href="#_subfunctions" class="code">function edit_absTol_CreateFcn(hObject, eventdata, handles)</a>
+0501 <span class="comment">% hObject    handle to edit_absTol (see GCBO)</span>
+0502 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0503 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0504 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0505 <span class="comment">%       See ISPC and COMPUTER.</span>
+0506 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0507     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0508 <span class="keyword">end</span>
+0509 
+0510 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0511 <a name="_sub24" href="#_subfunctions" class="code">function popup_Type_CreateFcn(hObject, eventdata, handles)</a>
+0512 <span class="comment">% hObject    handle to popup_Type (see GCBO)</span>
+0513 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0514 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0515 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0516 <span class="comment">%       See ISPC and COMPUTER.</span>
+0517 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0518     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0519 <span class="keyword">end</span>
+0520 
+0521 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0522 <a name="_sub25" href="#_subfunctions" class="code">function popup_solver_CreateFcn(hObject, eventdata, handles)</a>
+0523 <span class="comment">% hObject    handle to popup_solver (see GCBO)</span>
+0524 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0525 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0526 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0527 <span class="comment">%       See ISPC and COMPUTER.</span>
+0528 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0529     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0530 <span class="keyword">end</span>
+0531 
+0532 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0533 <a name="_sub26" href="#_subfunctions" class="code">function popup_shapePres_CreateFcn(hObject, eventdata, handles)</a>
+0534 <span class="comment">% hObject    handle to popup_shapePres (see GCBO)</span>
+0535 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0536 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0537 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0538 <span class="comment">%       See ISPC and COMPUTER.</span>
+0539 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0540     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0541 <span class="keyword">end</span>
+0542 
+0543 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0544 <a name="_sub27" href="#_subfunctions" class="code">function popup_solJacob_CreateFcn(hObject, eventdata, handles)</a>
+0545 <span class="comment">% hObject    handle to popup_solJacob (see GCBO)</span>
+0546 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0547 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0548 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0549 <span class="comment">%       See ISPC and COMPUTER.</span>
+0550 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0551     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0552 <span class="keyword">end</span>
+0553 
+0554 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0555 <a name="_sub28" href="#_subfunctions" class="code">function popup_solReset_CreateFcn(hObject, eventdata, handles)</a>
+0556 <span class="comment">% hObject    handle to popup_solReset (see GCBO)</span>
+0557 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0558 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0559 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0560 <span class="comment">%       See ISPC and COMPUTER.</span>
+0561 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0562     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0563 <span class="keyword">end</span>
+0564 
+0565 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0566 <a name="_sub29" href="#_subfunctions" class="code">function popup_maxOrder_CreateFcn(hObject, eventdata, handles)</a>
+0567 <span class="comment">% hObject    handle to popup_maxOrder (see GCBO)</span>
+0568 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0569 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0570 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0571 <span class="comment">%       See ISPC and COMPUTER.</span>
+0572 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0573     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0574 <span class="keyword">end</span>
+0575 
+0576 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0577 <a name="_sub30" href="#_subfunctions" class="code">function popup_extOrder_CreateFcn(hObject, eventdata, handles)</a>
+0578 <span class="comment">% hObject    handle to popup_extOrder (see GCBO)</span>
+0579 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0580 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0581 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0582 <span class="comment">%       See ISPC and COMPUTER.</span>
+0583 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0584     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0585 <span class="keyword">end</span>
+0586 
+0587 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0588 <a name="_sub31" href="#_subfunctions" class="code">function edit_noIter_CreateFcn(hObject, eventdata, handles)</a>
+0589 <span class="comment">% hObject    handle to edit_noIter (see GCBO)</span>
+0590 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0591 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0592 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0593 <span class="comment">%       See ISPC and COMPUTER.</span>
+0594 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0595     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0596 <span class="keyword">end</span>
+0597 
+0598 <span class="comment">%--------------------------------------------------------------------------</span>
+0599 <span class="comment">%-------UNUSED FUNCTION CALLBACKS - AUTOMATICALLY GENERATED BY GUIDE-------</span>
+0600 <span class="comment">%--------------------------------------------------------------------------</span>
+0601 
+0602 <a name="_sub32" href="#_subfunctions" class="code">function edit_noIter_Callback(hObject, eventdata, handles)</a>
+0603 
+0604 <span class="comment">% --- Executes on selection change in popup_extOrder.</span>
+0605 <a name="_sub33" href="#_subfunctions" class="code">function popup_extOrder_Callback(hObject, eventdata, handles)</a>
+0606 
+0607 <span class="comment">% --- Executes on selection change in popup_maxOrder.</span>
+0608 <a name="_sub34" href="#_subfunctions" class="code">function popup_maxOrder_Callback(hObject, eventdata, handles)</a>
+0609 
+0610 <span class="comment">% --- Executes on selection change in popup_solReset.</span>
+0611 <a name="_sub35" href="#_subfunctions" class="code">function popup_solReset_Callback(hObject, eventdata, handles)</a>
+0612 
+0613 <span class="comment">% --- Executes on selection change in popup_solJacob.</span>
+0614 <a name="_sub36" href="#_subfunctions" class="code">function popup_solJacob_Callback(hObject, eventdata, handles)</a>
+0615 
+0616 <span class="comment">% --- Executes on selection change in popup_shapePres.</span>
+0617 <a name="_sub37" href="#_subfunctions" class="code">function popup_shapePres_Callback(hObject, eventdata, handles)</a>
+0618 
+0619 <a name="_sub38" href="#_subfunctions" class="code">function edit_absTol_Callback(hObject, eventdata, handles)</a>
+0620 
+0621 <a name="_sub39" href="#_subfunctions" class="code">function edit_relTol_Callback(hObject, eventdata, handles)</a>
+0622 
+0623 <a name="_sub40" href="#_subfunctions" class="code">function edit_initialStepSize_Callback(hObject, eventdata, handles)</a>
+0624 
+0625 <a name="_sub41" href="#_subfunctions" class="code">function edit_startTime_Callback(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;*INUSD&gt;</span>
+0626 
+0627 <a name="_sub42" href="#_subfunctions" class="code">function edit_maxStepSize_Callback(hObject, eventdata, handles)</a>
+0628 
+0629 <a name="_sub43" href="#_subfunctions" class="code">function edit_consecMinSteps_Callback(hObject, eventdata, handles)</a>
+0630 
+0631 <a name="_sub44" href="#_subfunctions" class="code">function edit_stopTime_Callback(hObject, eventdata, handles)</a>
+0632 
+0633 <a name="_sub45" href="#_subfunctions" class="code">function edit_fixedSize_Callback(hObject, eventdata, handles)</a>
+0634 
+0635 <a name="_sub46" href="#_subfunctions" class="code">function edit_minStepSize_Callback(hObject, eventdata, handles)</a>
+0636</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sizeChar2Pixel</title>
+  <meta name="keywords" content="sizeChar2Pixel">
+  <meta name="description" content="SIZECHAR2PIXEL conversion of char symbols to pixel size">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; sizeChar2Pixel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>sizeChar2Pixel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>SIZECHAR2PIXEL conversion of char symbols to pixel size</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function pixelValue = sizeChar2Pixel(hObject, widthOrHeight, input) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SIZECHAR2PIXEL conversion of char symbols to pixel size
+
+ Converts char into pixel size.
+
+ INPUT:    hObject         -- Parent figure handle
+           widthOrHeight   -- Char with 'w' or 'h' to detect if horizontal 
+                               or vertical pixel size is needed
+           inputString     -- An input string, which length should be 
+                               computed in pixel values
+
+ OUTPUT:   pixelValue      -- The length of the string &quot;inputString&quot; in pixels
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/figures/import_dynamic_params.html" class="code" title="function varargout = import_dynamic_params(varargin)">import_dynamic_params</a>	IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS</li><li><a href="get_tableColumnWidth.html" class="code" title="function varargout = get_tableColumnWidth(varargin)">get_tableColumnWidth</a>	GET_TABLECOLUMNWIDTH estimates width of table</li><li><a href="newTablePosition.html" class="code" title="function newTablePosition( varargin )">newTablePosition</a>	NEWTABLEPOSITION set new layout position for import_dynamic_params</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function pixelValue = sizeChar2Pixel(hObject, widthOrHeight, input)</a>
+0002 <span class="comment">%SIZECHAR2PIXEL conversion of char symbols to pixel size</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Converts char into pixel size.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% INPUT:    hObject         -- Parent figure handle</span>
+0007 <span class="comment">%           widthOrHeight   -- Char with 'w' or 'h' to detect if horizontal</span>
+0008 <span class="comment">%                               or vertical pixel size is needed</span>
+0009 <span class="comment">%           inputString     -- An input string, which length should be</span>
+0010 <span class="comment">%                               computed in pixel values</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% OUTPUT:   pixelValue      -- The length of the string &quot;inputString&quot; in pixels</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0015 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0016 
+0017 <span class="keyword">if</span> nargin &lt; 3
+0018     error(<span class="string">'Insufficient number of input arguments'</span>);
+0019 <span class="keyword">end</span>
+0020 
+0021 size_pixels=get(hObject,<span class="string">'Position'</span>);
+0022 set(hObject,<span class="string">'Units'</span>,<span class="string">'characters'</span>);
+0023 size_characters=get(hObject,<span class="string">'Position'</span>);
+0024 set(hObject,<span class="string">'Units'</span>,<span class="string">'Pixels'</span>);
+0025 convFactor = size_pixels(3:4)./size_characters(3:4);
+0026 
+0027 <span class="keyword">if</span> isa(input,<span class="string">'char'</span>)
+0028     <span class="keyword">if</span> strcmp(widthOrHeight,<span class="string">'w'</span>)
+0029         pixelValue = convFactor(1)*<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(input,2);
+0030     <span class="keyword">elseif</span> strcmp(widthOrHeight,<span class="string">'h'</span>)
+0031         pixelValue = convFactor(2)*<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(input,1);
+0032     <span class="keyword">end</span>
+0033 <span class="keyword">elseif</span> isa(input,<span class="string">'double'</span>) || isa(input,<span class="string">'int'</span>)
+0034     <span class="keyword">if</span> strcmp(widthOrHeight,<span class="string">'w'</span>)
+0035         pixelValue = convFactor(1)*input;
+0036     <span class="keyword">elseif</span> strcmp(widthOrHeight,<span class="string">'h'</span>)
+0037         pixelValue = convFactor(2)*input;
+0038     <span class="keyword">end</span>
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

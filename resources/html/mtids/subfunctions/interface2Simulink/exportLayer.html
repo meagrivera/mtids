@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of exportLayer</title>
+  <meta name="keywords" content="exportLayer">
+  <meta name="description" content="exportLayer.m">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">interface2Simulink</a> &gt; exportLayer.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\interface2Simulink&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>exportLayer
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>exportLayer.m</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function[] =exportLayer(name,template,templateList,A, xy, labs) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> exportLayer.m 
+
+ Project: MTIDS
+ Created: 27/5/2011
+      
+                      inputs: -name: mname of model that will be produced
+                              -template: template used to generate subsystems
+                              - templateList: List of templates that are
+                                 availible in mtids
+                              -A: Adjacency matrix,
+                              -xy: Position of the nodes
+                              -labs: cell with the names of the nodes
+                      
+                      output: no output, produces a simulink model save manually !!
+ 
+ This function takes the data produced in mtids and generates a simulink
+ model to function as template. This is used to do latering in grids</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>	blockVanvas.m, defines simulink  define Block position</li><li><a href="templateModify.html" class="code" title="function [] = templateModify(nodeNumber,template)">templateModify</a>	buildSubsystem.m</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function[] =exportLayer(name,template,templateList,A, xy, labs)</a>
+0002 <span class="comment">% exportLayer.m</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Project: MTIDS</span>
+0005 <span class="comment">% Created: 27/5/2011</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%                      inputs: -name: mname of model that will be produced</span>
+0008 <span class="comment">%                              -template: template used to generate subsystems</span>
+0009 <span class="comment">%                              - templateList: List of templates that are</span>
+0010 <span class="comment">%                                 availible in mtids</span>
+0011 <span class="comment">%                              -A: Adjacency matrix,</span>
+0012 <span class="comment">%                              -xy: Position of the nodes</span>
+0013 <span class="comment">%                              -labs: cell with the names of the nodes</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%                      output: no output, produces a simulink model save manually !!</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% This function takes the data produced in mtids and generates a simulink</span>
+0018 <span class="comment">% model to function as template. This is used to do latering in grids</span>
+0019 
+0020 
+0021 <span class="comment">%% options</span>
+0022 vizMaxNodeNumber=50;    <span class="comment">% maximal number of nodes where Simulink opens</span>
+0023 
+0024 <span class="comment">%% Ask for interface template</span>
+0025 oldFolder = cd(strcat(pwd,<span class="string">'/templates'</span>));
+0026 [filename, pathname] = uigetfile( <span class="keyword">...</span>
+0027 {<span class="string">'*.mdl'</span>,<span class="string">'Simulink Model (*.mdl)'</span>;
+0028    <span class="string">'*.*'</span>,  <span class="string">'All Files (*.*)'</span>}, <span class="keyword">...</span>
+0029    <span class="string">'Select Interface node template '</span>);
+0030 
+0031 
+0032  file = strcat(pathname, filename);
+0033 
+0034  addpath(pathname);
+0035  
+0036  [pathname, interface, ext] = fileparts(file);
+0037 
+0038 cd(oldFolder);
+0039 
+0040 <span class="comment">%% Create the model</span>
+0041 
+0042 
+0043 <span class="keyword">try</span>
+0044     sys = name;
+0045 new_system(sys) 
+0046 
+0047 <span class="keyword">catch</span>  <span class="comment">% if subsystem already exist then look for an availible name</span>
+0048 
+0049     <span class="keyword">for</span> i=1:100
+0050         newsys= [sys num2str(i)];
+0051         <span class="keyword">try</span>
+0052           new_system(newsys) ;
+0053           sys=newsys;
+0054           <span class="keyword">break</span>;
+0055        <span class="keyword">catch</span>
+0056          
+0057        
+0058        <span class="keyword">end</span>
+0059        
+0060    
+0061     <span class="keyword">end</span>
+0062     
+0063 
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">%% open template and modify it do not visulize if number of nodes to high</span>
+0067 nodeNumber= <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(A,1)+1;
+0068 
+0069 <span class="keyword">for</span> i=1:<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(templateList,1)
+0070     <span class="keyword">if</span> any(strcmp(templateList{i},template))
+0071     <a href="templateModify.html" class="code" title="function [] = templateModify(nodeNumber,template)">templateModify</a>(nodeNumber,templateList{i})
+0072     <span class="keyword">end</span>
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="comment">% modify interface node</span>
+0076 <a href="templateModify.html" class="code" title="function [] = templateModify(nodeNumber,template)">templateModify</a>(nodeNumber,interface)
+0077 <span class="comment">%% Arrange Subsystems and build them accourding to template</span>
+0078 
+0079 x=xy(:,1);
+0080 y=xy(:,2);
+0081 
+0082 <span class="comment">% Define reference frame</span>
+0083 nodePosRadius= sqrt( x(1)^2 + y(1)^2) + nodeNumber/2;
+0084 graphCenter= [nodePosRadius+12 nodePosRadius+2] ;
+0085 
+0086 <span class="comment">% add input</span>
+0087 add_block(<span class="string">'built-in/Inport'</span>,[sys <span class="string">'/In1'</span> ] , <span class="string">'position'</span>, <a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>([1 graphCenter(2) ]) );
+0088 inPos= get_param([sys <span class="string">'/In1'</span>],<span class="string">'position'</span>);
+0089 <span class="comment">% add mux</span>
+0090 add_block(<span class="string">'built-in/Mux'</span>, [sys <span class="string">'/Mux'</span> ],<span class="string">'position'</span>, inPos + [100 0 75 0 ] );
+0091 set_param( [sys <span class="string">'/Mux'</span> ],<span class="string">'Inputs'</span>,<span class="string">'2'</span>);
+0092 set_param( [sys <span class="string">'/Mux'</span> ],<span class="string">'DisplayOption'</span>,<span class="string">'bar'</span>);
+0093 
+0094 <span class="comment">% add out</span>
+0095 add_block(<span class="string">'built-in/Outport'</span>,[sys <span class="string">'/Out1'</span> ] , <span class="string">'position'</span>, <a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>([graphCenter(1)+nodePosRadius+5  graphCenter(2) ]) );
+0096 
+0097 <span class="comment">%add interface node</span>
+0098 add_block(<span class="string">'built-in/Subsystem'</span>,[sys <span class="string">'/Interface'</span>] , <span class="string">'position'</span>, <a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>([7 graphCenter(2) ]) );
+0099 Simulink.BlockDiagram.copyContentsToSubSystem(interface, [sys <span class="string">'/Interface'</span> ]);
+0100 
+0101 <span class="comment">%connect things</span>
+0102 add_line(sys,<span class="string">'Mux/1'</span>, <span class="string">'Interface/1'</span>,<span class="string">'autorouting'</span>,<span class="string">'on'</span>)
+0103 add_line(sys,<span class="string">'In1/1'</span>, <span class="string">'Mux/1'</span>,<span class="string">'autorouting'</span>,<span class="string">'on'</span>)
+0104 
+0105 <span class="keyword">for</span> i=1:nodeNumber-1
+0106     
+0107 <span class="comment">%if i~=nodeNumber</span>
+0108     <span class="keyword">if</span> x(i)&gt;0
+0109     nodePosAngle= atan(-y(i)/x(i)) ;
+0110     <span class="keyword">else</span>
+0111       nodePosAngle= atan(-y(i)/x(i)) + pi ;  
+0112     <span class="keyword">end</span>
+0113     
+0114    nodePos= graphCenter + [nodePosRadius*cos(nodePosAngle) nodePosRadius*sin(nodePosAngle)] ;
+0115 
+0116 add_block(<span class="string">'built-in/Subsystem'</span>,[sys [<span class="string">'/'</span> labs{i}]] , <span class="string">'position'</span>, <a href="blockCanvas.html" class="code" title="function canvas= blockCanvas(pos)">blockCanvas</a>(nodePos) );
+0117 
+0118 
+0119 
+0120 <span class="comment">%modify template of subsystem call a function</span>
+0121 
+0122 
+0123 Simulink.BlockDiagram.copyContentsToSubSystem(template{i}, [sys [<span class="string">'/'</span> labs{i}]]);
+0124 <span class="comment">%end</span>
+0125 
+0126     
+0127     
+0128     
+0129     
+0130 
+0131 <span class="keyword">end</span>
+0132 <span class="comment">% close subsystems templates</span>
+0133 <span class="keyword">for</span> i=1:<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(templateList,1)
+0134 close_system(templateList{i},0)
+0135 <span class="keyword">end</span>
+0136 close_system(interface,0)
+0137 <span class="comment">%% Connect Subsystems</span>
+0138 
+0139 
+0140 
+0141 <span class="keyword">for</span> i=1:nodeNumber-1
+0142     <span class="keyword">for</span> j=1:nodeNumber-1
+0143     
+0144     <span class="comment">%if i~=j  % make all nodes connect</span>
+0145     <span class="keyword">if</span> i==nodeNumber
+0146         add_line(sys,[ <span class="string">'Interface/2'</span>], [labs{j} <span class="string">'/'</span> num2str(i)])
+0147         
+0148     <span class="keyword">else</span>
+0149         
+0150     <span class="keyword">if</span> A(i,j)~=0
+0151    <span class="comment">%add_line(sys,[labs{i} '/1'], [labs{j} '/' num2str(i)],'autorouting','on')</span>
+0152     add_line(sys,[labs{i} <span class="string">'/1'</span>], [labs{j} <span class="string">'/'</span> num2str(i)])
+0153     <span class="keyword">end</span>
+0154  
+0155     <span class="keyword">end</span>
+0156     <span class="keyword">end</span>   
+0157 <span class="keyword">end</span>
+0158 
+0159 <span class="comment">%connect to interface</span>
+0160 
+0161 <span class="keyword">for</span> i=1:nodeNumber-1
+0162     
+0163     add_line(sys,<span class="string">'Interface/2'</span>, [labs{i} <span class="string">'/'</span> num2str(nodeNumber)])
+0164     add_line(sys,[labs{i} <span class="string">'/1'</span>], [<span class="string">'Interface/'</span> num2str(i+1)])
+0165 <span class="keyword">end</span>
+0166 
+0167 <span class="comment">% interface connect to output</span>
+0168 
+0169 add_line(sys,<span class="string">'Interface/1'</span>, <span class="string">'Out1/1'</span>,<span class="string">'autorouting'</span>,<span class="string">'on'</span>)
+0170 
+0171 <span class="comment">%% open system</span>
+0172 <span class="comment">% NO VISULAISATION FOR LARGE NUMBER OF NODES</span>
+0173 <span class="keyword">if</span>(nodeNumber&lt;=vizMaxNodeNumber)
+0174 open_system(sys) 
+0175 <span class="keyword">end</span>
+0176 
+0177 <span class="comment">%% save model ....</span>
+0178 <span class="keyword">if</span>(nodeNumber&gt;vizMaxNodeNumber)
+0179  [filename, pathname] = uiputfile( <span class="keyword">...</span>
+0180 {<span class="string">'*.mdl'</span>,<span class="string">'Simulink Model (*.mdl)'</span>;
+0181    <span class="string">'*.*'</span>,  <span class="string">'All Files (*.*)'</span>}, <span class="keyword">...</span>
+0182    <span class="string">'Save model'</span>);
+0183 
+0184  <span class="comment">%file = strcat(pathname, filename);</span>
+0185 <span class="keyword">try</span>
+0186 save_system(sys,filename);
+0187 <span class="keyword">catch</span>
+0188    close_system(sys,0) 
+0189 <span class="keyword">end</span>
+0190 
+0191 close_system(sys,0)
+0192 <span class="keyword">end</span>
+0193 <span class="comment">%rmpath(pathname)</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

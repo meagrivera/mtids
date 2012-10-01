@@ -1,0 +1,892 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edit_node</title>
+  <meta name="keywords" content="edit_node">
+  <meta name="description" content="EDIT_NODE gui to edit settings of a specific node in a MTIDS graph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">figures</a> &gt; edit_node.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\figures&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>edit_node
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>EDIT_NODE gui to edit settings of a specific node in a MTIDS graph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = edit_node(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EDIT_NODE gui to edit settings of a specific node in a MTIDS graph
+
+ This GUI enables editing of node settings in a MTIDS graph.
+   -- Plot settings: which signal(s) of the node dynamics should be plotted
+   -- Node renaming / deleting
+   -- Editing the templates' numerical parameters
+   -- Testing the numerical parameters on consistency for the Simulink
+           simulation
+ 
+ INPUT:    (1)  -- Index of node in MTIDS graph system
+           (2)  -- Node name
+           (3)  -- Stored dynamic template of node,
+                    contains numerical parameters
+           (4)  -- List with all available templates in MTIDS
+           (5)  -- Connected node neighbours in MTIDS graph
+           (6)  -- Cell array, contains plot settings for all node
+           (7)  -- Handle to main figure (usually MTIDS itself)
+
+ OUTPUT:   (1)  -- Handle to figure
+           (2)  -- Node index
+           (3)  -- Node name (may have changed)
+           (4)  -- name of template
+           (5)  -- Connected node neighbours in MTIDS graph
+           (6)  -- boolean flag, 1 if node should be deleted
+           (7)  -- updated template (struct)
+           (8)  -- print vector, contains '1' for states or node output to plot
+           (9)  -- cell array with plot parameters
+
+ Authors: Francisco Llobet, Jose Rivera
+ Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/subfunctions/checkNodeInput.html" class="code" title="function varargout = checkNodeInput( varargin )">checkNodeInput</a>	CHECKNODEINPUT Tests input signal</li><li><a href="edit_paramValues.html" class="code" title="function varargout = edit_paramValues(varargin)">edit_paramValues</a>	EDIT_PARAMVALUES gui to edit numerical parameter values of a template</li><li><a href="pp2.html" class="code" title="function varargout = pp2(varargin)">pp2</a>	PP2 gui to set the plot specifications for each signal to plot</li><li><a href="../../../mtids/subfunctions/interface2Simulink/matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>	</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>	color(g,algo) --- color the graph g by a given algorithm</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>	delete --- delete vertices or edges from a graph</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>	display(g) --- display basic information about a graph object</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/old-versions/color.html" class="code" title="function p = color(g,algo)">color</a>	color(g,algo) --- color the graph g by a given algorithm</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/display.html" class="code" title="function display(p)">display</a>	display(p) --- used to display paritions to the console</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li><li><a href="../../../mtids/subfunctions/matgraph/@permutation/display.html" class="code" title="function st = display(p)">display</a>	display(p) --- display a permutation in disjoint cycle form.</li><li><a href="../../../mtids/subfunctions/set_stringPlotOutputSignals.html" class="code" title="function varargout = set_stringPlotOutputSignals( varargin ) %#ok<STOUT>">set_stringPlotOutputSignals</a>	SET_STRINGPLOTOUTPUTSIGNALS set visualization of which signals are to plot</li><li><a href="../../../mtids/subfunctions/set_stringSelectedStates.html" class="code" title="function varargout = set_stringSelectedStates( varargin ) %#ok<STOUT>">set_stringSelectedStates</a>	SET_STRINGSELECTEDSTATES creates string out of selected states to plot</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function edit_node_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = edit_node_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function connections_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function connections_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub5" class="code">function selector_dynamics_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub6" class="code">function selector_dynamics_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function button_edit_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub8" class="code">function button_delete_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function button_cancel_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub10" class="code">function checkbox1_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub11" class="code">function edit_intStates_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub12" class="code">function edit_intStates_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub13" class="code">function checkbox2_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub14" class="code">function edit_selectedStates_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub15" class="code">function edit_plotOutputSignals_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub16" class="code">function edit_selectedStates_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub17" class="code">function edit_plot_parameters_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub18" class="code">function figure1_CloseRequestFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub19" class="code">function pushbutton5_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub20" class="code">function [argout] = checkPlotParams (handles)</a></li><li><a href="#_sub21" class="code">function editPlotParams(hObject, handles)</a></li><li><a href="#_sub22" class="code">function generatePlotParams(hObject,handles)</a></li><li><a href="#_sub23" class="code">function compute_printVector(handles)</a></li><li><a href="#_sub24" class="code">function setPlotParams(hObject,handles)</a></li><li><a href="#_sub25" class="code">function push_editParams_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub26" class="code">function push_consistency_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub27" class="code">function edit_plotOutputSignals_CreateFcn(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = edit_node(varargin)</a>
+0002 <span class="comment">%EDIT_NODE gui to edit settings of a specific node in a MTIDS graph</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This GUI enables editing of node settings in a MTIDS graph.</span>
+0005 <span class="comment">%   -- Plot settings: which signal(s) of the node dynamics should be plotted</span>
+0006 <span class="comment">%   -- Node renaming / deleting</span>
+0007 <span class="comment">%   -- Editing the templates' numerical parameters</span>
+0008 <span class="comment">%   -- Testing the numerical parameters on consistency for the Simulink</span>
+0009 <span class="comment">%           simulation</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% INPUT:    (1)  -- Index of node in MTIDS graph system</span>
+0012 <span class="comment">%           (2)  -- Node name</span>
+0013 <span class="comment">%           (3)  -- Stored dynamic template of node,</span>
+0014 <span class="comment">%                    contains numerical parameters</span>
+0015 <span class="comment">%           (4)  -- List with all available templates in MTIDS</span>
+0016 <span class="comment">%           (5)  -- Connected node neighbours in MTIDS graph</span>
+0017 <span class="comment">%           (6)  -- Cell array, contains plot settings for all node</span>
+0018 <span class="comment">%           (7)  -- Handle to main figure (usually MTIDS itself)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUT:   (1)  -- Handle to figure</span>
+0021 <span class="comment">%           (2)  -- Node index</span>
+0022 <span class="comment">%           (3)  -- Node name (may have changed)</span>
+0023 <span class="comment">%           (4)  -- name of template</span>
+0024 <span class="comment">%           (5)  -- Connected node neighbours in MTIDS graph</span>
+0025 <span class="comment">%           (6)  -- boolean flag, 1 if node should be deleted</span>
+0026 <span class="comment">%           (7)  -- updated template (struct)</span>
+0027 <span class="comment">%           (8)  -- print vector, contains '1' for states or node output to plot</span>
+0028 <span class="comment">%           (9)  -- cell array with plot parameters</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Authors: Francisco Llobet, Jose Rivera</span>
+0031 <span class="comment">% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0032 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0033 
+0034 <span class="comment">% Edit the above text to modify the response to help edit_node</span>
+0035 
+0036 <span class="comment">% Last Modified by GUIDE v2.5 14-Sep-2012 10:58:39</span>
+0037 
+0038 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0039 gui_Singleton = 1;
+0040 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0041                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0042                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction edit_node_OpeningFcn(hObject, eventdata, handles, varargin)">edit_node_OpeningFcn</a>, <span class="keyword">...</span>
+0043                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = edit_node_OutputFcn(hObject, eventdata, handles)">edit_node_OutputFcn</a>, <span class="keyword">...</span>
+0044                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0045                    <span class="string">'gui_Callback'</span>,   []);
+0046 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0047     gui_State.gui_Callback = str2func(varargin{1});
+0048 <span class="keyword">end</span>
+0049 
+0050 <span class="keyword">if</span> nargout
+0051     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0052 <span class="keyword">else</span>
+0053     gui_mainfcn(gui_State, varargin{:});
+0054 <span class="keyword">end</span>
+0055 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0056 
+0057 
+0058 <span class="comment">% --- Executes just before edit_node is made visible.</span>
+0059 <a name="_sub1" href="#_subfunctions" class="code">function edit_node_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0060 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0061 <span class="comment">% hObject    handle to figure</span>
+0062 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0063 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0064 <span class="comment">% varargin   command line arguments to edit_node (see VARARGIN)</span>
+0065 
+0066 data.destroy = 0; <span class="comment">%means, node should NOT be destroyed and changes should be applied</span>
+0067 
+0068 <span class="comment">%Process Input Arguments!!</span>
+0069 data.nodenumber = varargin{1};
+0070 data.nodelabel  = varargin{2};
+0071 data.template = varargin{3};
+0072 data.oldTemplate = varargin{3};
+0073 data.template_list = varargin{4};
+0074 data.neighbours = varargin{5};
+0075 data.printCell = varargin{6};
+0076 data.handleMainFigure = varargin{7};
+0077 data.plotParamsOld = data.printCell{:,2};
+0078 <span class="comment">%Minimum length of print vector is 2. First entry denotes if node output</span>
+0079 <span class="comment">%should be plotted. Entries 1+i denotes if internal state i should be plotted.</span>
+0080 data.printVectorOld = data.printCell{:,1}; <span class="comment">%old print vector</span>
+0081 
+0082 [ny, nx] = <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(data.template_list);
+0083 
+0084 <span class="comment">% INITIALIZE GUI</span>
+0085 <span class="comment">% Building selector string</span>
+0086 <span class="keyword">for</span> i=1:ny
+0087     <span class="keyword">if</span> i == 1
+0088         data.drop_string = data.template_list{1,1};
+0089     <span class="keyword">elseif</span> i == ny
+0090         data.drop_string = strcat(data.drop_string,<span class="string">'|'</span>,data.template_list{i,1});
+0091     <span class="keyword">else</span>        
+0092         data.drop_string = strcat(data.drop_string,<span class="string">'|'</span>,data.template_list{i,1});
+0093     <span class="keyword">end</span>
+0094 <span class="keyword">end</span>
+0095 
+0096 <span class="comment">%set(handles.selector_dynamics, 'String', data.drop_string);</span>
+0097 n1 = find(strcmp(data.template{1}, data.template_list));
+0098 set(handles.selector_dynamics, <span class="string">'String'</span>, data.template{1}); <span class="comment">% Get number of template name from list</span>
+0099 set(handles.number_node, <span class="string">'String'</span>, num2str(data.nodenumber));
+0100 set(handles.edit_label, <span class="string">'String'</span>, data.nodelabel);
+0101 set(handles.connections, <span class="string">'String'</span>, <a href="../../../mtids/subfunctions/interface2Simulink/matrix_to_string.html" class="code" title="function A_str = matrix_to_string(A)">matrix_to_string</a>(data.neighbours));
+0102 
+0103 <span class="comment">%Initialize figure with information contained in printCell</span>
+0104 temp = data.printCell{1,1};
+0105 data.templateSaved = 0;
+0106 set(handles.edit_intStates,<span class="string">'String'</span>,num2str(data.template{1,2}.dimension.states));
+0107 set(handles.text_noOfOutputSignals,<span class="string">'String'</span>,num2str(data.template{1,2}.dimension.outputs));
+0108 <span class="keyword">if</span> temp(1) == 1
+0109     data.flagCheck1 = 1;
+0110 <span class="keyword">else</span>
+0111     data.flagCheck1 = 0;
+0112 <span class="keyword">end</span>
+0113 set(handles.checkbox1,<span class="string">'Value'</span>,data.flagCheck1);
+0114 <span class="comment">% if any(temp(2:length(temp)))</span>
+0115 <span class="comment">%     data.flagCheck2 = 1;</span>
+0116 <span class="comment">%     stringSelectedStates = num2str(find(temp(2:length(temp))));</span>
+0117 <span class="comment">% else</span>
+0118 <span class="comment">%     data.flagCheck2 = 0;</span>
+0119 <span class="comment">%     stringSelectedStates = '';</span>
+0120 <span class="comment">% end</span>
+0121 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0122 <a href="../../../mtids/subfunctions/set_stringSelectedStates.html" class="code" title="function varargout = set_stringSelectedStates( varargin ) %#ok<STOUT>">set_stringSelectedStates</a>( data.printCell,handles );
+0123 <a href="../../../mtids/subfunctions/set_stringPlotOutputSignals.html" class="code" title="function varargout = set_stringPlotOutputSignals( varargin ) %#ok<STOUT>">set_stringPlotOutputSignals</a>( data.printCell,handles );
+0124 <span class="comment">% set(handles.checkbox2,'Value',data.flagCheck2);</span>
+0125 <span class="comment">% set(handles.edit_selectedStates,'String',stringSelectedStates);</span>
+0126 
+0127 <span class="comment">% Choose default command line output for edit_node</span>
+0128 handles.output = hObject;
+0129 handles.flagEditParams = 0;
+0130 guidata(hObject, handles);
+0131 <span class="comment">%set(handles.selector_dynamics, 'Value', '2');</span>
+0132 <span class="comment">% UIWAIT makes edit_node wait for user response (see UIRESUME)</span>
+0133 uiwait(handles.figure1);
+0134 
+0135 
+0136 
+0137 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0138 <a name="_sub2" href="#_subfunctions" class="code">function varargout = edit_node_OutputFcn(hObject, eventdata, handles) </a>
+0139 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0140 <span class="comment">% hObject    handle to figure</span>
+0141 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0142 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0143 <a href="#_sub23" class="code" title="subfunction compute_printVector(handles)">compute_printVector</a>(handles);
+0144 <span class="comment">%load application data</span>
+0145 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0146 
+0147 <span class="keyword">if</span> handles.OutputFlag == 2 <span class="comment">% &quot;apply changes&quot;</span>
+0148     varargout{1} = handles.output;
+0149     varargout{2} = data.nodenumber;
+0150     varargout{3} = data.nodelabel;
+0151     varargout{4} = data.template;
+0152     varargout{5} = data.neighbours;
+0153     varargout{6} = data.destroy;
+0154     varargout{7} = data.templateSaved;
+0155     varargout{8} = data.printVector;
+0156     varargout{9} = data.plotParams;
+0157     
+0158 <span class="keyword">elseif</span> handles.OutputFlag == 1 <span class="comment">% &quot;cancel changes&quot;</span>
+0159     varargout{1} = handles.output;
+0160     varargout{2} = data.nodenumber;
+0161     varargout{3} = data.nodelabel;
+0162     varargout{4} = data.template;
+0163     varargout{5} = data.neighbours;
+0164     varargout{6} = data.destroy;
+0165     varargout{7} = data.templateSaved;
+0166     varargout{8} = data.printVectorOld;
+0167     varargout{9} = data.plotParamsOld;
+0168     
+0169 <span class="keyword">elseif</span> handles.OutputFlag == 0 <span class="comment">% &quot;delete node&quot;</span>
+0170     varargout{1} = handles.output;
+0171     varargout{2} = data.nodenumber;
+0172     varargout{3} = data.nodelabel;
+0173     varargout{4} = data.template;
+0174     varargout{5} = data.neighbours;
+0175     varargout{6} = data.destroy;
+0176     varargout{7} = data.templateSaved;
+0177     varargout{8} = data.printVectorOld;
+0178     varargout{9} = data.plotParamsOld; 
+0179 <span class="keyword">end</span>
+0180  
+0181 <span class="keyword">if</span> handles.flagEditParams &amp;&amp; handles.OutputFlag == 2
+0182     varargout{10} = data.newTemplate;
+0183 <span class="keyword">else</span>
+0184     varargout{10} = data.oldTemplate;
+0185 <span class="keyword">end</span>
+0186 <a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>(hObject)
+0187 
+0188 
+0189 
+0190 <a name="_sub3" href="#_subfunctions" class="code">function connections_Callback(hObject, eventdata, handles)</a>
+0191 <span class="comment">% hObject    handle to connections (see GCBO)</span>
+0192 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0193 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0194 
+0195 <span class="comment">% Hints: get(hObject,'String') returns contents of connections as text</span>
+0196 <span class="comment">%        str2double(get(hObject,'String')) returns contents of connections as a double</span>
+0197 
+0198 
+0199 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0200 <a name="_sub4" href="#_subfunctions" class="code">function connections_CreateFcn(hObject, eventdata, handles)</a>
+0201 <span class="comment">% hObject    handle to connections (see GCBO)</span>
+0202 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0203 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0204 
+0205 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0206 <span class="comment">%       See ISPC and COMPUTER.</span>
+0207 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0208     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0209 <span class="keyword">end</span>
+0210 
+0211 
+0212 <span class="comment">% --- Executes on selection change in selector_dynamics.</span>
+0213 <a name="_sub5" href="#_subfunctions" class="code">function selector_dynamics_Callback(hObject, eventdata, handles)</a>
+0214 <span class="comment">% hObject    handle to selector_dynamics (see GCBO)</span>
+0215 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0216 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0217 
+0218 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamics contents as cell array</span>
+0219 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from selector_dynamics</span>
+0220 
+0221 
+0222 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0223 <a name="_sub6" href="#_subfunctions" class="code">function selector_dynamics_CreateFcn(hObject, eventdata, handles)</a>
+0224 <span class="comment">% hObject    handle to selector_dynamics (see GCBO)</span>
+0225 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0226 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0227 
+0228 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0229 <span class="comment">%       See ISPC and COMPUTER.</span>
+0230 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0231     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0232 <span class="keyword">end</span>
+0233 
+0234 
+0235 <span class="comment">% --- Executes on button press in button_edit.</span>
+0236 <a name="_sub7" href="#_subfunctions" class="code">function button_edit_Callback(hObject, eventdata, handles)</a>
+0237 <span class="comment">% hObject    handle to button_edit (see GCBO)</span>
+0238 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0239 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0240 <a href="#_sub24" class="code" title="subfunction setPlotParams(hObject,handles)">setPlotParams</a>(hObject,handles);
+0241 <a href="#_sub23" class="code" title="subfunction compute_printVector(handles)">compute_printVector</a>(handles);
+0242 <span class="comment">%load application data</span>
+0243 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0244 
+0245 data.destroy = 0; <span class="comment">%node should NOT be destroyed and changes be applied</span>
+0246 
+0247 n_template = get(handles.selector_dynamics, <span class="string">'String'</span>);
+0248 data.template = n_template;
+0249 <span class="comment">%data.template = data.template_list{n_template};</span>
+0250 data.nodelabel = get(handles.edit_label, <span class="string">'String'</span>);
+0251 handles.nodelabel = get(handles.edit_label, <span class="string">'String'</span>);
+0252 data.neighbours = get(handles.connections, <span class="string">'String'</span>);
+0253 
+0254 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0255 
+0256 handles.OutputFlag = 2;
+0257 
+0258 guidata(hObject, handles);
+0259 <span class="comment">%close(handles.output);</span>
+0260 uiresume(handles.figure1);
+0261 
+0262 
+0263 <span class="comment">% --- Executes on button press in button_delete.</span>
+0264 <a name="_sub8" href="#_subfunctions" class="code">function button_delete_Callback(hObject, eventdata, handles)</a>
+0265 <span class="comment">% hObject    handle to button_delete (see GCBO)</span>
+0266 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0267 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0268 
+0269 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0270 data.destroy = 1; <span class="comment">%graph should be destroyed</span>
+0271 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0272 handles.OutputFlag = 0;
+0273 guidata(hObject, handles);
+0274 uiresume(handles.figure1);
+0275 
+0276 <span class="comment">% --- Executes on button press in button_cancel.</span>
+0277 <a name="_sub9" href="#_subfunctions" class="code">function button_cancel_Callback(hObject, eventdata, handles)</a>
+0278 <span class="comment">% hObject    handle to button_cancel (see GCBO)</span>
+0279 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0280 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0281 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0282 <span class="comment">%global destroy;</span>
+0283 data.destroy = 2; <span class="comment">%graph should NOT be destroyed, but changes should NOT be applied</span>
+0284 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0285 handles.OutputFlag = 1;
+0286 guidata(hObject, handles);
+0287 uiresume(handles.figure1);
+0288 
+0289 
+0290 <span class="comment">% --- Executes on button press in checkbox1.</span>
+0291 <a name="_sub10" href="#_subfunctions" class="code">function checkbox1_Callback(hObject, eventdata, handles)</a>
+0292 <span class="comment">% hObject    handle to checkbox1 (see GCBO)</span>
+0293 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0294 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0295 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of checkbox1</span>
+0296 <span class="comment">%global printVector;</span>
+0297 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0298 <span class="keyword">if</span> (get(hObject,<span class="string">'Value'</span>) == get(hObject,<span class="string">'Max'</span>))
+0299     <span class="comment">% Checkbox is checked-take appropriate action</span>
+0300     data.flagCheck1 = 1;
+0301 <span class="keyword">else</span>
+0302     <span class="comment">% Checkbox is not checked-take appropriate action</span>
+0303     data.flagCheck1 = 0;
+0304 <span class="keyword">end</span>
+0305 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0306 
+0307 
+0308 
+0309 <a name="_sub11" href="#_subfunctions" class="code">function edit_intStates_Callback(hObject, eventdata, handles)</a>
+0310 <span class="comment">% hObject    handle to edit_intStates (see GCBO)</span>
+0311 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0312 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0313 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_intStates as text</span>
+0314 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_intStates as a double</span>
+0315 <span class="comment">%check if string is scalar</span>
+0316 <span class="keyword">if</span> length( num2str(get(hObject,<span class="string">'String'</span>)) ) &gt; 1
+0317     <span class="comment">%error</span>
+0318 <span class="keyword">end</span>
+0319 <span class="comment">% check if internal states and chosen internal states to plot is</span>
+0320 <span class="comment">% consistent, resetting intStates if not</span>
+0321 <span class="comment">%{</span>
+0322 <a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>([<span class="string">'@edit_intStates_Callback '</span>]);
+0323 <a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>([<span class="string">'String of intStates: '</span> get(hObject,<span class="string">'String'</span>) ]);
+0324 <a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>([<span class="string">'Max. of intStates to plot: '</span> num2str( max( str2num( get(handles.edit_selectedStates,<span class="string">'String'</span>) ) ) ) ]);
+0325 <span class="comment">%}</span>
+0326 <span class="keyword">if</span> str2double(get(hObject,<span class="string">'String'</span>)) &lt; max( str2num( get(handles.edit_selectedStates,<span class="string">'String'</span>) ) )
+0327     set( hObject,<span class="string">'String'</span>, num2str( max( str2num( get(handles.edit_selectedStates,<span class="string">'String'</span>) ) ) ) );
+0328 <span class="keyword">end</span>
+0329 
+0330 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0331 <a name="_sub12" href="#_subfunctions" class="code">function edit_intStates_CreateFcn(hObject, eventdata, handles)</a>
+0332 <span class="comment">% hObject    handle to edit_intStates (see GCBO)</span>
+0333 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0334 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0335 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0336 <span class="comment">%       See ISPC and COMPUTER.</span>
+0337 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0338     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0339 <span class="keyword">end</span>
+0340 
+0341 
+0342 <span class="comment">% --- Executes on button press in checkbox2.</span>
+0343 <a name="_sub13" href="#_subfunctions" class="code">function checkbox2_Callback(hObject, eventdata, handles)</a>
+0344 <span class="comment">% hObject    handle to checkbox2 (see GCBO)</span>
+0345 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0346 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0347 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of checkbox2</span>
+0348 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0349 <span class="keyword">if</span> (get(hObject,<span class="string">'Value'</span>) == get(hObject,<span class="string">'Max'</span>))
+0350     <span class="comment">% Checkbox is checked-take appropriate action</span>
+0351     data.flagCheck2 = 1;
+0352 <span class="keyword">else</span>
+0353     <span class="comment">% Checkbox is not checked-take appropriate action</span>
+0354     data.flagCheck2 = 0;
+0355 <span class="keyword">end</span>
+0356 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0357 
+0358 
+0359 <a name="_sub14" href="#_subfunctions" class="code">function edit_selectedStates_Callback(hObject, eventdata, handles)</a>
+0360 <span class="comment">% hObject    handle to edit_selectedStates (see GCBO)</span>
+0361 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0362 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0363 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_selectedStates as text</span>
+0364 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_selectedStates as a double</span>
+0365 <span class="comment">% if max( str2num( get(hObject,'String'))) &gt; str2num( get(handles.edit_intStates,'String'))</span>
+0366 <span class="comment">%     set(handles.edit_intStates,'String', num2str( max( str2num( get(hObject,'String') ) ) ) );</span>
+0367 <span class="comment">% end</span>
+0368 data=getappdata(handles.figure1,<span class="string">'appData'</span>);
+0369 <span class="keyword">if</span> isfield(data,<span class="string">'newTemplate'</span>)
+0370     intStates = data.newTemplate{1,2}.dimension.states;
+0371 <span class="keyword">else</span>
+0372     intStates = data.oldTemplate{1,2}.dimension.states;
+0373 <span class="keyword">end</span>
+0374 <span class="keyword">if</span> max( str2num( get(hObject,<span class="string">'String'</span>))) &gt;  intStates <span class="comment">%#ok&lt;*ST2NM&gt;</span>
+0375     errordlg({<span class="string">'There are not as many internal states as selected.'</span>,<span class="keyword">...</span>
+0376         <span class="string">'Resetting ''Selected States'' to previous value.'</span>});
+0377     set(handles.edit_selectedStates,<span class="string">'String'</span>,data.stringSelectedStates);
+0378     set(handles.checkbox2,<span class="string">'Value'</span>, data.flagCheck2 );
+0379     <span class="keyword">return</span>
+0380 <span class="keyword">end</span>
+0381 <span class="keyword">if</span> ~isempty( str2num( get(hObject,<span class="string">'String'</span>)))
+0382     set(handles.checkbox2,<span class="string">'Value'</span>,1.0);
+0383     data.flagCheck2 = 1;
+0384 <span class="keyword">end</span>
+0385 data.stringSelectedStates = get(hObject,<span class="string">'String'</span>);
+0386 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0387 
+0388 <a name="_sub15" href="#_subfunctions" class="code">function edit_plotOutputSignals_Callback(hObject, eventdata, handles)</a>
+0389 <span class="comment">% hObject    handle to edit_plotOutputSignals (see GCBO)</span>
+0390 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0391 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0392 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_plotOutputSignals as text</span>
+0393 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_plotOutputSignals as a double</span>
+0394 data=getappdata(handles.figure1,<span class="string">'appData'</span>);
+0395 <span class="keyword">if</span> isfield(data,<span class="string">'newTemplate'</span>)
+0396     outputs = data.newTemplate{1,2}.dimension.outputs;
+0397 <span class="keyword">else</span>
+0398     outputs = data.oldTemplate{1,2}.dimension.outputs;
+0399 <span class="keyword">end</span>
+0400 <span class="keyword">if</span> max( str2num( get(hObject,<span class="string">'String'</span>))) &gt;  outputs <span class="comment">%#ok&lt;*ST2NM&gt;</span>
+0401     errordlg({<span class="string">'There are not as many output signals as selected.'</span>,<span class="keyword">...</span>
+0402         <span class="string">'Resetting ''Output Signals'' to previous value.'</span>});
+0403     set(handles.edit_plotOutputSignals,<span class="string">'String'</span>,data.stringPlotOutputSignals);
+0404     set(handles.checkbox2,<span class="string">'Value'</span>, data.flagCheck1 );
+0405     <span class="keyword">return</span>
+0406 <span class="keyword">end</span>
+0407 <span class="keyword">if</span> ~isempty( str2num( get(hObject,<span class="string">'String'</span>)))
+0408     set(handles.checkbox1,<span class="string">'Value'</span>,1.0);
+0409     data.flagCheck1 = 1;
+0410 <span class="keyword">end</span>
+0411 data.stringPlotOutputSignals = get(hObject,<span class="string">'String'</span>);
+0412 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0413 
+0414 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0415 <a name="_sub16" href="#_subfunctions" class="code">function edit_selectedStates_CreateFcn(hObject, eventdata, handles)</a>
+0416 <span class="comment">% hObject    handle to edit_selectedStates (see GCBO)</span>
+0417 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0418 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0419 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0420 <span class="comment">%       See ISPC and COMPUTER.</span>
+0421 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0422     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0423 <span class="keyword">end</span>
+0424 
+0425 
+0426 <span class="comment">% --- Executes on button press in edit_plot_parameters.</span>
+0427 <a name="_sub17" href="#_subfunctions" class="code">function edit_plot_parameters_Callback(hObject, eventdata, handles)</a>
+0428 <span class="comment">% hObject    handle to edit_plot_parameters (see GCBO)</span>
+0429 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0430 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0431 <span class="comment">%generateDefaultPlotParams(hObject,handles);</span>
+0432 
+0433 <a href="#_sub24" class="code" title="subfunction setPlotParams(hObject,handles)">setPlotParams</a>(hObject,handles);
+0434 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0435 <span class="comment">%process visualization data for pp2 (eg line naming)</span>
+0436 <span class="keyword">if</span> (data.flagCheck1 == 1 &amp;&amp; data.flagCheck2 == 1) <span class="comment">%node output and selected int. states should be plotted</span>
+0437     outputDim = length(str2num(get(handles.edit_plotOutputSignals,<span class="string">'String'</span>)));
+0438     plotStates = [str2num(get(handles.edit_plotOutputSignals,<span class="string">'String'</span>)) str2num(get(handles.edit_selectedStates,<span class="string">'String'</span>))];
+0439     plotString = cell(length(plotStates),1 );
+0440     <span class="keyword">for</span> i = 1:length(plotStates)
+0441         <span class="keyword">if</span> i&lt;=outputDim
+0442             plotString{i} = [<span class="string">'Node output: '</span> num2str( plotStates(i) )];
+0443         <span class="keyword">elseif</span> i&gt;outputDim
+0444             plotString{i} = [<span class="string">'Internal state '</span> num2str( plotStates(i) ) <span class="string">':'</span>];
+0445         <span class="keyword">end</span>
+0446     <span class="keyword">end</span>
+0447     temp = <a href="pp2.html" class="code" title="function varargout = pp2(varargin)">pp2</a>(data.nodenumber, plotStates,plotString,data.plotParams);
+0448     <span class="comment">% if the following is true, then pp2 was cancel without passing new</span>
+0449     <span class="comment">% params</span>
+0450     <span class="keyword">if</span> ~isempty(temp)
+0451         data.plotParams = temp;
+0452     <span class="keyword">end</span>
+0453 <span class="keyword">elseif</span> (data.flagCheck1 == 1 &amp;&amp; data.flagCheck2 == 0) <span class="comment">%only node output should be plotted</span>
+0454 <span class="comment">%     noOf</span>
+0455     plotString = cell(1,1);
+0456     plotString{1} = <span class="string">'Node output:'</span>;
+0457     temp = <a href="pp2.html" class="code" title="function varargout = pp2(varargin)">pp2</a>(data.nodenumber, 1,plotString,data.plotParams);
+0458     <span class="comment">% if the following is true, then pp2 was cancel without passing new</span>
+0459     <span class="comment">% params</span>
+0460     <span class="keyword">if</span> ~isempty(temp)
+0461         data.plotParams = temp;
+0462     <span class="keyword">end</span>
+0463 <span class="keyword">elseif</span> (data.flagCheck1 == 0 &amp;&amp; data.flagCheck2 == 1) <span class="comment">%only selected int. states should be plotted</span>
+0464     plotStates = str2num(get(handles.edit_selectedStates,<span class="string">'String'</span>));
+0465     plotString = cell(length(plotStates),1 );
+0466     <span class="keyword">for</span> i = 1:length(plotStates)
+0467         plotString{i} = [<span class="string">'Internal state '</span> num2str( plotStates(i) ) <span class="string">':'</span> ];
+0468     <span class="keyword">end</span>
+0469     temp = <a href="pp2.html" class="code" title="function varargout = pp2(varargin)">pp2</a>(data.nodenumber, plotStates,plotString,data.plotParams);
+0470     <span class="comment">% if the following is true, then pp2 was cancel without passing new</span>
+0471     <span class="comment">% params</span>
+0472     <span class="keyword">if</span> ~isempty(temp)
+0473         data.plotParams = temp;
+0474     <span class="keyword">end</span>
+0475     <span class="keyword">for</span> i = 1:length(data.plotParams)
+0476         <span class="comment">%because no node output should be plotted, we introduce</span>
+0477         <span class="comment">% an offset in the struct, where the first struct element is empty</span>
+0478         data.plotParams(i+1) = data.plotParams(i);
+0479     <span class="keyword">end</span>
+0480     data.plotParams(1).lineWidth = [];
+0481     data.plotParams(1).lineStyle = [];
+0482     data.plotParams(1).marker = [];
+0483     data.plotParams(1).lineColor = [];
+0484     data.plotParams(1).edgeColor = [];
+0485     data.plotParams(1).faceColor = [];
+0486 <span class="keyword">elseif</span> (data.flagCheck1 == 0 &amp;&amp; data.flagCheck2 == 0)<span class="comment">%nothing sould be plotted =&gt; do not open pp2.m</span>
+0487     errordlg(<span class="string">'There is nothing selected to plot.'</span>,<span class="string">'Error'</span>);
+0488     plotParams = data.plotParamsOld;
+0489     plotParams(1).lineWidth = [];
+0490     plotParams(1).lineStyle = [];
+0491     plotParams(1).marker = [];
+0492     plotParams(1).lineColor = [];
+0493     plotParams(1).edgeColor = [];
+0494     plotParams(1).faceColor = [];
+0495     data.plotParams = plotParams; <span class="comment">%minimum plotParams configuration</span>
+0496 <span class="keyword">end</span>
+0497 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0498 guidata(hObject, handles);
+0499 
+0500 
+0501 <span class="comment">% --- Executes when user attempts to close figure1.</span>
+0502 <a name="_sub18" href="#_subfunctions" class="code">function figure1_CloseRequestFcn(hObject, eventdata, handles)</a>
+0503 <span class="comment">% hObject    handle to figure1 (see GCBO)</span>
+0504 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0505 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0506 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0507 data.destroy = 2; <span class="comment">%graph should NOT be destroyed, but changes should NOT be applied</span>
+0508 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0509 handles.OutputFlag = 1;
+0510 guidata(hObject, handles);
+0511 uiresume(handles.figure1);
+0512 <span class="comment">%delete(hObject);</span>
+0513 
+0514 <span class="comment">% ---- DEBUGGING OUTPUT---------------------------------------</span>
+0515 <span class="comment">% --- Executes on button press in pushbutton5.</span>
+0516 <a name="_sub19" href="#_subfunctions" class="code">function pushbutton5_Callback(hObject, eventdata, handles)</a>
+0517 <span class="comment">% hObject    handle to pushbutton5 (see GCBO)</span>
+0518 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0519 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0520 
+0521 <span class="comment">%display(['get(handles.edit_intStates,&quot;String&quot;: ' get(handles.edit_intStates,'String') ]);</span>
+0522 <a href="#_sub24" class="code" title="subfunction setPlotParams(hObject,handles)">setPlotParams</a>(hObject,handles);
+0523 <a href="#_sub23" class="code" title="subfunction compute_printVector(handles)">compute_printVector</a>(handles);
+0524 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0525 
+0526 n_template = get(handles.selector_dynamics, <span class="string">'String'</span>);
+0527 <span class="comment">%data.template = data.template_list{n_template};</span>
+0528 data.nodelabel = get(handles.edit_label, <span class="string">'String'</span>);
+0529 handles.nodelabel = get(handles.edit_label, <span class="string">'String'</span>);
+0530 data.neighbours = get(handles.connections, <span class="string">'String'</span>);
+0531 
+0532 assignin(<span class="string">'base'</span>,<span class="string">'printVector'</span>,data.printVector);
+0533 assignin(<span class="string">'base'</span>,<span class="string">'plotParamsOld'</span>,data.plotParamsOld);
+0534 <span class="keyword">if</span> isfield(data,{<span class="string">'plotParams'</span>})
+0535    assignin(<span class="string">'base'</span>,<span class="string">'plotParams'</span>,data.plotParams); 
+0536 <span class="keyword">end</span>
+0537 
+0538 <span class="comment">%display(['get(handles.selector_dynamics: ' num2str(n_template) ]);</span>
+0539 <span class="comment">%display(['data.template: ' data.template]);</span>
+0540 <span class="comment">%display(['data.template_list: ' data.template_list ]);</span>
+0541 <span class="comment">%display(['data.nodelabel: ' data.nodelabel ]);</span>
+0542 <span class="comment">%assignin('base','data',data);</span>
+0543 <a href="#_sub20" class="code" title="subfunction [argout] = checkPlotParams (handles)">checkPlotParams</a>(handles);
+0544  
+0545 <span class="comment">% -- check for the same number of states to plot and number of plot</span>
+0546 <span class="comment">% parameters</span>
+0547 <a name="_sub20" href="#_subfunctions" class="code">function [argout] = checkPlotParams (handles)</a>
+0548 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0549 <span class="comment">% number of states</span>
+0550 nrOfStates = str2double( get(handles.edit_intStates,<span class="string">'String'</span>) );
+0551 <span class="comment">% number of sets of plot params</span>
+0552 <span class="keyword">if</span> isfield(data,{<span class="string">'plotParams'</span>})
+0553     nrOfPlotParams = length( data.plotParams );
+0554     <a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>([<span class="string">'Number of states to plot: '</span> num2str( nrOfStates ) ]);
+0555     <a href="../../../mtids/subfunctions/matgraph/@graph/display.html" class="code" title="function display(g)">display</a>([<span class="string">'Number of sets of plot params: '</span> num2str( nrOfPlotParams ) ]);
+0556 <span class="keyword">end</span>
+0557 
+0558 <a name="_sub21" href="#_subfunctions" class="code">function editPlotParams(hObject, handles)</a>
+0559 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0560 
+0561 <span class="comment">%hard coded default-value =&gt; in future versions editable</span>
+0562 auswahl = 1; <span class="comment">%First colors according to order 'r','b','m','g','k'</span>
+0563              <span class="comment">%LineStyle, LineWidth, markers always set to: '-',1.0, 'none'</span>
+0564 
+0565 nrOfPlotStates = length(find(data.printVector));
+0566 lengthPlotParams = length(data.plotParams);
+0567 
+0568 colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
+0569 <span class="keyword">if</span> nrOfPlotStates == 0
+0570     data.plotParams(1).lineWidth = [];
+0571     data.plotParams(1).lineStyle = [];
+0572     data.plotParams(1).marker = [];
+0573     data.plotParams(1).lineColor = [];
+0574     data.plotParams(1).edgeColor = [];
+0575     data.plotParams(1).faceColor = [];
+0576 
+0577 <span class="keyword">elseif</span> lengthPlotParams &gt; nrOfPlotStates
+0578     data.plotParams = data.plotParams(1:nrOfPlotStates);
+0579 <span class="keyword">else</span>
+0580     data.plotParams(1:lengthPlotParams) = data.plotParams;
+0581 
+0582     <span class="keyword">if</span> nrOfPlotStates-lengthPlotParams &gt; 5
+0583         coltemp = zeros(nrOfPlotStates+lengthPlotParams,3);
+0584         coltemp(lengthPlotParams+1:lengthPlotParams+5,:) = colorTemplate;
+0585         <span class="keyword">for</span> i = lengthPlotParams+6:lengthPlotParams+nrOfPlotStates
+0586            coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; <span class="comment">%a factor f &lt; 1.0 makes each color channel darker</span>
+0587         <span class="keyword">end</span>
+0588         <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a> = coltemp;
+0589     <span class="keyword">else</span>
+0590         <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a> = [zeros(lengthPlotParams,3)  ; colorTemplate(1:nrOfPlotStates,:)];
+0591     <span class="keyword">end</span>
+0592 
+0593     <span class="keyword">switch</span> auswahl;
+0594         <span class="keyword">case</span> 1; 
+0595             <span class="keyword">for</span> i = lengthPlotParams+1:lengthPlotParams+nrOfPlotStates
+0596                 data.plotParams(i).lineWidth = <span class="string">'1.0'</span>;
+0597                 data.plotParams(i).lineStyle = <span class="string">'-'</span>;
+0598                 data.plotParams(i).marker = <span class="string">'none'</span>;
+0599                 data.plotParams(i).lineColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0600                 data.plotParams(i).edgeColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0601                 data.plotParams(i).faceColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0602             <span class="keyword">end</span>      
+0603     <span class="keyword">end</span>
+0604 <span class="keyword">end</span>
+0605 
+0606 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0607 <span class="comment">%guidata(hObject, handles);</span>
+0608 
+0609 <a name="_sub22" href="#_subfunctions" class="code">function generatePlotParams(hObject,handles)</a>
+0610 <span class="comment">%hard coded default-value =&gt; in future versions editable</span>
+0611 auswahl = 1; <span class="comment">%First colors according to order 'r','b','m','g','k'</span>
+0612              <span class="comment">%LineStyle, LineWidth, markers always set to: '-',1.0, 'none'</span>
+0613              
+0614 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0615 nrOfPlotStates = length(find(data.printVector));
+0616 lengthPlotParamsOld = length(data.plotParamsOld);
+0617              
+0618 colorTemplate = [[1 0 0];[0 0 1];[1 0 1];[0 1 0];[0 0 0]];
+0619 
+0620 <span class="keyword">if</span> nrOfPlotStates == 0
+0621     data.plotParams(1).lineWidth = [];
+0622     data.plotParams(1).lineStyle = [];
+0623     data.plotParams(1).marker = [];
+0624     data.plotParams(1).lineColor = [];
+0625     data.plotParams(1).edgeColor = [];
+0626     data.plotParams(1).faceColor = [];
+0627 
+0628 <span class="keyword">elseif</span> lengthPlotParamsOld &gt; nrOfPlotStates
+0629     data.plotParams = data.plotParamsOld(1:nrOfPlotStates);
+0630 <span class="keyword">else</span>
+0631     data.plotParams(1:lengthPlotParamsOld) = data.plotParamsOld;
+0632 
+0633     <span class="keyword">if</span> nrOfPlotStates-lengthPlotParamsOld &gt; 5
+0634         coltemp = zeros(nrOfPlotStates+lengthPlotParamsOld,3);
+0635         coltemp(lengthPlotParams+1:lengthPlotParamsOld+5,:) = colorTemplate;
+0636         <span class="keyword">for</span> i = lengthPlotParamsOld+6:lengthPlotParamsOld+nrOfPlotStates
+0637            coltemp(i,:) = [0.7*rand 0.7*rand 0.7*rand]; <span class="comment">%a factor f &lt; 1.0 makes each color channel darker</span>
+0638         <span class="keyword">end</span>
+0639         <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a> = coltemp;
+0640     <span class="keyword">else</span>
+0641         <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a> = [zeros(lengthPlotParamsOld,3)  ; colorTemplate(1:nrOfPlotStates-lengthPlotParamsOld,:)];
+0642     <span class="keyword">end</span>
+0643 
+0644     <span class="keyword">switch</span> auswahl;
+0645         <span class="keyword">case</span> 1; 
+0646             <span class="keyword">for</span> i = lengthPlotParamsOld+1:nrOfPlotStates
+0647                 data.plotParams(i).lineWidth = <span class="string">'1.0'</span>;
+0648                 data.plotParams(i).lineStyle = <span class="string">'-'</span>;
+0649                 data.plotParams(i).marker = <span class="string">'none'</span>;
+0650                 data.plotParams(i).lineColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0651                 data.plotParams(i).edgeColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0652                 data.plotParams(i).faceColor = <a href="../../../mtids/subfunctions/matgraph/@graph/color.html" class="code" title="function p = color(g,algo,max_time)">color</a>(i,:);
+0653             <span class="keyword">end</span>      
+0654     <span class="keyword">end</span>
+0655 <span class="keyword">end</span>
+0656 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0657 
+0658 
+0659 <a name="_sub23" href="#_subfunctions" class="code">function compute_printVector(handles)</a>
+0660 <span class="comment">%TODO: case distinction for templates with only one internal state</span>
+0661 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0662 <span class="keyword">if</span> handles.flagEditParams
+0663     outputDim = data.newTemplate{1,2}.dimension.outputs;
+0664     statesDim = data.newTemplate{1,2}.dimension.states;
+0665 <span class="keyword">else</span>
+0666     outputDim = data.oldTemplate{1,2}.dimension.outputs;
+0667     statesDim = data.oldTemplate{1,2}.dimension.states;
+0668 <span class="keyword">end</span>
+0669 data.printVector = zeros(1,outputDim+statesDim);
+0670 <span class="comment">%Read out manually the information about the states, which should be</span>
+0671 <span class="comment">%plotted. Format is: &quot;i j l&quot;, no brackets, just a spacer between the</span>
+0672 <span class="comment">%numbers.</span>
+0673 data.stringPlotOutputSignals = get(handles.edit_plotOutputSignals,<span class="string">'String'</span>);
+0674 <span class="keyword">if</span> data.flagCheck1  &amp;&amp; ~isempty(data.stringPlotOutputSignals)
+0675     plotOutputSignals = str2num(data.stringPlotOutputSignals);
+0676 <span class="keyword">else</span>
+0677     plotOutputSignals = 0;
+0678 <span class="keyword">end</span>
+0679 data.stringSelectedStates = get(handles.edit_selectedStates,<span class="string">'String'</span>);
+0680 <span class="keyword">if</span> data.flagCheck2 &amp;&amp; ~isempty(data.stringSelectedStates)
+0681     selectedStates = str2num(data.stringSelectedStates);
+0682 <span class="keyword">else</span>
+0683     selectedStates = 0;
+0684 <span class="keyword">end</span>
+0685 <span class="keyword">if</span> data.flagCheck1
+0686     <span class="keyword">for</span> kk = 1:outputDim
+0687         <span class="keyword">if</span> find(plotOutputSignals == kk)
+0688             data.printVector(kk) = 1;
+0689         <span class="keyword">end</span>
+0690     <span class="keyword">end</span>
+0691 <span class="keyword">end</span>
+0692 <span class="keyword">if</span> data.flagCheck2
+0693     <span class="keyword">for</span> kk = 1:statesDim
+0694         <span class="keyword">if</span> find(selectedStates == kk)
+0695             data.printVector(outputDim+kk) = 1;
+0696         <span class="keyword">end</span>
+0697     <span class="keyword">end</span>
+0698 <span class="keyword">end</span>
+0699 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0700 
+0701 
+0702 <a name="_sub24" href="#_subfunctions" class="code">function setPlotParams(hObject,handles)</a>
+0703 <a href="#_sub23" class="code" title="subfunction compute_printVector(handles)">compute_printVector</a>(handles);
+0704 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0705 nrOfPlotStates = length(find(data.printVector));
+0706 
+0707 <span class="comment">%consider the following cases:</span>
+0708 
+0709 <span class="comment">%no change to printVector (compared to printVectorOld)</span>
+0710 <span class="comment">%--- use plotParamsOld</span>
+0711 <span class="keyword">if</span> length(data.printVectorOld) == length(data.printVector ) &amp;&amp;  all(data.printVectorOld == data.printVector)
+0712     choice = 1;
+0713 
+0714 <span class="comment">%change to printVector AND plotParams does not exist =&gt; no input has been created yet</span>
+0715 <span class="comment">%--- generate default plotParams</span>
+0716 <span class="keyword">elseif</span> isfield(data,{<span class="string">'plotParams'</span>}) == 0
+0717     choice = 2;
+0718 
+0719 <span class="comment">%change to printVector, but nrOfPlotStates hasn't changed</span>
+0720 <span class="comment">%--- use plotParams</span>
+0721 <span class="keyword">elseif</span> isfield(data,{<span class="string">'plotParams'</span>} ) ~= 0 &amp;&amp; nrOfPlotStates == length(data.plotParams)
+0722     choice = 3;
+0723 
+0724 <span class="comment">%change to printVector AND nrOfPlotStates has changed, plotParams must</span>
+0725 <span class="comment">%exist</span>
+0726 <span class="comment">%--- edit plotParams</span>
+0727 <span class="keyword">elseif</span> isfield(data,{<span class="string">'plotParams'</span>} ) ~= 0
+0728     choice = 4;
+0729 
+0730 <span class="comment">%default case: generate default plotParams</span>
+0731 <span class="keyword">else</span>
+0732     choice = 2;
+0733 <span class="keyword">end</span>
+0734 <span class="keyword">switch</span> choice
+0735     <span class="keyword">case</span> 1;
+0736         <span class="keyword">if</span> isfield(data,{<span class="string">'plotParams'</span>}) == 0
+0737             data.plotParams = data.plotParamsOld;
+0738         <span class="keyword">end</span>
+0739     <span class="keyword">case</span> 2;
+0740         <a href="#_sub22" class="code" title="subfunction generatePlotParams(hObject,handles)">generatePlotParams</a>(hObject,handles);
+0741         data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0742     <span class="keyword">case</span> 3;
+0743         <span class="comment">%do nothing</span>
+0744     <span class="keyword">case</span> 4;
+0745         <a href="#_sub21" class="code" title="subfunction editPlotParams(hObject, handles)">editPlotParams</a>(hObject, handles);
+0746         data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0747 <span class="keyword">end</span>
+0748 setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0749 
+0750 
+0751 <span class="comment">% --- Executes on button press in push_editParams.</span>
+0752 <a name="_sub25" href="#_subfunctions" class="code">function push_editParams_Callback(hObject, eventdata, handles)</a>
+0753 <span class="comment">% hObject    handle to push_editParams (see GCBO)</span>
+0754 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0755 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0756 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0757 <span class="keyword">try</span>
+0758     <span class="keyword">if</span> isfield(data,<span class="string">'newTemplate'</span>)
+0759         [newTemplate data.templateSaved] = <a href="edit_paramValues.html" class="code" title="function varargout = edit_paramValues(varargin)">edit_paramValues</a>(data.newTemplate);
+0760     <span class="keyword">else</span>
+0761         [newTemplate data.templateSaved] = <a href="edit_paramValues.html" class="code" title="function varargout = edit_paramValues(varargin)">edit_paramValues</a>(data.oldTemplate);
+0762     <span class="keyword">end</span>
+0763     flagOkay = 1;
+0764 <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0765     flagOkay = 0;
+0766 <span class="keyword">end</span>
+0767 <span class="keyword">if</span> flagOkay
+0768     data.newTemplate = newTemplate;
+0769     set(handles.edit_intStates,<span class="string">'String'</span>,num2str(data.newTemplate{1,2}.dimension.states));
+0770     set(handles.text_noOfOutputSignals,<span class="string">'String'</span>,num2str(data.newTemplate{1,2}.dimension.outputs));
+0771     setappdata(handles.figure1,<span class="string">'appData'</span>,data);
+0772     handles.flagEditParams = 1;
+0773     guidata(hObject, handles);
+0774 <span class="keyword">end</span>
+0775 
+0776 <span class="comment">% --- Executes on button press in push_consistency.</span>
+0777 <a name="_sub26" href="#_subfunctions" class="code">function push_consistency_Callback(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;*INUSL&gt;</span>
+0778 <span class="comment">% hObject    handle to push_consistency (see GCBO)</span>
+0779 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0780 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0781 data = getappdata(handles.figure1,<span class="string">'appData'</span>);
+0782 <span class="keyword">if</span> handles.flagEditParams
+0783     templ = data.newTemplate;
+0784 <span class="keyword">else</span>
+0785     templ = data.oldTemplate;
+0786 <span class="keyword">end</span>
+0787 [isCorrect error]=<a href="../../../mtids/subfunctions/checkNodeInput.html" class="code" title="function varargout = checkNodeInput( varargin )">checkNodeInput</a>(data.nodenumber,data.handleMainFigure,templ);
+0788 <span class="keyword">if</span> ~isCorrect
+0789     errStrg = [];
+0790     <span class="keyword">for</span> kk = 1:length( error.DimMismatch )
+0791         errStrg = [errStrg <span class="string">', '</span> error.DimMismatch{kk}];
+0792     <span class="keyword">end</span>
+0793     errStrg = errStrg(3:end);
+0794     disp([<span class="string">'For node '</span> num2str(data.nodenumber) <span class="string">': Input variable(s) &quot;'</span> errStrg <span class="string">'&quot; has (have) not correct dimension(s).'</span>]);
+0795 <span class="keyword">else</span>
+0796     disp([<span class="string">'For node '</span> num2str(data.nodenumber) <span class="string">': Input variables are consistent.'</span>]);
+0797 <span class="keyword">end</span>
+0798 
+0799 
+0800 <span class="comment">%%%%%</span>
+0801 
+0802 
+0803 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0804 <a name="_sub27" href="#_subfunctions" class="code">function edit_plotOutputSignals_CreateFcn(hObject, eventdata, handles)</a>
+0805 <span class="comment">% hObject    handle to edit_plotOutputSignals (see GCBO)</span>
+0806 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0807 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0808 
+0809 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0810 <span class="comment">%       See ISPC and COMPUTER.</span>
+0811 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0812     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0813 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

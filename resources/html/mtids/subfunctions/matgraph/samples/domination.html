@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of domination</title>
+  <meta name="keywords" content="domination">
+  <meta name="description" content="% Domination in graphs">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; domination.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>domination
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Domination in graphs</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Domination in graphs
+ We demonstrate how to find a minimum dominating set in a graph. This requires
+ Matlab's Optimization Toolbox. We illustrate this using Petersen's graph
+ and a grid graph.
+% Petersen's graph example</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>	cdraw(g,dir,coloring) -- draw g with a given vertex coloring</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/dom.html" class="code" title="function [d,S] = dom(g)">dom</a>	[d,S] = dom(g) --- domination number of g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>	grid(g,a,b) --- create an a-by-b grid graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/petersen.html" class="code" title="function petersen(g)">petersen</a>	petersen(g) --- overwrite g with the Petersen graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../../../mtids/subfunctions/matgraph/@partition/partition.html" class="code" title="function p = partition(param)">partition</a>	partition --- constructor for the partition class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Domination in graphs</span>
+0002 <span class="comment">% We demonstrate how to find a minimum dominating set in a graph. This requires</span>
+0003 <span class="comment">% Matlab's Optimization Toolbox. We illustrate this using Petersen's graph</span>
+0004 <span class="comment">% and a grid graph.</span>
+0005 <span class="comment">%% Petersen's graph example</span>
+0006 g = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0007 <a href="../../../../mtids/subfunctions/matgraph/@graph/petersen.html" class="code" title="function petersen(g)">petersen</a>(g);
+0008 [d,S]=<a href="../../../../mtids/subfunctions/matgraph/@graph/dom.html" class="code" title="function [d,S] = dom(g)">dom</a>(g);
+0009 disp([<span class="string">'The domination number of the Petersen graph is '</span>, int2str(d)])
+0010 notS = setdiff(1:<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(g), S);
+0011 p = <a href="../../../../mtids/subfunctions/matgraph/@partition/partition.html" class="code" title="function p = partition(param)">partition</a>({S,notS});
+0012 clf;<a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>(g,p)
+0013 <span class="comment">%% Grid graph example</span>
+0014 <a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>(g,5,5);
+0015 [d,S]=<a href="../../../../mtids/subfunctions/matgraph/@graph/dom.html" class="code" title="function [d,S] = dom(g)">dom</a>(g);
+0016 disp([<span class="string">'The domination number of the 5-by-5 grid is '</span>, int2str(d)])
+0017 notS = setdiff(1:<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(g), S);
+0018 p = <a href="../../../../mtids/subfunctions/matgraph/@partition/partition.html" class="code" title="function p = partition(param)">partition</a>({S,notS});
+0019 clf;<a href="../../../../mtids/subfunctions/matgraph/@graph/cdraw.html" class="code" title="function cdraw(g,dir,coloring,line_style,color_matrix)">cdraw</a>(g,p)
+0020 <span class="comment">%% Release storage</span>
+0021 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(g)</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

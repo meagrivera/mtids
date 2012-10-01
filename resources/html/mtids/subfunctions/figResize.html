@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of figResize</title>
+  <meta name="keywords" content="figResize">
+  <meta name="description" content="FIGRESIZE figure resize function for pp2.fig">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; figResize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>figResize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>FIGRESIZE figure resize function for pp2.fig</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function figResize(src,evt,handles) %#ok<INUSL> </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">FIGRESIZE figure resize function for pp2.fig
+
+ This function works as a resize function for the figure pp2.fig.
+
+ INPUT:    src      -- Handles to invoking function
+           evt      -- (unused)
+           handles  -- Struct with handles of parent figure
+
+ OUTPUT: (none)     -- Position elements are set directly
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/figures/import_dynamic_params.html" class="code" title="function varargout = import_dynamic_params(varargin)">import_dynamic_params</a>	IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS</li><li><a href="newTablePosition.html" class="code" title="function newTablePosition( varargin )">newTablePosition</a>	NEWTABLEPOSITION set new layout position for import_dynamic_params</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function figResize(src,evt,handles) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0002 <span class="comment">%FIGRESIZE figure resize function for pp2.fig</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function works as a resize function for the figure pp2.fig.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% INPUT:    src      -- Handles to invoking function</span>
+0007 <span class="comment">%           evt      -- (unused)</span>
+0008 <span class="comment">%           handles  -- Struct with handles of parent figure</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% OUTPUT: (none)     -- Position elements are set directly</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0013 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0014 
+0015 topFrame = 30;
+0016 fpos = get(src,<span class="string">'Position'</span>);
+0017 fposPanel = get(handles.uipanel1,<span class="string">'Position'</span>);
+0018 fposTable = get(handles.t,<span class="string">'Position'</span>);
+0019 set(handles.uipanel1,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0020     [fposPanel(1) fposPanel(2) fpos(3)-27 fpos(4)-20]);
+0021 bottomTable = fpos(4) - fposTable(4) - topFrame;
+0022 set(handles.t,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0023     [fposTable(1) bottomTable fpos(3)-45 fposTable(4) ]);
+0024 fposPushbutton1 = get(handles.pushbutton1,<span class="string">'Position'</span>);
+0025 fposPushbutton2 = get(handles.pushbutton2,<span class="string">'Position'</span>);
+0026 fposPushbutton3 = get(handles.pushbutton3,<span class="string">'Position'</span>);
+0027 fposPushbutton4 = get(handles.pushbutton4,<span class="string">'Position'</span>);
+0028 fposPushbutton5 = get(handles.pushbutton5,<span class="string">'Position'</span>);
+0029 fposPushbutton6 = get(handles.pushbutton6,<span class="string">'Position'</span>);
+0030 set(handles.pushbutton1,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0031     [0.1*fpos(3) fposPushbutton1(2) fposPushbutton1(3) fposPushbutton1(4)]);
+0032 set(handles.pushbutton2,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0033     [0.1*fpos(3) fposPushbutton2(2) fposPushbutton2(3) fposPushbutton2(4)]);
+0034 set(handles.pushbutton3,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0035     [0.4*fpos(3) fposPushbutton3(2) fposPushbutton3(3) fposPushbutton3(4)]);
+0036 set(handles.pushbutton4,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0037     [0.4*fpos(3) fposPushbutton4(2) fposPushbutton4(3) fposPushbutton4(4)]);
+0038 set(handles.pushbutton5,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0039     [0.7*fpos(3) fposPushbutton5(2) fposPushbutton5(3) fposPushbutton5(4)]);
+0040 set(handles.pushbutton6,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0041     [0.7*fpos(3) fposPushbutton6(2) fposPushbutton6(3) fposPushbutton6(4)]);
+0042 fposPanelTextInputSpecs = get(handles.PanelTextInputSpecs,<span class="string">'Position'</span>);
+0043 set(handles.PanelTextInputSpecs,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0044     [fposPanelTextInputSpecs(1) fposPanelTextInputSpecs(2) fpos(3)-2*fposPanelTextInputSpecs(1)<span class="keyword">...</span>
+0045     fposPanelTextInputSpecs(4)]);
+0046 <span class="comment">%      posTextBlockTypeOld = get(handles.textBlockType,'Position');</span>
+0047 <span class="comment">%      figureFrames = get_figureFrames();</span>
+0048 <span class="comment">%      posTextBlockTypeNew = [posTextBlockTypeOld(1) ...</span>
+0049 <span class="comment">%          fpos(4)-1.725*figureFrames.top ...</span>
+0050 <span class="comment">%          posTextBlockTypeOld(3) ...</span>
+0051 <span class="comment">%          posTextBlockTypeOld(4)];</span>
+0052 <span class="comment">%      set(handles.textBlockType,'Position',posTextBlockTypeNew);</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

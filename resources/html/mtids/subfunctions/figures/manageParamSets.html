@@ -1,0 +1,1080 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of manageParamSets</title>
+  <meta name="keywords" content="manageParamSets">
+  <meta name="description" content="MANAGEPARAMSETS gui for managing templates and its numerical parameter sets">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">figures</a> &gt; manageParamSets.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\figures&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>manageParamSets
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>MANAGEPARAMSETS gui for managing templates and its numerical parameter sets</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = manageParamSets(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MANAGEPARAMSETS gui for managing templates and its numerical parameter sets
+
+ This GUI enables the import of new dynamic templates to MTIDS and the
+ management of its numerical parameter sets. Principally, the relation of
+ a template to its num. values sets is a 1N relation, which means, one
+ template may obtain N param sets. Furthermore, theses sets can be
+ deactivated for their use in MTIDS.
+
+ INPUT:    (1) -- Cell array, containing a list of templates (see overview
+                   of applied data structures in MTIDS, folder
+                   'resources')
+
+ OUTPUT:   (1) -- Template list, similar to input
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/subfunctions/get_BlockParams.html" class="code" title="function [ paramname paramvalue ] = get_BlockParams( varargin )">get_BlockParams</a>	GET_BLOCKPARAMS block and parameter names for predefined block types</li><li><a href="../../../mtids/subfunctions/isValidData.html" class="code" title="function varargout = isValidData( varargin )">isValidData</a>	ISVALIDDATA Test prompted user data for feasiblity</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>	delete --- delete vertices or edges from a graph</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/load.html" class="code" title="function load(g,filename)">load</a>	load(g,filename) --- read a saved graph on disk</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/save.html" class="code" title="function save(g,filename)">save</a>	save(g,filename) --- save a graph to disk</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li><li><a href="../../../mtids/subfunctions/mtids_main/readImportedTemplates.html" class="code" title="function varargout = readImportedTemplates( varargin )">readImportedTemplates</a>	READIMPORTEDTEMPLATES reads Simulink templates out of folder</li><li><a href="../../../mtids/subfunctions/saveParamSet2File.html" class="code" title="function varargout = saveParamSet2File( varargin )">saveParamSet2File</a>	SAVEPARAMSET2FILE storing parameter set for a template</li><li><a href="../../../mtids/subfunctions/testingValueSet.html" class="code" title="function varargout = testingValueSet( varargin )">testingValueSet</a>	TESTINGVALUESET checking numerical parameters of template</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/mtids.html" class="code" title="function varargout = mtids(varargin)">mtids</a>	MTIDS Version 1.2</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function manageParamSets_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = manageParamSets_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function handles = uipanel_mode_SelectionChangeFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function setPanelModeActions( varargin )</a></li><li><a href="#_sub5" class="code">function initDropdownMenuTemplates( handles )</a></li><li><a href="#_sub6" class="code">function handles = popupmenu_template_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function popupmenu_template_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub8" class="code">function popupmenu_valueSet_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function setObjectPositions( handles )</a></li><li><a href="#_sub10" class="code">function edit_save2File_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub11" class="code">function TextField1InputSpecs_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub12" class="code">function TextField2InputSpecs_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub13" class="code">function pushbutton_loadTemplate_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub14" class="code">function pushbutton_save2File_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub15" class="code">function pushbutton_addBlock_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub16" class="code">function pushbutton_removeBlock_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub17" class="code">function pushbutton_addParameter_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub18" class="code">function pushbutton_removeParameter_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub19" class="code">function pushbutton_testValueSet_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub20" class="code">function pushbutton_finishImport_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub21" class="code">function handles = popupmenu_valueSet_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub22" class="code">function pushbutton_deleteSet_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub23" class="code">function handles = togglebutton_setActive_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub24" class="code">function table_CellSelectionCallback(src,evt,handles)</a></li><li><a href="#_sub25" class="code">function handles = loadTableFromStruct( hObject,handles )</a></li><li><a href="#_sub26" class="code">function table_CellEditCallbackFcn(src,evt,handles)</a></li><li><a href="#_sub27" class="code">function handles = handleOpenSystems( handles )</a></li><li><a href="#_sub28" class="code">function handles = buildTableFromTemplate( handles )</a></li><li><a href="#_sub29" class="code">function pushbutton_debug_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub30" class="code">function edit_save2File_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub31" class="code">function figure1_CloseRequestFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub32" class="code">function togglebutton_setActive_ButtonDownFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub33" class="code">function TextField1InputSpecs_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub34" class="code">function TextField2InputSpecs_Callback(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = manageParamSets(varargin)</a>
+0002 <span class="comment">%MANAGEPARAMSETS gui for managing templates and its numerical parameter sets</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This GUI enables the import of new dynamic templates to MTIDS and the</span>
+0005 <span class="comment">% management of its numerical parameter sets. Principally, the relation of</span>
+0006 <span class="comment">% a template to its num. values sets is a 1N relation, which means, one</span>
+0007 <span class="comment">% template may obtain N param sets. Furthermore, theses sets can be</span>
+0008 <span class="comment">% deactivated for their use in MTIDS.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% INPUT:    (1) -- Cell array, containing a list of templates (see overview</span>
+0011 <span class="comment">%                   of applied data structures in MTIDS, folder</span>
+0012 <span class="comment">%                   'resources')</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% OUTPUT:   (1) -- Template list, similar to input</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0017 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0018 
+0019 <span class="comment">%      MANAGEPARAMSETS, by itself, creates a new MANAGEPARAMSETS or raises the existing</span>
+0020 <span class="comment">%      singleton*.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%      H = MANAGEPARAMSETS returns the handle to a new MANAGEPARAMSETS or the handle to</span>
+0023 <span class="comment">%      the existing singleton*.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%      MANAGEPARAMSETS('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0026 <span class="comment">%      function named CALLBACK in MANAGEPARAMSETS.M with the given input arguments.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%      MANAGEPARAMSETS('Property','Value',...) creates a new MANAGEPARAMSETS or raises the</span>
+0029 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0030 <span class="comment">%      applied to the GUI before manageParamSets_OpeningFcn gets called.  An</span>
+0031 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0032 <span class="comment">%      stop.  All inputs are passed to manageParamSets_OpeningFcn via varargin.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0035 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0038 
+0039 <span class="comment">% Edit the above text to modify the response to help manageParamSets</span>
+0040 
+0041 <span class="comment">% Last Modified by GUIDE v2.5 26-Sep-2012 08:51:27</span>
+0042 
+0043 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0044 gui_Singleton = 1;
+0045 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0046                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0047                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction manageParamSets_OpeningFcn(hObject, eventdata, handles, varargin)">manageParamSets_OpeningFcn</a>, <span class="keyword">...</span>
+0048                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = manageParamSets_OutputFcn(hObject, eventdata, handles)">manageParamSets_OutputFcn</a>, <span class="keyword">...</span>
+0049                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0050                    <span class="string">'gui_Callback'</span>,   []);
+0051 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0052     gui_State.gui_Callback = str2func(varargin{1});
+0053 <span class="keyword">end</span>
+0054 
+0055 <span class="keyword">if</span> nargout
+0056     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0057 <span class="keyword">else</span>
+0058     gui_mainfcn(gui_State, varargin{:});
+0059 <span class="keyword">end</span>
+0060 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0061 
+0062 
+0063 <span class="comment">% --- Executes just before manageParamSets is made visible.</span>
+0064 <a name="_sub1" href="#_subfunctions" class="code">function manageParamSets_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0065 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0066 <span class="comment">% hObject    handle to figure</span>
+0067 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0068 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0069 <span class="comment">% varargin   command line arguments to manageParamSets (see VARARGIN)</span>
+0070 
+0071 <span class="comment">% Choose default command line output for manageParamSets</span>
+0072 handles.output = hObject;
+0073 handles.mode = <span class="string">'edit'</span>;
+0074 template_list = varargin{1};
+0075 handles.readTemplateList = 0;
+0076 handles.templateNames = template_list(:,1);
+0077 handles.templateSets = template_list(:,4);
+0078 handles.flagNewTemplate = 0;
+0079 handles.sys2Import = cell(0,2);
+0080 handles.noChanges = 1;
+0081 handles.newImportStarted = 0;
+0082 handles.succTest = 0;
+0083 <span class="comment">% initialize dropdown menues</span>
+0084 <a href="#_sub5" class="code" title="subfunction initDropdownMenuTemplates( handles )">initDropdownMenuTemplates</a>( handles );
+0085 handles = <a href="#_sub6" class="code" title="subfunction handles = popupmenu_template_Callback(hObject, eventdata, handles)">popupmenu_template_Callback</a>(handles.popupmenu_template, eventdata, handles);
+0086 <a href="#_sub4" class="code" title="subfunction setPanelModeActions( varargin )">setPanelModeActions</a>( handles,hObject );
+0087 <a href="#_sub9" class="code" title="subfunction setObjectPositions( handles )">setObjectPositions</a>( handles );
+0088 handles = <a href="#_sub25" class="code" title="subfunction handles = loadTableFromStruct( hObject,handles )">loadTableFromStruct</a>( handles.popupmenu_valueSet,handles );
+0089 handles = <a href="#_sub27" class="code" title="subfunction handles = handleOpenSystems( handles )">handleOpenSystems</a>( handles );
+0090 <span class="comment">% Update handles structure</span>
+0091 guidata(hObject, handles);
+0092 <span class="comment">% UIWAIT makes manageParamSets wait for user response (see UIRESUME)</span>
+0093 uiwait(handles.figure1);
+0094 
+0095 
+0096 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0097 <a name="_sub2" href="#_subfunctions" class="code">function varargout = manageParamSets_OutputFcn(hObject, eventdata, handles) </a>
+0098 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0099 <span class="comment">% hObject    handle to figure</span>
+0100 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0101 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0102 
+0103 <span class="comment">% Get default command line output from handles structure</span>
+0104 varargout{1} = handles.output;
+0105 <a href="../../../mtids/subfunctions/matgraph/@graph/delete.html" class="code" title="function delete(g,i,j,dir)">delete</a>(hObject);
+0106 
+0107 
+0108 <span class="comment">% --- Executes when selected object is changed in uipanel_mode.</span>
+0109 <a name="_sub3" href="#_subfunctions" class="code">function handles = uipanel_mode_SelectionChangeFcn(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;*DEFNU&gt;</span>
+0110 <span class="comment">% hObject    handle to the selected object in uipanel_mode</span>
+0111 <span class="comment">% eventdata  structure with the following fields (see UIBUTTONGROUP)</span>
+0112 <span class="comment">%    EventName: string 'SelectionChanged' (read only)</span>
+0113 <span class="comment">%    OldValue: handle of the previously selected object or empty if none was selected</span>
+0114 <span class="comment">%    NewValue: handle of the currently selected object</span>
+0115 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0116 <span class="keyword">switch</span> get(eventdata.NewValue,<span class="string">'Tag'</span>)
+0117     <span class="keyword">case</span> <span class="string">'radiobutton_editParamSets'</span>;
+0118         <span class="keyword">if</span> handles.newImportStarted
+0119             choice = questdlg(<span class="string">'Discard current template import?'</span>, <span class="keyword">...</span>
+0120                 <span class="string">'Switch mode'</span>, <span class="keyword">...</span>
+0121                 <span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'No'</span>);
+0122             <span class="keyword">switch</span> choice
+0123                 <span class="keyword">case</span> <span class="string">'Yes'</span>;
+0124                     handles.mode = <span class="string">'edit'</span>;
+0125                 <span class="keyword">case</span> <span class="string">'No'</span>;
+0126                     set(handles.radiobutton_editParamSets,<span class="string">'Value'</span>,0.0);
+0127                     set(handles.radiobutton_newImport,<span class="string">'Value'</span>,1.0);
+0128                     <span class="keyword">return</span>
+0129             <span class="keyword">end</span>
+0130         <span class="keyword">else</span>
+0131             handles.mode = <span class="string">'edit'</span>;
+0132         <span class="keyword">end</span>
+0133     <span class="keyword">case</span> <span class="string">'radiobutton_newImport'</span>;
+0134         <span class="keyword">if</span> ~handles.noChanges
+0135             choice = questdlg(<span class="string">'Discard changes to current parameter set?'</span>, <span class="keyword">...</span>
+0136                 <span class="string">'Switch mode'</span>, <span class="keyword">...</span>
+0137                 <span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'No'</span>);
+0138             <span class="keyword">switch</span> choice
+0139                 <span class="keyword">case</span> <span class="string">'Yes'</span>;
+0140                     handles.mode = <span class="string">'import'</span>;
+0141 <span class="comment">%                     handles.noChanges = 1;</span>
+0142                 <span class="keyword">case</span> <span class="string">'No'</span>;
+0143                     set(handles.radiobutton_editParamSets,<span class="string">'Value'</span>,1.0);
+0144                     set(handles.radiobutton_newImport,<span class="string">'Value'</span>,0.0);                    
+0145                     <span class="keyword">return</span>
+0146             <span class="keyword">end</span>
+0147         <span class="keyword">else</span>
+0148             handles.mode = <span class="string">'import'</span>;
+0149         <span class="keyword">end</span>
+0150 <span class="keyword">end</span>
+0151 <a href="#_sub4" class="code" title="subfunction setPanelModeActions( varargin )">setPanelModeActions</a>( handles,hObject );
+0152 handles = <a href="#_sub27" class="code" title="subfunction handles = handleOpenSystems( handles )">handleOpenSystems</a>( handles );
+0153 handles = <a href="#_sub25" class="code" title="subfunction handles = loadTableFromStruct( hObject,handles )">loadTableFromStruct</a>( hObject,handles );
+0154 guidata(hObject, handles);
+0155 
+0156 
+0157 <a name="_sub4" href="#_subfunctions" class="code">function setPanelModeActions( varargin )</a>
+0158 <span class="comment">%SETPANELMODEACTIONS</span>
+0159 <span class="comment">% This functions resets the layout of the panel &quot;uipanel_modeActions&quot;,</span>
+0160 <span class="comment">% depending on which mode was chosen</span>
+0161 handles     = varargin{1};
+0162 hObject     = varargin{2};
+0163 <span class="keyword">switch</span> handles.mode
+0164     <span class="keyword">case</span> <span class="string">'edit'</span>;
+0165         title = <span class="string">'Choose parameter set'</span>;
+0166         set(handles.pushbutton_loadTemplate,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0167         set(handles.popupmenu_template,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0168         set(handles.popupmenu_valueSet,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0169         set(handles.pushbutton_deleteSet,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0170         set(handles.togglebutton_setActive,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0171         set(handles.pushbutton_addBlock,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0172         set(handles.pushbutton_removeBlock,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0173         set(handles.pushbutton_addParameter,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0174         set(handles.pushbutton_removeParameter,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0175         set(handles.pushbutton_finishImport,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0176         set(handles.pushbutton_save2File,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0177     <span class="keyword">case</span> <span class="string">'import'</span>;
+0178         title = <span class="string">'Load template from file'</span>;
+0179         set(handles.pushbutton_loadTemplate,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0180         set(handles.popupmenu_template,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0181         set(handles.popupmenu_valueSet,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0182         set(handles.pushbutton_deleteSet,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0183         set(handles.togglebutton_setActive,<span class="string">'Visible'</span>,<span class="string">'off'</span>);        
+0184         set(handles.pushbutton_addBlock,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0185         set(handles.pushbutton_removeBlock,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0186         set(handles.pushbutton_addParameter,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0187         set(handles.pushbutton_removeParameter,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0188         set(handles.pushbutton_finishImport,<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0189         set(handles.pushbutton_save2File,<span class="string">'Visible'</span>,<span class="string">'off'</span>);
+0190 <span class="keyword">end</span>
+0191 set(handles.uipanel_modeActions,<span class="string">'Title'</span>,title);
+0192 
+0193 
+0194 <a name="_sub5" href="#_subfunctions" class="code">function initDropdownMenuTemplates( handles )</a>
+0195 <span class="comment">%INITDROPDOWNMENUES</span>
+0196 <span class="comment">%  This function initializes the dropdown menues in the panel &quot;Mode</span>
+0197 <span class="comment">%  depending actions&quot; with the loaded templates in &quot;data.template_list&quot; and</span>
+0198 <span class="comment">%  the given parameter value sets.</span>
+0199 <span class="keyword">if</span> ~handles.flagNewTemplate
+0200     set(handles.popupmenu_template, <span class="string">'String'</span>, handles.templateNames);
+0201 <span class="keyword">else</span>
+0202     <span class="comment">% do something</span>
+0203 <span class="keyword">end</span>
+0204 
+0205 
+0206 <span class="comment">% --- Executes on selection change in popupmenu_template.</span>
+0207 <a name="_sub6" href="#_subfunctions" class="code">function handles = popupmenu_template_Callback(hObject, eventdata, handles)</a>
+0208 <span class="comment">% hObject    handle to popupmenu_template (see GCBO)</span>
+0209 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0210 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0211 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_template contents as cell array</span>
+0212 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_template</span>
+0213 idxDynSelector = get(hObject,<span class="string">'Value'</span>);
+0214 <span class="keyword">if</span> ~handles.flagNewTemplate
+0215     nrOfParamSets = length(handles.templateSets{idxDynSelector});
+0216 <span class="comment">%     length( handles.templateNames{get(hObject,'Value'),4} );</span>
+0217 <span class="keyword">else</span>
+0218     <span class="comment">% do something</span>
+0219 <span class="keyword">end</span>
+0220 drop_string = cell( nrOfParamSets,1 );
+0221 <span class="keyword">for</span> i=1:nrOfParamSets
+0222     <span class="comment">% Check if template contains a name for a set</span>
+0223     <span class="keyword">if</span> isfield(handles.templateSets{idxDynSelector}(i),<span class="string">'setName'</span>) &amp;&amp;<span class="keyword">...</span>
+0224             ~isempty(handles.templateSets{idxDynSelector}(i).setName)
+0225         drop_string{i} = handles.templateSets{idxDynSelector}(i).setName;
+0226     <span class="keyword">else</span>
+0227         drop_string{i} = <span class="string">'&lt;no name set&gt;'</span>;
+0228     <span class="keyword">end</span>
+0229 <span class="keyword">end</span>
+0230 set(handles.popupmenu_valueSet, <span class="string">'String'</span>, drop_string,<span class="string">'Value'</span>,1);
+0231 handles = <a href="#_sub27" class="code" title="subfunction handles = handleOpenSystems( handles )">handleOpenSystems</a>( handles );
+0232 handles = <a href="#_sub21" class="code" title="subfunction handles = popupmenu_valueSet_Callback(hObject, eventdata, handles) ">popupmenu_valueSet_Callback</a>(hObject, eventdata, handles);
+0233 guidata(handles.figure1, handles);
+0234 
+0235 
+0236 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0237 <a name="_sub7" href="#_subfunctions" class="code">function popupmenu_template_CreateFcn(hObject, eventdata, handles)</a>
+0238 <span class="comment">% hObject    handle to popupmenu_template (see GCBO)</span>
+0239 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0240 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0241 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0242 <span class="comment">%       See ISPC and COMPUTER.</span>
+0243 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0244     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0245 <span class="keyword">end</span>
+0246 
+0247 
+0248 
+0249 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0250 <a name="_sub8" href="#_subfunctions" class="code">function popupmenu_valueSet_CreateFcn(hObject, eventdata, handles)</a>
+0251 <span class="comment">% hObject    handle to popupmenu_valueSet (see GCBO)</span>
+0252 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0253 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0254 
+0255 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0256 <span class="comment">%       See ISPC and COMPUTER.</span>
+0257 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0258     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0259 <span class="keyword">end</span>
+0260 
+0261 <a name="_sub9" href="#_subfunctions" class="code">function setObjectPositions( handles )</a>
+0262 <span class="comment">%SETOBJECTPOSITIONS</span>
+0263 <span class="comment">% This function set some parameters of the uicontrol elements in the panel</span>
+0264 <span class="comment">% &quot;mode depending actions&quot;</span>
+0265 temp = get(handles.pushbutton_loadTemplate,<span class="string">'Position'</span>);
+0266 posPopupmenu_template = get(handles.popupmenu_template,<span class="string">'Position'</span>);
+0267 posPopupmenu_template(1) = temp(1);
+0268 posPopupmenu_valueSet = get(handles.popupmenu_valueSet,<span class="string">'Position'</span>);
+0269 posPopupmenu_valueSet(1) = temp(1);
+0270 set(handles.popupmenu_template,<span class="string">'Position'</span>,posPopupmenu_template);
+0271 set(handles.popupmenu_valueSet,<span class="string">'Position'</span>,posPopupmenu_valueSet);
+0272 temp1 = get(handles.pushbutton_finishImport,<span class="string">'Position'</span>);
+0273 set(handles.pushbutton_deleteSet,<span class="string">'Position'</span>,temp1);
+0274 
+0275 
+0276 
+0277 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0278 <a name="_sub10" href="#_subfunctions" class="code">function edit_save2File_CreateFcn(hObject, eventdata, handles)</a>
+0279 <span class="comment">% hObject    handle to edit_save2File (see GCBO)</span>
+0280 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0281 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0282 
+0283 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0284 <span class="comment">%       See ISPC and COMPUTER.</span>
+0285 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0286     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0287 <span class="keyword">end</span>
+0288 
+0289 
+0290 
+0291 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0292 <a name="_sub11" href="#_subfunctions" class="code">function TextField1InputSpecs_CreateFcn(hObject, eventdata, handles)</a>
+0293 <span class="comment">% hObject    handle to TextField1InputSpecs (see GCBO)</span>
+0294 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0295 <span class="comment">% handles    empty - handles1 not created until after all CreateFcns called</span>
+0296 
+0297 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0298 <span class="comment">%       See ISPC and COMPUTER.</span>
+0299 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0300     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0301 <span class="keyword">end</span>
+0302 
+0303 
+0304 
+0305 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0306 <a name="_sub12" href="#_subfunctions" class="code">function TextField2InputSpecs_CreateFcn(hObject, eventdata, handles)</a>
+0307 <span class="comment">% hObject    handle to TextField2InputSpecs (see GCBO)</span>
+0308 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0309 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0310 
+0311 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0312 <span class="comment">%       See ISPC and COMPUTER.</span>
+0313 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0314     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0315 <span class="keyword">end</span>
+0316 
+0317 
+0318 <span class="comment">% --- Executes on button press in pushbutton_loadTemplate.</span>
+0319 <a name="_sub13" href="#_subfunctions" class="code">function pushbutton_loadTemplate_Callback(hObject, eventdata, handles)</a>
+0320 <span class="comment">% hObject    handle to pushbutton_loadTemplate (see GCBO)</span>
+0321 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0322 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0323 [filename, pathname] = uigetfile( <span class="keyword">...</span>
+0324 {<span class="string">'*.mdl'</span>,<span class="string">'Simulink model template(*.mdl)'</span>;
+0325    <span class="string">'*.*'</span>,  <span class="string">'All Files (*.*)'</span>}, <span class="keyword">...</span>
+0326    <span class="string">'Import Simulink model templates'</span>, <span class="keyword">...</span>
+0327    <span class="string">'MultiSelect'</span>, <span class="string">'on'</span>);
+0328 <span class="keyword">if</span> any(~filename) || any(~pathname)
+0329     <span class="keyword">return</span>
+0330 <span class="keyword">elseif</span> any(strcmp( handles.templateNames, regexp(filename,<span class="string">'\w*(?=.mdl)'</span>,<span class="string">'match'</span>) ))
+0331     errordlg({<span class="string">'A template with this name still exists.'</span>,<span class="keyword">...</span>
+0332         <span class="string">'Please check if the new template is not identical to the existing one.'</span>,<span class="keyword">...</span>
+0333         <span class="string">'If so, use &quot;Edit parameter set&quot; to create new value sets.'</span>,<span class="keyword">...</span>
+0334         <span class="string">'If not, rename new template.'</span>});
+0335     <span class="keyword">return</span>
+0336 <span class="keyword">end</span>
+0337 <span class="keyword">if</span> isfield(handles,<span class="string">'sys2Import'</span>)
+0338     howManySys = length(handles.sys2Import(:,1));
+0339 <span class="keyword">else</span>
+0340     howManySys = 0;
+0341 <span class="keyword">end</span>
+0342 handles.sys2Import{howManySys+1,1} = filename;
+0343 handles.sys2Import{howManySys+1,2} = pathname;
+0344 <a href="#_sub27" class="code" title="subfunction handles = handleOpenSystems( handles )">handleOpenSystems</a>( handles );
+0345 m=regexp( filename, <span class="string">'\.'</span>, <span class="string">'split'</span>,<span class="string">'once'</span>);
+0346 handles.sysname = m{1};
+0347 handles = <a href="#_sub28" class="code" title="subfunction handles = buildTableFromTemplate( handles )">buildTableFromTemplate</a>( handles );
+0348 guidata(hObject, handles);
+0349 
+0350 <span class="comment">% --- Executes on button press in pushbutton_save2File.</span>
+0351 <a name="_sub14" href="#_subfunctions" class="code">function pushbutton_save2File_Callback(hObject, eventdata, handles)</a>
+0352 <span class="comment">% hObject    handle to pushbutton_save2File (see GCBO)</span>
+0353 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0354 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0355 disp(<span class="string">'Saving parameter set to file...'</span>);
+0356 <span class="keyword">if</span> handles.succTest &amp;&amp; isfield( handles, <span class="string">'dimension'</span>)
+0357     choice = <span class="string">'yes'</span>;
+0358     dimension = handles.dimension;
+0359 <span class="keyword">else</span>
+0360     handles.pathname = [pwd filesep <span class="string">'templates'</span> filesep <span class="string">'import'</span> filesep];
+0361     [dimension choice ] = <a href="../../../mtids/subfunctions/testingValueSet.html" class="code" title="function varargout = testingValueSet( varargin )">testingValueSet</a>( handles,0 );
+0362 <span class="keyword">end</span>
+0363 <span class="keyword">if</span> strcmp( choice,<span class="string">'yes'</span>)
+0364     handles.succTest = 1;
+0365     templName = handles.templateNames{get(handles.popupmenu_template,<span class="string">'Value'</span>)};
+0366     Data = get(handles.t,<span class="string">'Data'</span>);
+0367     [success errMessage ] = <a href="../../../mtids/subfunctions/saveParamSet2File.html" class="code" title="function varargout = saveParamSet2File( varargin )">saveParamSet2File</a>(handles.TextField1InputSpecs,<span class="keyword">...</span>
+0368         handles.TextField2InputSpecs, templName, handles.edit_save2File,<span class="keyword">...</span>
+0369         Data, dimension, handles.pathname,handles.togglebutton_setActive,1);
+0370     <span class="keyword">if</span> ~success
+0371         disp(<span class="string">'Parameter set not saved due to following reason:'</span>);
+0372         <span class="keyword">if</span> ~isempty(errMessage)
+0373             disp(errMessage);
+0374         <span class="keyword">end</span>
+0375     <span class="keyword">else</span>
+0376         <span class="comment">% read in updated param sets</span>
+0377         paramValueSetsNew = <a href="../../../mtids/subfunctions/mtids_main/readImportedTemplates.html" class="code" title="function varargout = readImportedTemplates( varargin )">readImportedTemplates</a>;
+0378         <span class="keyword">for</span> kk = 1:length( paramValueSetsNew )
+0379             handles.templateNames{kk} = paramValueSetsNew(kk).name;
+0380             handles.templateSets{kk} =  paramValueSetsNew(kk).sets;
+0381         <span class="keyword">end</span>
+0382         <span class="comment">% choose entries in popupmenus to recent saved set</span>
+0383         setName = get(handles.edit_save2File,<span class="string">'String'</span>);
+0384         handles.noChanges = 1;
+0385         handles = <a href="#_sub6" class="code" title="subfunction handles = popupmenu_template_Callback(hObject, eventdata, handles)">popupmenu_template_Callback</a>( handles.popupmenu_template,[],handles );
+0386         idxTemp = find( strcmp( get(handles.popupmenu_template,<span class="string">'String'</span>),templName));
+0387         idxSet = find( strcmp( get(handles.popupmenu_valueSet,<span class="string">'String'</span>),setName ));
+0388         set(handles.popupmenu_template,<span class="string">'Value'</span>,idxTemp);
+0389         set(handles.popupmenu_valueSet,<span class="string">'Value'</span>,idxSet);
+0390         handles = <a href="#_sub21" class="code" title="subfunction handles = popupmenu_valueSet_Callback(hObject, eventdata, handles) ">popupmenu_valueSet_Callback</a>(handles.popupmenu_valueSet, [], handles);
+0391         guidata(hObject,handles);
+0392     <span class="keyword">end</span>
+0393 <span class="keyword">else</span>
+0394     disp(<span class="string">'Testing of parameter set failed.'</span>);
+0395 <span class="keyword">end</span>
+0396 
+0397 <span class="comment">% --- Executes on button press in pushbutton_addBlock.</span>
+0398 <a name="_sub15" href="#_subfunctions" class="code">function pushbutton_addBlock_Callback(hObject, eventdata, handles)</a>
+0399 <span class="comment">% hObject    handle to pushbutton_addBlock (see GCBO)</span>
+0400 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0401 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0402 nrOfRows = length( get(handles.t,<span class="string">'RowName'</span>) );
+0403 <span class="comment">% ask for new row (=block) name</span>
+0404 newRowName = inputdlg({<span class="string">'New Block Type: '</span>},<span class="string">'Add Block'</span>,1);
+0405 <span class="keyword">if</span> isempty( newRowName )
+0406     <span class="keyword">return</span>;
+0407 <span class="keyword">end</span>
+0408 <span class="comment">% check if block type exists before adding the row to the table</span>
+0409 <span class="keyword">if</span> isempty( find_system(handles.sysname,<span class="string">'BlockType'</span>,newRowName{1}) )
+0410     errordlg([<span class="string">'No Block of Type '</span>,newRowName,<span class="string">' found!'</span>]);
+0411     <span class="keyword">return</span>;
+0412 <span class="keyword">end</span>
+0413 <span class="comment">% Data processing to row names and table data</span>
+0414 rownames = cell(nrOfRows+1,1);
+0415 rownames(1:nrOfRows) = get(handles.t,<span class="string">'RowName'</span>);
+0416 rownames(end) = newRowName;
+0417 testCell=find_system(handles.sysname,<span class="string">'BlockType'</span>,newRowName{1});
+0418 s=regexp(testCell,<span class="string">'/'</span>,<span class="string">'split'</span>);
+0419 listOutString = cell(<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(s,1),1);
+0420 <span class="keyword">for</span> i = 1:<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(s,1)
+0421     listOutString{i} = s{i}{2};
+0422 <span class="keyword">end</span>
+0423 newBlockNameIndex = listdlg(<span class="string">'PromptString'</span>,<span class="string">'Select a Block Name:'</span>,<span class="keyword">...</span>
+0424     <span class="string">'SelectionMode'</span>,<span class="string">'single'</span>,<span class="string">'ListString'</span>,listOutString);
+0425 dataOld=get(handles.t,<span class="string">'Data'</span>);
+0426 dataNew = cell( <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dataOld,1)+1, <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dataOld,2) );
+0427 dataNew(1:end-1,:) = dataOld;
+0428 newBlockName = listOutString(newBlockNameIndex);
+0429 [ paramname paramvalue ] = <a href="../../../mtids/subfunctions/get_BlockParams.html" class="code" title="function [ paramname paramvalue ] = get_BlockParams( varargin )">get_BlockParams</a>( newRowName{:},handles,newBlockName{:} );
+0430 dataNew(<span class="keyword">end</span>,1) = listOutString(newBlockNameIndex);
+0431 <span class="keyword">for</span> j = 1:length(paramname)
+0432     dataNew{<span class="keyword">end</span>,2*j} = paramname{j};
+0433     dataNew{<span class="keyword">end</span>,1+2*j} = paramvalue{j};
+0434 <span class="keyword">end</span>
+0435 set(handles.t,<span class="string">'RowName'</span>,rownames,<span class="string">'Data'</span>,dataNew);
+0436 
+0437 <span class="comment">% --- Executes on button press in pushbutton_removeBlock.</span>
+0438 <a name="_sub16" href="#_subfunctions" class="code">function pushbutton_removeBlock_Callback(hObject, eventdata, handles)</a>
+0439 <span class="comment">% hObject    handle to pushbutton_removeBlock (see GCBO)</span>
+0440 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0441 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0442 <span class="comment">% Case handling: if no cells are selected</span>
+0443 <span class="keyword">try</span>
+0444     <span class="keyword">if</span> isempty(handles.selected_cells)
+0445         errordlg(<span class="string">'No row(s) selected'</span>);
+0446         <span class="keyword">return</span>
+0447     <span class="keyword">end</span>
+0448     IDX = handles.selected_cells; <span class="comment">% Contains indices of the selected cells</span>
+0449     rowIDX = IDX(:,1);
+0450     <span class="comment">% colIDX = IDX(:,2);</span>
+0451     rownames = get(handles.t,<span class="string">'RowName'</span>);
+0452     <span class="comment">% Perform request if cells should really be deleted</span>
+0453     title = <span class="string">'Sure? Delete block(s)?'</span>;
+0454     qstring = {<span class="string">'Should the following blocks be deleted?'</span>,<span class="keyword">...</span>
+0455         rownames{rowIDX} };
+0456     choice = questdlg(qstring,title,<span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'No'</span>);
+0457     <span class="keyword">switch</span> choice
+0458         <span class="keyword">case</span> <span class="string">'Yes'</span>;
+0459             <span class="comment">% adapt rownames</span>
+0460             rownamesIDX = 1:1:length(rownames);
+0461             <span class="comment">% delete rowname indices according to selected cells</span>
+0462             <span class="keyword">for</span> ii = 1:length(rowIDX)
+0463                 rownamesIDX = rownamesIDX(rownamesIDX ~= rowIDX(ii));
+0464             <span class="keyword">end</span>
+0465             rownamesNew = rownames( rownamesIDX );
+0466             <span class="comment">% adapt table data</span>
+0467             data=get(handles.t,<span class="string">'Data'</span>);
+0468             data = data( rownamesIDX,: );
+0469             <span class="comment">% set new table</span>
+0470             set(handles.t,<span class="string">'RowName'</span>,rownamesNew,<span class="string">'Data'</span>,data);
+0471         <span class="keyword">case</span> <span class="string">'No'</span>;
+0472             <span class="comment">% do nothing</span>
+0473     <span class="keyword">end</span>
+0474 <span class="keyword">catch</span>
+0475     errordlg(<span class="string">'No row(s) selected'</span>);
+0476     <span class="keyword">return</span>
+0477 <span class="keyword">end</span>
+0478 
+0479 <span class="comment">% --- Executes on button press in pushbutton_addParameter.</span>
+0480 <a name="_sub17" href="#_subfunctions" class="code">function pushbutton_addParameter_Callback(hObject, eventdata, handles)</a>
+0481 <span class="comment">% hObject    handle to pushbutton_addParameter (see GCBO)</span>
+0482 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0483 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0484 <span class="keyword">if</span> ~isfield(handles,<span class="string">'selected_cells'</span>) || isempty(handles.selected_cells)
+0485     errordlg(<span class="string">'No row(s) selected'</span>);
+0486     <span class="keyword">return</span>
+0487 <span class="keyword">end</span>
+0488 IDX = handles.selected_cells; <span class="comment">% Contains indices of the selected cells</span>
+0489 rowIDX = IDX(:,1);
+0490 <span class="comment">% colIDX = IDX(:,2);</span>
+0491 <span class="keyword">if</span> <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( rowIDX,1 ) &gt; 1
+0492     errordlg(<span class="string">'Please choose only one block for adding a new parameter'</span>);
+0493     <span class="keyword">return</span>
+0494 <span class="keyword">end</span>
+0495 <span class="comment">% Dialog if parameter out of list should be chosen or via free hand input</span>
+0496 <span class="comment">% Construct a questdlg with three options</span>
+0497 choice = questdlg(<span class="string">'How should the parameter be chosen?'</span>, <span class="keyword">...</span>
+0498  <span class="string">'Add Parameter Menu'</span>, <span class="keyword">...</span>
+0499  <span class="string">'Out of list'</span>,<span class="string">'Free input'</span>,<span class="string">'Cancel'</span>,<span class="string">'Cancel'</span>);
+0500 <span class="comment">% Handle response</span>
+0501 cellData = get(handles.t,<span class="string">'Data'</span>);
+0502 <span class="keyword">switch</span> choice
+0503     <span class="keyword">case</span> <span class="string">'Out of list'</span>
+0504         <span class="comment">% Show list with available parameters</span>
+0505         allParams = get_param([handles.sysname <span class="string">'/'</span> cellData{rowIDX,1}],<span class="string">'Dialogparameters'</span>);
+0506         namesAllParams = fieldnames( allParams );
+0507         newParamIndex = listdlg(<span class="string">'PromptString'</span>,<span class="string">'Select a parameter:'</span>,<span class="keyword">...</span>
+0508             <span class="string">'SelectionMode'</span>,<span class="string">'single'</span>,<span class="string">'ListString'</span>,namesAllParams);
+0509         <span class="keyword">if</span> isempty( newParamIndex )
+0510             <span class="keyword">return</span>;
+0511         <span class="keyword">end</span>
+0512         answer(1) = namesAllParams( newParamIndex );
+0513         paramvalue = get_param([handles.sysname,<span class="string">'/'</span>,cellData{ rowIDX,1 } ],answer{1});
+0514     <span class="keyword">case</span> <span class="string">'Free input'</span>
+0515         rowname = get(handles.t,<span class="string">'RowName'</span>);
+0516         <span class="comment">% Perform request if parameter should be added</span>
+0517         prompt = {<span class="string">'Enter parameter name:'</span>};
+0518         title = [<span class="string">'Add new Parameter to Block '</span>,rowname{rowIDX}];
+0519         num_lines = 1;
+0520         def = {<span class="string">'paramname'</span>};
+0521         answer = inputdlg(prompt,title,num_lines,def);
+0522         <span class="comment">% Check if parameter name really exists; if not, throw error</span>
+0523         <span class="keyword">try</span>
+0524             paramvalue = get_param([handles.sysname,<span class="string">'/'</span>,cellData{ rowIDX,1 } ],answer{1});
+0525         <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0526             errordlg([<span class="string">'Parameter '</span>,answer{1},<span class="string">' not found for block '</span>,cellData{ rowIDX,1 },<span class="string">'!'</span>]);
+0527             <span class="keyword">return</span>
+0528         <span class="keyword">end</span>
+0529     <span class="keyword">case</span> <span class="string">'Cancel'</span>
+0530         <span class="keyword">return</span>;
+0531 <span class="keyword">end</span>
+0532 <span class="keyword">if</span> ~isempty( answer{1} ) &amp;&amp; ~isempty( paramvalue )
+0533     cellData = get(handles.t,<span class="string">'Data'</span>);
+0534     <span class="comment">% Determine next free position in cell data</span>
+0535     <span class="comment">% Check for length AND last empty cell</span>
+0536     posLast = length( cellData( rowIDX,:));
+0537     <span class="keyword">while</span> isempty( cellData{ rowIDX,posLast } )
+0538         posLast = posLast - 1;
+0539     <span class="keyword">end</span>
+0540     posNew = posLast + 1;
+0541     cellData{ rowIDX, posNew } = answer{1};
+0542     cellData{ rowIDX, posNew+1 } = paramvalue;
+0543     <span class="comment">% Adapt column names if necessary</span>
+0544     cnames = get(handles.t,<span class="string">'ColumnName'</span>);
+0545     columneditable = get(handles.t,<span class="string">'ColumnEditable'</span>);
+0546     <span class="keyword">if</span> length( cnames ) &lt; posNew+1
+0547         <span class="comment">%do something</span>
+0548         cnames{posNew} = <span class="string">'Parameter Name'</span>;
+0549         cnames{posNew + 1} = <span class="string">'Value'</span>;
+0550         columneditable(posNew) = false;
+0551         columneditable(posNew + 1) = true;
+0552         set(handles.t,<span class="string">'ColumnName'</span>,cnames);
+0553         set(handles.t,<span class="string">'ColumnEditable'</span>,columneditable);
+0554     <span class="keyword">end</span>
+0555     set(handles.t,<span class="string">'Data'</span>,cellData);
+0556 <span class="keyword">end</span>
+0557 
+0558 <span class="comment">% --- Executes on button press in pushbutton_removeParameter.</span>
+0559 <a name="_sub18" href="#_subfunctions" class="code">function pushbutton_removeParameter_Callback(hObject, eventdata, handles)</a>
+0560 <span class="comment">% hObject    handle to pushbutton_removeParameter (see GCBO)</span>
+0561 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0562 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0563 <span class="keyword">try</span>
+0564     <span class="keyword">if</span> ~isfield(handles,<span class="string">'selected_cells'</span>) || isempty(handles.selected_cells)
+0565         errordlg(<span class="string">'No row(s) selected'</span>);
+0566         <span class="keyword">return</span>
+0567     <span class="keyword">end</span>
+0568     IDX = handles.selected_cells; <span class="comment">% Contains indices of the selected cells</span>
+0569     <span class="keyword">if</span> <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( IDX,1 ) &gt; 1
+0570        errordlg(<span class="string">'Please select only one cell to delete parameter values'</span>);
+0571        <span class="keyword">return</span>
+0572     <span class="keyword">end</span>
+0573     rowIDX = IDX(1);
+0574     colIDX = IDX(2);
+0575     cellData = get(handles.t,<span class="string">'Data'</span>);
+0576     <span class="keyword">if</span> colIDX == 1
+0577         pushbutton2_Callback(hObject, eventdata, handles);
+0578     <span class="keyword">end</span>
+0579     <span class="comment">% determine colIDXs to delete entries</span>
+0580     <span class="keyword">if</span> rem( colIDX,2 ) == 0
+0581         colIDX = [colIDX colIDX+1];
+0582     <span class="keyword">else</span>
+0583         colIDX = [colIDX-1 colIDX];
+0584     <span class="keyword">end</span>
+0585     <span class="keyword">if</span> or( isempty( cellData{rowIDX,colIDX(1)} ),<span class="keyword">...</span>
+0586             isempty( cellData{rowIDX,colIDX(2)} ))
+0587         errordlg(<span class="string">'No parameter contained in selected cell(s)'</span>);
+0588         <span class="keyword">return</span>
+0589     <span class="keyword">else</span>
+0590         cellData{rowIDX,colIDX(1)} = [];
+0591         cellData{rowIDX,colIDX(2)} = [];
+0592         <span class="comment">% Check if table contains empty cols; if yes, remove them</span>
+0593         <span class="keyword">if</span> all( all( cellfun(@isempty, cellData(:,colIDX(1:2)) ) ) )
+0594             <span class="keyword">if</span> <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( cellData,2 ) &gt; colIDX(2)
+0595                 <span class="comment">% shift all cols on the RHS to the left by 2</span>
+0596                 cellData(:,colIDX(1):end-2) = cellData(:,colIDX(2)+1:end);
+0597                 cellData = cellData(:,1:end-2);
+0598             <span class="keyword">else</span>
+0599                 <span class="comment">% simply remove these two cols</span>
+0600                 cellData = cellData(:,1:colIDX(1)-1);               
+0601             <span class="keyword">end</span>
+0602         <span class="keyword">end</span>
+0603         colNames = get(handles.t,<span class="string">'ColumnName'</span>);
+0604         dimCellCols = <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( cellData,2 );
+0605         colNames = colNames(1:dimCellCols);
+0606         set(handles.t,<span class="string">'Data'</span>,cellData,<span class="string">'ColumnName'</span>,colNames);
+0607     <span class="keyword">end</span>   
+0608 <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0609    <span class="comment">%</span>
+0610 <span class="keyword">end</span>
+0611 
+0612 <span class="comment">% --- Executes on button press in pushbutton_testValueSet.</span>
+0613 <a name="_sub19" href="#_subfunctions" class="code">function pushbutton_testValueSet_Callback(hObject, eventdata, handles)</a>
+0614 <span class="comment">% hObject    handle to pushbutton_testValueSet (see GCBO)</span>
+0615 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0616 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0617 <span class="keyword">if</span> ~isempty(regexp( handles.sysname, <span class="string">'_CHECKED'</span>, <span class="string">'once'</span>))
+0618     handles.pathname = [pwd filesep <span class="string">'templates'</span> filesep <span class="string">'import'</span> filesep];
+0619 <span class="keyword">else</span>
+0620     handles.pathname = handles.sys2Import{<span class="keyword">end</span>,2};
+0621 <span class="keyword">end</span>
+0622 disp(<span class="string">'Testing parameter set...'</span>);
+0623 [dimension choice ME1 ME2] = <a href="../../../mtids/subfunctions/testingValueSet.html" class="code" title="function varargout = testingValueSet( varargin )">testingValueSet</a>( handles,0 );
+0624 <span class="keyword">if</span> strcmp( choice, <span class="string">'yes'</span> )
+0625     handles.succTest = 1;
+0626     handles.dimension = dimension;
+0627     guidata(hObject, handles);
+0628     disp(<span class="string">'Parameter tested successfully'</span>);
+0629 <span class="keyword">else</span>
+0630     disp(<span class="string">'Testing failed. Maybe the following message will help you to find the error:'</span>);
+0631     <span class="keyword">if</span> ~isempty(ME1)
+0632         disp(ME1.message);
+0633     <span class="keyword">end</span>
+0634     <span class="keyword">if</span> ~isempty(ME2)
+0635         disp(ME2.message);
+0636     <span class="keyword">end</span>
+0637 <span class="keyword">end</span>
+0638 
+0639 <span class="comment">% --- Executes on button press in pushbutton_finishImport.</span>
+0640 <a name="_sub20" href="#_subfunctions" class="code">function pushbutton_finishImport_Callback(hObject, eventdata, handles)</a>
+0641 <span class="comment">% hObject    handle to pushbutton_finishImport (see GCBO)</span>
+0642 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0643 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0644 <span class="keyword">if</span> handles.succTest
+0645     choice = <span class="string">'yes'</span>;
+0646     dimension = handles.dimension;
+0647 <span class="keyword">else</span>
+0648     handles.pathname = handles.sys2Import{<span class="keyword">end</span>,2};
+0649     [dimension choice ] = <a href="../../../mtids/subfunctions/testingValueSet.html" class="code" title="function varargout = testingValueSet( varargin )">testingValueSet</a>( handles,0 );
+0650 <span class="keyword">end</span>
+0651 <span class="comment">% In case of being successful, store parameters</span>
+0652 <span class="keyword">if</span> strcmp(choice,<span class="string">'yes'</span>)
+0653     Data = get(handles.t,<span class="string">'Data'</span>);
+0654     answer(1) = regexp( handles.sys2Import{1}, <span class="string">'\w*(?=.mdl)'</span>,<span class="string">'match'</span> );
+0655     pathname = [handles.pathname <span class="string">'import'</span> filesep];
+0656     <span class="comment">% copy also data=&gt;use existing table</span>
+0657     [success errMessage ] = <a href="../../../mtids/subfunctions/saveParamSet2File.html" class="code" title="function varargout = saveParamSet2File( varargin )">saveParamSet2File</a>(handles.TextField1InputSpecs,<span class="keyword">...</span>
+0658         handles.TextField2InputSpecs, answer{1}, handles.edit_save2File,<span class="keyword">...</span>
+0659         Data, dimension, pathname);
+0660     <span class="comment">% close figure</span>
+0661     <span class="keyword">if</span> success
+0662         <span class="keyword">if</span> ~exist( [answer{1} <span class="string">'_CHECKED'</span>],<span class="string">'file'</span>)
+0663             save_system( handles.sysname, [pathname answer{1} <span class="string">'_CHECKED'</span>]);
+0664         <span class="keyword">else</span>
+0665             errordlg({<span class="string">'A template with this name still exists.'</span>,<span class="keyword">...</span>
+0666                 <span class="string">'Please check if the new template is not identical to the existing one.'</span>,<span class="keyword">...</span>
+0667                 <span class="string">'If so, use &quot;Edit parameter set&quot; to create new value sets.'</span>,<span class="keyword">...</span>
+0668                 <span class="string">'If not, rename new template.'</span>});
+0669             <span class="keyword">return</span>
+0670         <span class="keyword">end</span>
+0671         bdclose;
+0672         <span class="comment">% read new template_list</span>
+0673         paramValueSets = <a href="../../../mtids/subfunctions/mtids_main/readImportedTemplates.html" class="code" title="function varargout = readImportedTemplates( varargin )">readImportedTemplates</a>;
+0674         <span class="keyword">for</span> kk = 1:length( paramValueSets )
+0675             handles.templateNames{kk} = paramValueSets(kk).name;
+0676             handles.templateSets{kk} = paramValueSets(kk).sets;
+0677         <span class="keyword">end</span>
+0678         <a href="#_sub5" class="code" title="subfunction initDropdownMenuTemplates( handles )">initDropdownMenuTemplates</a>( handles );    
+0679         <span class="comment">% clean up table</span>
+0680         set(handles.edit_save2File,<span class="string">'String'</span>,<span class="string">''</span>);
+0681         choice = questdlg(<span class="string">'Import is finished. What do you like to do?'</span>, <span class="keyword">...</span>
+0682             <span class="string">'Import successful'</span>, <span class="keyword">...</span>
+0683             <span class="string">'Edit params sets'</span>,<span class="string">'New import'</span>,<span class="string">'Exit'</span>,<span class="string">'New import'</span>);
+0684         <span class="keyword">switch</span> choice
+0685             <span class="keyword">case</span> <span class="string">'Edit params sets'</span>;
+0686                 <span class="comment">% switch mode</span>
+0687                 evtdat.EventName = <span class="string">'SelectionChanged'</span>;
+0688                 evtdat.OldValue = handles.radiobutton_newImport;
+0689                 evtdat.NewValue = handles.radiobutton_editParamSets;
+0690                 set(handles.radiobutton_editParamSets,<span class="string">'Value'</span>,1.0);
+0691                 set(handles.radiobutton_newImport,<span class="string">'Value'</span>,0.0);
+0692                 <span class="comment">% make new templates available internally before invoking</span>
+0693                 <span class="comment">% &quot;selectionChangeFcn&quot;</span>
+0694                 handles = <a href="#_sub3" class="code" title="subfunction handles = uipanel_mode_SelectionChangeFcn(hObject, eventdata, handles) ">uipanel_mode_SelectionChangeFcn</a>(handles.uipanel_mode, evtdat, handles);
+0695                 <span class="comment">% select new imported set</span>
+0696                 idxNewTempl = find( strcmp( get(handles.popupmenu_template,<span class="string">'String'</span>), answer{1} ));
+0697                 idxNewSet = 1;
+0698                 set(handles.popupmenu_template,<span class="string">'Value'</span>,idxNewTempl);
+0699                 handles = <a href="#_sub6" class="code" title="subfunction handles = popupmenu_template_Callback(hObject, eventdata, handles)">popupmenu_template_Callback</a>(handles.popupmenu_template, [], handles);
+0700             <span class="keyword">case</span> <span class="string">'New import'</span>;
+0701                 <span class="comment">% do nothing</span>
+0702             <span class="keyword">case</span> <span class="string">'Exit'</span>;
+0703                 <span class="comment">% leave 'manageParamSets'</span>
+0704                 <a href="#_sub31" class="code" title="subfunction figure1_CloseRequestFcn(hObject, eventdata, handles)">figure1_CloseRequestFcn</a>(handles.figure1, [], handles);
+0705                 <span class="keyword">return</span>
+0706         <span class="keyword">end</span>        
+0707         
+0708         <span class="comment">% saving new handles</span>
+0709         guidata(handles.figure1, handles);
+0710 
+0711     <span class="keyword">else</span>
+0712         disp(<span class="string">'Could not save parameter set due to following reason:'</span>);
+0713         <span class="keyword">if</span> ~isempty(errMessage)
+0714            disp(errMessage); 
+0715         <span class="keyword">end</span>
+0716     <span class="keyword">end</span>
+0717 <span class="keyword">else</span>
+0718     disp(<span class="string">'Testing of parameter set failed.'</span>);
+0719 <span class="keyword">end</span>
+0720 
+0721 <span class="comment">% --- Executes on selection change in popupmenu_valueSet.</span>
+0722 <a name="_sub21" href="#_subfunctions" class="code">function handles = popupmenu_valueSet_Callback(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;*INUSL&gt;</span>
+0723 <span class="comment">% hObject    handle to popupmenu_valueSet (see GCBO)</span>
+0724 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0725 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0726 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_valueSet contents as cell array</span>
+0727 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_valueSet</span>
+0728 <span class="keyword">if</span> ~handles.noChanges &amp;&amp; strcmp(handles.mode,<span class="string">'edit'</span>)
+0729     choice = questdlg(<span class="string">'Discard changes to current parameter set?'</span>, <span class="keyword">...</span>
+0730         <span class="string">'Switch parameter set'</span>, <span class="keyword">...</span>
+0731         <span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'No'</span>);
+0732     <span class="keyword">switch</span> choice
+0733         <span class="keyword">case</span> <span class="string">'Yes'</span>;
+0734             handles = <a href="#_sub25" class="code" title="subfunction handles = loadTableFromStruct( hObject,handles )">loadTableFromStruct</a>( hObject,handles );
+0735         <span class="keyword">case</span> <span class="string">'No'</span>;
+0736             <span class="keyword">return</span>
+0737     <span class="keyword">end</span>
+0738 <span class="keyword">else</span>
+0739     handles = <a href="#_sub25" class="code" title="subfunction handles = loadTableFromStruct( hObject,handles )">loadTableFromStruct</a>( hObject,handles );
+0740 <span class="keyword">end</span>
+0741 idxSet = get(handles.popupmenu_valueSet,<span class="string">'Value'</span>);
+0742 idxTempl = get(handles.popupmenu_template,<span class="string">'Value'</span>);
+0743 isActive = handles.templateSets{idxTempl}(idxSet).isActive;
+0744 set(handles.togglebutton_setActive,<span class="string">'Value'</span>,isActive);
+0745 <span class="keyword">if</span> isActive
+0746     set(handles.togglebutton_setActive,<span class="string">'BackgroundColor'</span>,[0.702 0.85 0.443]);
+0747 <span class="keyword">else</span>
+0748     set(handles.togglebutton_setActive,<span class="string">'BackgroundColor'</span>,[.702 .702 .702]);
+0749 <span class="keyword">end</span>
+0750 guidata(hObject,handles);
+0751 
+0752 
+0753 <span class="comment">% --- Executes on button press in pushbutton_deleteSet.</span>
+0754 <a name="_sub22" href="#_subfunctions" class="code">function pushbutton_deleteSet_Callback(hObject, eventdata, handles)</a>
+0755 <span class="comment">% hObject    handle to pushbutton_deleteSet (see GCBO)</span>
+0756 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0757 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0758 answer = questdlg([<span class="string">'Delete current parameter set &quot;'</span> get(handles.edit_save2File,<span class="string">'String'</span>) <span class="string">'&quot;?'</span> ],<span class="keyword">...</span>
+0759     <span class="string">'Delete parameter set'</span>);
+0760 <span class="keyword">if</span> strcmp( answer,<span class="string">'Yes'</span>)
+0761     flagDelete = 0;
+0762     setName = get(handles.edit_save2File,<span class="string">'String'</span>);
+0763     templName = handles.templateNames{ get(handles.popupmenu_template,<span class="string">'Value'</span>) };
+0764     pathname = [pwd filesep <span class="string">'templates'</span> filesep <span class="string">'import'</span> filesep];
+0765     <a href="../../../mtids/subfunctions/matgraph/@graph/load.html" class="code" title="function load(g,filename)">load</a>([pathname templName <span class="string">'_paramValues.mat'</span>]);
+0766     varName = [templName <span class="string">'_paramValues'</span>];
+0767     eval([<span class="string">'len = length('</span> varName <span class="string">');'</span>]);
+0768     <span class="keyword">if</span> len &gt; 1
+0769         <span class="keyword">for</span> kk = 1:len
+0770             eval([<span class="string">'match = strcmp('</span> varName <span class="string">'(kk).setName, setName );'</span>]);
+0771             <span class="keyword">if</span> match
+0772                 eval([varName <span class="string">'(kk) = [];'</span>]);
+0773                 mess = [<span class="string">'Parameter set &quot;'</span> setName <span class="string">'&quot; deleted'</span>];
+0774                 flagDelete = 1;
+0775                 <span class="keyword">break</span>
+0776             <span class="keyword">end</span>
+0777         <span class="keyword">end</span>
+0778         <span class="keyword">if</span> ~flagDelete
+0779             mess = [<span class="string">'Parameter set &quot;'</span> setName <span class="string">'&quot; not found'</span>];
+0780         <span class="keyword">end</span>
+0781     <span class="keyword">else</span>
+0782         mess = <span class="string">'At least one parameter set must remain'</span>;
+0783     <span class="keyword">end</span>
+0784     <span class="keyword">if</span> flagDelete
+0785         <span class="comment">% store set struct</span>
+0786         <a href="../../../mtids/subfunctions/matgraph/@graph/save.html" class="code" title="function save(g,filename)">save</a>([pathname varName],varName);
+0787         <span class="comment">% read in updated param sets</span>
+0788         paramValueSetsNew = <a href="../../../mtids/subfunctions/mtids_main/readImportedTemplates.html" class="code" title="function varargout = readImportedTemplates( varargin )">readImportedTemplates</a>;
+0789         <span class="keyword">for</span> kk = 1:length( paramValueSetsNew )
+0790             handles.templateNames{kk} = paramValueSetsNew(kk).name;
+0791             handles.templateSets{kk} =  paramValueSetsNew(kk).sets;
+0792         <span class="keyword">end</span>
+0793         handles.noChanges = 1;
+0794         handles = <a href="#_sub6" class="code" title="subfunction handles = popupmenu_template_Callback(hObject, eventdata, handles)">popupmenu_template_Callback</a>( handles.popupmenu_template,[],handles );
+0795         idxTemp = find( strcmp( get(handles.popupmenu_template,<span class="string">'String'</span>),templName));
+0796         set(handles.popupmenu_template,<span class="string">'Value'</span>,idxTemp);
+0797         handles = <a href="#_sub21" class="code" title="subfunction handles = popupmenu_valueSet_Callback(hObject, eventdata, handles) ">popupmenu_valueSet_Callback</a>(handles.popupmenu_valueSet, [], handles);
+0798         guidata(hObject,handles);
+0799     <span class="keyword">end</span>
+0800     disp(mess);
+0801 <span class="keyword">end</span>
+0802 
+0803 <span class="comment">% --- Executes on button press in togglebutton_setActive.</span>
+0804 <a name="_sub23" href="#_subfunctions" class="code">function handles = togglebutton_setActive_Callback(hObject, eventdata, handles)</a>
+0805 <span class="comment">% hObject    handle to togglebutton_setActive (see GCBO)</span>
+0806 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0807 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0808 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of togglebutton_setActive</span>
+0809 <span class="keyword">if</span> get(hObject,<span class="string">'Value'</span>)
+0810     set(handles.togglebutton_setActive,<span class="string">'BackgroundColor'</span>,[0.702 0.85 0.443]);
+0811 <span class="keyword">else</span>
+0812     set(handles.togglebutton_setActive,<span class="string">'BackgroundColor'</span>,[.702 .702 .702]);
+0813 <span class="keyword">end</span>
+0814 handles.noChanges = 0;
+0815 guidata(hObject, handles);
+0816 
+0817 <span class="comment">% --- Executes when selected cell(s) is changed</span>
+0818 <a name="_sub24" href="#_subfunctions" class="code">function table_CellSelectionCallback(src,evt,handles)</a>
+0819 handles.selected_cells = evt.Indices;
+0820 guidata(src, handles);
+0821 
+0822 
+0823 <a name="_sub25" href="#_subfunctions" class="code">function handles = loadTableFromStruct( hObject,handles )</a>
+0824 <span class="comment">%LOADTABLEFROMSTRUCT</span>
+0825 <span class="comment">%  This function loads data into a table, which comes from a structure,</span>
+0826 <span class="comment">%  describing the parameters of a dynamic template</span>
+0827 <span class="keyword">if</span> strcmp( handles.mode,<span class="string">'edit'</span>)
+0828     idxSelectedTemplate = get(handles.popupmenu_template,<span class="string">'Value'</span>);
+0829     idxSelectedSet = get(handles.popupmenu_valueSet,<span class="string">'Value'</span>);
+0830     set(handles.TextField2InputSpecs,<span class="string">'String'</span>, <span class="keyword">...</span>
+0831         num2str( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.noOfIntInputs ) );
+0832     inputStrg = [];
+0833     <span class="keyword">for</span> kk = 1:length( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars )
+0834         inputStrg = [inputStrg <span class="string">', '</span> handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars{kk}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0835     <span class="keyword">end</span>
+0836     set(handles.TextField1InputSpecs,<span class="string">'String'</span>, inputStrg(3:end) );
+0837     tableRowNames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1);
+0838     tableData = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set;
+0839     cnames = cell( <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(tableData,2) , 1 );
+0840     cnames{1} = <span class="string">'Block Name'</span>;
+0841     columneditable = logical( zeros(1, <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(tableData,2) )); <span class="comment">%#ok&lt;LOGL&gt;</span>
+0842     <span class="keyword">for</span> i = 1:floor( <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(tableData,2) / 2)
+0843         cnames{2*i} = <span class="string">'Parameter Name'</span>;
+0844         cnames{2*i + 1} = <span class="string">'Value'</span>;
+0845         columneditable(2*i) = false;
+0846         columneditable(2*i + 1) = true;
+0847     <span class="keyword">end</span>
+0848     columnformat = repmat( {<span class="string">'char'</span>}, 1,<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(tableData,2) );
+0849     set(handles.t,<span class="string">'CellSelectionCallback'</span>,<span class="keyword">...</span>
+0850         {@<a href="#_sub24" class="code" title="subfunction table_CellSelectionCallback(src,evt,handles)">table_CellSelectionCallback</a>,handles},<span class="string">'CellEditCallback'</span>,<span class="keyword">...</span>
+0851         {@<a href="#_sub26" class="code" title="subfunction table_CellEditCallbackFcn(src,evt,handles) ">table_CellEditCallbackFcn</a>,handles},<span class="string">'RowName'</span>,tableRowNames,<span class="keyword">...</span>
+0852         <span class="string">'Data'</span>,tableData,<span class="string">'ColumnName'</span>,cnames,<span class="keyword">...</span>
+0853         <span class="string">'ColumnEditable'</span>, columneditable,<span class="string">'ColumnFormat'</span>,columnformat);
+0854     set(handles.edit_save2File,<span class="string">'String'</span>,handles.templateSets{idxSelectedTemplate}(idxSelectedSet).setName);
+0855 <span class="keyword">else</span>
+0856     <span class="comment">% clear table and according text fields</span>
+0857     set(handles.TextField2InputSpecs,<span class="string">'String'</span>, num2str(0) );
+0858     set(handles.TextField1InputSpecs,<span class="string">'String'</span>, <span class="string">''</span> );
+0859     set(handles.t,<span class="string">'CellSelectionCallback'</span>,<span class="keyword">...</span>
+0860         {@<a href="#_sub24" class="code" title="subfunction table_CellSelectionCallback(src,evt,handles)">table_CellSelectionCallback</a>,handles},<span class="string">'CellEditCallback'</span>,<span class="keyword">...</span>
+0861         {@<a href="#_sub26" class="code" title="subfunction table_CellEditCallbackFcn(src,evt,handles) ">table_CellEditCallbackFcn</a>,handles},<span class="string">'RowName'</span>,{<span class="string">'1'</span>,<span class="string">'2'</span>},<span class="keyword">...</span>
+0862         <span class="string">'Data'</span>,{<span class="string">''</span>,<span class="string">''</span>;<span class="string">''</span>,<span class="string">''</span>},<span class="string">'ColumnName'</span>,{<span class="string">'a'</span>,<span class="string">'b'</span>});
+0863     set(handles.edit_save2File,<span class="string">'String'</span>,<span class="string">''</span>);
+0864 <span class="keyword">end</span>
+0865 handles.noChanges = 1;
+0866 handles.succTest = 1;
+0867 
+0868 
+0869 <span class="comment">% --- Executes when cell(s) is (are) edited</span>
+0870 <a name="_sub26" href="#_subfunctions" class="code">function table_CellEditCallbackFcn(src,evt,handles) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0871 <span class="comment">% success = 0;</span>
+0872 <span class="comment">% Get indices of edited cell</span>
+0873 IDX = evt.Indices;
+0874 rowIDX = IDX(1);
+0875 colIDX = IDX(2);
+0876 cellData = get(handles.t,<span class="string">'Data'</span>);
+0877 handles.sysname = gcs;
+0878 success = <a href="../../../mtids/subfunctions/isValidData.html" class="code" title="function varargout = isValidData( varargin )">isValidData</a>( handles, rowIDX, colIDX );
+0879 <span class="keyword">if</span> ~success
+0880     errordlg(<span class="string">'Parameter value not possible'</span>);
+0881     <span class="comment">% Restore old data</span>
+0882     cellData{ rowIDX,colIDX } = evt.PreviousData;
+0883     set(handles.t,<span class="string">'Data'</span>,cellData);
+0884 <span class="keyword">else</span>
+0885     handles.noChanges = 0;
+0886     handles.succTest = 0;
+0887 <span class="keyword">end</span>
+0888 guidata(src,handles);
+0889 
+0890 <a name="_sub27" href="#_subfunctions" class="code">function handles = handleOpenSystems( handles )</a>
+0891 <span class="comment">%HANDLEOPENSYSTEMS</span>
+0892 <span class="comment">% This function handles the opened simulink systems, which are necessary</span>
+0893 <span class="comment">% due to various checks, if parameter sets are feasible or not.</span>
+0894 <span class="comment">% close gcs if it belongs to our current database</span>
+0895 currSys = gcs;
+0896 currSys = currSys( 1:regexp( currSys, <span class="string">'_CHECKED'</span> )-1);
+0897 <span class="keyword">if</span> any(~cellfun(@isempty,regexp( handles.templateNames, currSys )))
+0898     close_system(gcs,0);
+0899 <span class="keyword">else</span>
+0900     currSys = gcs;
+0901     <span class="keyword">if</span> any(~cellfun(@isempty,regexp( handles.sys2Import(:,1), currSys )))
+0902         close_system(gcs,0);
+0903     <span class="keyword">end</span>
+0904 <span class="keyword">end</span>
+0905 <span class="comment">% if mode==edit, load sys which is selected in popupmenu_template</span>
+0906 <span class="keyword">switch</span> handles.mode
+0907     <span class="keyword">case</span> <span class="string">'edit'</span>;
+0908         idxSelSys = get(handles.popupmenu_template,<span class="string">'Value'</span>);
+0909         allNames = get(handles.popupmenu_template,<span class="string">'String'</span>);
+0910         selSys = allNames{idxSelSys};
+0911         handles.sysname = [selSys <span class="string">'_CHECKED'</span>];
+0912         load_system(handles.sysname);
+0913 <span class="comment">% if mode==import, close all systems and start import routine, which</span>
+0914 <span class="comment">%       necessarily opens the new template</span>
+0915     <span class="keyword">case</span> <span class="string">'import'</span>;
+0916         <span class="keyword">if</span> isempty(handles.sys2Import)
+0917             <span class="comment">% could not load model =&gt; exit fcn</span>
+0918             <span class="keyword">return</span>
+0919         <span class="keyword">else</span>
+0920             nameSys2Import = handles.sys2Import{<span class="keyword">end</span>,1};
+0921             pathSys2Import = handles.sys2Import{<span class="keyword">end</span>,2};
+0922             currPath = pwd;
+0923             cd(pathSys2Import);
+0924             load_system(nameSys2Import);
+0925             cd(currPath);
+0926         <span class="keyword">end</span>
+0927 <span class="keyword">end</span>
+0928 
+0929 <a name="_sub28" href="#_subfunctions" class="code">function handles = buildTableFromTemplate( handles )</a>
+0930 <span class="comment">%BUILDTABLEFROMTEMPLATE</span>
+0931 <span class="comment">% This function creates a new table from a dynamic template</span>
+0932 blks = find_system(gcs, <span class="string">'Type'</span>, <span class="string">'block'</span>);
+0933 listblks = get_param(blks, <span class="string">'BlockType'</span>);
+0934 listnms = get_param(blks,<span class="string">'Name'</span>);
+0935 listnms( ~cellfun( @isempty, regexp( listblks,<span class="keyword">...</span>
+0936     <span class="string">'Inport|Outport|Sum|Mux|Math|Scope|ToWorkspace'</span>,<span class="string">'start'</span>)) ) = [];
+0937 listblks( ~cellfun( @isempty, regexp( listblks,<span class="keyword">...</span>
+0938     <span class="string">'Inport|Outport|Sum|Mux|Math|Scope|ToWorkspace'</span>,<span class="string">'start'</span>)) ) = [];
+0939 <span class="comment">% Filling the data cells</span>
+0940 dat = cell(length(listblks),3);
+0941 dat(:,1) = listnms;
+0942 <span class="keyword">for</span> i = 1:length(listblks)
+0943     [ paramname paramvalue ] = <a href="../../../mtids/subfunctions/get_BlockParams.html" class="code" title="function [ paramname paramvalue ] = get_BlockParams( varargin )">get_BlockParams</a>( listblks{i},handles,listnms{i} );
+0944     <span class="keyword">for</span> j = 1:length(paramname)
+0945         dat{i,2*j} = paramname{j};
+0946         dat{i,1+2*j} = paramvalue{j};
+0947     <span class="keyword">end</span>
+0948 <span class="keyword">end</span>
+0949 cnames = cell( <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dat,2) , 1 );
+0950 cnames{1} = <span class="string">'Block Name'</span>;
+0951 columneditable = logical( zeros(1, <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dat,2) )); <span class="comment">%#ok&lt;LOGL&gt;</span>
+0952 <span class="keyword">for</span> i = 1:floor( <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dat,2) / 2)
+0953     cnames{2*i} = <span class="string">'Parameter Name'</span>;
+0954     cnames{2*i + 1} = <span class="string">'Value'</span>;
+0955     columneditable(2*i) = false;
+0956     columneditable(2*i + 1) = true;
+0957 <span class="keyword">end</span>
+0958 columnformat = repmat( {<span class="string">'char'</span>}, 1,<a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(dat,2) );
+0959 set(handles.t,<span class="string">'RowName'</span>,listblks,<span class="string">'ColumnName'</span>,cnames,<span class="keyword">...</span>
+0960     <span class="string">'Data'</span>,dat, <span class="string">'ColumnEditable'</span>, columneditable,<span class="keyword">...</span>
+0961     <span class="string">'BackgroundColor'</span>,[1 1 1],<span class="string">'ColumnFormat'</span>,columnformat,<span class="string">'CellSelectionCallback'</span>,<span class="keyword">...</span>
+0962     {@<a href="#_sub24" class="code" title="subfunction table_CellSelectionCallback(src,evt,handles)">table_CellSelectionCallback</a>,handles},<span class="string">'CellEditCallback'</span>,<span class="keyword">...</span>
+0963     {@<a href="#_sub26" class="code" title="subfunction table_CellEditCallbackFcn(src,evt,handles) ">table_CellEditCallbackFcn</a>,handles});
+0964 handles.noChanges = 1;
+0965 handles.succTest = 0;
+0966 
+0967 
+0968 <span class="comment">% --- Executes on button press in pushbutton_debug.=&gt;CLOSE-Button</span>
+0969 <a name="_sub29" href="#_subfunctions" class="code">function pushbutton_debug_Callback(hObject, eventdata, handles)</a>
+0970 <span class="comment">% hObject    handle to pushbutton_debug (see GCBO)</span>
+0971 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0972 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0973 <span class="comment">% assignin('base','h',handles);</span>
+0974 <span class="comment">% disp(['handles.noChanges : ' num2str( handles.noChanges ) ]);</span>
+0975 <span class="comment">% disp(['handles.succTest : ' num2str( handles.succTest ) ]);</span>
+0976 <a href="#_sub31" class="code" title="subfunction figure1_CloseRequestFcn(hObject, eventdata, handles)">figure1_CloseRequestFcn</a>(hObject, eventdata, handles);
+0977 
+0978 <a name="_sub30" href="#_subfunctions" class="code">function edit_save2File_Callback(hObject, eventdata, handles) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0979 <span class="comment">% hObject    handle to edit_save2File (see GCBO)</span>
+0980 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0981 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0982 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_save2File as text</span>
+0983 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_save2File as a double</span>
+0984 
+0985 <span class="comment">% --- Executes when user attempts to close figure1.</span>
+0986 <a name="_sub31" href="#_subfunctions" class="code">function figure1_CloseRequestFcn(hObject, eventdata, handles)</a>
+0987 <span class="comment">% hObject    handle to figure1 (see GCBO)</span>
+0988 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0989 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0990 <span class="comment">% Hint: delete(hObject) closes the figure</span>
+0991 uiresume(handles.figure1);
+0992 
+0993 <span class="comment">% --- If Enable == 'on', executes on mouse press in 5 pixel border.</span>
+0994 <span class="comment">% --- Otherwise, executes on mouse press in 5 pixel border or over togglebutton_setActive.</span>
+0995 <a name="_sub32" href="#_subfunctions" class="code">function togglebutton_setActive_ButtonDownFcn(hObject, eventdata, handles)</a>
+0996 <span class="comment">% hObject    handle to togglebutton_setActive (see GCBO)</span>
+0997 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0998 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0999 
+1000 <a name="_sub33" href="#_subfunctions" class="code">function TextField1InputSpecs_Callback(hObject, eventdata, handles)</a>
+1001 <span class="comment">% hObject    handle to TextField1InputSpecs (see GCBO)</span>
+1002 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+1003 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+1004 <span class="comment">% Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text</span>
+1005 <span class="comment">%        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double</span>
+1006 handles.noChanges = 0;
+1007 guidata(hObject,handles);
+1008 
+1009 <a name="_sub34" href="#_subfunctions" class="code">function TextField2InputSpecs_Callback(hObject, eventdata, handles)</a>
+1010 <span class="comment">% hObject    handle to TextField2InputSpecs (see GCBO)</span>
+1011 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+1012 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+1013 <span class="comment">% Hints: get(hObject,'String') returns contents of TextField2InputSpecs as text</span>
+1014 <span class="comment">%        str2double(get(hObject,'String')) returns contents of TextField2InputSpecs as a double</span>
+1015 handles.noChanges = 0;
+1016 guidata(hObject,handles);</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

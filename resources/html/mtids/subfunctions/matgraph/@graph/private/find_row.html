@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of find_row</title>
+  <meta name="keywords" content="find_row">
+  <meta name="description" content="find_row(r,M)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">mtids</a> &gt; <a href="../../../index.html">subfunctions</a> &gt; <a href="../../index.html">matgraph</a> &gt; <a href="../index.html">@graph</a> &gt; <a href="index.html">private</a> &gt; find_row.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\@graph\private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>find_row
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>find_row(r,M)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function idx = find_row(r, M, a, b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> find_row(r,M)
+ find row r in matrix M. Assume rows of M are sorted and unique
+
+ find_row(r,M,a,b)
+ a = lowest row to check (default 1)
+ b = highest row to check (default number of rows in M)
+
+ return the idx of the row, or 0 if not found</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="find_row.html" class="code" title="function idx = find_row(r, M, a, b)">find_row</a>	find_row(r,M)</li><li><a href="vector_compare.html" class="code" title="function sg = vector_compare(v,w)">vector_compare</a>	vector_compare(v,w) -- lexicographically compare row vectors</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../../../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../mtids/subfunctions/matgraph/@graph/cayley.html" class="code" title="function cayley(g,perms,verbose)">cayley</a>	cayley(g,perms) -- create a Cayley graph (undirected)</li><li><a href="../../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>	[yn,p] = iso(g,h,options) --- is g isomorphic to h?</li><li><a href="find_row.html" class="code" title="function idx = find_row(r, M, a, b)">find_row</a>	find_row(r,M)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function idx = find_row(r, M, a, b)</a>
+0002 <span class="comment">% find_row(r,M)</span>
+0003 <span class="comment">% find row r in matrix M. Assume rows of M are sorted and unique</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% find_row(r,M,a,b)</span>
+0006 <span class="comment">% a = lowest row to check (default 1)</span>
+0007 <span class="comment">% b = highest row to check (default number of rows in M)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% return the idx of the row, or 0 if not found</span>
+0010 
+0011 <span class="keyword">if</span> nargin &lt; 3
+0012     a = 1;
+0013     b = <a href="../../../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(M,1);
+0014 <span class="keyword">end</span>
+0015 
+0016 <span class="keyword">if</span> a&gt;b
+0017     idx = 0;
+0018     <span class="keyword">return</span>
+0019 <span class="keyword">end</span>
+0020 
+0021 <span class="keyword">if</span> a==b
+0022     <span class="keyword">if</span> <a href="vector_compare.html" class="code" title="function sg = vector_compare(v,w)">vector_compare</a>(r,M(a,:)) == 0
+0023         idx = a;
+0024     <span class="keyword">else</span>
+0025         idx = 0;
+0026     <span class="keyword">end</span>
+0027     <span class="keyword">return</span>
+0028 <span class="keyword">end</span>
+0029 
+0030 mid = floor( (a+b)/2 );
+0031 
+0032 sg = <a href="vector_compare.html" class="code" title="function sg = vector_compare(v,w)">vector_compare</a>(r, M(mid,:));
+0033 
+0034 <span class="keyword">switch</span> sg
+0035     <span class="keyword">case</span> 0,
+0036         idx = mid;
+0037         <span class="keyword">return</span>;
+0038     <span class="keyword">case</span> -1,
+0039         idx = <a href="find_row.html" class="code" title="function idx = find_row(r, M, a, b)">find_row</a>(r, M, a, mid-1);
+0040         <span class="keyword">return</span>
+0041     <span class="keyword">case</span> 1,
+0042         idx = <a href="find_row.html" class="code" title="function idx = find_row(r, M, a, b)">find_row</a>(r, M, mid+1, b);
+0043 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

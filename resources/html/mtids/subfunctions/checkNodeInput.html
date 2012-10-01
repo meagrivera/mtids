@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of checkNodeInput</title>
+  <meta name="keywords" content="checkNodeInput">
+  <meta name="description" content="CHECKNODEINPUT Tests input signal">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; checkNodeInput.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>checkNodeInput
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CHECKNODEINPUT Tests input signal</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = checkNodeInput( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CHECKNODEINPUT Tests input signal
+ This function checks if the number of input signals fits to its
+ parameters
+ INPUT:    (1) -- Node ID
+           (2) -- mtids structure 'data'
+
+ OUTPUT:   (1) -- boolean: 1 for correct, 0 for errors occured
+           (2) -- structure 'error':
+                   error.ParamNotFound: cell with names of input
+                   depending variables, which names are not unique within
+                   the template
+                   error.DimMismatch: cell with names of input depending
+                   variables, which do not obtain the correct dimension
+           (3) -- signal size of node input
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>	matrix(g) --- return (a copy of) the adjacency matrix of g</li><li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li><li><a href="templateHasDependingInputs.html" class="code" title="function varargout = templateHasDependingInputs( varargin )">templateHasDependingInputs</a>	TEMPLATEHASDEPENDINGINPUTS checks node template for input depending parameters</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="computeInputSizes.html" class="code" title="function computeInputSizes( handles )">computeInputSizes</a>	COMPUTEINPUTSIZES Computes signal sizes of nodes inputs</li><li><a href="../../mtids/subfunctions/figures/edit_node.html" class="code" title="function varargout = edit_node(varargin)">edit_node</a>	EDIT_NODE gui to edit settings of a specific node in a MTIDS graph</li><li><a href="systemConsistencyTest.html" class="code" title="function varargout = systemConsistencyTest( handles,varargin )">systemConsistencyTest</a>	SYSTEMCONSISTENCYTEST compares input signal with input depending parameters</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = checkNodeInput( varargin )</a>
+0002 <span class="comment">%CHECKNODEINPUT Tests input signal</span>
+0003 <span class="comment">% This function checks if the number of input signals fits to its</span>
+0004 <span class="comment">% parameters</span>
+0005 <span class="comment">% INPUT:    (1) -- Node ID</span>
+0006 <span class="comment">%           (2) -- mtids structure 'data'</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% OUTPUT:   (1) -- boolean: 1 for correct, 0 for errors occured</span>
+0009 <span class="comment">%           (2) -- structure 'error':</span>
+0010 <span class="comment">%                   error.ParamNotFound: cell with names of input</span>
+0011 <span class="comment">%                   depending variables, which names are not unique within</span>
+0012 <span class="comment">%                   the template</span>
+0013 <span class="comment">%                   error.DimMismatch: cell with names of input depending</span>
+0014 <span class="comment">%                   variables, which do not obtain the correct dimension</span>
+0015 <span class="comment">%           (3) -- signal size of node input</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0018 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0019 
+0020 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( varargin,2 ) == 2
+0021     nodeIDX = varargin{1};
+0022     data = varargin{2};
+0023     mat = <a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>( data.g );
+0024     template = data.templates(nodeIDX,:);
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( varargin,2 ) == 3
+0027     nodeIDX = varargin{1};
+0028     data = getappdata(varargin{2},<span class="string">'appData'</span>);
+0029     mat = <a href="../../mtids/subfunctions/matgraph/@graph/matrix.html" class="code" title="function A = matrix(g)">matrix</a>( data.g );
+0030     template = varargin{3};
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="comment">% sparse admittanz matrix</span>
+0034 [row col ~] = find( mat );
+0035 
+0036 <span class="comment">% indices of node, which have incoming edges to the current node</span>
+0037 incomingIDX = row( col == nodeIDX );
+0038 
+0039 <span class="comment">% check out size of incoming signal</span>
+0040 signalSize = zeros( length(incomingIDX),1 );
+0041 <span class="keyword">for</span> ii = 1:<a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( incomingIDX,1 )
+0042     <span class="comment">% access to output dimension of incoming nodes</span>
+0043     signalSize(ii) = data.templates{ incomingIDX(ii),2 }.dimension.outputs;
+0044 <span class="keyword">end</span>
+0045 varargout{3} = sum( signalSize );    
+0046 <span class="keyword">if</span> <a href="templateHasDependingInputs.html" class="code" title="function varargout = templateHasDependingInputs( varargin )">templateHasDependingInputs</a>( nodeIDX,template ) &amp;&amp; sum( signalSize )
+0047 <span class="comment">%    if ~isempty( incomingIDX )</span>
+0048        
+0049    <span class="comment">% Get cell with strings of depending variables</span>
+0050    Vars = template{1,2}.inputSpec.Vars;
+0051    errorDimMismatch = zeros( length( Vars ),1 );
+0052    errorParamNotFound = zeros( length( Vars ),1 );
+0053    noOfIntInputs = template{1,2}.inputSpec.noOfIntInputs;
+0054    <span class="comment">% Text 2nd dimension of all depending input parameters</span>
+0055    <span class="keyword">for</span> ii = 1:length( Vars )
+0056        tempSet = template{1,2}.set;
+0057        [tempRow tempCol] = find( strcmp(tempSet,Vars{ii}) );
+0058        <span class="keyword">if</span> length(tempRow) &gt; 1 || length(tempCol) &gt; 1
+0059            <span class="comment">% Error: there is more than one parameter with name Vars{ii},</span>
+0060            <span class="comment">% thus the depending input params couldn't be allocated. Try the</span>
+0061            <span class="comment">% following: repeat the import of the template and rename the</span>
+0062            <span class="comment">% depending parameters to unique names.</span>
+0063            errorParamNotFound(ii) = 1;
+0064        <span class="keyword">else</span>
+0065            cmd1 = [Vars{ii} <span class="string">' = '</span> tempSet{ tempRow,tempCol+1 } <span class="string">';'</span>];
+0066            eval( cmd1 );
+0067            cmd2 = [<span class="string">'tempDim = size('</span> Vars{ii} <span class="string">',2);'</span>];
+0068            eval( cmd2 );
+0069            <span class="comment">% Test if sum of all input signals subtracted by possible</span>
+0070            <span class="comment">% internal feedback to the input is equal to</span>
+0071            <span class="keyword">if</span> tempDim ~= sum( signalSize ) + noOfIntInputs
+0072                <span class="comment">% Error: param Vars{ii} is not feasible for that graph</span>
+0073                <span class="comment">% structure</span>
+0074                <span class="comment">% The number of input signals and its size is not the same</span>
+0075                <span class="comment">% as specified in the input depending parameter Vars{ii}</span>
+0076                errorDimMismatch(ii) = 1;
+0077            <span class="keyword">else</span>
+0078                <span class="comment">% do nothing</span>
+0079            <span class="keyword">end</span>
+0080        <span class="keyword">end</span>
+0081    <span class="keyword">end</span>
+0082    <span class="keyword">if</span> any( errorDimMismatch ) || any( errorParamNotFound )
+0083        varargout{1} = 0;
+0084        error.DimMismatch = Vars( logical( errorDimMismatch ));
+0085        error.ParamNotFound = Vars( logical( errorParamNotFound ));
+0086        varargout{2} = error;
+0087    <span class="keyword">else</span>
+0088        varargout{1} = 1;
+0089        varargout{2} = [];
+0090    <span class="keyword">end</span>
+0091 <span class="keyword">else</span>
+0092     <span class="comment">% if there is no parameter, which is depending on size of input</span>
+0093     <span class="comment">% signals, then it should be work</span>
+0094     varargout{1} = 1;
+0095     varargout{2} = [];
+0096 <span class="keyword">end</span>
+0097 
+0098 
+0099</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

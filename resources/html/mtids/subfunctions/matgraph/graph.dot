@@ -1,0 +1,22 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  free_all -> graph_system_exists;
+  graph_init -> graph_system_exists;
+  graph_init -> set_large;
+  max_available -> graph_system_exists;
+  num_available -> graph_system_exists;
+  set_large -> graph_system_exists;
+
+  check_matrix [URL="check_matrix.html"];
+  find_available [URL="find_available.html"];
+  free_all [URL="free_all.html"];
+  genhtml [URL="genhtml.html"];
+  graph_destroy [URL="graph_destroy.html"];
+  graph_init [URL="graph_init.html"];
+  graph_system_exists [URL="graph_system_exists.html"];
+  matgraph_version [URL="matgraph_version.html"];
+  max_available [URL="max_available.html"];
+  num_available [URL="num_available.html"];
+  set_large [URL="set_large.html"];
+  swap [URL="swap.html"];
+}

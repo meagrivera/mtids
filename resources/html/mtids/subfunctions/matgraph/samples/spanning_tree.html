@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spanning_tree</title>
+  <meta name="keywords" content="spanning_tree">
+  <meta name="description" content="% Finding spanning trees">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; spanning_tree.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>spanning_tree
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Finding spanning trees</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Finding spanning trees
+ Matgraph provides two functions for finding spanning trees:
+ 
+ * |bfsptree| --- breadth first spanning tree
+ * |dfsptree| --- depth first spanning tree
+% Set up the graph
+ We illustrate finding spanning trees in the icosahedron graph.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/bfstree.html" class="code" title="function bfstree(t,g,v)">bfstree</a>	bfstree(t,g,v) --- create a breadth-first spanning tree of g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/dfstree.html" class="code" title="function visited = dfstree(t,g,v)">dfstree</a>	dfstree(t,g,v) --- create a depth-first spanning tree of g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>	draw(g) --- draw g in a figure window</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/icosahedron.html" class="code" title="function icosahedron(g)">icosahedron</a>	icosahedron(g) --- overwrite g with the icosahedron graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/nsptrees.html" class="code" title="function nt = nsptrees(g)">nsptrees</a>	nsptrees(g) --- number of spanning trees of g.</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/draw.html" class="code" title="function draw(g,line_style)">draw</a>	draw(g) --- draw g in a figure window</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Finding spanning trees</span>
+0002 <span class="comment">% Matgraph provides two functions for finding spanning trees:</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% * |bfsptree| --- breadth first spanning tree</span>
+0005 <span class="comment">% * |dfsptree| --- depth first spanning tree</span>
+0006 <span class="comment">%% Set up the graph</span>
+0007 <span class="comment">% We illustrate finding spanning trees in the icosahedron graph.</span>
+0008 g = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0009 <a href="../../../../mtids/subfunctions/matgraph/@graph/icosahedron.html" class="code" title="function icosahedron(g)">icosahedron</a>(g);
+0010 <span class="comment">%% Depth first spanning tree</span>
+0011 t = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0012 <a href="../../../../mtids/subfunctions/matgraph/@graph/dfstree.html" class="code" title="function visited = dfstree(t,g,v)">dfstree</a>(t,g);
+0013 clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g,<span class="string">':'</span>);
+0014 <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(t)
+0015 <span class="comment">%% Breadth first spanning tree</span>
+0016 <a href="../../../../mtids/subfunctions/matgraph/@graph/bfstree.html" class="code" title="function bfstree(t,g,v)">bfstree</a>(t,g);
+0017 clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g,<span class="string">':'</span>);
+0018 <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(t)
+0019 <span class="comment">%% Counting spanning trees</span>
+0020 <span class="comment">% The matrix-tree theorem makes enumerating spanning trees in Matlab</span>
+0021 <span class="comment">% especially easy.</span>
+0022 nt = <a href="../../../../mtids/subfunctions/matgraph/@graph/nsptrees.html" class="code" title="function nt = nsptrees(g)">nsptrees</a>(g);
+0023 disp([<span class="string">'The icosahedron graph has '</span>, int2str(nt),<span class="string">' spanning trees'</span>]);
+0024 <span class="comment">%% Release the graphs</span>
+0025 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(t)
+0026 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(g)</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

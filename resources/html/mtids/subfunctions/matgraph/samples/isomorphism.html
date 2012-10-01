@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isomorphism</title>
+  <meta name="keywords" content="isomorphism">
+  <meta name="description" content="% Checking graph isormorphism in Matgraph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">mtids</a> &gt; <a href="../../index.html">subfunctions</a> &gt; <a href="../index.html">matgraph</a> &gt; <a href="index.html">samples</a> &gt; isomorphism.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\matgraph\samples&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>isomorphism
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Checking graph isormorphism in Matgraph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Checking graph isormorphism in Matgraph
+ We show how to determine if two graphs are isomorphic and, if so, how to
+ find the permutation that transforms one into the other.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../mtids/subfunctions/matgraph/@graph/add.html" class="code" title="function add(g,i,j,dir)">add</a>	add --- add edge(s) to the graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/bucky.html" class="code" title="function bucky(g)">bucky</a>	bucky(g) --- overwrite g with the Buckyball graph (and give a nice</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/cartesian.html" class="code" title="function cartesian(g,h1,h2)">cartesian</a>	cartesian(g,h1,h2) --- overwrite g with the product of h1 and h2</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>	copy(g,h) --- overwrite g with a copy of h</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/cycle.html" class="code" title="function cycle(g,n)">cycle</a>	cycle(g,n) --- create a cycle graph on n vertices</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>	distxy(g) -- give g a distance based embedding</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>	draw(g) --- draw g in a figure window</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>	free(g) --- free the graph from the system</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>	graph: constructor for the graph class</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>	grid(g,a,b) --- create an a-by-b grid graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>	[yn,p] = iso(g,h,options) --- is g isomorphic to h?</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/mobius.html" class="code" title="function mobius(g,nverts)">mobius</a>	mobius(g,nverts) --- create a Mobius ladder graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/ndraw.html" class="code" title="function ndraw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">ndraw</a>	ndraw(g) --- draw g in a figure window with numbered vertices</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/draw.html" class="code" title="function draw(g,line_style)">draw</a>	draw(g) --- draw g in a figure window</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/old-versions/iso.html" class="code" title="function [yn,p] = iso(g,h)">iso</a>	[yn,p] = iso(g,h) --- is g isomorphic to h?</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>	random --- overwrite g with a random graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/random_regular.html" class="code" title="function random_regular(g,n,k)">random_regular</a>	random_regular(g,n,k) --- create a random regular graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/random_tree.html" class="code" title="function random_tree(t,n)">random_tree</a>	random_tree(t,n) --- overwrite t with a random tree on n vertices</li><li><a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>	renumber the vertices of a graph</li><li><a href="../../../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>	constructor for the permutation class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Checking graph isormorphism in Matgraph</span>
+0002 <span class="comment">% We show how to determine if two graphs are isomorphic and, if so, how to</span>
+0003 <span class="comment">% find the permutation that transforms one into the other.</span>
+0004 
+0005 <span class="comment">%% Cycle graph</span>
+0006 <span class="comment">% Create two copies of a cycle on 10 vertices, but randomly renumber the</span>
+0007 <span class="comment">% second.</span>
+0008 
+0009 g = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0010 h = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>;
+0011 <a href="../../../../mtids/subfunctions/matgraph/@graph/cycle.html" class="code" title="function cycle(g,n)">cycle</a>(g,10);
+0012 <a href="../../../../mtids/subfunctions/matgraph/@graph/cycle.html" class="code" title="function cycle(g,n)">cycle</a>(h,10);
+0013 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(h,<a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(h))));
+0014 figure(1); clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/ndraw.html" class="code" title="function ndraw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">ndraw</a>(g);
+0015 figure(2); clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/ndraw.html" class="code" title="function ndraw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">ndraw</a>(h);
+0016 
+0017 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h)
+0018 
+0019 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0020 <span class="keyword">if</span> g==h
+0021     disp(<span class="string">'Graphs are the same'</span>)
+0022 <span class="keyword">else</span>
+0023     disp(<span class="string">'Graphs are different'</span>)
+0024 <span class="keyword">end</span>
+0025 
+0026 <span class="comment">%% Large, vertex regular graph</span>
+0027 <span class="comment">% The bucky graph is a vertex transitive graph with 60 vertices. We make</span>
+0028 <span class="comment">% two copies (one that is randomly renumbered) and check they are the same.</span>
+0029 
+0030 <a href="../../../../mtids/subfunctions/matgraph/@graph/bucky.html" class="code" title="function bucky(g)">bucky</a>(g);
+0031 <a href="../../../../mtids/subfunctions/matgraph/@graph/bucky.html" class="code" title="function bucky(g)">bucky</a>(h);
+0032 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(h,<a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(h))));
+0033 
+0034 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h)
+0035 
+0036 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0037 <span class="keyword">if</span> g==h
+0038     disp(<span class="string">'Graphs are the same'</span>)
+0039 <span class="keyword">else</span>
+0040     disp(<span class="string">'Graphs are different'</span>)
+0041 <span class="keyword">end</span>
+0042 
+0043 <span class="comment">%% Standard random graph</span>
+0044 <span class="comment">% We generate a standard Erdos-Renyi random graph and a randomly renumbered</span>
+0045 <span class="comment">% copy, and then verify they are isomorphic.</span>
+0046 
+0047 <a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(g,100,0.5)
+0048 <a href="../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>(h,g)
+0049 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(h,<a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(h))));
+0050 
+0051 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h);
+0052 
+0053 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0054 <span class="keyword">if</span> g==h
+0055     disp(<span class="string">'Graphs are the same'</span>)
+0056 <span class="keyword">else</span>
+0057     disp(<span class="string">'Graphs are different'</span>)
+0058 <span class="keyword">end</span>
+0059 
+0060 
+0061 <span class="comment">%% Random regular graph</span>
+0062 <span class="comment">% We generate a random 3-regular graph and a randomly renumbered</span>
+0063 <span class="comment">% copy, and then verify they are isomorphic.</span>
+0064 
+0065 <a href="../../../../mtids/subfunctions/matgraph/@graph/random_regular.html" class="code" title="function random_regular(g,n,k)">random_regular</a>(g,100,3);
+0066 <a href="../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>(h,g);
+0067 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(h,<a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(h))));
+0068 
+0069 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h);
+0070 
+0071 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0072 <span class="keyword">if</span> g==h
+0073     disp(<span class="string">'Graphs are the same'</span>)
+0074 <span class="keyword">else</span>
+0075     disp(<span class="string">'Graphs are different'</span>)
+0076 <span class="keyword">end</span>
+0077 
+0078 <span class="comment">%% Random tree</span>
+0079 <span class="comment">% We generate a random tree and a randomly renumbered</span>
+0080 <span class="comment">% copy, and then verify they are isomorphic.</span>
+0081 
+0082 <a href="../../../../mtids/subfunctions/matgraph/@graph/random_tree.html" class="code" title="function random_tree(t,n)">random_tree</a>(g,100);
+0083 <a href="../../../../mtids/subfunctions/matgraph/@graph/copy.html" class="code" title="function copy(g,h)">copy</a>(h,g);
+0084 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(h,<a href="../../../../mtids/subfunctions/matgraph/@graph/random.html" class="code" title="function random(g,arg1,arg2)">random</a>(<a href="../../../../mtids/subfunctions/matgraph/@permutation/permutation.html" class="code" title="function p = permutation(n)">permutation</a>(<a href="../../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>(h))));
+0085 
+0086 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h);
+0087 
+0088 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0089 <span class="keyword">if</span> g==h
+0090     disp(<span class="string">'Graphs are the same'</span>)
+0091 <span class="keyword">else</span>
+0092     disp(<span class="string">'Graphs are different'</span>)
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">%% Two ways to make a grid</span>
+0096 <span class="comment">% We generate a grid graph in two different ways. The graphs are not equal,</span>
+0097 <span class="comment">% but they are isomorphic.</span>
+0098 
+0099 <a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>(g,6,3);
+0100 <a href="../../../../mtids/subfunctions/matgraph/@graph/grid.html" class="code" title="function grid(g,a,b)">grid</a>(h,3,6);
+0101 <span class="keyword">if</span> g==h
+0102     disp(<span class="string">'Graphs are the same'</span>)
+0103 <span class="keyword">else</span>
+0104     disp(<span class="string">'Graphs are different'</span>)
+0105 <span class="keyword">end</span>
+0106 
+0107 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h)
+0108 
+0109 <a href="../../../../mtids/subfunctions/matgraph/@graph/renumber.html" class="code" title="function renumber(g,perm)">renumber</a>(g,p)
+0110 <span class="keyword">if</span> g==h
+0111     disp(<span class="string">'Graphs are the same'</span>)
+0112 <span class="keyword">else</span>
+0113     disp(<span class="string">'Graphs are different'</span>)
+0114 <span class="keyword">end</span>
+0115 
+0116 <span class="comment">%% Mobius and non-Mobius ladders are not isomorphic</span>
+0117 <span class="comment">% The Mobius ladder on 20 vertices and the Cartesian product of a 10-cycle</span>
+0118 <span class="comment">% and an edge are both 3-regular graphs on 20 vertices. But they are not</span>
+0119 <span class="comment">% isomorphic.</span>
+0120 
+0121 <a href="../../../../mtids/subfunctions/matgraph/@graph/mobius.html" class="code" title="function mobius(g,nverts)">mobius</a>(g,20);
+0122 c10 = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>; <a href="../../../../mtids/subfunctions/matgraph/@graph/cycle.html" class="code" title="function cycle(g,n)">cycle</a>(c10,10);
+0123 k2 = <a href="../../../../mtids/subfunctions/matgraph/@graph/graph.html" class="code" title="function g = graph(n)">graph</a>; <a href="../../../../mtids/subfunctions/matgraph/@graph/add.html" class="code" title="function add(g,i,j,dir)">add</a>(k2,1,2);
+0124 <a href="../../../../mtids/subfunctions/matgraph/@graph/cartesian.html" class="code" title="function cartesian(g,h1,h2)">cartesian</a>(h,c10,k2);
+0125 
+0126 figure(1); clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(g);
+0127 <a href="../../../../mtids/subfunctions/matgraph/@graph/distxy.html" class="code" title="function e = distxy(g, D)">distxy</a>(h);
+0128 figure(2); clf; <a href="../../../../mtids/subfunctions/matgraph/@graph/draw.html" class="code" title="function draw(g,dir,line_style,nodeFillColor,nodeEdgeColor)">draw</a>(h);
+0129 
+0130 [yn,p] = <a href="../../../../mtids/subfunctions/matgraph/@graph/iso.html" class="code" title="function [yn,p] = iso(g,h,options)">iso</a>(g,h)
+0131 
+0132 <span class="keyword">if</span> yn
+0133     disp(<span class="string">'Graphs are isomorphic'</span>)
+0134 <span class="keyword">else</span>
+0135     disp(<span class="string">'Graphs are not isomorphic'</span>)
+0136 <span class="keyword">end</span>
+0137 
+0138 
+0139 
+0140 <span class="comment">%% Release storage</span>
+0141 
+0142 <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(g); <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(h); <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(c10); <a href="../../../../mtids/subfunctions/matgraph/@graph/free.html" class="code" title="function free(g)">free</a>(k2);</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

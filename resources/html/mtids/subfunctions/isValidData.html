@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isValidData</title>
+  <meta name="keywords" content="isValidData">
+  <meta name="description" content="ISVALIDDATA Test prompted user data for feasiblity">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">mtids</a> &gt; <a href="index.html">subfunctions</a> &gt; isValidData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>isValidData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ISVALIDDATA Test prompted user data for feasiblity</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = isValidData( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ISVALIDDATA Test prompted user data for feasiblity
+
+ Checks, if data stored in table, which represents the numerical parameter 
+ set of a template, fits to the block in simulink models and checks
+ if this data is feasible.
+
+ INPUT:    (1) -- Handle to main figure (usually MTIDS itself)
+           (2) -- Row index
+           (3) -- Column index
+
+ OUTPUT:   (1) -- Boolean, '1' for 'no problem occured during the check'
+
+ Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../mtids/subfunctions/figures/edit_paramValues.html" class="code" title="function varargout = edit_paramValues(varargin)">edit_paramValues</a>	EDIT_PARAMVALUES gui to edit numerical parameter values of a template</li><li><a href="../../mtids/subfunctions/figures/import_dynamic_params.html" class="code" title="function varargout = import_dynamic_params(varargin)">import_dynamic_params</a>	IMPORT_DYNAMIC_PARAMS gui for importing tempates to MTIDS</li><li><a href="../../mtids/subfunctions/figures/manageParamSets.html" class="code" title="function varargout = manageParamSets(varargin)">manageParamSets</a>	MANAGEPARAMSETS gui for managing templates and its numerical parameter sets</li><li><a href="testingValueSet.html" class="code" title="function varargout = testingValueSet( varargin )">testingValueSet</a>	TESTINGVALUESET checking numerical parameters of template</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = isValidData( varargin )</a>
+0002 <span class="comment">%ISVALIDDATA Test prompted user data for feasiblity</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Checks, if data stored in table, which represents the numerical parameter</span>
+0005 <span class="comment">% set of a template, fits to the block in simulink models and checks</span>
+0006 <span class="comment">% if this data is feasible.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% INPUT:    (1) -- Handle to main figure (usually MTIDS itself)</span>
+0009 <span class="comment">%           (2) -- Row index</span>
+0010 <span class="comment">%           (3) -- Column index</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% OUTPUT:   (1) -- Boolean, '1' for 'no problem occured during the check'</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0015 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0016 
+0017 <span class="keyword">if</span> <a href="../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>( varargin,2 ) &lt; 3
+0018     error(<span class="string">'Insufficient number of input arguments'</span>);
+0019 <span class="keyword">end</span>
+0020 
+0021 handles     = varargin{1};
+0022 rowIDX      = varargin{2};
+0023 colIDX      = varargin{3};
+0024 
+0025 success = 0;
+0026 
+0027 cellData = get(handles.t,<span class="string">'Data'</span>);
+0028 paramCellArray = get_param([handles.sysname,<span class="string">'/'</span>,cellData{ rowIDX,1 } ], <span class="string">'DialogParameters'</span>);
+0029 paramName = cellData{ rowIDX,colIDX-1 };
+0030 paramField = getfield( paramCellArray, paramName ); <span class="comment">%#ok&lt;*GFLD&gt;</span>
+0031 
+0032 <span class="keyword">switch</span> paramField.Type
+0033     <span class="keyword">case</span> <span class="string">'boolean'</span>;
+0034         <span class="comment">% Value can be on / off</span>
+0035         <span class="keyword">if</span> ~any( strcmp( cellData{ rowIDX,colIDX }, {<span class="string">'on'</span>,<span class="string">'off'</span>} ))
+0036             success = 0;
+0037         <span class="keyword">else</span>
+0038             success = 1;
+0039         <span class="keyword">end</span>
+0040     <span class="keyword">case</span> <span class="string">'enum'</span>;
+0041         idxValue = find( strcmp( cellData{ rowIDX,colIDX }, paramField.Enum )); <span class="comment">%#ok&lt;EFIND&gt;</span>
+0042         <span class="keyword">if</span> isempty( idxValue )
+0043             success = 0;
+0044         <span class="keyword">else</span>
+0045             success = 1;
+0046         <span class="keyword">end</span>
+0047     <span class="keyword">case</span> <span class="string">'string'</span>;
+0048         <span class="keyword">if</span> isempty( str2num( cellData{ rowIDX,colIDX } ) )  || <span class="keyword">...</span>
+0049                 isempty( cellData{ rowIDX,colIDX } ) <span class="comment">%#ok&lt;ST2NM&gt;</span>
+0050             success = 0;
+0051         <span class="keyword">else</span>
+0052             success = 1;
+0053         <span class="keyword">end</span>        
+0054     <span class="keyword">otherwise</span>;        
+0055 <span class="keyword">end</span>
+0056 
+0057 varargout{1} = success;</pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

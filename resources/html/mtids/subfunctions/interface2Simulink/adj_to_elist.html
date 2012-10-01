@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of adj_to_elist</title>
+  <meta name="keywords" content="adj_to_elist">
+  <meta name="description" content="ADJ_TO_ELIST Reshapes an (N x N) adjacency matrix into a (M x 2) edge list">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">mtids</a> &gt; <a href="../index.html">subfunctions</a> &gt; <a href="index.html">interface2Simulink</a> &gt; adj_to_elist.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for mtids\subfunctions\interface2Simulink&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>adj_to_elist
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>ADJ_TO_ELIST Reshapes an (N x N) adjacency matrix into a (M x 2) edge list</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function elist = adj_to_elist(A) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ADJ_TO_ELIST Reshapes an (N x N) adjacency matrix into a (M x 2) edge list
+
+ This function takes an adjacency matrix as input and outputs an edge list
+
+ INPUTS: A         -- Symmetric adjacency matrix (N x N)
+         
+ OUTPUT: elist     -- Edge list (M x 2) 
+
+
+ Authors: Francisco Llobet, Jose Rivera
+ Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+ Project: MTIDS (http://code.google.com/p/mtids/)
+ Created: 30/5/2011</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a>	ne(g) --- number of edges in g</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>	nv(g) --- number of vertices in g</li><li><a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>	size(g) --- returns [nv,ne] for the graph</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/ne.html" class="code" title="function yn = ne(p,q)">ne</a>	ne(p,q) --- p ~= q checks if p and q are different</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/nv.html" class="code" title="function n = nv(p)">nv</a>	nv(p) --- number of vertices (elements) of a partition</li><li><a href="../../../mtids/subfunctions/matgraph/@partition/size.html" class="code" title="function s = size(p)">size</a>	size(p) --- returns [nv,np]: number of vertices, parts.</li><li><a href="../../../mtids/subfunctions/matgraph/@permutation/ne.html" class="code" title="function tf = ne(p,q)">ne</a>	test if p ~= q</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../mtids/subfunctions/figures/export_as_matrix.html" class="code" title="function varargout = export_as_matrix(varargin)">export_as_matrix</a>	EXPORT_AS_MATRIX gui to export a graph in mtids as a matrix</li><li><a href="any_matrix_to_elist.html" class="code" title="function elist = any_matrix_to_elist(M,dir)">any_matrix_to_elist</a>	ANY_MATRIX_TO_ELIST Reshapes an adjacency matrix into an edge list</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function elist = adj_to_elist(A)</a>
+0002 <span class="comment">%ADJ_TO_ELIST Reshapes an (N x N) adjacency matrix into a (M x 2) edge list</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This function takes an adjacency matrix as input and outputs an edge list</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% INPUTS: A         -- Symmetric adjacency matrix (N x N)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% OUTPUT: elist     -- Edge list (M x 2)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Authors: Francisco Llobet, Jose Rivera</span>
+0012 <span class="comment">% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)</span>
+0013 <span class="comment">% Project: MTIDS (http://code.google.com/p/mtids/)</span>
+0014 <span class="comment">% Created: 30/5/2011</span>
+0015 
+0016 <a href="../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a> = <a href="../../../mtids/subfunctions/matgraph/@graph/size.html" class="code" title="function [sz,tz] = size(g)">size</a>(A,1);
+0017 <a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> = 0;
+0018 <span class="keyword">for</span> i=1:<a href="../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>
+0019    <span class="keyword">for</span> j=i:<a href="../../../mtids/subfunctions/matgraph/@graph/nv.html" class="code" title="function n = nv(g)">nv</a>
+0020       <span class="keyword">if</span> A(i,j)
+0021           <a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> = <a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> + 1;
+0022           elist(<a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> ,1) = i; <span class="comment">%#ok&lt;*AGROW&gt;</span>
+0023           elist(<a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> ,2) = j;
+0024           A(j,i) = 0;
+0025       <span class="keyword">end</span>
+0026    <span class="keyword">end</span>
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="keyword">if</span> <a href="../../../mtids/subfunctions/matgraph/@graph/ne.html" class="code" title="function m = ne(g,dir,h)">ne</a> == 0
+0030    elist = 0; 
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 01-Oct-2012 17:13:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
