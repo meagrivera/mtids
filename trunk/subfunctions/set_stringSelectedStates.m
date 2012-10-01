@@ -1,5 +1,17 @@
 function varargout = set_stringSelectedStates( varargin ) %#ok<STOUT>
-%SET_STRINGSELECTEDSTATES
+%SET_STRINGSELECTEDSTATES creates string out of selected states to plot
+%
+% This function creates a string to visualize the states of a node, which
+% should be plotted.
+%
+% INPUT:    (1) -- Cell array, contains information about which states should
+%                   be plotted
+%           (2) -- Struct, handles to elements of parent figure
+%
+% OUTPUT: (none) Created string will be prompted immediately
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % function input
 printCell       = varargin{1};

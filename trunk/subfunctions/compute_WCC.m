@@ -1,11 +1,18 @@
-function WCC_sets = compute_WCC ( graphINPUT )
-% This script computs the weak connected components of a directed graph,
-% based on Matgraph
-% Input: graph1 --      Edited Matgraph graph object, which represents a
+function WCC_sets = compute_WCC( graphINPUT )
+%COMPUTE_WCC Computes weak connected components of a digraph
+%
+% This function computes the weak connected components of a directed graph,
+% based on Matgraph. Sketch of algorithm is explained inside the source
+% code.
+%
+% INPUT: graph1    --   Edited Matgraph graph object, which represents a
 %                       directed graph
-% Output: WCC_sets --   Cell vector, each cell contains the numbers of
+% OUTPUT: WCC_sets --   Cell vector, each cell contains the numbers of
 %                       nodes, which belong to its WCC. For the number WCC
 %                       sets, use length(WCC_sets)
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Algorithm: for each node exchange the directed edges with andirected
 % edges - perform a DFS and set all visited nodes, including the start

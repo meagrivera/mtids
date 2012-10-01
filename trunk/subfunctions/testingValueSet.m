@@ -1,6 +1,9 @@
 function varargout = testingValueSet( varargin )
+%TESTINGVALUESET checking numerical parameters of template
+%
 % This function tests the parameter value sets of a dynamic template on its
-% consistency
+% consistency.
+%
 % INPUT: (1) handles    - handles structure of invoking figure
 %        (2) ask4choice - boolean, if the routine should ask explicitly for
 %                           going on with the program
@@ -17,6 +20,8 @@ function varargout = testingValueSet( varargin )
 %                                   template block; is empty if
 %                                   everything's alright
 %
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 handles             = varargin{1};
 if size( varargin,2 ) > 1

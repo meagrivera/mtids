@@ -1,17 +1,21 @@
 function varargout = checkNodeInput( varargin )
+%CHECKNODEINPUT Tests input signal
 % This function checks if the number of input signals fits to its
 % parameters
-% INPUT:    (1) Node ID
-%           (2) mtids structure 'data'
+% INPUT:    (1) -- Node ID
+%           (2) -- mtids structure 'data'
 %
-% OUTPUT:   (1) boolean: 1 for correct, 0 for errors occured
-%           (2) structure 'error':
+% OUTPUT:   (1) -- boolean: 1 for correct, 0 for errors occured
+%           (2) -- structure 'error':
 %                   error.ParamNotFound: cell with names of input
 %                   depending variables, which names are not unique within
 %                   the template
 %                   error.DimMismatch: cell with names of input depending
 %                   variables, which do not obtain the correct dimension
-%           (3) signal size of node input
+%           (3) -- signal size of node input
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 if size( varargin,2 ) == 2
     nodeIDX = varargin{1};

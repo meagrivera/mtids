@@ -1,7 +1,22 @@
 function varargout = isValidData( varargin )
-% ISVALIDDATA
-%  Checks if data stored in table fits to the block in simulink models and
-%  if this data is feasible
+%ISVALIDDATA Test prompted user data for feasiblity
+%
+% Checks, if data stored in table, which represents the numerical parameter 
+% set of a template, fits to the block in simulink models and checks
+% if this data is feasible.
+%
+% INPUT:    (1) -- Handle to main figure (usually MTIDS itself)
+%           (2) -- Row index
+%           (3) -- Column index
+%
+% OUTPUT:   (1) -- Boolean, '1' for 'no problem occured during the check'
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
+if size( varargin,2 ) < 3
+    error('Insufficient number of input arguments');
+end
 
 handles     = varargin{1};
 rowIDX      = varargin{2};

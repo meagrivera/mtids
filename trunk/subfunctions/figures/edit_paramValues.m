@@ -1,26 +1,17 @@
 function varargout = edit_paramValues(varargin)
-% EDIT_PARAMVALUES MATLAB code for edit_paramValues.fig
-%      EDIT_PARAMVALUES, by itself, creates a new EDIT_PARAMVALUES or raises the existing
-%      singleton*.
+% EDIT_PARAMVALUES gui to edit numerical parameter values of a template
 %
-%      H = EDIT_PARAMVALUES returns the handle to a new EDIT_PARAMVALUES or the handle to
-%      the existing singleton*.
+% This GUI enables editing the numerical parameter set of the template,
+% which was chosen for a specific node. This set can also be saved to disk,
+% if needed.
 %
-%      EDIT_PARAMVALUES('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in EDIT_PARAMVALUES.M with the given input arguments.
+% INPUT:    (1) -- Cell array, consisting of name and value set of the
+%                   template
 %
-%      EDIT_PARAMVALUES('Property','Value',...) creates a new EDIT_PARAMVALUES or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before edit_paramValues_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to edit_paramValues_OpeningFcn via varargin.
+% OUTPUT:   (1) -- Cell array, same structure as input
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help edit_paramValues
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Last Modified by GUIDE v2.5 20-Sep-2012 09:28:39
 

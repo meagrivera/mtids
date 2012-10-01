@@ -1,11 +1,19 @@
 function varargout = systemConsistencyTest( handles,varargin )
+%SYSTEMCONSISTENCYTEST compares input signal with input depending parameters
+%
 % This function checks the system, consisting of the graph and its
 % numerical dynamic parameters, which are hidden inside the node templates,
 % for consistency
-% INPUT:    handles
-% OUTPUT:   (1) 1 for no errors found, 0 for errors found
-%           (2) vector containing if node has consistent input depending
-%               parameters
+%
+% INPUT:    (1) -- Handles to parent figure
+%
+% OUTPUT:   (1) -- Boolean, '1' for no errors found
+%           (2) -- Vector containing if node has consistent input depending
+%                   parameters
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 if size( varargin,2 ) == 1
     plotBadNodes = varargin{1};
 else

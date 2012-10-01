@@ -1,8 +1,16 @@
-% --------------------------------------------------------------------
-function input_parameter_adaptation_Callback(hObject, eventdata, handles)
-% hObject    handle to input_parameter_adaptation (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+function input_parameter_adaptation_Callback(hObject, eventdata, handles) %#ok<INUSL>
+%INPUT_PARAMETER_ADAPTATION_CALLBACK automatic correction of numerical parameters
+%
+% INPUT: hObject    -- handle to input_parameter_adaptation (see GCBO)
+%        eventdata  -- reserved - to be defined in a future version of MATLAB
+%        handles    -- structure with handles and user data (see GUIDATA)
+%
+% OUTPUT: (none)    -- Correct parameters are written directly into
+%                       affected template value sets
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 data = getappdata(handles.figure1,'appData');
 
 % get node which don't have consistent input depending parameters
@@ -25,7 +33,7 @@ for ii = 1:nv(data.g)
                 % error
                 return
             end
-            valOld = str2num( tempSet{ tempRow,tempCol+1 } );
+            valOld = str2num( tempSet{ tempRow,tempCol+1 } ); %#ok<ST2NM>
             switch mode
                 case 'ones';
                     valNew = ones( size(valOld,1),nodeInputs );
@@ -46,12 +54,11 @@ for ii = 1:nv(data.g)
             % simulink blocks
             str = '[';
             for jj = 1:size(valNew,1) % for each line of 'valNew'
-                str = [str num2str(valNew(jj,:)) ';'];
+                str = [str num2str(valNew(jj,:)) ';']; %#ok<AGROW>
             end
             str(end) = ']';
             data.templates{ii,2}.set{tempRow,tempCol+1} = str;
         end
     end
 end
-
 setappdata(handles.figure1,'appData',data);

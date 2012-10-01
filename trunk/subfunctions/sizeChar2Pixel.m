@@ -1,19 +1,21 @@
 function pixelValue = sizeChar2Pixel(hObject, widthOrHeight, input)
-%SIZECHAR2PIXEL
-% Converts char into pixel size
+%SIZECHAR2PIXEL conversion of char symbols to pixel size
 %
-%INPUT
-%   hObject:        Parent figure handle
-%   widthOrHeight:  Char with 'w' or 'h' to detect if horizontal or
-%                   vertical pixel size is needed
-%   inputString:    An input string, which length should be computed in
-%                   pixel values
+% Converts char into pixel size.
 %
-%OUTPUT
-%   pixelValue:     The length of the string "inputString" in pixels
+% INPUT:    hObject         -- Parent figure handle
+%           widthOrHeight   -- Char with 'w' or 'h' to detect if horizontal 
+%                               or vertical pixel size is needed
+%           inputString     -- An input string, which length should be 
+%                               computed in pixel values
+%
+% OUTPUT:   pixelValue      -- The length of the string "inputString" in pixels
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 if nargin < 3
-    errordlg('@sizeChar2Pixel: To less input arguments');
+    error('Insufficient number of input arguments');
 end
 
 size_pixels=get(hObject,'Position');

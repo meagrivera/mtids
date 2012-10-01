@@ -1,5 +1,21 @@
 function varargout = manageParamSets(varargin)
-% MANAGEPARAMSETS MATLAB code for manageParamSets.fig
+%MANAGEPARAMSETS gui for managing templates and its numerical parameter sets
+%
+% This GUI enables the import of new dynamic templates to MTIDS and the
+% management of its numerical parameter sets. Principally, the relation of
+% a template to its num. values sets is a 1N relation, which means, one
+% template may obtain N param sets. Furthermore, theses sets can be
+% deactivated for their use in MTIDS.
+%
+% INPUT:    (1) -- Cell array, containing a list of templates (see overview
+%                   of applied data structures in MTIDS, folder
+%                   'resources')
+%
+% OUTPUT:   (1) -- Template list, similar to input
+%
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
+
 %      MANAGEPARAMSETS, by itself, creates a new MANAGEPARAMSETS or raises the existing
 %      singleton*.
 %

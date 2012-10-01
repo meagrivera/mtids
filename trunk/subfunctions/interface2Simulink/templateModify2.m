@@ -1,17 +1,24 @@
-% buildSubsystem.m
-%model to put 
 function [] = templateModify2(nodeNumber, nodeConnections, template)
+%TEMPLATEMODIFY2 adapts the template according to given input
+%
+% INPUT:    nodeNumber      -- Index of node in MTIDS
+%           nodeConnections -- Indegree of node, number of neighbouring
+%                               nodes
+%           template        -- The name of the current (opened) template
+%
+% OUTPUT:   (none)          -- Changes are written directly into the open model
+%
+% Authors: Francisco Llobet, Jose Rivera
+% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Template is already opened
-
 % degree of subsystem (number of outs and ins)
-
 % case distinction: number of inputs equals zero
 
 % case distinction, if indegree equals zero
 if (nodeNumber == 0)
-    % task: delete input and mux
-    
+    % task: delete input and mux    
     % get position for constant block with zero values
     constPos= get_param([template '/In1'],'position');
     %constPos = constPos + [-20 -20 20 20];

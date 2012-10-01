@@ -1,24 +1,35 @@
 function varargout = edit_node(varargin)
-% EDIT_NODE M-file for edit_node.fig
-%      EDIT_NODE, by itself, creates a new EDIT_NODE or raises the existing
-%      singleton*.
+%EDIT_NODE gui to edit settings of a specific node in a MTIDS graph
 %
-%      H = EDIT_NODE returns the handle to a new EDIT_NODE or the handle to
-%      the existing singleton*.
+% This GUI enables editing of node settings in a MTIDS graph.
+%   -- Plot settings: which signal(s) of the node dynamics should be plotted
+%   -- Node renaming / deleting
+%   -- Editing the templates' numerical parameters
+%   -- Testing the numerical parameters on consistency for the Simulink
+%           simulation
+% 
+% INPUT:    (1)  -- Index of node in MTIDS graph system
+%           (2)  -- Node name
+%           (3)  -- Stored dynamic template of node,
+%                    contains numerical parameters
+%           (4)  -- List with all available templates in MTIDS
+%           (5)  -- Connected node neighbours in MTIDS graph
+%           (6)  -- Cell array, contains plot settings for all node
+%           (7)  -- Handle to main figure (usually MTIDS itself)
 %
-%      EDIT_NODE('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in EDIT_NODE.M with the given input arguments.
+% OUTPUT:   (1)  -- Handle to figure
+%           (2)  -- Node index
+%           (3)  -- Node name (may have changed)
+%           (4)  -- name of template
+%           (5)  -- Connected node neighbours in MTIDS graph
+%           (6)  -- boolean flag, 1 if node should be deleted
+%           (7)  -- updated template (struct)
+%           (8)  -- print vector, contains '1' for states or node output to plot
+%           (9)  -- cell array with plot parameters
 %
-%      EDIT_NODE('Property','Value',...) creates a new EDIT_NODE or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before edit_node_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to edit_node_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
+% Authors: Francisco Llobet, Jose Rivera
+% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Edit the above text to modify the response to help edit_node
 

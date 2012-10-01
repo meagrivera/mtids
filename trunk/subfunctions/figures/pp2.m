@@ -1,26 +1,20 @@
 function varargout = pp2(varargin)
-% PP2 MATLAB code for pp2.fig
-%      PP2, by itself, creates a new PP2 or raises the existing
-%      singleton*.
+% PP2 gui to set the plot specifications for each signal to plot
 %
-%      H = PP2 returns the handle to a new PP2 or the handle to
-%      the existing singleton*.
+% This GUI allows to specifiy individually each signal, which should be
+% plotted. The configurations comprises line width, line and marker style, 
+% line, marker and edge color.
 %
-%      PP2('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in PP2.M with the given input arguments.
+% INPUT:    (1) -- Index of node in MTIDS graph system
+%           (2) -- Logical vector of output and state signals, which should
+%                   be plotted
+%           (3) -- Char array, for visualizing all selected plot states
+%           (4) -- Struct, containing the old plotting configurations
 %
-%      PP2('Property','Value',...) creates a new PP2 or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before pp2_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to pp2_OpeningFcn via varargin.
+% OUTPUT:   (1) -- Struct, containing the new plotting configurations
 %
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help pp2
+% Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Last Modified by GUIDE v2.5 25-Apr-2012 11:50:50
 
@@ -71,9 +65,9 @@ end
 
 %DEBUGGING
 %{
-display(['Nodenumber: ' num2str(nodenumber) ]);
-display(['Plot state vector: ' num2str(plotStates) ]);
-display(['Number of states to plot: ' num2str(handles.nrOfPlotStates) ]);
+disp(['Nodenumber: ' num2str(nodenumber) ]);
+disp(['Plot state vector: ' num2str(plotStates) ]);
+disp(['Number of states to plot: ' num2str(handles.nrOfPlotStates) ]);
 %}
 
 %% Outputstrings
@@ -253,7 +247,7 @@ end
 
 %DEBUGGING
 %{
-display([params]);
+disp([params]);
 %}
 
 % data should be applied to current node
@@ -310,15 +304,15 @@ set(hObject,'BackgroundColor',C);
 
 %if color was chosen for lineColor, marker and markerface color should be
 %set to same value
-%display(['Tag of envoking object: ' get(hObject,'Tag') ]);
+%disp(['Tag of envoking object: ' get(hObject,'Tag') ]);
 %determine line number
 tmpstr = get(hObject,'Tag');
 
 % THIS SOLUTION WORKS ONLY IF THERE ARE LESS THAN 10 STATES TO PLOT!!!
 ln = str2double(tmpstr(9));
 pmh = str2double(tmpstr(15));
-%display(['ln = ' num2str(ln) ]);
-%display(['pmh = ' num2str(pmh) ]);
+%disp(['ln = ' num2str(ln) ]);
+%disp(['pmh = ' num2str(pmh) ]);
 
 %determine if color was set for linecolor
 if pmh == 4
