@@ -1862,7 +1862,7 @@ labs = get_label(g);
 name =	'untitled';
 template ='LTI'; 
 if nv(g) > 200
-    disp('Exporting...may take some time...go get some coffee...');
+    disp('Exporting...may take some time...');
 else   
     disp('Exporting...');
 end
