@@ -1207,39 +1207,41 @@ templates = data.templates;
 {'*.mdl','Simulink Model (*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
    'Import Simulink model');
-
-file = strcat(pathname, filename);
-
-addpath(pathname);
- 
-[pathname, model, ext] = fileparts(file); 
- 
-[A, nverts, nedges, xy, labs ] = importSimulink(model);
-
-% Delete graph!
-  
-% Deprecated! elist = adj_to_elist(A);
-
-free(g);
- 
-g = graph(nverts); 
-  
-% Preliminary template import 
-n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
-
-for i=1:nverts
-    label(g,i,labs{i});
-    templates{i,1}=template_list{n_template,1};
-    for j=1:nverts
-        if A(i,j)
-             add(g,i,j);
-             A(j,i) = 0;
-        end            
+if filename
+    file = strcat(pathname, filename);
+    addpath(pathname);
+    [pathname, model, ext] = fileparts(file);
+    [A, nverts, nedges, xy, labs ] = importSimulink(model);
+    
+    % Delete graph!
+    
+    % Deprecated! elist = adj_to_elist(A);
+    
+    free(g);
+    
+    g = graph(nverts);
+    
+    % Preliminary template import
+    n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
+    
+    for i=1:nverts
+        label(g,i,labs{i});
+        templates{i,1}=template_list{n_template,1};
+        for j=1:nverts
+            if A(i,j)
+                switch data.modus
+                    case 'directed';
+                        add(g,i,j,1);
+                    case 'undirected';
+                        add(g,i,j);
+                end
+                A(j,i) = 0;
+            end
+        end
     end
+    
+    embed(g,xy);
 end
-
-embed(g,xy);
-
 %store application data
 data.g = g;
 data.template_list = template_list;
@@ -1987,6 +1989,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
             'Yes','No','No');
         switch choice
             case 'Yes';
+%                 if
                 elist = edges(data.g,0);
                 delete(data.g,elist);
             case 'No';
