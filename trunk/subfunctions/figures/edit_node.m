@@ -15,7 +15,7 @@ function varargout = edit_node(varargin)
 %           (4)  -- List with all available templates in MTIDS
 %           (5)  -- Connected node neighbours in MTIDS graph
 %           (6)  -- Cell array, contains plot settings for all node
-%           (7)  -- Handle to main figure (usually MTIDS itself)
+%           (7)  -- Handle to main figure (usually to MTIDS itself)
 %
 % OUTPUT:   (1)  -- Handle to figure
 %           (2)  -- Node index
