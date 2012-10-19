@@ -175,28 +175,23 @@ elseif strcmp(data.modus, 'directed')
     set(handles.button_undirected,'Value',0);
     set(handles.button_directed,'Value',1);
 end
-
 if data.plotAllOutput == 0
     set(handles.plotAllOutput,'Checked','off')
 elseif data.plotAllOutput == 1
     set(handles.plotAllOutput,'Checked','on')
 end
-
 if data.flag_showSimMod == 0
     set(handles.showSimMod,'Checked','off')
 elseif data.flag_showSimMod == 1
     set(handles.showSimMod,'Checked','on')
 end
-
 set(handles.numberview,'Check','on');
 set(handles.number_button,'Value', 1);
 set(handles.newnodelabel,'String','Node');
 set(handles.strong_connections,'String', ' ');        
 set(handles.text16,'String', 'Graph density:');
-
 % store userdata, use tag 'appData'
 setappdata(hObject,'appData',data);
-
 refresh_dynamics(eventdata, handles);
 % Choose default command line output for mtids
 handles.output = hObject;
@@ -236,20 +231,17 @@ function newnode_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % load application data
 data = getappdata(handles.figure1,'appData');
-
 g = data.g;
 graph_refresh = data.graph_refresh;
 templates = data.templates;
 template_list = data.template_list;
 printCell = data.printCell;
 plotAllOutput = data.plotAllOutput;
-
 rmxy(g);
 new_vertex = nv(g) + 1;
 resize(g, new_vertex);
 labs = get_label(g);
 lab_string =  get(handles.newnodelabel,'String');
-
 % check if any of the existing names is equal as the new one
 if any(strncmp(lab_string,labs,length(lab_string))) 
     n = find(strcmp(lab_string,labs)); % find index of node, which
@@ -268,7 +260,6 @@ if any(strncmp(lab_string,labs,length(lab_string)))
         end
     end
 end
-
 label(g, new_vertex, lab_string); 
 % Get number of template name from list
 n_template = get(handles.selector_dynamic, 'Value'); 
@@ -288,17 +279,14 @@ end
 % this line sets the face color for the node
 data.nodeColor{length_nodeColor+1,1} = template_list{n_template,2};
 data.nodeColor{length_nodeColor+1,2} = template_list{n_template,3};
-
 %Now, after the node was created, the printCell can be added  
 length_cellPrint = size(printCell,1);
-
 %Keep the informations of the old nodes
 tempCell = printCell;
 printCell = cell(length_cellPrint+1,2);
 for i = 1:length_cellPrint
     printCell(i,:) = tempCell(i,:);
 end
-
 %Initially, the printVector and the plotParams are the same for all templates
 statesDim = templates{nv(g),2}.dimension.states;
 outputDim = templates{nv(g),2}.dimension.outputs;
@@ -330,13 +318,11 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % load application data
 data = getappdata(handles.figure1,'appData'); %#ok<NASGU>
-
 save_settings(['resources' filesep 'lastset'],handles);
 filename = 'lastgraph.mat';
 pathname = [pwd filesep 'resources' filesep];
 saveGraph(hObject, eventdata, handles, pathname, filename);
 data = getappdata(handles.figure1,'appData');
-
 % Hint: delete(hObject) closes the figure
 g = data.g;
 free(g)
@@ -359,7 +345,6 @@ function addconnection_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
 % Fix connections
 % Search labels
 label1 = get(handles.fromnode,'String');
@@ -372,7 +357,6 @@ else
     n1 = str2num(label1);
     n2 = str2num(label2);
 end
-
 switch modus
     case 'undirected';
         add(g,n1(1), n2(1));
@@ -452,7 +436,6 @@ function removeconnection_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
 % Arreglar conexiones
 % Buscar en labels
 label1 = get(handles.fromnode,'String');
@@ -505,13 +488,11 @@ function removenode_Callback(hObject, eventdata, handles)
 % hObject    handle to removenode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 templates = data.templates;
 printCell = data.printCell;
-
 a = str2num(get(handles.remnode,'String'));
 if nv(g) && (a <= nv(g))
     templates(a,:) = []; % Deleting the template for the node, which should be deleted
@@ -813,7 +794,6 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
-
 % --------------------------------------------------------------------
 function export_as_layer_2_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer_2 (see GCBO)
@@ -854,6 +834,7 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 
 
+% --------------------------------------------------------------------
 function refresh_graph(reset, eventdata, handles,hObject)
 % This function refreshes the graph window
 %load application data
