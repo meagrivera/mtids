@@ -1,7 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-
-  old_draw [URL="old_draw.html"];
-  test_import_dynamic_parameters [URL="test_import_dynamic_parameters.html"];
-  test_line [URL="test_line.html"];
-}

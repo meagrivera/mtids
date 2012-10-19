@@ -98,9 +98,6 @@ addpath(strcat(pwd,'/subfunctions/figures'));
 %initialize graph
 graph_init;
 
-%declare userdata as structures: data.*; with it global variables could be
-%erased
-
 flagLoadSet = 0;
 try
     load_settings(['resources' filesep 'lastset'],handles);
@@ -141,13 +138,6 @@ switch flagLoadSet
         data.flag_showSimMod = 1;
         data.template_list = cell(0,3);
         data.modus = 'undirected';
-%         % template_list-data for debugging/testing-purpose
-%         data.template_list{1,1} = 'LTI';
-%         data.template_list{1,2} = [245 245 245]/255; % node face color for template
-%         data.template_list{1,3} = [0 0 0]; % node edge color for template
-%         paramValues(1).set = cell( 1,3 ); % param values
-%         data.template_list{1,4} = paramValues;
-%         data.template_list{1,5} = 1; % is active (or not), logical
         data.templates = cell(0,1);
         data.printCell = cell(0,2);
         data.nodeColor = cell(0,2);
@@ -198,8 +188,6 @@ elseif data.flag_showSimMod == 1
     set(handles.showSimMod,'Checked','on')
 end
 
-%grid on;
-%zoom on;
 set(handles.numberview,'Check','on');
 set(handles.number_button,'Value', 1);
 set(handles.newnodelabel,'String','Node');
@@ -214,10 +202,7 @@ refresh_dynamics(eventdata, handles);
 handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
-% refresh_valueSet(handles);
 refresh_graph(0, eventdata, handles,hObject);
-% UIWAIT makes mtids wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -226,10 +211,8 @@ function varargout = mtids_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
 
 
 % --- Executes during object creation, after setting all properties.
@@ -237,7 +220,6 @@ function newnodelabel_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to newnodelabel (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -252,7 +234,6 @@ function newnode_Callback(hObject, eventdata, handles)
 % hObject    handle to newnode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -347,9 +328,8 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % load application data
-data = getappdata(handles.figure1,'appData');
+data = getappdata(handles.figure1,'appData'); %#ok<NASGU>
 
 save_settings(['resources' filesep 'lastset'],handles);
 filename = 'lastgraph.mat';
@@ -358,16 +338,13 @@ saveGraph(hObject, eventdata, handles, pathname, filename);
 data = getappdata(handles.figure1,'appData');
 
 % Hint: delete(hObject) closes the figure
-%global g;
 g = data.g;
 free(g)
 graph_destroy;
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
-
 % graph_destroy();
 delete(hObject);
 
@@ -378,7 +355,6 @@ function addconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to addconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
@@ -388,7 +364,6 @@ modus = data.modus;
 % Search labels
 label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
-
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
     labs = get_label(g);
     n1 = strmatch(label1, labs, 'exact');
@@ -406,9 +381,6 @@ switch modus
         add(g,n1(1), n2(1),1);
         refresh_graph(0, eventdata, handles,hObject);
 end
-
-%refresh_graph(0, eventdata, handles,hObject);
-
 %store application data
 data.modus = modus;
 data.g = g;
@@ -422,7 +394,6 @@ function fromnode_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to fromnode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -430,7 +401,6 @@ if ispc
 else
     set(hObject,'BackgroundColor',get(0,'defaultUicontrolBackgroundColor'));
 end
-
 
 
 % --- Executes during object creation, after setting all properties.
@@ -438,7 +408,6 @@ function tonode_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to tonode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -448,13 +417,11 @@ else
 end
 
 
-
 % --- Executes on button press in randomconnection.
 function randomconnection_Callback(hObject, eventdata, handles)
 % hObject    handle to randomconnection (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
@@ -510,7 +477,6 @@ switch modus
         dir = 1;
         delete(g,n1(1), n2(1), dir);
 end
-
 %store application data
 data.g = g;
 data.modus = modus;
@@ -525,7 +491,6 @@ function remnode_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to remnode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -563,7 +528,6 @@ if nv(g) && (a <= nv(g))
     end
     refresh_graph(0, eventdata, handles,hObject);
 end
-
 %store application data
 data.g = g;
 data.templates = templates;
@@ -578,12 +542,9 @@ function trimgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to trimgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-
 trim(data.g);
-
 %store application data
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
@@ -595,16 +556,10 @@ function clearconnections_Callback(hObject, eventdata, handles)
 % hObject    handle to clearconnections (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-%global g;
-
-clear_edges(g);
-
+clear_edges(data.g);
 %store application data
-data.g = g;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
@@ -615,15 +570,10 @@ function completegraph_Callback(hObject, eventdata, handles)
 % hObject    handle to completegraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-
-complete(g);
-
+complete(data.g);
 %store application data
-data.g = g;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
@@ -634,7 +584,6 @@ function randomgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to randomgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 switch data.modus
@@ -655,7 +604,6 @@ function listbox1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to listbox1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: listbox controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -670,17 +618,13 @@ function Newgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to Newgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-
-resize(g,0);
-templates = cell(0,1);
-
+resize(data.g,0);
 %store application data
-data.g = g;
-data.templates = templates;
+data.templates = cell(0,2);
+data.printCell = cell(0,2);
+data.nodeColor = cell(0,2);
 setappdata(handles.figure1,'appData',data);
 refresh_graph(1, eventdata, handles,hObject);
 
@@ -690,32 +634,22 @@ function loadgraph_Callback(hObject, eventdata, handles)
 % hObject    handle to loadgraph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
-
 [filename, pathname] = uigetfile( ...
 {'*.mat;','Graph/Network Files';
    '*.mat','MAT-files (*.mat)'; ...
     '*.*',  'All Files (*.*)'}, ...
    'Open');
-
 if filename
-         
     file = strcat(pathname, filename);
     [pathname, filename, ext] = fileparts(file);
-
-    free(g);
-    
+    free(g);   
     if strcmp(ext, '.mat') 
         S = load(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
             'printCell','template_list','modus','nodeColor') ;
-        %S = load(file, 'data' );
-        %data = S.data;
-        %assignin('base','data',data);
-        
         nverts = S.nverts;
         adj_matrix = S.adj_matrix;
         XY = S.XY;
@@ -730,7 +664,6 @@ if filename
             case 'undirected'; dir = 0;
             case 'directed'; dir = 1;
         end
-
         for i=1:nverts
             label(g,i,labs{i});
             for j=1:nverts
@@ -740,22 +673,17 @@ if filename
               end            
             end
         end
-
         embed(g,XY);
-        
     elseif strcmp(ext, '.gr')
         load(g, file);
         templates = cell(0,1);
         % Temporary code...
         n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
-
         for i=1:nv(g)
             templates{i,1}=template_list{n_template,1};
-        end
-        
+        end      
     end
 end
-
 %set the uipanel according to stored value of "modus"
 switch data.modus
     case 'directed'
@@ -765,12 +693,10 @@ switch data.modus
         set(handles.button_undirected,'Value', 1.0);
         set(handles.button_directed,'Value', 0.0);        
 end
-
 %store application data
 data.g = g;
 data.templates = templates;
 data.template_list = template_list;
-
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_dynamics(eventdata, handles);
@@ -782,7 +708,6 @@ function savegraphas_Callback(hObject, eventdata, handles)
 % hObject    handle to savegraphas (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 [filename, pathname] = uiputfile( ...
 {  '*.mat','MAT-files [Prefered] (*.mat)'; ...
    '*.*',  'All Files (*.*)';}, ...
@@ -802,14 +727,10 @@ function labelview_Callback(hObject, eventdata, handles)
 % hObject    handle to labelview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-
-%global g;
 checkstatus = get(hObject,'Check');
-
 if strcmp(checkstatus, 'on')
     set(hObject,'Check','off');
 elseif strcmp(checkstatus, 'off')
@@ -819,11 +740,9 @@ elseif strcmp(checkstatus, 'off')
     set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles,hObject)
 end
-
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -831,14 +750,10 @@ function colorview_Callback(hObject, eventdata, handles)
 % hObject    handle to colorview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-
-%global g;
 checkstatus = get(hObject,'Check');
-
 if strcmp(checkstatus, 'on')
     set(hObject,'Check','off');
 elseif strcmp(checkstatus, 'off')
@@ -848,7 +763,6 @@ elseif strcmp(checkstatus, 'off')
     set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles,hObject)
 end
-
 guidata(hObject, handles);
 
 % --------------------------------------------------------------------
@@ -856,14 +770,10 @@ function numberview_Callback(hObject, eventdata, handles)
 % hObject    handle to numberview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-
-%global g;
 checkstatus = get(hObject,'Check');
-
 if strcmp(checkstatus, 'on')
     set(hObject,'Check','off');
 elseif strcmp(checkstatus, 'off')
@@ -873,11 +783,9 @@ elseif strcmp(checkstatus, 'off')
     set(handles.blankview,'Check','off');
     refresh_graph(0, eventdata, handles,hObject)
 end
-
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 
 
@@ -886,14 +794,10 @@ function blankview_Callback(hObject, eventdata, handles)
 % hObject    handle to blankview (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
-
-%global g;
 checkstatus = get(hObject,'Check');
-
 if strcmp(checkstatus, 'on')
     set(hObject,'Check','off');
 elseif strcmp(checkstatus, 'off')
@@ -903,11 +807,9 @@ elseif strcmp(checkstatus, 'off')
     set(handles.blankview,'Check','on');
     refresh_graph(0, eventdata, handles,hObject);
 end
-
 %store application data
 data.g = g;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 
 
@@ -917,19 +819,15 @@ function export_as_layer_2_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer_2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)global g;
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 templates = data.templates;
 template_list = data.template_list;
-
 A  = double(matrix(g));
-
 rmxy(g);
 embed(g);
 xy = getxy(g);
-
 labs = get_label(g);
 name =	'untitled';
 template =	'LTI'; 
@@ -939,10 +837,8 @@ else
      disp('Exporting...');
 end
 disp('  ');
-
 %function contained in folder "interface2simulink"
 exportLayer2(name,templates,template_list,A, xy, labs); 
-
 if nv(g) > 50
     disp('Done exporting');
     disp(' ');
@@ -950,36 +846,30 @@ if nv(g) > 50
 else   
     disp('Done exporting');
 end
-
 %store application data
 data.g = g;
 data.templates = templates;
 data.template_list = template_list;
 setappdata(handles.figure1,'appData',data);
-
 guidata(hObject, handles);
 
 
 function refresh_graph(reset, eventdata, handles,hObject)
 % This function refreshes the graph window
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
 % Check which kind of lable is activated
 checklabel = get(handles.labelview,'Check');
 checknumber = get(handles.numberview,'Check');
 %checkcolor = get(handles.colorview,'Check');
 checkblank = get(handles.blankview,'Check');
- 
 % rmxy(g);
 cla;
 if reset == 1
     rmxy(g); %rmxy: erase g's embedding
 end
-
 switch modus
     case 'undirected';
         dir = 0;
@@ -1005,7 +895,6 @@ switch modus
             set(handles.text19,'String', 'Algebraic connectivity:');
             set(handles.algebraic_connectivity,'String', '0');
         end
-
     case 'directed';
         dir = 1;
         % do something with the basic stats stuff
@@ -1059,12 +948,10 @@ function basic_stats(eventdata, handles)
 % hObject    handle to laplacianvisualize (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
 switch modus
     case 'undirected';
         L = laplacian(g);
@@ -1109,46 +996,36 @@ switch modus
         Eigen_Values_L = diag(Eigen_Values_L);
         [Eigen_Values_L, ndx] = sort(Eigen_Values_L, 'ascend');
         Eigen_Matrix_L=Eigen_Matrix_L(:,ndx); 
-
         Eigen_Values_A = diag(Eigen_Values_A);
         [Eigen_Values_A, ndx] = sort(Eigen_Values_A, 'ascend');
         Eigen_Matrix_A=Eigen_Matrix_A(:,ndx); 
-
         graph_connectivityA = Eigen_Values_A(null_L+1);
         graph_connectivity = Eigen_Values_L(null_L+1);
         set(handles.text19,'String', 'Algebraic connectivity:');
         set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
         fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
-
         estrada_connectivity = diag(exp(A));
-
-        estrada_graph_index  = trace(exp(A));
- 
+        estrada_graph_index  = trace(exp(A)); 
     case 'directed';
         [InDeg OutDeg]=getDegree(matrixOfGraph(g));
         LaplacianIn = diag(InDeg) - double(matrixOfGraph(g));
         LaplacianOut = diag(OutDeg) - double(matrixOfGraph(g));
         rank_L_In = rank(LaplacianIn); %rank of laplacian with indegree
         rank_L_Out = rank(LaplacianOut); %rank of laplacian with outdegree
-        dim_L = mean(size(LaplacianIn)); %matrix-dimension
-        
+        dim_L = mean(size(LaplacianIn)); %matrix-dimension        
         set(handles.text22,'String', 'Weak connected subgraphs:');
-        set(handles.connected_graphs,'String', num2str( length( compute_WCC( data.g))));
-        
+        set(handles.connected_graphs,'String', num2str( length( compute_WCC( data.g))));        
         minInDeg = min(InDeg);
         maxInDeg = max(InDeg);
         minOutDeg = min(OutDeg);
-        maxOutDeg = max(OutDeg);
-        
-        [i,j,s]=find(InDeg == OutDeg);
-        
+        maxOutDeg = max(OutDeg);       
+        [i,j,s]=find(InDeg == OutDeg);       
         if size(s,1) == dim_L
             isBalanced = 'Yes';
         else %if size(s,1) < dim_L
             isBalanced = 'No';
         end
-        strongCons = num2str( length( compute_SCC( data.g )));
-        
+        strongCons = num2str( length( compute_SCC( data.g )));        
         % idea of detecting cyclic graphs: if there are less sets of SCC
         % as nodes in the graph, then there must be at least one cycle.
         if str2double( strongCons ) < nv(data.g)
@@ -1181,7 +1058,6 @@ function dynamic_label_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to dynamic_label (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -1196,13 +1072,11 @@ function import_from_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 template_list = data.template_list;
 templates = data.templates;
-
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink Model (*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
@@ -1212,18 +1086,11 @@ if filename
     addpath(pathname);
     [pathname, model, ext] = fileparts(file);
     [A, nverts, nedges, xy, labs ] = importSimulink(model);
-    
     % Delete graph!
-    
-    % Deprecated! elist = adj_to_elist(A);
-    
     free(g);
-    
     g = graph(nverts);
-    
     % Preliminary template import
     n_template = get(handles.selector_dynamic, 'Value'); % Get template name from list
-    
     for i=1:nverts
         label(g,i,labs{i});
         templates{i,1}=template_list{n_template,1};
@@ -1238,8 +1105,7 @@ if filename
                 A(j,i) = 0;
             end
         end
-    end
-    
+    end  
     embed(g,xy);
 end
 %store application data
@@ -1256,7 +1122,6 @@ function export_to_simulink_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
@@ -1264,13 +1129,10 @@ template_list = data.template_list;
 templates = data.templates;
 disp('Export mode 1');
 A  = double(matrix(g));
-
 % Makes the graph a circle
 rmxy(g);
 embed(g);
-
 xy = getxy(g);
-
 labs = get_label(g);
 name =	'untitled';
 template =	'LTI'; 
@@ -1280,9 +1142,7 @@ else
     disp('Exporting...');
 end
 disp('  ');
-
 exportSimulink(name,templates,template_list,A, xy, labs);
-
 if nv(g) > 50
     disp('Done exporting');
     disp(' ');
@@ -1298,7 +1158,6 @@ function add_multiple_nodes_Callback(hObject, eventdata, handles)
 % hObject    handle to add_multiple_nodes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 n_nodes = str2num(get(handles.number_of_nodes,'String'));
@@ -1328,7 +1187,6 @@ function number_of_nodes_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to number_of_nodes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc
@@ -1375,21 +1233,17 @@ function import_from_workplace_Callback(hObject, eventdata, handles)
 % hObject    handle to import_from_workplace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
-%printCell = data.printCell;
-
 prompt = {'Workspace:','Variable name:'};
 dlg_title = 'Inport matrix from workspace';
 num_lines = 1;
 def = {'base','matrix'};
 answer = inputdlg(prompt,dlg_title,num_lines,def);
-
 if ~isempty(answer)
     M = evalin(answer{1},answer{2});
     switch modus
@@ -1446,9 +1300,7 @@ function add_mdl_template_Callback(hObject, eventdata, handles)
 data = getappdata(handles.figure1,'appData');
 template_list = data.template_list;
 templates = data.templates;
-
 oldFolder = cd(strcat(pwd,'/templates'));
-
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink model template(*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
@@ -1498,13 +1350,11 @@ refresh_dynamics(eventdata, handles);
 guidata(hObject, handles);
  
 
-
 % --- Executes during object creation, after setting all properties.
 function selector_dynamic_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selector_dynamic (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -1527,7 +1377,6 @@ function selector_valueSet_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selector_valueSet (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -1567,7 +1416,6 @@ stringDynSelector = get(handles.selector_dynamic,'String');
 temp = ~cellfun( @isempty, regexp( data.template_list(:,1), ...
     regexp( stringDynSelector(idxDynSelector,:),'\w+','match') ) );
 nrOfParamSets = length( data.template_list{temp,4} );
-% drop_string = cell( nrOfParamSets,1 );
 counter = 0;
 for i=1:nrOfParamSets
     if data.template_list{idxDynSelector,4}(i).isActive
@@ -1589,26 +1437,21 @@ function circular_graph_Callback(hObject, eventdata, handles)
 % hObject    handle to circular_graph (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 modus = data.modus;
-
 switch modus
     case 'undirected';
         dir = 0;
     case 'directed';
         dir = 1;
 end
-
 clear_edges(g);
-
 for i=1:(nv(g)-1)
     add(g,i,i+1,dir);
 end
 add(g,nv(g),1,dir)
-
 %store application data
 data.g = g;
 data.modus = modus;
@@ -1624,7 +1467,6 @@ function figure1_WindowButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
@@ -1635,28 +1477,22 @@ templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
 printCell = data.printCell;
-
 CP = get(handles.axes1, 'CurrentPoint');
 x_c = CP(1,1);
 y_c = CP(1,2);
-
 XY = getxy(g);
 x = XY(:,1);
 y = XY(:,2);
-
 d_x = x-x_c;
 d_y = y-y_c;
-
 radius = d_x.*d_x+d_y.*d_y;
 [C,I] = min(radius);
 if C <= 0.05; % Hardcoded value!
- 
     if strcmp(get(handles.output, 'SelectionType'), 'normal')
         %  disp(I);
         move_index = I;
         botton_down = 1;
-        start_index = 0; % Reset starting index
-        
+        start_index = 0; % Reset starting index    
     elseif strcmp(get(handles.output, 'SelectionType'), 'alt')
         if start_index
             if has(g, start_index, I) %no additional request for the case of directed graphs necessary
@@ -1678,8 +1514,7 @@ if C <= 0.05; % Hardcoded value!
             refresh_graph(0, eventdata, handles,hObject);
         else
             start_index = I;
-        end
-        
+        end 
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
         % Opens EDIT_NODE(): node modification dialog
         [s1,nodenumber,nodelabel,template,neighbours,destroy,templateSaved,...
@@ -1702,19 +1537,15 @@ if C <= 0.05; % Hardcoded value!
                         end
                     end
                 end
-            end
-            
-            label(g,I, nodelabel);
-            
+            end      
+            label(g,I, nodelabel);   
             templates{I} = template;
             e_delete = g(I);
-            size_ne = size(e_delete,2);
-            
+            size_ne = size(e_delete,2);          
             if ~strcmp('double',class(neighbours))
                 %disp(['Class of variable "neighbour" is not "double".']);
                 neighbours = eval(neighbours); %neighbours must be of type "double"
-            end
-            
+            end         
             for i=1:size_ne
                 delete(g,I,e_delete(i));
             end           
@@ -1801,12 +1632,10 @@ function figure1_WindowButtonUpFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 botton_down = 0;
-
 %store application data
 data.g = g;
 data.botton_down = botton_down;
@@ -1823,7 +1652,6 @@ data = getappdata(handles.figure1,'appData');
 botton_down = data.botton_down;
 move_index = data.move_index;
 g = data.g;
-
 if botton_down
     CP = get(handles.axes1, 'CurrentPoint');
     x_c = CP(1,1);
@@ -1834,7 +1662,6 @@ if botton_down
     embed(g,XY);
     refresh_graph(0, eventdata, handles,hObject);
 end
-
 %store application data
 data.botton_down = botton_down;
 data.move_index = move_index;
@@ -1848,18 +1675,15 @@ function export_as_layer_Callback(hObject, eventdata, handles)
 % hObject    handle to export_as_layer (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 templates = data.templates;
 template_list = data.template_list;
-
 A  = double(matrix(g));
 rmxy(g);
 embed(g);
 xy = getxy(g);
-
 labs = get_label(g);
 name =	'untitled';
 template ='LTI'; 
@@ -1870,7 +1694,6 @@ else
 end
 disp('  ');
 exportLayer(name,templates,template_list,A, xy, labs);
-
 if nv(g) > 50
     disp('Done exporting');
     disp(' ');
@@ -1893,24 +1716,19 @@ function export_to_simulink2_Callback(hObject, eventdata, handles)
 % hObject    handle to export_to_simulink2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 templates = data.templates;
 template_list = data.template_list;
-% disp('Export mode 2');
 A  = double(matrix(g));
-
 % Makes the graph a circle
 rmxy(g);
 embed(g);
 xy = getxy(g);
 labs = get_label(g);
-
 % Invoke subroutine which checks the system and its parameters on consistency
 check = systemConsistencyTest( handles );
-
 if check
     % Determine system name
     prompt = {'Enter name of system: '};
@@ -1935,7 +1753,6 @@ else
     disp('System consistency test failed');
     expSucc = 0;
 end
-
 if expSucc && ~isempty( filename )
     data.sysFilename = filename;
 end
@@ -1955,10 +1772,8 @@ function uipanel9_SelectionChangeFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Originally taken from the Help Menu "Programming a button group"
 % With it, the choice of which graphs are supported can be done
-
 %load application data
 data = getappdata(handles.figure1,'appData');
-
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'button_undirected'
         data.modus = 'undirected';
@@ -1970,8 +1785,10 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
             case 'Yes';
                 % Only delete edges
                 elist = edges(data.g,1);
-                for ii = 1:size(elist,1)
-                    delete( data.g, elist(ii,1), elist(ii,2), 1 );
+                if ~isempty(elist)
+                    for ii = 1:size(elist,1)
+                        delete( data.g, elist(ii,1), elist(ii,2), 1 );
+                    end
                 end
             case 'No';
                 % Delete entire graph
@@ -1991,7 +1808,9 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
             case 'Yes';
 %                 if
                 elist = edges(data.g,0);
-                delete(data.g,elist);
+                if ~isempty(elist)
+                    delete(data.g,elist);
+                end
             case 'No';
                 resize(data.g,0);
                 data.printCell = cell(0,2);
@@ -2014,25 +1833,17 @@ function run_simulation_Callback(hObject, eventdata, handles)
 % hObject    handle to run_simulation (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 expSucc = data.expSucc;
 printCell = data.printCell;
 templates = data.templates;
-
-%global g;
-%global printCell;
-%global templates;
-%global expSucc;
-
 %After export to simulink is complete, start the simulation, using the
 %plotting parameters in printCell
 if expSucc ~= 1
     msgbox('Please start ''Export to Simulink'' before using this function.','Notice');
 end
-
 if expSucc == 1
     %We need: number of nodes, number of internal states per node
     nrNodes = nv(g);
@@ -2042,7 +1853,6 @@ if expSucc == 1
     else
         simOut = data.simOut;
     end
-
     %Plotting of the simulation result can be done on different ways. For now,
     %every state gets its own figure
     t = simOut.get('tout');
@@ -2093,8 +1903,7 @@ if expSucc == 1
             end
             legend(stringMatrix,'Location','NorthEastOutside');
             xlabel('Simulation time in [s]');
-            ylabel(['Output and/or state of node ' num2str(i)]);
-            
+            ylabel(['Output and/or state of node ' num2str(i)]);           
             hold off;
         end
     end
@@ -2109,7 +1918,6 @@ function plotAllOutput_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 data = getappdata(handles.figure1,'appData');
-
 if strcmp(get(handles.plotAllOutput,'Checked'),'on')
     set(handles.plotAllOutput,'Checked','off')
     plotAllOutput = 0;
@@ -2128,21 +1936,14 @@ function run_simulation_plots_Callback(hObject, eventdata, handles)
 % hObject    handle to run_simulation_plots (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
 printCell = data.printCell;
 templates = s;
 expSucc = data.expSucc;
-
-%global g;
-%global printCell;
-%global templates;
-%global expSucc;
 global xout;
 global tout;
-
 
 %After export to simulink is complete, start the simulation, using the
 %plotting parameters in printCell
@@ -2357,16 +2158,13 @@ function template_import_wizard_Callback(hObject, eventdata, handles)
 % hObject    handle to template_import_wizard (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % next step: load template invisibly from mdl-file
 oldFolder = cd(strcat(pwd,'/templates'));
-
 [filename, pathname] = uigetfile( ...
 {'*.mdl','Simulink model template(*.mdl)';
    '*.*',  'All Files (*.*)'}, ...
    'Import Simulink model templates', ...
    'MultiSelect', 'on');
-
 % disp(['Filename: ' filename]);
 if all( filename ~= 0 )
     load_system(filename);
@@ -2402,7 +2200,6 @@ if ~cellfun( @isempty, listblks )
 else
     % errordlg('No blocks with editable');
 end
-
 close_system(filename,0);
 cd(oldFolder);
 data = getappdata(handles.figure1,'appData');
@@ -2415,7 +2212,6 @@ function saveGraph(hObject, eventdata, handles, pathname, filename)
 % hObject    handle to savegraphas (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
@@ -2423,19 +2219,16 @@ templates = data.templates;
 template_list = data.template_list;
 modus = data.modus;
 printCell = data.printCell;
-
 if filename
      file = strcat(pathname, filename);
      [pathname, filename, ext] = fileparts(file);
      %save(g, file);
-
      adj_matrix = double(matrix(g));
      labs = get_label(g);
      XY = getxy(g);
      nverts = nv(g);
      nedges = ne(g);
      nodeColor = data.nodeColor;
-
      if strcmp(ext, '.mat')
         %save(file, 'data' );
         save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
