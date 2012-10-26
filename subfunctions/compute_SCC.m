@@ -67,7 +67,9 @@ posEmptyCells = find(cellfun(@isempty, SCC_sets));
 if ~isempty(posEmptyCells)
     SCC_sets = SCC_sets(1:min(posEmptyCells)-1);
 end
-    
+free(graph1_switched);
+free(t);
+% free(graph1);
     
     
 %%%%%%%%%%%%%%%

@@ -25,7 +25,7 @@ colIDX      = varargin{3};
 success = 0;
 
 cellData = get(handles.t,'Data');
-paramCellArray = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ], 'DialogParameters');
+    paramCellArray = get_param([handles.sysname,'/',cellData{ rowIDX,1 } ], 'DialogParameters');
 paramName = cellData{ rowIDX,colIDX-1 };
 paramField = getfield( paramCellArray, paramName ); %#ok<*GFLD>
 

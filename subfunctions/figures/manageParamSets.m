@@ -659,8 +659,8 @@ if strcmp(choice,'yes')
         Data, dimension, pathname);
     % close figure
     if success
-        if ~exist( [answer{1} '_CHECKED'],'file')
-            save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+        if ~exist( [answer{1} '_CHECKED.mdl'],'file')
+            save_system( handles.sysname, [pathname answer{1} '_CHECKED.mdl']);
         else
             errordlg({'A template with this name still exists.',...
                 'Please check if the new template is not identical to the existing one.',...
@@ -997,14 +997,14 @@ function togglebutton_setActive_ButtonDownFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-function TextField1InputSpecs_Callback(hObject, eventdata, handles)
-% hObject    handle to TextField1InputSpecs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text
-%        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double
-handles.noChanges = 0;
-guidata(hObject,handles);
+% function TextField1InputSpecs_Callback(hObject, eventdata, handles)
+% % hObject    handle to TextField1InputSpecs (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% % Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text
+% %        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double
+% handles.noChanges = 0;
+% guidata(hObject,handles);
 
 function TextField2InputSpecs_Callback(hObject, eventdata, handles)
 % hObject    handle to TextField2InputSpecs (see GCBO)

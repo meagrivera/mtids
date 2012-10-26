@@ -98,10 +98,12 @@ choice = 'No';
 if flagParamsFeasible
     try
         % Adapt "/Mux" according to specified inputs
-        Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
-        Vars=strcat(Vars{1:end});
+%         Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
+        Vars = regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
+        Vars = Vars(~cellfun(@isempty,Vars));
         noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
         if ~isempty( Vars )
+            Vars = Vars{1}; %strcat(Vars{1:end});
 %             noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
             noOfInputsToMux = size( getNumericValue( Vars,handles ),2 ) - noOfIntInputs;
             set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...

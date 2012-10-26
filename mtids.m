@@ -308,7 +308,7 @@ data.plotAllOutput = plotAllOutput;
 data.expSucc = 0;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
-computeInputSizes( handles );
+computeInputSizes( handles ); 
 
 
 % --- Executes when user attempts to close figure1.
@@ -490,29 +490,15 @@ function removenode_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % load application data
 data = getappdata(handles.figure1,'appData');
-g = data.g;
-templates = data.templates;
-printCell = data.printCell;
 a = str2num(get(handles.remnode,'String'));
-if nv(g) && (a <= nv(g))
-    templates(a,:) = []; % Deleting the template for the node, which should be deleted
-    delete(g,a);
-    %Here, the i-th entry of the printCell must be deleted too
-    length_printCell = size(printCell,1);
-    temp_printCell = printCell;
-    printCell = cell(length_printCell-1,2);
-    for i = 1:(a-1)
-        printCell(i,:) = temp_printCell(i,:);
-    end
-    for i = (a+1):length_printCell
-        printCell(i-1,:) = temp_printCell(i,:);
-    end
+if nv(data.g) && (a <= nv(data.g))
+    data.templates(a,:) = []; % Deleting the template for the node, which should be deleted
+    data.nodeColor(a,:)=[];
+    data.printCell(a,:)=[];
+    delete(data.g,a);
     refresh_graph(0, eventdata, handles,hObject);
 end
 %store application data
-data.g = g;
-data.templates = templates;
-data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 computeInputSizes(handles);
@@ -1033,7 +1019,6 @@ switch modus
 end
 %no data storaged needed, because this is a "void" function
 
-
 % --- Executes during object creation, after setting all properties.
 function dynamic_label_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to dynamic_label (see GCBO)
@@ -1351,6 +1336,7 @@ function selector_dynamic_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamic contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from selector_dynamic
 %get(hObject,'Value')
+set(hObject,'BackgroundColor','white');
 refresh_valueSet(handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1506,6 +1492,10 @@ if C <= 0.05; % Hardcoded value!
             data.simOut = [];
         end
         templates(I,:) = newTemplate;
+%         templates{I,2}.nodeInputs = data.templates{I,2}.nodeInputs;
+%         if isfield(data.templates{I,2},'isActive')
+            templates{I,2}.isActive = data.templates{I,2}.isActive;
+%         end
         if destroy == 0
             if ~strcmp(nodelabel, get_label(g,I))
                 if(strmatch(nodelabel,get_label(g),'exact'))
@@ -1590,7 +1580,7 @@ if strcmp(get(handles.output, 'SelectionType'), 'extend')
     guidata(hObject, handles);
     return
 end
-
+tempMatrix = matrix(data.g);
 %store application data
 data.g = g;
 data.templates = templates;
@@ -1603,8 +1593,11 @@ data.modus = modus;
 data.printCell = printCell;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
-computeInputSizes(handles);
+if ~isequal(tempMatrix,matrix(g))
+    computeInputSizes(handles);
+end
 refresh_valueSet( handles );
+computeInputSizes(handles);
 
 
 % --- Executes on mouse press over figure background, over a disabled or
@@ -1841,8 +1834,10 @@ if expSucc == 1
     Xtemp = simOut.get('xout');
     counter = 1;
     X = cell(nrNodes,1);
+    Y=cell(nrNodes,1);
     for i = 1:nrNodes
         noOfStates = data.templates{i,2}.dimension.states;
+        eval(['Y{i}=simOut.get(''nodeout' num2str(i) ''').signals.values;']);
         X(i) = { Xtemp(:,counter:counter+noOfStates-1) };
         counter = counter + noOfStates;
     end
@@ -1853,33 +1848,41 @@ if expSucc == 1
             hold on;
             %Check if output of node i should be plotted
             stringMatrix = cell(1,1);
+            counterStringMatrix=0;
             if any(temp(1:data.templates{i,2}.dimension.outputs))
                 eval(['y = simOut.get(''nodeout' num2str(i) ''').signals.values;']);
                 outputsToPlot = size(y,2);
                 for kk = 1:size(y,2)
-                    plot(t,y(:,kk),...
-                        'Color',printCell{i,2}(kk).lineColor,...
-                        'Linewidth',str2num(printCell{i,2}(kk).lineWidth),...
-                        'LineStyle',printCell{i,2}(kk).lineStyle,...
-                        'Marker',printCell{i,2}(kk).marker,...
-                        'MarkerEdgeColor',printCell{i,2}(kk).edgeColor ,...
-                        'MarkerFaceColor',printCell{i,2}(kk).faceColor); %#ok<*ST2NM>
-                    stringMatrix{kk} = ['Output signal ' num2str(kk) ' of node ' num2str(i)];
+                    if temp(kk)
+                        counterStringMatrix = counterStringMatrix + 1;
+                        plot(t,y(:,kk),...
+                            'Color',printCell{i,2}(counterStringMatrix).lineColor,...
+                            'Linewidth',str2num(printCell{i,2}(counterStringMatrix).lineWidth),...
+                            'LineStyle',printCell{i,2}(counterStringMatrix).lineStyle,...
+                            'Marker',printCell{i,2}(counterStringMatrix).marker,...
+                            'MarkerEdgeColor',printCell{i,2}(counterStringMatrix).edgeColor ,...
+                            'MarkerFaceColor',printCell{i,2}(counterStringMatrix).faceColor); %#ok<*ST2NM>
+                        stringMatrix{counterStringMatrix} = ['Output signal ' num2str(kk) ' of node ' num2str(i)];
+                    end
                 end
+%             else
+%                 outputsToPlot = 0;
             end
             %legend(['Output signal of node' num2str(i)]);
-            counterStringMatrix = outputsToPlot;
-            for kk = outputsToPlot+1:length( temp )
+
+%             counterStringMatrix = outputsToPlot;
+            for kk = data.templates{i,2}.dimension.outputs+1:length( temp )
                 if temp(kk)
                     counterStringMatrix = counterStringMatrix + 1;
-                    plot(t,X{i}(:,kk-outputsToPlot),...
-                        'Color',printCell{i,2}(kk).lineColor,...
-                        'Linewidth',str2num(printCell{i,2}(kk).lineWidth),...
-                        'LineStyle',printCell{i,2}(kk).lineStyle,...
-                        'Marker',printCell{i,2}(kk).marker,...
-                        'MarkerEdgeColor',printCell{i,2}(kk).edgeColor ,...
-                        'MarkerFaceColor',printCell{i,2}(kk).faceColor);
-                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-outputsToPlot) ' of node ' num2str(i)];
+                    idx=kk-data.templates{i,2}.dimension.outputs;
+                    plot(t,X{i}(:,idx),...
+                        'Color',printCell{i,2}(counterStringMatrix).lineColor,...
+                        'Linewidth',str2num(printCell{i,2}(counterStringMatrix).lineWidth),...
+                        'LineStyle',printCell{i,2}(counterStringMatrix).lineStyle,...
+                        'Marker',printCell{i,2}(counterStringMatrix).marker,...
+                        'MarkerEdgeColor',printCell{i,2}(counterStringMatrix).edgeColor ,...
+                        'MarkerFaceColor',printCell{i,2}(counterStringMatrix).faceColor);
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-data.templates{i,2}.dimension.outputs) ' of node ' num2str(i)];
                 end
             end
             legend(stringMatrix,'Location','NorthEastOutside');
@@ -1887,6 +1890,32 @@ if expSucc == 1
             ylabel(['Output and/or state of node ' num2str(i)]);           
             hold off;
         end
+    end
+    choice = questdlg('Would you like to save the simulation results to a file to the Workspace?','Export Results', ...
+        'Save to File','Export to Workspace','Exit','Exit');
+    switch choice
+        case 'Save to File';
+            prompt = {'Enter filename: '};
+            dlg_title = 'Filename';
+            num_lines = 1;
+            def = {'untitled'};
+            name = inputdlg(prompt,dlg_title,num_lines,def);
+            if isempty( name )
+                name = def;
+            end
+            save(name{1},'X','Y','t')
+           
+           
+        case 'Export to Workspace';
+            assignin('base','X',X)
+            assignin('base','Y',Y)
+            assignin('base','t',t)
+%         case 'Close Figures'
+%             close all
+        case 'Exit';
+            % do nothing
+%             figure1_CloseRequestFcn(handles.figure1, [], handles);
+%             return
     end
 end
 setappdata(handles.figure1,'appData',data);
@@ -2130,7 +2159,11 @@ h1=msgbox(message,title,'help');
 posVector=get(h1,'OuterPosition');
 set(h1,'OuterPosition',posVector + [0 0 20 0]); %[left, bottom, width, height]
 simulink;
-open_system('nodeTemplate.mdl');
+path=[pwd filesep 'templates' filesep];
+if ~exist('newtemplate1.mdl','file')
+    copyfile([path 'nodeTemplate.mdl'],[path 'newtemplate1.mdl']);
+end
+open_system('newtemplate1.mdl');
 
 
 
@@ -2307,6 +2340,7 @@ function dynamic_label_Callback(hObject, eventdata, handles)
 function number_of_nodes_Callback(hObject, eventdata, handles)
 
 function selector_valueSet_Callback(hObject, eventdata, handles) %#ok<*DEFNU,*INUSD>
+set(handles.selector_valueSet,'BackgroundColor','white');
 
 
 %%%%%%%%%
