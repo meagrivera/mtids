@@ -10,11 +10,12 @@ function varargout = inputParamsAdaptation(varargin)
 % OUTOUT:   (1) -- Chosen mode (as a char)
 %           (2) -- Boolean, '1' if button 'okay' was pressed, '0' if button
 %                   'cancel' was pressed
+%           (3) -- Scalar; factor for mode "Constant"
 %
 % Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
-% Last Modified by GUIDE v2.5 17-Sep-2012 10:18:21
+% Last Modified by GUIDE v2.5 26-Oct-2012 15:45:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -66,6 +67,7 @@ if handles.output_mode
 else
     varargout{2} = 0;
 end
+varargout{3} = get(handles.edit_factor,'string');
 delete(handles.main_figInputParamAdaptation);
 
 % --- Executes on button press in pushbutton_okay.
@@ -107,3 +109,29 @@ switch get(eventdata.NewValue,'Tag')
         handles.mode = 'preserve';
 end
 guidata(hObject, handles);
+
+
+
+function edit_factor_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
+% hObject    handle to edit_factor (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: get(hObject,'String') returns contents of edit_factor as text
+%        str2double(get(hObject,'String')) returns contents of edit_factor as a double
+if isempty(isnan(str2num(get(hObject,'String')))) %#ok<ST2NM>
+    set(hObject,'String',num2str(1));
+    error('Prompted input is not a number');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_factor_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_factor (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

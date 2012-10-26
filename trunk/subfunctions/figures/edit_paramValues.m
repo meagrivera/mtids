@@ -169,10 +169,8 @@ data = getappdata(handles.main_editParamValues,'appData');
 [dimension succ ME_testSimulation ME_paramsFeasible] = testingValueSet( handles,0 );
 if strcmp( succ, 'yes' )
 %     inputSpec.Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
-    Vartemp=regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
-    Vartemp=strcat(Vartemp{1:end});
-    Vartemp2{1}=Vartemp;
-    inputSpec.Vars = Vartemp2;
+    Vartemp=regexp(get(handles.TextField1InputSpecs,'String'), ',|\s','split');
+    inputSpec.Vars=Vartemp(~cellfun(@isempty,Vartemp));
     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
     data.new_template{1,1} = data.template{1,1};
     data.new_template{1,2}.set = get(handles.t,'Data');

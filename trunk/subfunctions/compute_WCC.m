@@ -5,7 +5,7 @@ function WCC_sets = compute_WCC( graphINPUT )
 % based on Matgraph. Sketch of algorithm is explained inside the source
 % code.
 %
-% INPUT: graph1    --   Edited Matgraph graph object, which represents a
+% INPUT: graphINPUT--   Edited Matgraph graph object, which represents a
 %                       directed graph
 % OUTPUT: WCC_sets --   Cell vector, each cell contains the numbers of
 %                       nodes, which belong to its WCC. For the number WCC
@@ -61,7 +61,9 @@ posEmptyCells = find(cellfun(@isempty, WCC_sets));
 if ~isempty(posEmptyCells)
     WCC_sets = WCC_sets(1:min(posEmptyCells)-1);
 end
-
+free(graph1);
+free(t);
+% free(graphINPUT);
 
 
 %%%%%%%%%%%%%%

@@ -34,7 +34,7 @@ if expSucc
 %             'SaveState','on','StateSaveName','xout','SaveOutput','on',...
 %             'OutputSaveName','yout');
         simOut = sim( data.sysFilename,data.simPrms );
-        close_system( data.sysFilename );
+        close_system( data.sysFilename,1 );
         warning('on', 'all');
     elseif ~isempty( currSysName )
         warning('off', 'all');

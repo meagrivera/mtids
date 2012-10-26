@@ -18,7 +18,7 @@ data = getappdata(handles.figure1,'appData');
 badNodes = ~consistentNodes;
 
 % ask for adaptation method
-[mode check] = inputParamsAdaptation;
+[mode check factor] = inputParamsAdaptation;
 if ~check
     return
 end
@@ -40,7 +40,7 @@ for ii = 1:nv(data.g)
             switch mode
                 case 'ones';
                     if nodeInputs>0
-                        valNew = ones( size(valOld,1),nodeInputs );
+                        valNew = ones( size(valOld,1),nodeInputs )*factor;
                     else
                         valNew=0;
                     end
@@ -52,7 +52,12 @@ for ii = 1:nv(data.g)
                     end
                 case 'meanValues';
                     if nodeInputs>0
-                        valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
+                        M1 = ones( size(valOld,1),nodeInputs );
+                        M2 = mean(valOld,2);
+                        for jj = 1:size(M1,1)
+                           M1(jj,:) = M1(jj,:)*M2(jj); 
+                        end
+                        valNew = M1; %ones( size(valOld,1),nodeInputs )*mean(valOld,2);
                     else
                         valNew=0;
                     end

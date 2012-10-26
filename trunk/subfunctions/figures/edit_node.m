@@ -33,7 +33,7 @@ function varargout = edit_node(varargin)
 
 % Edit the above text to modify the response to help edit_node
 
-% Last Modified by GUIDE v2.5 14-Sep-2012 10:58:39
+% Last Modified by GUIDE v2.5 26-Oct-2012 16:18:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -78,24 +78,16 @@ data.plotParamsOld = data.printCell{:,2};
 %Minimum length of print vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
 data.printVectorOld = data.printCell{:,1}; %old print vector
-
-[ny, nx] = size(data.template_list);
-
-% INITIALIZE GUI
-% Building selector string
-for i=1:ny
-    if i == 1
-        data.drop_string = data.template_list{1,1};
-    elseif i == ny
-        data.drop_string = strcat(data.drop_string,'|',data.template_list{i,1});
-    else        
-        data.drop_string = strcat(data.drop_string,'|',data.template_list{i,1});
-    end
+set(handles.selector_dynamics, 'String', data.template_list(:,1));
+n1 = find(strcmp(data.oldTemplate{1}, data.template_list));
+set(handles.selector_dynamics, 'Value', n1); % Get number of template name from list
+string4selectorParamSet = cell(1,length(data.template_list{n1,4}));
+for kk = 1:length(data.template_list{n1,4})
+    string4selectorParamSet{kk} = data.template_list{n1,4}(kk).setName;
 end
-
-%set(handles.selector_dynamics, 'String', data.drop_string);
-n1 = find(strcmp(data.template{1}, data.template_list));
-set(handles.selector_dynamics, 'String', data.template{1}); % Get number of template name from list
+set(handles.selector_paramSet,'String',string4selectorParamSet);
+n2 = find(strcmp(string4selectorParamSet,data.template{1,2}.setName));
+set(handles.selector_paramSet,'Value',n2);
 set(handles.number_node, 'String', num2str(data.nodenumber));
 set(handles.edit_label, 'String', data.nodelabel);
 set(handles.connections, 'String', matrix_to_string(data.neighbours));
@@ -210,26 +202,24 @@ end
 
 
 % --- Executes on selection change in selector_dynamics.
-function selector_dynamics_Callback(hObject, eventdata, handles)
+function selector_dynamics_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
 % hObject    handle to selector_dynamics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamics contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from selector_dynamics
-
+set(hObject,'BackgroundColor','white');
 
 % --- Executes during object creation, after setting all properties.
 function selector_dynamics_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selector_dynamics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+%     set(hObject,'BackgroundColor','white');
+% end
 
 
 % --- Executes on button press in button_edit.
@@ -807,6 +797,28 @@ function edit_plotOutputSignals_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in selector_paramSet.
+function selector_paramSet_Callback(hObject, eventdata, handles)
+% hObject    handle to selector_paramSet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Hints: contents = cellstr(get(hObject,'String')) returns selector_paramSet contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from selector_paramSet
+set(hObject,'BackgroundColor','white');
+
+
+% --- Executes during object creation, after setting all properties.
+function selector_paramSet_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to selector_paramSet (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

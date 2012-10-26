@@ -16,7 +16,7 @@ function TextField1InputSpecs_Callback( hObject, evtdata, handles ) %#ok<INUSL>
 % Read-out string and separate it (empty spaces or comma), using regexp
 user_string = get(hObject,'String');
 vars =regexp( user_string, ',|\s','split');
-
+vars = vars(~cellfun(@isempty,vars));
 % Search for variable names in the table
 Data = get(handles.t,'Data');
 if ~isempty( vars)
@@ -41,6 +41,17 @@ if ~isempty( vars)
         end
     end
 end
+%for all found variables
+% for kk = 1:length( vars )
+%     %find block name for variable kk in first col of 'Data'
+%     rowIDX = strcmp(Data{:,1},regexp(vars{kk},'[\w-_]*(?=/)','match'));
+%     regexp(vars{kk},'\/','split')
+%     %compare if there is any parameter with 'Name'
+% %     if regexp(vars{kk},'[\w-_]*(?=/)','match')
+% %         
+% %     end
+% 
+% end
 if ~isempty( vars)
     errordlg(['Parameter(s) ''' vars{:} ''' not found in table'],'Error on prompted parameter');
 end
