@@ -57,6 +57,7 @@ for kk = 1:length( data.template{1,2}.inputSpec.Vars )
     inputStrg = [inputStrg ', ' data.template{1,2}.inputSpec.Vars{kk}]; %#ok<AGROW>
 end
 set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
+% set(handles.TextField1InputSpecs,'String', strcat(inputStrg(3:end)) );
 tableRowNames = data.template{1,2}.set(:,1);
 tableData = data.template{1,2}.set;
 cnames = cell( size(tableData,2) , 1 );
@@ -167,7 +168,11 @@ data = getappdata(handles.main_editParamValues,'appData');
 % If succ == 'yes', test simulation with param value set was successfull
 [dimension succ ME_testSimulation ME_paramsFeasible] = testingValueSet( handles,0 );
 if strcmp( succ, 'yes' )
-    inputSpec.Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
+%     inputSpec.Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
+    Vartemp=regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
+    Vartemp=strcat(Vartemp{1:end});
+    Vartemp2{1}=Vartemp;
+    inputSpec.Vars = Vartemp2;
     inputSpec.noOfIntInputs = str2double(get(handles.TextField2InputSpecs,'string'));
     data.new_template{1,1} = data.template{1,1};
     data.new_template{1,2}.set = get(handles.t,'Data');

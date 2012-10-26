@@ -134,7 +134,7 @@ switch flagLoadSet
     case 2;
         
     otherwise;
-        data.plotAllOutput = 1;
+        data.plotAllOutput = 0;
         data.flag_showSimMod = 1;
         data.template_list = cell(0,3);
         data.modus = 'undirected';

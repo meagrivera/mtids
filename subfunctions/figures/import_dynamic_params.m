@@ -592,8 +592,10 @@ if strcmp(choice,'yes')
         return
     end
     pathname = [pwd filesep 'import' filesep];
-    if ~exist( [answer{1} '_CHECKED'],'file')
-        save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+%     if ~exist( [answer{1} '_CHECKED'],'file')
+    if ~exist( [answer{1} '_CHECKED.mdl'],'file')
+%         save_system( handles.sysname, [pathname answer{1} '_CHECKED']);
+        save_system( handles.sysname, [pathname answer{1} '_CHECKED.mdl']);
     end
     % copy also data=>use existing table
     [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...

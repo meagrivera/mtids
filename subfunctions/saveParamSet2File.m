@@ -47,7 +47,8 @@ end
 if size( varargin,2 ) > 8
     overwriteEnable = varargin{9};
 else
-    overwriteEnable = 1;
+%     overwriteEnable = 1;
+    overwriteEnable = 0;
 end
 
 flagEqual = 0;

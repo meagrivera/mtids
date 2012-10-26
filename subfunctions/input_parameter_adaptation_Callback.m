@@ -28,7 +28,10 @@ for ii = 1:nv(data.g)
         tempSet = data.templates{ii,2}.set;
         nodeInputs = data.templates{ii,2}.nodeInputs;
         for kk = 1:length(vars)
-            [tempRow tempCol] = find( strcmp(tempSet,vars{kk}) );
+            blockname=regexp( vars{kk}, ',|\/','split');
+            tempRow=find(strcmp(tempSet(:,1),blockname{1}));
+            tempCol=find(strcmp(tempSet(tempRow,:),blockname{2}));
+            %             [tempRow tempCol] = find( strcmp(tempSet,vars{kk}) );
             if length(tempRow) > 1 || length(tempCol) > 1
                 % error
                 return
@@ -36,18 +39,38 @@ for ii = 1:nv(data.g)
             valOld = str2num( tempSet{ tempRow,tempCol+1 } ); %#ok<ST2NM>
             switch mode
                 case 'ones';
-                    valNew = ones( size(valOld,1),nodeInputs );
+                    if nodeInputs>0
+                        valNew = ones( size(valOld,1),nodeInputs );
+                    else
+                        valNew=0;
+                    end
                 case 'meanNodes';
-                    valNew = ones( size(valOld,1),nodeInputs )/nodeInputs;
+                    if nodeInputs>0
+                        valNew = ones( size(valOld,1),nodeInputs )/nodeInputs;
+                    else
+                        valNew=0;
+                    end
                 case 'meanValues';
-                    valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
+                    if nodeInputs>0
+                        valNew = ones( size(valOld,1),nodeInputs )*mean(valOld,2);
+                    else
+                        valNew=0;
+                    end
                 case 'random';
-                    valNew = randn( size(valOld,1),nodeInputs );
+                    if nodeInputs>0
+                        valNew = randn( size(valOld,1),nodeInputs );
+                    else
+                        valNew=0;
+                    end
                 case 'preserve';
-                    if size( valOld,2 ) < nodeInputs
-                        valNew = [valOld ones(size(valOld,1),nodeInputs-size(valOld,2))];
-                    elseif size( valOld,2 ) > nodeInputs
-                        valNew = valOld(:,1:nodeInputs);
+                    if nodeInputs>0
+                        if size( valOld,2 ) < nodeInputs
+                            valNew = [valOld ones(size(valOld,1),nodeInputs-size(valOld,2))];
+                        elseif size( valOld,2 ) > nodeInputs
+                            valNew = valOld(:,1:nodeInputs);
+                        end
+                    else
+                        valNew=0;
                     end
             end
             % wrap 'valNew' into correct format for writing the values into
