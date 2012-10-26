@@ -27,7 +27,9 @@ if ~isempty( vars)
             if paramExists && valueExists
                 temp = zeros( length( vars ),1 );
                 for kk = 1:length( vars )
-                    if isequal( vars(kk), Data(ii,jj) )
+                    comparestring=strcat(Data{ii,1},'/',Data{ii,jj});
+%                     if isequal( vars(kk), Data(ii,jj) )
+                    if strcmp( vars(kk), comparestring )
                         temp(kk) = 1;
                     end
                 end

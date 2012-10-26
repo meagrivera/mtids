@@ -20,17 +20,22 @@ end
 var         = varargin{1};
 handles     = varargin{2};
 
+blockname=regexp( var, ',|\/','split');
+
 % Search for variable names in the table
 Data = get(handles.t,'Data');
 flag = 0;
 for ii = 1:size( Data,1 )
-    for jj = 2:2:size( Data,2 )
-        paramExists = ~isempty( Data{ii,jj} );
-        valueExists = ~isempty( Data{ii,jj+1} );
-        if paramExists && valueExists
-            if isequal( var, Data{ii,jj} )
-                varargout{1} = str2num( Data{ii,jj+1} ); %#ok<ST2NM>
-                flag = 1;
+    if strcmp(Data(ii,1),blockname{1})
+        for jj = 2:2:size( Data,2 )
+            paramExists = ~isempty( Data{ii,jj} );
+            valueExists = ~isempty( Data{ii,jj+1} );
+            if paramExists && valueExists
+                %             if isequal( var, Data{ii,jj} )
+                if strcmp(blockname{2},Data{ii,jj})
+                    varargout{1} = str2num( Data{ii,jj+1} ); %#ok<ST2NM>
+                    flag = 1;
+                end
             end
         end
     end

@@ -69,7 +69,8 @@ if notValid
 end
 
 % Collecting all parameters and writing it into a copy of the Model
-save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy']);
+% save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy']);
+save_system( handles.sysname, [pwd filesep handles.sysname '_tempCopy.mdl']);
 Data = get(handles.t,'Data');
 flagParamsFeasible = 0;
 try
@@ -97,10 +98,12 @@ choice = 'No';
 if flagParamsFeasible
     try
         % Adapt "/Mux" according to specified inputs
-        Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9]','match');
+        Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
+        Vars=strcat(Vars{1:end});
         noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
         if ~isempty( Vars )
-            noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
+%             noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
+            noOfInputsToMux = size( getNumericValue( Vars,handles ),2 ) - noOfIntInputs;
             set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
                 num2str(noOfInputsToMux) );
         end
