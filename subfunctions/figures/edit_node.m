@@ -234,7 +234,11 @@ data = getappdata(handles.figure1,'appData');
 
 data.destroy = 0; %node should NOT be destroyed and changes be applied
 
-n_template = get(handles.selector_dynamics, 'String');
+% n_template = get(handles.selector_dynamics, 'String');
+
+wholetemplatelist=get(handles.selector_dynamics,'String');
+n_template=get(handles.selector_dynamics,'Value');
+n_template=wholetemplatelist{n_template};
 data.template = n_template;
 %data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
