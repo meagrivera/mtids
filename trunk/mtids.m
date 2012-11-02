@@ -1486,7 +1486,8 @@ if C <= 0.05; % Hardcoded value!
         % Opens EDIT_NODE(): node modification dialog
         [s1,nodenumber,nodelabel,template,neighbours,destroy,templateSaved,...
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
-            templates(I,:), template_list, g(I), printCell(I,:),handles.figure1 );
+            templates(I,:), template_list, g(I), printCell(I,:),handles.figure1,...
+            data.plotAllOutput);
         if ~all( cellfun(@isequal,newTemplate,templates(I,:)) )
             data.expSucc = 0;
             data.simOut = [];

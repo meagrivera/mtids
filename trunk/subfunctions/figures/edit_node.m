@@ -16,6 +16,7 @@ function varargout = edit_node(varargin)
 %           (5)  -- Connected node neighbours in MTIDS graph
 %           (6)  -- Cell array, contains plot settings for all node
 %           (7)  -- Handle to main figure (usually to MTIDS itself)
+%           (8)  -- Flag "Plot All Output"
 %
 % OUTPUT:   (1)  -- Handle to figure
 %           (2)  -- Node index
@@ -74,20 +75,26 @@ data.template_list = varargin{4};
 data.neighbours = varargin{5};
 data.printCell = varargin{6};
 data.handleMainFigure = varargin{7};
+data.plotAllOutput = varargin{8};
 data.plotParamsOld = data.printCell{:,2};
 %Minimum length of print vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
 data.printVectorOld = data.printCell{:,1}; %old print vector
+%% Initialize dropdown-menues
 set(handles.selector_dynamics, 'String', data.template_list(:,1));
 n1 = find(strcmp(data.oldTemplate{1}, data.template_list));
 set(handles.selector_dynamics, 'Value', n1); % Get number of template name from list
 string4selectorParamSet = cell(1,length(data.template_list{n1,4}));
 for kk = 1:length(data.template_list{n1,4})
-    string4selectorParamSet{kk} = data.template_list{n1,4}(kk).setName;
+    if data.template_list{n1,4}(kk).isActive
+        string4selectorParamSet{kk} = data.template_list{n1,4}(kk).setName;
+    end
 end
+string4selectorParamSet = string4selectorParamSet(~cellfun(@isempty,string4selectorParamSet));
 set(handles.selector_paramSet,'String',string4selectorParamSet);
-n2 = find(strcmp(string4selectorParamSet,data.template{1,2}.setName));
+n2 = find(strcmp(string4selectorParamSet,data.oldTemplate{1,2}.setName));
 set(handles.selector_paramSet,'Value',n2);
+%%
 set(handles.number_node, 'String', num2str(data.nodenumber));
 set(handles.edit_label, 'String', data.nodelabel);
 set(handles.connections, 'String', matrix_to_string(data.neighbours));
@@ -95,8 +102,9 @@ set(handles.connections, 'String', matrix_to_string(data.neighbours));
 %Initialize figure with information contained in printCell
 temp = data.printCell{1,1};
 data.templateSaved = 0;
-set(handles.edit_intStates,'String',num2str(data.template{1,2}.dimension.states));
-set(handles.text_noOfOutputSignals,'String',num2str(data.template{1,2}.dimension.outputs));
+data.template = data.template{1,1};
+set(handles.edit_intStates,'String',num2str(data.oldTemplate{1,2}.dimension.states));
+set(handles.text_noOfOutputSignals,'String',num2str(data.oldTemplate{1,2}.dimension.outputs));
 if temp(1) == 1
     data.flagCheck1 = 1;
 else
@@ -170,7 +178,7 @@ elseif handles.OutputFlag == 0 % "delete node"
     varargout{9} = data.plotParamsOld; 
 end
  
-if handles.flagEditParams && handles.OutputFlag == 2
+if isfield(data,'newTemplate') && handles.flagEditParams && handles.OutputFlag == 2
     varargout{10} = data.newTemplate;
 else
     varargout{10} = data.oldTemplate;
@@ -208,7 +216,23 @@ function selector_dynamics_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: contents = cellstr(get(hObject,'String')) returns selector_dynamics contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from selector_dynamics
-set(hObject,'BackgroundColor','white');
+%set(hObject,'BackgroundColor','white');
+% contents = cellstr(get(hObject,'String'));
+data = getappdata(handles.figure1,'appData');
+n1 = get(hObject,'Value');
+string4selectorParamSet = cell(1,length(data.template_list{n1,4}));
+for kk = 1:length(data.template_list{n1,4})
+    if data.template_list{n1,4}(kk).isActive
+        string4selectorParamSet{kk} = data.template_list{n1,4}(kk).setName;
+    end
+end
+string4selectorParamSet = string4selectorParamSet(~cellfun(@isempty,string4selectorParamSet));
+set(handles.selector_paramSet,'String',string4selectorParamSet);
+n2 = 1; %find(strcmp(string4selectorParamSet,data.template_list{n1,4}.setName));
+set(handles.selector_paramSet,'Value',n2);
+% Call "selector_paramSet_Callback"
+selector_paramSet_Callback(handles.selector_paramSet, [], handles);
+setappdata(handles.figure1,'appData',data);
 
 % --- Executes during object creation, after setting all properties.
 function selector_dynamics_CreateFcn(hObject, eventdata, handles)
@@ -236,19 +260,16 @@ data.destroy = 0; %node should NOT be destroyed and changes be applied
 
 % n_template = get(handles.selector_dynamics, 'String');
 
-wholetemplatelist=get(handles.selector_dynamics,'String');
-n_template=get(handles.selector_dynamics,'Value');
-n_template=wholetemplatelist{n_template};
-data.template = n_template;
+% wholetemplatelist=get(handles.selector_dynamics,'String');
+% n_template=get(handles.selector_dynamics,'Value');
+% n_template=wholetemplatelist{n_template};
+% data.template = n_template;
 %data.template = data.template_list{n_template};
 data.nodelabel = get(handles.edit_label, 'String');
 handles.nodelabel = get(handles.edit_label, 'String');
 data.neighbours = get(handles.connections, 'String');
-
 setappdata(handles.figure1,'appData',data);
-
 handles.OutputFlag = 2;
-
 guidata(hObject, handles);
 %close(handles.output);
 uiresume(handles.figure1);
@@ -296,6 +317,8 @@ else
     % Checkbox is not checked-take appropriate action 
     data.flagCheck1 = 0;
 end
+% handles.flagEditParams = 1;
+% guidata(hObject, handles);
 setappdata(handles.figure1,'appData',data);
 
 
@@ -347,6 +370,8 @@ else
     % Checkbox is not checked-take appropriate action
     data.flagCheck2 = 0;
 end
+% handles.flagEditParams = 1;
+% guidata(hObject, handles);
 setappdata(handles.figure1,'appData',data);
 
 
@@ -404,6 +429,7 @@ if ~isempty( str2num( get(hObject,'String')))
 end
 data.stringPlotOutputSignals = get(hObject,'String');
 setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function edit_selectedStates_CreateFcn(hObject, eventdata, handles)
@@ -814,7 +840,49 @@ function selector_paramSet_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: contents = cellstr(get(hObject,'String')) returns selector_paramSet contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from selector_paramSet
-set(hObject,'BackgroundColor','white');
+%set(hObject,'BackgroundColor','white');
+contents = cellstr(get(hObject,'String'));
+nameSet = contents{get(hObject,'Value')};
+data = getappdata(handles.figure1,'appData');
+nTemp = get(handles.selector_dynamics,'Value');
+% nameSet = get(handles.selector_dynamics,'String');
+% nSetMenu = get(hObject,'Value');
+%% new settings in data.template and data.printCell
+for ii = 1:length(data.template_list{nTemp,4})
+   if strcmp(nameSet, data.template_list{nTemp,4}(ii).setName)
+       nSetTList = ii;
+       break
+   end
+end
+wholetemplatelist=get(handles.selector_dynamics,'String');
+n_template=get(handles.selector_dynamics,'Value');
+% n_template=wholetemplatelist{n_template};
+data.newTemplate{1,1} = wholetemplatelist{n_template};
+data.newTemplate{1,2} = data.template_list{nTemp,4}(nSetTList);
+data.template =  wholetemplatelist{n_template};
+dimOut = data.template_list{nTemp,4}(nSetTList).dimension.outputs;
+dimInt = data.template_list{nTemp,4}(nSetTList).dimension.states;
+if data.plotAllOutput
+    data.printCell{1,1} = [ones(1,dimOut) zeros(1,dimInt)];
+    data.printCell{1,2} = initPlotParams(dimOut);
+else
+    data.printCell{1,1} = [zeros(1,dimOut) zeros(1,dimInt)];
+    data.printCell{1,2} = initPlotParams(1);
+end
+handles.flagEditParams = 1;
+setappdata(handles.figure1,'appData',data);
+guidata(hObject, handles);
+%% visualization
+% text_noOfOutputSignals
+set(handles.text_noOfOutputSignals,'String',num2str(dimOut));
+% edit_intStates
+set(handles.edit_intStates,'String',num2str(dimInt));
+% edit_selectedStates
+set_stringSelectedStates( data.printCell,handles );
+% edit_plotOutputSignals
+set_stringPlotOutputSignals( data.printCell,handles );
+data = getappdata(handles.figure1,'appData');
+setappdata(handles.figure1,'appData',data);
 
 
 % --- Executes during object creation, after setting all properties.
