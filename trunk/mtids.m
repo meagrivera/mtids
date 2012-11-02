@@ -23,7 +23,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 26-Sep-2012 15:38:36
+% Last Modified by GUIDE v2.5 29-Oct-2012 09:03:45
 
 % Authors: Francisco Llobet, Jose Rivera
 % Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
@@ -1825,7 +1825,9 @@ if expSucc == 1
         simOut = performSimulation( handles );
         data.simOut = simOut;
     else
-        simOut = data.simOut;
+%         simOut = data.simOut;
+        simOut = performSimulation( handles );
+        data.simOut = simOut;
     end
     %Plotting of the simulation result can be done on different ways. For now,
     %every state gets its own figure
@@ -2345,3 +2347,10 @@ set(handles.selector_valueSet,'BackgroundColor','white');
 
 %%%%%%%%%
 
+
+
+% --------------------------------------------------------------------
+function uipushtool2_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipushtool2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
