@@ -17,6 +17,7 @@ function varargout = edit_node(varargin)
 %           (6)  -- Cell array, contains plot settings for all node
 %           (7)  -- Handle to main figure (usually to MTIDS itself)
 %           (8)  -- Flag "Plot All Output"
+%           (9)  -- Flag "DEBUG" or "PUBLISH" mode
 %
 % OUTPUT:   (1)  -- Handle to figure
 %           (2)  -- Node index
@@ -76,6 +77,7 @@ data.neighbours = varargin{5};
 data.printCell = varargin{6};
 data.handleMainFigure = varargin{7};
 data.plotAllOutput = varargin{8};
+data.version = varargin{9};
 data.plotParamsOld = data.printCell{:,2};
 %Minimum length of print vector is 2. First entry denotes if node output
 %should be plotted. Entries 1+i denotes if internal state i should be plotted.
@@ -123,6 +125,11 @@ set_stringSelectedStates( data.printCell,handles );
 set_stringPlotOutputSignals( data.printCell,handles );
 % set(handles.checkbox2,'Value',data.flagCheck2);
 % set(handles.edit_selectedStates,'String',stringSelectedStates);
+
+switch data.version
+    case 'PUBLISH';
+        set(handles.pushbutton5,'Visible','off');
+end
 
 % Choose default command line output for edit_node
 handles.output = hObject;

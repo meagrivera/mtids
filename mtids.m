@@ -23,7 +23,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 29-Oct-2012 09:03:45
+% Last Modified by GUIDE v2.5 07-Jan-2013 09:45:35
 
 % Authors: Francisco Llobet, Jose Rivera
 % Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
@@ -57,8 +57,18 @@ function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to mtids (see VARARGIN)
 
+% DEBUG or PUBLISH (VERSION)
+% vers = 'DEBUG';
+vers = 'PUBLISH';
+
+
 disp(' ');
-disp('MTIDS 1.2');
+switch vers
+    case 'DEBUG';
+        disp('MTIDS 1.2 - DEBUG MODE');
+    case 'PUBLISH';
+        disp('MTIDS 1.2');
+end
 disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
 disp('<a href="http://code.google.com/p/mtids">http://code.google.com/p/mtids</a>');
 disp(' ');
@@ -154,6 +164,19 @@ data.add_connection = 0;
 data.start_index = 0;
 data.graph_refresh = 1;
 data.adaptInputParams = 'ones';
+
+data.vers = vers;
+switch data.vers
+    case 'PUBLISH';
+        % debug push-buttons
+        set(handles.pushbutton17,'Visible','off');
+        % menu items
+        set(handles.export_as_layer_2,'Visible','off');
+        set(handles.import_from_simulink,'Visible','off');
+        set(handles.add_mdl_template,'Visible','off');
+        set(handles.template_import_wizard,'Visible','off');
+        set(handles.run_simulation_plots,'Visible','off');
+end
 
 %container for plot information - 
 % 1.column: printVector -- containes the information about node number,
@@ -349,6 +372,14 @@ modus = data.modus;
 % Search labels
 label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
+if isempty(label1)
+    warning('Please specify "From node"');
+    return
+end
+if isempty(label2)
+    warning('Please specify "To node"');
+    return
+end
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max'))
     labs = get_label(g);
     n1 = strmatch(label1, labs, 'exact');
@@ -442,6 +473,14 @@ label1 = get(handles.fromnode,'String');
 label2 = get(handles.tonode,'String');
 %the radio buttons "Label" and "Node number" evaluates, if a node is
 %adressed via its number or label
+if isempty(label1)
+    warning('Please specify "From node"');
+    return
+end
+if isempty(label2)
+    warning('Please specify "To node"');
+    return
+end
 if (get(handles.label_button,'Value') == get(handles.label_button,'Max')) 
     %if this is true, the radio button is selected
     labs = get_label(g);
@@ -491,6 +530,10 @@ function removenode_Callback(hObject, eventdata, handles)
 % load application data
 data = getappdata(handles.figure1,'appData');
 a = str2num(get(handles.remnode,'String'));
+if isempty(a)
+    warning('Please specify the node, which should be deleted');
+    return
+end
 if nv(data.g) && (a <= nv(data.g))
     data.templates(a,:) = []; % Deleting the template for the node, which should be deleted
     data.nodeColor(a,:)=[];
@@ -1484,10 +1527,17 @@ if C <= 0.05; % Hardcoded value!
         end 
     elseif strcmp(get(handles.output, 'SelectionType'), 'open')
         % Opens EDIT_NODE(): node modification dialog
+        switch data.modus
+            case 'directed';
+                [row col ~] = find( matrix( data.g ) );
+                vec_neigbours_old = row( col == I )';
+            case 'undirected';
+                vec_neigbours_old = g(I);
+        end
         [s1,nodenumber,nodelabel,template,neighbours,destroy,templateSaved,...
             printVector,plotParams,newTemplate] = edit_node(I, get_label(g,I), ...
-            templates(I,:), template_list, g(I), printCell(I,:),handles.figure1,...
-            data.plotAllOutput);
+            templates(I,:), template_list, vec_neigbours_old, printCell(I,:),handles.figure1,...
+            data.plotAllOutput, data.vers);
         if ~all( cellfun(@isequal,newTemplate,templates(I,:)) )
             data.expSucc = 0;
             data.simOut = [];
@@ -1512,20 +1562,26 @@ if C <= 0.05; % Hardcoded value!
             end      
             label(g,I, nodelabel);   
             templates{I} = template;
-            e_delete = g(I);
+            e_delete = vec_neigbours_old;
             size_ne = size(e_delete,2);          
             if ~strcmp('double',class(neighbours))
                 %disp(['Class of variable "neighbour" is not "double".']);
                 neighbours = eval(neighbours); %neighbours must be of type "double"
             end         
             for i=1:size_ne
-                delete(g,I,e_delete(i));
-            end           
-            size_ne = size(neighbours,2);          
+                switch data.modus
+                    case 'undirected';
+                        delete(g,I,e_delete(i));
+                    case 'directed';
+                        delete(g,e_delete(i),I,1);
+                end
+            end
+            size_ne = size(neighbours,2); 
             if ~strcmp(neighbours, '[]')
                 for i=1:size_ne
                     if strcmp( data.modus,'directed')
-                        add(g,I,neighbours(i),1);
+%                         add(g,I,neighbours(i),1);
+                        add(g,neighbours(i),I,1);
                     else
                         add(g,I,neighbours(i));
                     end
@@ -1772,7 +1828,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
                 data.nodeColor = cell(0,2);                
         end     
         guidata(hObject, handles);
-        refresh_graph(0, eventdata, handles,hObject);
+%         refresh_graph(0, eventdata, handles,hObject);
     case 'button_directed'
         data.modus = 'directed';
         qstring = {'Preserve vertices?','(Edges will be deleted in both cases)'};
@@ -1792,7 +1848,7 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
                 data.nodeColor = cell(0,2);
         end
         guidata(hObject, handles);
-        refresh_graph(0, eventdata, handles,hObject);
+%         refresh_graph(0, eventdata, handles,hObject);
     % Continue with more cases as necessary.
     otherwise
         % Code for when there is no match.
@@ -1801,6 +1857,7 @@ end
 %store application data
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles); 
+refresh_graph(0, eventdata, handles,hObject);
 
 
 % --------------------------------------------------------------------
@@ -2355,3 +2412,31 @@ function uipushtool2_ClickedCallback(hObject, eventdata, handles)
 % hObject    handle to uipushtool2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton_allnodedynamic.
+function pushbutton_allnodedynamic_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_allnodedynamic (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+choice = questdlg('Do you really want to overwrite all node dynamics?',...
+    'Are you sure?','Yes','No','No');
+switch choice
+    case 'No';
+        return
+    case 'Yes';
+        data = getappdata(handles.figure1,'appData');
+        % loop => iterate over number of nodes
+        nodeNrs = size(data.templates,1);        
+        idx_sel_dyn = get(handles.selector_dynamic,'Value');
+        idx_sel_set = get(handles.selector_valueSet,'Value');
+        %
+        for k = 1:nodeNrs
+            data.templates{k,1} = data.template_list{idx_sel_dyn,1};
+            data.templates{k,2} = data.template_list{idx_sel_dyn,4}(idx_sel_set);
+        end
+        %store application data
+        setappdata(handles.figure1,'appData',data);
+        % guidata(hObject, handles);
+        computeInputSizes(handles);
+end
