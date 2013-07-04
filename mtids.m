@@ -23,10 +23,11 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 07-Jan-2013 09:45:35
+% Last Modified by GUIDE v2.5 02-May-2013 13:54:46
 
 % Authors: Francisco Llobet, Jose Rivera
-% Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
+% Editors: Ferdinand Trommsdorff (f.trommsdorff@gmail.com), 
+%          Cagkan Yapar (cagkan.yapar@tum.de)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
 % Begin initialization code - DO NOT EDIT
@@ -60,6 +61,7 @@ function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % DEBUG or PUBLISH (VERSION)
 % vers = 'DEBUG';
 vers = 'PUBLISH';
+
 
 
 disp(' ');
@@ -112,6 +114,8 @@ flagLoadSet = 0;
 try
     load_settings(['resources' filesep 'lastset'],handles);
     data = getappdata(handles.figure1,'appData');
+    
+     
     if ~isempty(data)
         choice = questdlg('Do you want to load the settings formerly used?', ...
             'Former settings?', ...
@@ -121,7 +125,9 @@ try
                 flagLoadSet = 1;
             case 'Yes, with last graph';
                 loadGraphAtOpening(hObject, eventdata, handles);
+
                 data = getappdata(handles.figure1,'appData');
+               
                 flagLoadSet = 2;
             case 'No';
                 flagLoadSet = 0;
@@ -130,6 +136,7 @@ try
 catch
     %
 end
+
 
 % Setting the parameters according to chosen old data
 switch flagLoadSet
@@ -142,7 +149,7 @@ switch flagLoadSet
         data.g = g;
         
     case 2;
-        
+     
     otherwise;
         data.plotAllOutput = 0;
         data.flag_showSimMod = 1;
@@ -222,7 +229,101 @@ handles.output = hObject;
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
 
+A=matrixOfGraph(data.g); %Initialize degree-distribution plots. Use the adjacency matrix from the last usage of mtids
+sizeA=size(A,1);
+n = nv(data.g);   %# of nodes 
+degout=zeros(sizeA,1);
+for j=1:sizeA
+    degout(j)=sum(A(j,:));
+end
+unv = unique(degout);
+unv1 = unv;
+degin=zeros(sizeA,1);
+for j=1:sizeA
+    degin(j)=sum(A(:,j));
+end
+unv2 = unique(degin);
+degfig=figure('Visible','off','Name','Degree distribution','NumberTitle','off','Position',[10 558 560 420]);
+semilogx(unv, histc(degout,unv)/n,'--rs');
+xlabel('Degree');
+ylabel('Degree probability of fraction');
+title('Degree distribution');
+degoutfig=figure('Visible','off','Name','Out-degree distribution','NumberTitle','off','Position',[10 558 560 420]);
+semilogx(unv1, histc(degout,unv1)/n,'--rs');
+title('Out-degree distribution');
+xlabel('Out-degree');
+ylabel('Degree probability of fraction');
+deginfig=figure('Visible','off','Name','In-degree distribution','NumberTitle','off','Position',[10 50 560 420]);
+semilogx(unv2, histc(degin,unv2)/n,'--rs');
+title('In-degree distribution');
+xlabel('In-degree');
+ylabel('Degree probability of fraction');
+toggle = (get(handles.toggleshowdegree,'Value'));
+if toggle == 1 && dir == 0
+    set(degfig,'Visible','on');
+elseif toggle == 1 && dir == 1
+    set(degoutfig,'Visible','on');
+    set(deginfig,'Visible','on');
+end
 
+ 
+    function DegreeDistribution(hObject, eventdata, handles)
+        data = getappdata(handles.figure1,'appData');
+        modus = data.modus;
+        n = nv(data.g);   %# of nodes 
+        switch modus
+            case 'undirected';
+                dir = 0;
+            case 'directed';
+                dir = 1;
+        end
+        
+        close(findobj('type','figure','name','Degree distribution'));
+        close(findobj('type','figure','name','Out-degree distribution'));
+        close(findobj('type','figure','name','In-degree distribution'));
+        A=matrixOfGraph(data.g);
+        sizeA=size(A,1);
+        degout=zeros(sizeA,1);
+        for j=1:sizeA
+            degout(j)=sum(A(j,:));
+        end
+        unv = unique(degout);
+        if dir == 1
+            unv1 = unv;
+            degin=zeros(sizeA,1);
+            for j=1:sizeA
+                degin(j)=sum(A(:,j));
+            end
+            unv2 = unique(degin);
+        end
+        if dir == 0
+            degfig=figure('Visible','off','Name','Degree distribution','NumberTitle','off','Position',[10 558 560 420]);
+            semilogx(unv, histc(degout,unv)/n,'--rs');
+            xlabel('Degree');
+            ylabel('Degree probability of fraction');
+            title('Degree distribution');
+        end
+        if dir == 1
+            degoutfig=figure('Visible','off','Name','Out-degree distribution','NumberTitle','off','Position',[10 558 560 420]);
+            semilogx(unv1, histc(degout,unv1)/n,'--rs');
+            title('Out-degree distribution');
+            xlabel('Out-degree');
+            ylabel('Degree probability of fraction');
+            deginfig=figure('Visible','off','Name','In-degree distribution','NumberTitle','off','Position',[10 50 560 420]);
+            semilogx(unv2, histc(degin,unv2)/n,'--rs');
+            title('In-degree distribution');
+            xlabel('In-degree');
+            ylabel('Degree probability of fraction');
+        end
+        toggle = (get(handles.toggleshowdegree,'Value'));
+        if toggle == 1 && dir == 0
+            set(degfig,'Visible','on');
+        elseif toggle == 1 && dir == 1
+            set(degoutfig,'Visible','on');
+            set(deginfig,'Visible','on');
+        end
+         
+           
 % --- Outputs from this function are returned to the command line.
 function varargout = mtids_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
@@ -354,8 +455,15 @@ graph_destroy;
 data.g = g;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
+
 % graph_destroy();
 delete(hObject);
+
+close(findobj('type','figure','name','Degree distribution'));
+close(findobj('type','figure','name','Out-degree distribution'));
+close(findobj('type','figure','name','In-degree distribution'));
+
+
 
 
 
@@ -573,6 +681,7 @@ clear_edges(data.g);
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
+DegreeDistribution(hObject, eventdata, handles);
 
 
 % --- Executes on button press in completegraph.
@@ -587,6 +696,7 @@ complete(data.g);
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject);
+DegreeDistribution(hObject, eventdata, handles);
 
 
 % --- Executes on button press in randomgraph.
@@ -607,6 +717,7 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 refresh_graph(0, eventdata, handles,hObject)
 computeInputSizes(handles);
+DegreeDistribution(hObject, eventdata, handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -952,6 +1063,107 @@ setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);
 % computeInputSizes( handles );
 
+function C=clustering_coef_bu(G)
+%CLUSTERING_COEF_BU     Clustering coefficient
+%
+%   C = clustering_coef_bu(A);
+%
+%   The clustering coefficient is the fraction of triangles around a node
+%   (equiv. the fraction of node’s neighbors that are neighbors of each other).
+%
+%   Input:      A,      binary undirected connection matrix
+%
+%   Output:     C,      clustering coefficient vector
+%
+%   Reference: Watts and Strogatz (1998) Nature 393:440-442.
+%
+%
+%   Mika Rubinov, UNSW, 2007-2010
+
+n=length(G);
+C=zeros(n,1);
+
+for u=1:n
+    V=find(G(u,:));
+    k=length(V);
+    if k>=2;                %degree must be at least 2
+        S=G(V,V);
+        C(u)=sum(S(:))/(k^2-k);
+    end
+end
+function C=clustering_coef_bd(A)
+%CLUSTERING_COEF_BD     Clustering coefficient
+%
+%   C = clustering_coef_bd(A);
+%
+%   The clustering coefficient is the fraction of triangles around a node
+%   (equiv. the fraction of node’s neighbors that are neighbors of each other).
+%
+%   Input:      A,      binary directed connection matrix
+%
+%   Output:     C,      clustering coefficient vector
+%
+%   Reference: Fagiolo (2007) Phys Rev E 76:026107.
+%
+%
+%   Mika Rubinov, UNSW, 2007-2010
+
+%Methodological note: In directed graphs, 3 nodes generate up to 8 
+%triangles (2*2*2 edges). The number of existing triangles is the main 
+%diagonal of S^3/2. The number of all (in or out) neighbour pairs is 
+%K(K-1)/2. Each neighbour pair may generate two triangles. "False pairs" 
+%are i<->j edge pairs (these do not generate triangles). The number of 
+%false pairs is the main diagonal of A^2.
+%Thus the maximum possible number of triangles = 
+%       = (2 edges)*([ALL PAIRS] - [FALSE PAIRS])
+%       = 2 * (K(K-1)/2 - diag(A^2))
+%       = K(K-1) - 2(diag(A^2))
+
+S=A+A.';                    %symmetrized input graph
+K=sum(S,2);                 %total degree (in + out)
+cyc3=diag(S^3)/2;           %number of 3-cycles (ie. directed triangles)
+K(cyc3==0)=inf;             %if no 3-cycles exist, make C=0 (via K=inf)
+CYC3=K.*(K-1)-2*diag(A^2);	%number of all possible 3-cycles
+C=cyc3./CYC3;               %clustering coefficient
+function D=distance_bin(G)
+%DISTANCE_BIN       Distance matrix
+%
+%   D = distance_bin(A);
+%
+%   The distance matrix contains lengths of shortest paths between all
+%   pairs of nodes. An entry (u,v) represents the length of shortest path 
+%   from node u to node v. The average shortest path length is the 
+%   characteristic path length of the network.
+%
+%   Input:      A,      binary directed/undirected connection matrix
+%
+%   Output:     D,      distance matrix
+%
+%   Notes: 
+%       Lengths between disconnected nodes are set to Inf.
+%       Lengths on the main diagonal are set to 0.
+%
+%   Algorithm: Algebraic shortest paths.
+%
+%
+%   Mika Rubinov, UNSW, 2007-2010.
+
+G=double(G);
+D=eye(length(G));
+n=1;
+nPATH=G;                        %n-path matrix
+L=(nPATH~=0);                   %shortest n-path matrix
+
+while find(L,1);
+    D=D+n.*L;
+    n=n+1;
+    nPATH=nPATH*G;
+    L=(nPATH~=0).*(D==0);
+end
+
+D(~D)=inf;                      %disconnected nodes are assigned d=inf;
+D=D-eye(length(G));
+
 
 % --- Executes on button press in laplacianvisualize.
 function basic_stats(eventdata, handles)
@@ -961,9 +1173,19 @@ function basic_stats(eventdata, handles)
 %load application data
 data = getappdata(handles.figure1,'appData');
 g = data.g;
+dist=distance_bin(matrixOfGraph(g));
+N=nv(g);
+apl = sum(dist(:))/2   /   (N*(N-1)/2);%Average path length(idea taken from
+%Boston University MA665 course web site
+%(http://math.bu.edu/people/mak/MA665/))
+%distance_bin, clustering_coef_bu, clustering_coef_bu functions
+%from Brain Connectivity Toolbox (https://sites.google.com/site/bctnet/)
+set(handles.pathlength,'String',num2str(apl));
 modus = data.modus;
 switch modus
     case 'undirected';
+        C=mean(clustering_coef_bu(matrixOfGraph(g)));%idea from MA665
+        set(handles.cluster,'String',num2str(C));
         L = laplacian(g);
         rank_L = rank(L);       % Matrix rank
         dim_L  = mean(size(L)); % Matrix dimension
@@ -1017,6 +1239,8 @@ switch modus
         estrada_connectivity = diag(exp(A));
         estrada_graph_index  = trace(exp(A)); 
     case 'directed';
+        C=mean(clustering_coef_bd(matrixOfGraph(g)));%CC for directed graphs
+        set(handles.cluster,'String',num2str(C));
         [InDeg OutDeg]=getDegree(matrixOfGraph(g));
         LaplacianIn = diag(InDeg) - double(matrixOfGraph(g));
         LaplacianOut = diag(OutDeg) - double(matrixOfGraph(g));
@@ -1028,7 +1252,9 @@ switch modus
         minInDeg = min(InDeg);
         maxInDeg = max(InDeg);
         minOutDeg = min(OutDeg);
-        maxOutDeg = max(OutDeg);       
+        maxOutDeg = max(OutDeg);
+      %  avgInDeg = mean(InDeg);
+      %  avgOutDeg = mean(OutDeg);
         [i,j,s]=find(InDeg == OutDeg);       
         if size(s,1) == dim_L
             isBalanced = 'Yes';
@@ -1468,6 +1694,7 @@ data.modus = modus;
 setappdata(handles.figure1,'appData',data);
 guidata(hObject, handles);    
 refresh_graph(0, eventdata, handles,hObject);
+DegreeDistribution(hObject, eventdata, handles);
 
 
 
@@ -2158,7 +2385,7 @@ if ~isempty(filename)
             for j=1:nverts
                 if adj_matrix(i,j)
                     add(g,i,j,dir);
-                    adj_matrix(j,i) = 0;
+                   % adj_matrix(j,i) = 0;%Why was that here?
                 end
             end
         end
@@ -2307,7 +2534,7 @@ if filename
         %save(file, 'data' );
         save(file, 'nverts', 'nedges','adj_matrix', 'XY', 'labs', 'templates',...
             'printCell','template_list','modus','nodeColor') ;
-%         disp(strcat('Saved graph as binary .mat file ("', file,'")'));
+         disp(strcat('Saved graph as binary .mat file ("', file,'")'));
      elseif strcmp(ext, '.gr')
         save(g, file);
         disp(strcat('Saved graph as Matgraph file ("', file,'")'));
@@ -2439,4 +2666,675 @@ switch choice
         setappdata(handles.figure1,'appData',data);
         % guidata(hObject, handles);
         computeInputSizes(handles);
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function randomgraph_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to randomgraph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over randomgraph.
+function randomgraph_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to randomgraph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on key press with focus on randomgraph and none of its controls.
+function randomgraph_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to randomgraph (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+    function smallworld(hObject, eventdata, handles, answersw)%Watts-Strogatz small-world network,pseudocode from Prettejohn et al. (2011)
+        %load application data
+        data = getappdata(handles.figure1,'appData');
+        m = str2num(answersw{1,1});%# of neighbors connected from left and right in the initial lattice
+        p = str2num(answersw{2,1});%the probability of random rewiring
+        modus = data.modus;%directed-undirected
+        switch modus
+            case 'undirected';
+                dir = 0;
+            case 'directed';
+                dir = 1;
+                opp = str2num(answersw{3,1});%for the directed case, oppositeness of random connections
+        end
+        n = nv(data.g);   %# of nodes 
+        %the methodology used to create the adjacency matrix A is taken from "make_small_world.m" function from
+        %"MA665: Introduction to Modeling and Data Analysis in Neuroscience" (Boston University) course
+        r = zeros(1,n);  
+        r(2:m+1)=1;  
+        r(n-m+1:n)=1;
+        A = toeplitz(r);%Initial lattice
+        [row, col] = find(triu(A));%A is symmetric, thus we can only work with the upper part of it
+        for k=1:length(row)           %For each (i,j) pair.
+            i=row(k);
+            j=col(k);
+            if rand() < p             %Draw a random number [0,1].  If it's < p,
+                tempOutConns=A(i,:)';%Out-connections of node i (i-->j)
+                tempInConns=A(:,i);%In-connections of node i (j-->i)
+                tempOutConns(i)=1;%For computational purposes
+                tempInConns(i)=1;%             //
+                tempOutConns=ones(n,1) - tempOutConns;
+                tempInConns=ones(n,1) - tempInConns;
+                tempMult(:,1)=tempInConns(:,1).*tempOutConns(:,1);
+                temprand=find(tempMult);%nodes that are not adjacent to/from node i
+                sizetemprand=size(temprand,1);
+                if sizetemprand >= 1%if such a node exists
+                    A(i,j)=0;             %  then eliminate this edge (i,j),
+                    A(j,i)=0;             %  and eliminate (j,i).
+                    inew=i;
+                    ijnew = randperm(sizetemprand);
+                    jnew=temprand(ijnew(1));%Choose one of these nodes
+                    A(inew,jnew)=1;       %Create an out-connection (i is now adjacent to j(i-->j))
+                    l=rand();               %for the directed case
+                    if dir ==1 && l >= opp %if l>=opp and the graph is directed
+                        tempInConns_=tempInConns;
+                        tempInConns_(jnew)=0;%if possible find another jnew
+                        tempInrand=find(tempInConns_);
+                        sizetempIn=size(tempInrand,1);
+                        if sizetempIn >= 1   %check if another node(s) exist(s)
+                            ijnew = randperm(sizetempIn);%if exists, choose one
+                            jnew=tempInrand(ijnew(1));
+                        end
+                    end
+                    A(jnew,inew)=1;%add jnew-->i
+                end
+            end
+        end
+        fast_set_matrix(data.g,A);
+        setappdata(handles.figure1,'appData',data);
+        guidata(hObject, handles);
+        refresh_graph(0, eventdata, handles,hObject)
+        computeInputSizes(handles);
+        DegreeDistribution(hObject, eventdata, handles);
+
+
+        function scalefree(hObject, eventdata, handles, answersf)  %pseudocode from Prettejohn et al. (2011)
+            data = getappdata(handles.figure1,'appData');
+            m_0 = str2num(answersf{1,1});%initial complete graph, m=m_0
+            modus = data.modus;
+            switch modus
+                case 'undirected';
+                    dir = 0;
+                case 'directed';
+                    dir = 1;
+                    opp=str2num(answersf{2,1});%oppositeness
+            end
+            n = nv(data.g);%# of nodes
+            A=ones(m_0)-eye(m_0);
+            A(n,n)=0;      %initial complete graph of m_0 nodes is created
+            if dir == 1    %E = # of edges of the initial complete graph
+                E=(m_0*(m_0-1));
+            else
+                E=(m_0*(m_0-1))/2;
+            end
+            for i=m_0+1:1:n %add n-m_0 nodes, connect them using preferential attachment mechanism
+                d=1;
+                while d <= m_0 %add m_0 or 2*m_0 connections for each new node, for the undirected and directed cases, respectively
+                    ijnew=randperm(i-1); %each new node with index i can connect to i-1 pre-existing nodes
+                    jnew=ijnew(1);  %choose one node among the i-1 pre-existing nodes
+                    b=1;
+                    while ( A(i,jnew) == 1)%if i is adjacent to this node, find another node to which i is not adjacent
+                        b=b+1;
+                        jnew = ijnew(b);
+                    end
+                    b=sum(A(jnew,:))/E; %preferential attachment; nodes to which many adjacent nodes exist have a higher ...
+                    l=rand();           %probability to connect to i
+                    if b > l
+                        if dir == 0     %two-sided connections are established in the undirected case
+                            A(i,jnew)=1;
+                            A(jnew,i)=1;
+                            E=E+1;      %increment the number of total edges by 1(every two-sided connections are regarded as one edge)
+                        else            %directed case
+                            k=rand();
+                            if k < opp  %oppositeness
+                                A(i,jnew)=1;%add i-->jnew 
+                                if A(jnew,i) ~= 1%if jnew-->i does not exists, add it
+                                    A(jnew,i)=1;
+                                else      %if it exists, find another jnew
+                                    jnewtemp=randperm(i-1);
+                                    q=1;
+                                    jnewnew=jnewtemp(1);
+                                    while A(jnewnew,i) == 1
+                                        q=q+1;
+                                        jnewnew=jnewtemp(q);
+                                    end
+                                    A(jnewnew,i)=1; %add jnew-->i
+                                end
+                                E=E+2; %increment the number of total edges by 2
+                            else       %if k >= opp, add i-->jnew, choose a random jnew and then add jnew-->i according to...
+                                c=0;   %preferential attachment mechanism
+                                A(i,jnew)=1;
+                                E=E+1; %increment the number of total edges by 1
+                                while c == 0
+                                    jnewtemp=randperm(i-1);
+                                    q=1;
+                                    jnewnew=jnewtemp(1);
+                                    if i == m_0+1%the very first node added to the initial complete graph may not be able...
+                                        hh=1;    %to find a random node different than jnew to connect to
+                                        while ( A(jnewnew,i) == 1 || jnewnew == jnew)  && hh < m_0
+                                            q=q+1;
+                                            jnewnew = jnewtemp(q);
+                                            hh=hh+1;
+                                        end
+                                        if hh == m_0 && A(jnewnew,i) == 1%if it cannot find, choose jnewnew=jnew
+                                            jnewnew=jnew;
+                                        end
+                                    else         %nodes with indices bigger than m_0+1 won't have such a problem
+                                        while ( A(jnewnew,i) == 1 || jnewnew == jnew)
+                                            q=q+1;
+                                            jnewnew = jnewtemp(q); %choose a random jnewnew
+                                        end
+                                    end
+                                    x=sum(A(jnewnew,:))/E;   %preferential attachment
+                                    l=rand();
+                                    if x > l
+                                        A(jnewnew,i)=1;
+                                        E=E+1;               %increment the number of total edges by 1
+                                        c=1;                 %edges are established, terminate the while loop 
+                                    end
+                                end
+                            end
+                        end
+                        d=d+1;
+                    end
+                end
+            end
+            fast_set_matrix(data.g,A);
+            setappdata(handles.figure1,'appData',data);
+            guidata(hObject, handles);
+            refresh_graph(0, eventdata, handles,hObject)
+            computeInputSizes(handles);
+            DegreeDistribution(hObject, eventdata, handles);
+        
+
+                    
+        function klemmeguiluz(hObject, eventdata, handles, answerke)%Idea for the undirected case is taken from K. Klemm, V.M. Eguiluz, Phys. Rev. E 65 (2002) 057102.
+            %Prettejohn et al. (2011) is used for implementing the directed version       
+            data = getappdata(handles.figure1,'appData');
+            m_0 = str2num(answerke{1,1});
+            mu = str2num(answerke{2,1}); %Probability to connect to an active node
+            modus = data.modus;
+            E=(m_0*(m_0-1))/2; %E = # of edges of the initial complete graph
+            switch modus
+                case 'undirected';
+                    dir = 0;
+                case 'directed';
+                    dir = 1;
+                    opp=str2num(answerke{3,1});
+            end
+            n = nv(data.g);
+            A=ones(m_0)-eye(m_0);
+            A(n,n)=0;
+            an=ones(m_0,1);%all nodes in the initial graph belong to active nodes
+            an(n,1)=0;     %N-m_0 nodes are initialized as non-active nodes
+             for i=m_0+1:1:n %Add n-m_0 nodes step by step
+                 j_temp=find(an);%active nodes that are present at the moment the new node i is added
+                for p=1:m_0   %Each new node is connected to m_0 nodes 
+                    l=rand();                    
+                    j=j_temp(p);%Choose one of the active nodes at each step
+                    if mu < l && A(i,j) ~= 1% if l > mu and there is no connection between the node i and the active node...                      
+                        A(i,j)=1;           %(such a connection could exists as a result of a random connection occured at a...
+                        A(j,i)=1;           %prior step.)
+                        E=E+1;              %increment the # of edges by 1
+                    else                    %if l <= mu
+                        c=0;                %find a random node jnew which is not adjacent to/from the node i
+                        while c==0
+                            ijnew=randperm(i-1); %the list of all nodes existing at the step i, other than the node i
+                            jnew=ijnew(1);
+                            d=1;                           
+                            while ( A(jnew,i) == 1) %find a random node jnew which is not adjacent to/from the node i
+                                d=d+1;
+                                jnew = ijnew(d);
+                            end                           
+                            b=sum(A(jnew,:))/E; %preferential attachment to this random node
+                            e=rand();
+                            if b > e
+                                A(i,jnew)=1;
+                                A(jnew,i)=1;
+                                E=E+1;          %increment the # of edges by 1
+                                c=1;            %the edges are established, terminate the while loop
+                            end
+                        end
+                    end
+                end
+                deactivation=0; %Preferential deactivation mechanism
+                while deactivation==0
+                    j_indice=randperm(m_0,1); 
+                    j_tempdeactive=find(an); %List of active nodes
+                    j_deactive=j_tempdeactive(j_indice);%Choose one of the active nodes
+                    invdegreesum=0;
+                    for o=1:m_0 
+                        invdegreesum=invdegreesum+1/(sum(A(:,j_tempdeactive(o))));
+                    end
+                    pd=(1/(sum(A(:,j_deactive))))/invdegreesum;
+                    l=rand(); %The probability rate pd of deactivation decreases with the in-degree of the node
+                    if pd > l %"Highly clustered scale-free networks, Phys. Rev. E 65, 036123 (2002)"
+                        deactivation=1; %An active node to be deactivated is found, terminate the while loop
+                        an(j_deactive)=0; %Deactivate the active node that satisfies pd > l
+                    end
+                end
+                an(i)=1; %Add the current node i to the list of active nodes
+             end
+            %If the network is directed, rewire by taking the "oppositeness" value into account
+            %Mean in-degree and mean out-degree of the directed graph will be equal to the mean degree of...
+            %the corresponding undirected graph, whereas the clustering coefficient or the scale-freeness are...
+            %unfortunately not preserved
+            if dir == 1  
+                for i=1:n %for all nodes
+                    a=sum(A(i,:));
+                    jtemp=find(A(i,:));%The nodes to which i is adjacent
+                    for z=1:a          %For all nodes to which i is adjacent 
+                        j=jtemp(z);
+                        l=rand();
+                        if opp < l     
+                            randc=randperm(n); %Choose a random node from the set of all nodes
+                            c=randc(1);
+                            b=i;
+                            w=2;
+                            while (b == c || A(i,c)==1) && w<=n %Try to find a node c that is different than i...
+                                c=randc(w);                     %and to which i is not adjacent 
+                                w=w+1;               %If there is not such a node, terminate the loop
+                            end
+                            if w ~= (n+1)   %If there is such a node
+                                A(i,j)=0;
+                                A(i,c)=1;
+                            end
+                        end
+                    end
+                end
+            end
+            
+            fast_set_matrix(data.g,A);
+            setappdata(handles.figure1,'appData',data);
+            guidata(hObject, handles);
+            refresh_graph(0, eventdata, handles,hObject)
+            computeInputSizes(handles);
+            DegreeDistribution(hObject, eventdata, handles);
+
+                
+               
+
+            function adjscalefree(hObject, eventdata, handles, answerasf)%pseudocode by "Construction of Scale-Free Networks with Adjustable Clustering, Tam et. al"
+                m_0 = str2num(answerasf{1,1});%initial complete graph, m=m_0
+                p = str2num(answerasf{2,1});%probability of a random connection(1-p:probability of a connection with a neighbor9
+                if p == 0 %To prevent infinite loops that may emerge when p == 0
+                    p=0.01;
+                end
+                data = getappdata(handles.figure1,'appData');
+                modus = data.modus;
+                switch modus
+                    case 'undirected';
+                        dir = 0;
+                    case 'directed';
+                        dir = 1;
+                        opp=str2num(answerasf{3,1});%oppositeness
+                end
+                n = nv(data.g);%# of nodes
+                A=ones(m_0)-eye(m_0);%Create an undirected scale-free network, using the same algorithm as above
+                A(n,n)=0;
+                E=(m_0*(m_0-1))/2;
+                for i=m_0+1:1:n
+                    d=1;
+                    while d <= m_0
+                        ijnew=randperm(i-1);
+                        jnew=ijnew(1);
+                        b=1;
+                        while ( A(i,jnew) == 1)
+                            b=b+1;
+                            jnew = ijnew(b);
+                        end
+                        b=sum(A(jnew,:))/E;
+                        l=rand();
+                        if b > l
+                            A(i,jnew)=1;
+                            A(jnew,i)=1;
+                            E=E+1;
+                            d=d+1;
+                        end
+                    end
+                end
+                degs=zeros(n,1);
+                degs(:)=sum(A(:,:));%Save the degrees of each node acquired as a result of the scale-free algorithm
+                %Rewire edges, while keeping the degree of each node unchanged
+                A=zeros(n);%new adjacency matrix
+                i=1;
+                restart=0; %flag, indicates the impossibility of continuing the rewiring process
+                while i <= n %for all nodes
+                    k=0;     %until they reach the degree they had from the scale-free mechanism
+                    if restart == 1 %if it is not possible to continue rewiring, restart the process of rewiring
+                        A=zeros(n);
+                        i=1;
+                        restart=0;
+                    end
+                    added=sum(A(i,:));%The degree of node i at this moment of rewiring process
+                    while k < degs(i)-added %Add the remaining edges (degs(i)-added) to i
+                        l=rand();
+                        if l <= p  %Random connection with a node
+                            jnew_=randperm(n);
+                            jnew=jnew_(1);%Find a node different than i, that is not adjacent to/from i and whose current...
+                            q=2; %degree is still below its degree that it acquired as a result of the initial scale-free network mechanism
+                            while ((i == jnew || A(i,jnew) == 1 ) || (sum(A(jnew,:)) == degs(jnew))) && q <= n
+                                jnew = jnew_(q);
+                                q=q+1; %Count the number of nodes that are checked whether they fulfill the abovementioned conditions
+                            end
+                            if q == n+1 %If none of the nodes satisfy them, restart the rewiring process
+                                restart=1;
+                            end
+                        else      %Connection with a neighbor
+                            if i < n %Check if the index of the current number is n
+                                jnew=i+1;%if it is not, jnew=i+1
+                            else
+                                jnew=1; %else, jnew=1 (because of the circularity of the graph)
+                            end;
+                            qq=1;%Try to find a node jnew that is as close as possible to i(jnew starts from the index...
+                            %i+1 and gets the indices i+k, k=1,2,3,...
+                            while ((i == jnew || A(i,jnew) == 1 ) || (sum(A(jnew,:)) == degs(jnew))) && qq < n
+                                if jnew < n
+                                    jnew=jnew+1;
+                                else
+                                    jnew=1;
+                                end
+                                qq=qq+1; %If such a node does not exist, terminate this while loop
+                            end         %(this terminating may cause a negligible difference in the # of total connections... 
+                        end             %compared to the network that is created as a result of the initial scale-free mechanism)
+                        if sum(A(jnew,:)) ~= degs(jnew) %If the node jnew we found as the result of the one of the processes...
+                            k=k+1;  %(the processes for the cases l<=p or l>p) can still get new connections from other nodes
+                            A(i,jnew)=1;
+                            A(jnew,i)=1;
+                        end
+                    end
+                    i=i+1; %proceed to the next node
+                    if sum(A(n,:)) ~= degs(n) && i == n %If the last node i=n cannot connect to other nodes, if because
+                        restart=1;           %they already reached their maximum degree
+                    end                      %Restart the rewiring process
+                end
+                if dir == 1 %Making the network directed, same algorithm as the one in K&E part
+                    for i=1:n %for all nodes
+                        a=sum(A(i,:));
+                        jtemp=find(A(i,:));%The nodes that are adjacent to i
+                        for z=1:a          %For all nodes that are adjacent to i
+                            j=jtemp(z);
+                            l=rand();
+                            if opp < l
+                                randc=randperm(n); %Choose a random node from the set of all nodes
+                                c=randc(1);
+                                b=i;
+                                w=2;
+                                while (b == c || A(i,c)==1) && w<=n %Try to find a node c that is different than i...
+                                    c=randc(w);                     %and to which i is not adjacent
+                                    w=w+1;               %If there is not such a node, terminate the loop
+                                end
+                                if w ~= (n+1)   %If there is such a node
+                                    A(i,j)=0;
+                                    A(i,c)=1;
+                                end
+                            end
+                        end
+                    end
+                end
+                fast_set_matrix(data.g,A);
+                setappdata(handles.figure1,'appData',data);
+                guidata(hObject, handles);
+                refresh_graph(0, eventdata, handles,hObject)
+                computeInputSizes(handles);
+                DegreeDistribution(hObject, eventdata, handles);
+                
+                        
+
+
+
+% --- Executes during object creation, after setting all properties.
+function add_multiple_nodes_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to add_multiple_nodes (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on key press with focus on button_undirected and none of its controls.
+function button_undirected_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to button_undirected (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on key press with focus on number_of_nodes and none of its controls.
+function number_of_nodes_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to number_of_nodes (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over number_of_nodes.
+function number_of_nodes_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to number_of_nodes (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function newnodelabel_Callback(hObject, eventdata, handles)
+% hObject    handle to newnodelabel (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of newnodelabel as text
+%        str2double(get(hObject,'String')) returns contents of newnodelabel as a double
+
+
+
+% --- Executes during object creation, after setting all properties.
+function average_degree_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to average_degree (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes1
+
+
+% --- Executes during object deletion, before destroying properties.
+function axes1_DeleteFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in toggleshowdegree.
+function toggleshowdegree_Callback(hObject, eventdata, handles)
+% hObject    handle to toggleshowdegree (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+toggle=get(hObject,'Value');
+data = getappdata(handles.figure1,'appData');
+
+modus = data.modus;
+switch modus
+    case 'undirected';
+        dir = 0;
+    case 'directed';
+        dir = 1;
+end
+handledeg=findobj('type','figure','name','Degree distribution');
+handledegout=findobj('type','figure','name','Out-degree distribution');
+handledegin=findobj('type','figure','name','In-degree distribution');
+if toggle == 0 && dir == 0
+    set(handledegout,'Visible','off');
+    set(handledegin,'Visible','off');
+    set(handledeg,'Visible','off');
+    set(hObject,'String','Show degree distribution');
+elseif toggle == 0 && dir == 1
+    set(handledegout,'Visible','off');
+    set(handledegin,'Visible','off');
+    set(handledeg,'Visible','off');
+    set(hObject,'String','Show degree distribution');
+elseif toggle == 1 && dir == 0
+    set(handledeg,'Visible','on');
+    set(handledegout,'Visible','off');
+    set(handledegin,'Visible','off');
+    set(hObject,'String','Hide degree distribution');
+elseif toggle == 1 && dir == 1
+    set(handledeg,'Visible','off');
+    set(handledegout,'Visible','on');
+    set(handledegin,'Visible','on');
+    set(hObject,'String','Hide degree distribution');
+end
+            
+% Hint: get(hObject,'Value') returns toggle state of toggleshowdegree
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over toggleshowdegree.
+function toggleshowdegree_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to toggleshowdegree (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+% --- Executes on selection change in popupmenu5.
+    function popupmenu5_Callback(hObject, eventdata, handles)
+        % hObject    handle to popupmenu5 (see GCBO)
+        % eventdata  reserved - to be defined in a future version of MATLAB
+        % handles    structure with handles and user data (see GUIDATA)
+        data = getappdata(handles.figure1,'appData');
+        modus = data.modus;%directed-undirected
+        switch modus
+            case 'undirected';
+                dir = 0;
+            case 'directed';
+                dir = 1;
+        end
+        choosefunction=get(hObject,'Value');
+        if dir == 0
+            switch choosefunction
+                case 1
+                    prompt={'# of neighbors connected',...
+                        'Probability of a random edge'};
+                    name='Input for small world network';
+                    numlines=1;
+                    defaultanswer={'2','0.1'};
+                    answersw=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answersw)
+                        smallworld(hObject, eventdata, handles,answersw);
+                    end
+                case 2
+                    prompt={'Initial network size'};
+                    name='Input for scale-free network';
+                    numlines=1;
+                    defaultanswer={'2'};
+                    answersf=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answersf)
+                        scalefree(hObject, eventdata, handles,answersf);
+                    end
+                case 3
+                    prompt={'# of neighbors connected',...
+                        'Probability of an edge to a random node'};
+                    name='Input for Klemm-Eguiluz network';
+                    numlines=1;
+                    defaultanswer={'2','0.1'};
+                    answerke=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answerke)
+                        klemmeguiluz(hObject, eventdata, handles,answerke);
+                    end
+                case 4
+                    prompt={'# of neighbors connected',...
+                        'Probability of an edge to a random node'};
+                    name='Input for adjustable scale-free network(Tam et al.)';
+                    numlines=1;
+                    defaultanswer={'2','0.1'};
+                    answerasf=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answerasf)
+                        adjscalefree(hObject, eventdata, handles, answerasf);
+                    end
+            end
+        elseif dir == 1
+            switch choosefunction
+                case 1
+                    prompt={'# of neighbors connected',...
+                        'Probability of a random edge',...
+                        'Oppositeness'};
+                    name='Input for small world network';
+                    numlines=1;
+                    defaultanswer={'2','0.1','0.8'};
+                    answersw=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answersw)
+                        smallworld(hObject, eventdata, handles,answersw);
+                    end
+                case 2
+                    prompt={'Initial network size',...
+                        'Oppositeness'};
+                    name='Input for scale-free network';
+                    numlines=1;
+                    defaultanswer={'2','0.8'};
+                    answersf=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answersf)
+                        scalefree(hObject, eventdata, handles,answersf);
+                    end
+                case 3
+                    prompt={'# of neighbors connected',...
+                        'Probability of an edge to a random node',...
+                        'Oppositeness'};
+                    name='Input for Klemm-Eguiluz network';
+                    numlines=1;
+                    defaultanswer={'2','0.1','0.8'};
+                    answerke=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answerke)
+                        klemmeguiluz(hObject, eventdata, handles, answerke);
+                    end
+                case 4
+                    prompt={'# of neighbors connected',...
+                        'Probability of an edge to a random node',...
+                        'Oppositeness'};
+                    name='Input for adjustable scale-free network(Tam et al.)';
+                    numlines=1;
+                    defaultanswer={'2','0.1','0.8'};
+                    answerasf=inputdlg(prompt,name,numlines,defaultanswer);
+                    if ~isempty(answerasf)
+                        adjscalefree(hObject, eventdata, handles, answerasf);
+                    end
+            end
+        end
+        
+                    
+                    
+        
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu5
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
