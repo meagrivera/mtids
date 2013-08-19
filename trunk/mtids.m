@@ -59,8 +59,8 @@ function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to mtids (see VARARGIN)
 
 % DEBUG or PUBLISH (VERSION)
-% vers = 'DEBUG';
-vers = 'PUBLISH';
+vers = 'DEBUG';
+% vers = 'PUBLISH';
 
 
 
@@ -181,7 +181,7 @@ switch data.vers
         set(handles.export_as_layer_2,'Visible','off');
         set(handles.import_from_simulink,'Visible','off');
         set(handles.add_mdl_template,'Visible','off');
-        set(handles.template_import_wizard,'Visible','off');
+%         set(handles.template_import_wizard,'Visible','off');
         set(handles.run_simulation_plots,'Visible','off');
 end
 
@@ -1069,7 +1069,7 @@ function C=clustering_coef_bu(G)
 %   C = clustering_coef_bu(A);
 %
 %   The clustering coefficient is the fraction of triangles around a node
-%   (equiv. the fraction of node’s neighbors that are neighbors of each other).
+%   (equiv. the fraction of nodeï¿½s neighbors that are neighbors of each other).
 %
 %   Input:      A,      binary undirected connection matrix
 %
@@ -1097,7 +1097,7 @@ function C=clustering_coef_bd(A)
 %   C = clustering_coef_bd(A);
 %
 %   The clustering coefficient is the fraction of triangles around a node
-%   (equiv. the fraction of node’s neighbors that are neighbors of each other).
+%   (equiv. the fraction of nodeï¿½s neighbors that are neighbors of each other).
 %
 %   Input:      A,      binary directed connection matrix
 %
