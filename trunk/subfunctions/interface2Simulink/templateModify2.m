@@ -25,32 +25,50 @@ if (nodeNumber == 0)
     
     % delete line from Inport to Mux
     delete_line(template,'In1/1','Mux/1');
+    
     % delete line from Mux to first input-block
     
     sigAll=find_system(template, 'FindAll', 'on','type','line');
+    
+    % Finds and deletes lines connected to Mux.  Following, the two
+    % selectors are replaced by constant blocks which are set to '0'. (PDK)
+    
+    sigallMux=[];
+    
     for n = 1:length(sigAll)
        if strcmp(get(sigAll(n),'SourcePort'),'Mux:1')
-           endPoint = get(sigAll(n),'Points');
-           delete_line(sigAll(n));
+           sigallMux=[sigallMux;n];
+%            endPoint = get(sigAll(n),'Points');
+%            delete_line(sigAll(n));
        end    
-    end  
-    
-    % look for In1 before deletion
-    if any(strcmp(get_param(template,'Blocks'), 'In1'))
-        delete_block([template '/In1'])
     end
+    try
+        for n = 1:length(sigallMux) %1:length(sigAllMux)
+            idx=sigallMux(n);
+           if strcmp(get(sigAll(idx),'SourcePort'),'Mux:1')
+               endPoint = get(sigAll(idx),'Points');
+               delete_line(sigAll(idx));
+           end    
+        end
+    catch
     
-    % look for Mux before deletion
-    if any(strcmp(get_param(template,'Blocks'), 'Mux'))
-        delete_block([template '/Mux'])
+        % look for In1 before deletion
+        if any(strcmp(get_param(template,'Blocks'), 'In1'))
+            delete_block([template '/In1'])
+        end
+
+        % look for Mux before deletion
+        if any(strcmp(get_param(template,'Blocks'), 'Mux'))
+            delete_block([template '/Mux'])
+        end
+
+        % add constant block with value = 0
+        replace_block(template,'Name','Selector_xj','built-in/Constant','noprompt')
+        set_param([template '/Selector_xj'],'Value','0');
+        replace_block(template,'Name','Selector_yj','built-in/Constant','noprompt')
+        set_param([template '/Selector_yj'],'Value','0');
+
     end
-    
-    % add constant block with value = 0
-    add_block('built-in/Constant',[template '/Const']);
-    set_param([template '/Const'],'position',constPos,'Value','0');
-    
-    % add line from const block to first subsystem block
-    add_line(template, [get_param([template '/Const'],'Outport'); endPoint(2,:)]);
     
 else % do job as before
     

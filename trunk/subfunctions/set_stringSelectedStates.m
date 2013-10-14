@@ -19,7 +19,7 @@ handles         = varargin{2};
 
 data = getappdata(handles.figure1,'appData');
 temp = printCell{1,1};
-outputDim = data.oldTemplate{1,2}.dimension.outputs;
+outputDim = data.oldTemplate{1,2}.dimension.template_outputs;
 if any(temp(outputDim+1:length(temp)))
     data.flagCheck2 = 1;
     data.stringSelectedStates = num2str(find(temp(outputDim+1:length(temp))));

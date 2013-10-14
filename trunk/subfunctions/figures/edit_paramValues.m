@@ -13,7 +13,7 @@ function varargout = edit_paramValues(varargin)
 % Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
-% Last Modified by GUIDE v2.5 20-Sep-2012 09:28:39
+% Last Modified by GUIDE v2.5 04-Sep-2013 09:57:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,6 +57,17 @@ for kk = 1:length( data.template{1,2}.inputSpec.Vars )
     inputStrg = [inputStrg ', ' data.template{1,2}.inputSpec.Vars{kk}]; %#ok<AGROW>
 end
 set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
+
+% Place the Linear depending output parameters in corresponding text box (PDK)
+set(handles.TextOutputspecs2,'String', ...
+    num2str( data.template{1,2}.inputSpec.noOfIntOutputs ) );
+outputStrg = [];
+for kk = 1:length( data.template{1,2}.inputSpec.VarsOutput )
+    outputStrg = [outputStrg ', ' data.template{1,2}.inputSpec.VarsOutput{kk}];
+end
+set(handles.TextOutputspecs1,'String', outputStrg(3:end) );
+
+
 % set(handles.TextField1InputSpecs,'String', strcat(inputStrg(3:end)) );
 tableRowNames = data.template{1,2}.set(:,1);
 tableData = data.template{1,2}.set;
@@ -287,3 +298,49 @@ else
     handles.succTest = 0;
 end
 guidata(src,handles);
+
+
+
+function TextOutputspecs1_Callback(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of TextOutputspecs1 as text
+%        str2double(get(hObject,'String')) returns contents of TextOutputspecs1 as a double
+
+
+
+function TextOutputspecs2_Callback(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of TextOutputspecs2 as text
+%        str2double(get(hObject,'String')) returns contents of TextOutputspecs2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function TextOutputspecs1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function TextOutputspecs2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

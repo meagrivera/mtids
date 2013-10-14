@@ -7,7 +7,7 @@ function varargout = exportSimulink2( varargin )
 % INPUT:    (1) -- name of model that will be produced
 %           (2) -- template used to generate subsystems
 %           (3) -- templateList: List of templates that are
-%           (4) -- availible in mtids
+%           (4) -- available in mtids
 %           (5) -- Adjacency matrix,
 %           (6) -- Position of the nodes
 %           (7) -- cell with the names of the nodes
@@ -32,7 +32,7 @@ A               = varargin{4};
 xy              = varargin{5};
 labs            = varargin{6};
 flag_showSimMod = varargin{7};
-
+graphmatrix     = varargin{8};
 %% options
 vizMaxNodeNumber=50;    % maximal number of nodes where Simulink opens
 
@@ -86,12 +86,50 @@ for i=1:nodeNumber
     valueSet = templates{i,2}.set;  
     for jj = 1:size(valueSet,1)
        for kk = 2:2:size( valueSet(jj,:),2 )
-           if ~isempty( valueSet(jj,kk) )
+           if ~isempty( valueSet(jj,kk) ) && ~strcmp(valueSet(jj,kk),{''})  %The {''} comparison is to avoid the error
+                                                                            % due to the empty parameters from the Selectors and Grounds
                set_param( [invSysName '/' valueSet{jj,1}], ...
                    valueSet{jj,kk},valueSet{jj,kk+1} );
            end
        end
-    end    
+    end
+    
+    % Dynamically adapts the selectors to the input vectors from incoming
+    % nodes (PDK)
+    
+    states_vector = [];
+    outputs_vector = [];
+    states_end_index = 0;
+    template_outputs = 0;
+    states_initial_index = 1;
+    for mm = 1 : nodeNumber
+        if graphmatrix{mm,i} == 1
+            states_initial_index = states_initial_index + template_outputs;
+            states_end_index = states_initial_index + templates{mm,2}.dimension.states - 1;
+            states_vector = [ states_vector, states_initial_index:states_end_index ];
+            outputs_initial_index = states_end_index + 1;
+            outputs_end_index = outputs_initial_index + templates{mm,2}.dimension.outputs - 1;
+            outputs_vector = [ outputs_vector, outputs_initial_index:outputs_end_index ];
+            template_outputs = templates{mm,2}.dimension.template_outputs;
+        end
+    end
+    
+    if ~isempty(states_vector) & ~isempty(outputs_vector)
+
+        set_param( [invSysName '/Selector_xj'], ...
+                       'Indices', strcat('','[',num2str(1:1),']','') );
+        set_param( [invSysName '/Selector_xj'], ...
+                       'InputPortWidth',num2str(outputs_end_index) );
+        set_param( [invSysName '/Selector_xj'], ...
+                       'Indices', mat2str(states_vector) );
+        set_param( [invSysName '/Selector_yj'], ...
+                       'Indices', strcat('','[',num2str(1:1),']','') );
+        set_param( [invSysName '/Selector_yj'], ...
+                       'InputPortWidth',num2str(outputs_end_index) );
+        set_param( [invSysName '/Selector_yj'], ...
+                       'Indices', mat2str(outputs_vector) );
+    end   
+    
     nodeConnections= find(A(:,i)); % Find in-degree   
     templateModify2(length(nodeConnections),nodeConnections,invSysName);
     %Numbers the To Workspace blocks, which have been added to every

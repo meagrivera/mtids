@@ -15,7 +15,7 @@ function varargout = inputParamsAdaptation(varargin)
 % Author: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
-% Last Modified by GUIDE v2.5 26-Oct-2012 15:45:54
+% Last Modified by GUIDE v2.5 16-Sep-2013 15:05:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -47,6 +47,7 @@ function inputParamsAdaptation_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for inputParamsAdaptation
 handles.mode = 'ones';
+
 % Update handles structure
 guidata(hObject, handles);
 % UIWAIT makes inputParamsAdaptation wait for user response (see UIRESUME)

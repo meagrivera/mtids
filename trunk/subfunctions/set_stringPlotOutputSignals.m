@@ -19,7 +19,23 @@ handles         = varargin{2};
 
 data = getappdata(handles.figure1,'appData');
 temp = printCell{1,1};
-outDim = data.oldTemplate{1,2}.dimension.outputs;
+
+% Tests whether or not the newTemplate Field is within the data structure
+% and if so, alters the outDim variable to that templates output size.
+% (PDK)
+
+data_struct_string = fieldnames(data);
+outDim = data.oldTemplate{1,2}.dimension.template_outputs;
+
+for i = 1 : size(data_struct_string,1)
+    if strcmp(data_struct_string(i,1),'newTemplate')
+        outDim = data.newTemplate{1,2}.dimension.template_outputs;
+        break
+    end
+end
+
+%--------------
+
 if any(temp(1:outDim))
     data.flagCheck1 = 1;
     data.stringPlotOutputSignals = num2str(find(temp(1:outDim)));

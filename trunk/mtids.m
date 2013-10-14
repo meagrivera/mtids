@@ -23,7 +23,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 02-May-2013 13:54:46
+% Last Modified by GUIDE v2.5 07-Oct-2013 15:53:46
 
 % Authors: Francisco Llobet, Jose Rivera
 % Editors: Ferdinand Trommsdorff (f.trommsdorff@gmail.com), 
@@ -171,6 +171,7 @@ data.add_connection = 0;
 data.start_index = 0;
 data.graph_refresh = 1;
 data.adaptInputParams = 'ones';
+data.export_figure = 0; %----Editing-----
 
 data.vers = vers;
 switch data.vers
@@ -181,7 +182,7 @@ switch data.vers
         set(handles.export_as_layer_2,'Visible','off');
         set(handles.import_from_simulink,'Visible','off');
         set(handles.add_mdl_template,'Visible','off');
-%         set(handles.template_import_wizard,'Visible','off');
+        set(handles.template_import_wizard,'Visible','off');
         set(handles.run_simulation_plots,'Visible','off');
 end
 
@@ -231,7 +232,7 @@ refresh_graph(0, eventdata, handles,hObject);
 
 A=matrixOfGraph(data.g); %Initialize degree-distribution plots. Use the adjacency matrix from the last usage of mtids
 sizeA=size(A,1);
-n = nv(data.g);   %# of nodes 
+n = nv(data.g);   % # of nodes 
 degout=zeros(sizeA,1);
 for j=1:sizeA
     degout(j)=sum(A(j,:));
@@ -270,7 +271,7 @@ end
     function DegreeDistribution(hObject, eventdata, handles)
         data = getappdata(handles.figure1,'appData');
         modus = data.modus;
-        n = nv(data.g);   %# of nodes 
+        n = nv(data.g);   % # of nodes 
         switch modus
             case 'undirected';
                 dir = 0;
@@ -411,11 +412,14 @@ printCell = cell(length_cellPrint+1,2);
 for i = 1:length_cellPrint
     printCell(i,:) = tempCell(i,:);
 end
-%Initially, the printVector and the plotParams are the same for all templates
+%Initially, the printVector and the plotParams are the same for all
+%templates EDITING
 statesDim = templates{nv(g),2}.dimension.states;
-outputDim = templates{nv(g),2}.dimension.outputs;
+% outputDim = templates{nv(g),2}.dimension.template_outputs; %Philip
+outputDim = templates{nv(g),2}.dimension.outputs; %Frederik 
 printVector = zeros(1,outputDim + statesDim);
-printVector(1:outputDim) = ones(1:outputDim)*plotAllOutput;
+% printVector(1:outputDim) = ones(1:outputDim)*plotAllOutput;
+printVector(1:outputDim) = ones(1,outputDim)*plotAllOutput;
 printCell(length_cellPrint+1,1) = num2cell(printVector,2);
 printCell{length_cellPrint+1,2} = initPlotParams(outputDim);
 setappdata(handles.figure1,'appData',data);
@@ -1015,6 +1019,8 @@ switch modus
             set(handles.graph_heterogenity,'String', '0');
             set(handles.text19,'String', 'Algebraic connectivity:');
             set(handles.algebraic_connectivity,'String', '0');
+            set(handles.root_span_tree,'Visible','off');
+            set(handles.root_span_tree_result,'Visible','off');
         end
     case 'directed';
         dir = 1;
@@ -1040,6 +1046,8 @@ switch modus
             set(handles.graph_heterogenity,'String', '-');
             set(handles.text19,'String', 'Has cycles:');
             set(handles.algebraic_connectivity,'String', '-');
+            set(handles.root_span_tree,'Visible','on');
+            set(handles.root_span_tree_result,'Visible','on');
         end    
 end
 % set node color
@@ -1054,6 +1062,7 @@ elseif strcmp(checknumber, 'on')
 else
     draw(g,dir,'-',data.nodeColor(:,1), data.nodeColor(:,2) );
 end
+
 set(handles.nedges,'String', num2str(ne(g,dir)));
 set(handles.nvertices,'String',num2str(nv(g)));
 %store application data
@@ -1285,6 +1294,7 @@ switch modus
         set(handles.graph_heterogenity,'String', isBalanced);
         set(handles.text19,'String', 'Has cycles:');
         set(handles.algebraic_connectivity,'String', isCyclic);
+        set(handles.root_span_tree_result,'String',rooted_spanning_tree(data));
 end
 %no data storaged needed, because this is a "void" function
 
@@ -2004,7 +2014,7 @@ if check
         disp('Exporting...');
     end
     disp('  ');
-    filename = exportSimulink2(name{:}, templates, template_list, A, xy, labs, data.flag_showSimMod);
+    filename = exportSimulink2(name{:}, templates, template_list, A, xy, labs, data.flag_showSimMod,g);
     disp('Done exporting');
     expSucc = 1;
 else
@@ -2136,7 +2146,7 @@ if expSucc == 1
             %Check if output of node i should be plotted
             stringMatrix = cell(1,1);
             counterStringMatrix=0;
-            if any(temp(1:data.templates{i,2}.dimension.outputs))
+            if any(temp(1:data.templates{i,2}.dimension.template_outputs))
                 eval(['y = simOut.get(''nodeout' num2str(i) ''').signals.values;']);
                 outputsToPlot = size(y,2);
                 for kk = 1:size(y,2)
@@ -2158,10 +2168,10 @@ if expSucc == 1
             %legend(['Output signal of node' num2str(i)]);
 
 %             counterStringMatrix = outputsToPlot;
-            for kk = data.templates{i,2}.dimension.outputs+1:length( temp )
+            for kk = data.templates{i,2}.dimension.template_outputs+1:length( temp )
                 if temp(kk)
                     counterStringMatrix = counterStringMatrix + 1;
-                    idx=kk-data.templates{i,2}.dimension.outputs;
+                    idx=kk-data.templates{i,2}.dimension.template_outputs;
                     plot(t,X{i}(:,idx),...
                         'Color',printCell{i,2}(counterStringMatrix).lineColor,...
                         'Linewidth',str2num(printCell{i,2}(counterStringMatrix).lineWidth),...
@@ -2169,7 +2179,7 @@ if expSucc == 1
                         'Marker',printCell{i,2}(counterStringMatrix).marker,...
                         'MarkerEdgeColor',printCell{i,2}(counterStringMatrix).edgeColor ,...
                         'MarkerFaceColor',printCell{i,2}(counterStringMatrix).faceColor);
-                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-data.templates{i,2}.dimension.outputs) ' of node ' num2str(i)];
+                    stringMatrix{counterStringMatrix} = ['State ' num2str(kk-data.templates{i,2}.dimension.template_outputs) ' of node ' num2str(i)];
                 end
             end
             legend(stringMatrix,'Location','NorthEastOutside');
@@ -2698,7 +2708,7 @@ function randomgraph_KeyPressFcn(hObject, eventdata, handles)
     function smallworld(hObject, eventdata, handles, answersw)%Watts-Strogatz small-world network,pseudocode from Prettejohn et al. (2011)
         %load application data
         data = getappdata(handles.figure1,'appData');
-        m = str2num(answersw{1,1});%# of neighbors connected from left and right in the initial lattice
+        m = str2num(answersw{1,1});% # of neighbors connected from left and right in the initial lattice
         p = str2num(answersw{2,1});%the probability of random rewiring
         modus = data.modus;%directed-undirected
         switch modus
@@ -2708,7 +2718,7 @@ function randomgraph_KeyPressFcn(hObject, eventdata, handles)
                 dir = 1;
                 opp = str2num(answersw{3,1});%for the directed case, oppositeness of random connections
         end
-        n = nv(data.g);   %# of nodes 
+        n = nv(data.g);   % # of nodes 
         %the methodology used to create the adjacency matrix A is taken from "make_small_world.m" function from
         %"MA665: Introduction to Modeling and Data Analysis in Neuroscience" (Boston University) course
         r = zeros(1,n);  
@@ -2770,7 +2780,7 @@ function randomgraph_KeyPressFcn(hObject, eventdata, handles)
                     dir = 1;
                     opp=str2num(answersf{2,1});%oppositeness
             end
-            n = nv(data.g);%# of nodes
+            n = nv(data.g);% # of nodes
             A=ones(m_0)-eye(m_0);
             A(n,n)=0;      %initial complete graph of m_0 nodes is created
             if dir == 1    %E = # of edges of the initial complete graph
@@ -2980,7 +2990,7 @@ function randomgraph_KeyPressFcn(hObject, eventdata, handles)
                         dir = 1;
                         opp=str2num(answerasf{3,1});%oppositeness
                 end
-                n = nv(data.g);%# of nodes
+                n = nv(data.g);% # of nodes
                 A=ones(m_0)-eye(m_0);%Create an undirected scale-free network, using the same algorithm as above
                 A(n,n)=0;
                 E=(m_0*(m_0-1))/2;
@@ -3338,3 +3348,190 @@ function popupmenu5_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --------------------------------------------------------------------
+function lti_analysis_test_Callback(hObject, eventdata, handles)
+% hObject    handle to lti_analysis_test (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% This option first checks whether or not all nodes are modifications of the 'LTI_Output'
+% template.  If so, a new window opens to allow the user to test the
+% stability, observability and controllability.  Further, if the states
+% matrix is unstable, the user has the option of creating a random stable
+% matrix while still keeping entry locations.  This allows the user to
+% still be able to export the system to Simlunk. (PDK)
+
+data = getappdata(handles.figure1,'appData');
+
+% Test to confirm all nodes are made of the 'LTI Output' template
+
+errornode = [];
+for ii = 1 : size(data.templates,1)
+    if ~strcmp(data.templates{ii,2}.isLTI,'Yes')
+        errornode = [errornode ', ' num2str(ii)];
+    end
+end
+
+if ~isempty(errornode)
+    errornode = errornode(3:end);
+    if size(errornode,2) == 1
+        errordlg(cat(2,'Node ',errornode, ' is not definded as an LTI template.'))
+    else
+        errordlg(cat(2,'Nodes ',errornode, ' are not definded as LTI templates.'))
+    end
+    return
+end
+
+% Opens the LTI analysis window.
+[data, check] = lti_analysis(data, handles);
+
+% This test whether or not the user hit cancel.  If not, all data will be
+% overwritten.
+if check == 1
+    setappdata(handles.figure1,'appData',data);
+end
+
+
+% --------------------------------------------------------------------
+function disable_simulink_warnings_Callback(hObject, eventdata, handles)
+% hObject    handle to disable_simulink_warnings (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Gives the user the option to disable certain Simulink warning messages
+% comprised in the warning_set variable.  This list can be expanded.  To
+% have Matlab enumerate all editable parameters copy and paste: active_config_set = getActiveConfigSet(gcs);
+% diagnostics_config = active_config_set.getComponent('Diagnostics');
+% get_param(diagnostics_config,'ObjectParameters') in the command window. A
+% discription can be found here:
+% http://www.mathworks.de/de/help/simulink/slref/model-parameters.html
+% (PDK)
+
+disable_warnings = questdlg('Are you sure you would like to disable Simulink warnings?');
+active_config_set = getActiveConfigSet(gcs);
+diagnostics_config = active_config_set.getComponent('Diagnostics');
+warning_set_struct = get_param(diagnostics_config,'ObjectParameters');
+warning_set = fields(warning_set_struct);
+disp('Working...')
+
+if strcmp(disable_warnings,'Yes')
+    for ii = 1 : size(warning_set,1)
+        cmd1 = ['warning_set_struct.' warning_set{ii} '.Enum'];
+        options = eval(cmd1);
+        for jj = 1 : size(options,1)
+            if strcmp(options(jj),'none')
+                set_param(diagnostics_config,warning_set{ii},'none')
+                break
+            end
+        end
+    end
+end
+disp('Finished')
+
+
+% --------------------------------------------------------------------
+function integral_initial_condition_Callback(hObject, eventdata, handles)
+% hObject    handle to integral_initial_condition (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+data = getappdata(handles.figure1,'appData');
+
+[integral_mode, check, integral_factor ] = initialconditions;
+
+integral_factor = str2num(integral_factor);
+
+if ~check
+    return
+end
+
+% Places the same initial condition to all integral blocks in the entire
+% system
+
+for ii = 1:nv(data.g)
+    tempSet = data.templates{ii,2}.set;
+    nodeInputstruct = data.templates{ii,2}.nodeInputs;
+    nodeInputs = nodeInputstruct.states;
+    for kk = 1:size(tempSet,1)
+        if strcmp(tempSet(kk,2),'InitialCondition')
+            tempRow=kk;
+            tempCol=2;
+            valOld = str2num( tempSet{ tempRow,tempCol+1 } ); %#ok<ST2NM>
+            switch integral_mode
+                case 'ones';
+                    if nodeInputs>0
+                        valNew = integral_factor;
+                    else
+                        valNew=zeros(1,1); %Editing (PDK);
+                    end
+                case 'meanNodes';
+                    if nodeInputs>0
+                        valNew = ones( 1,1 )/1;
+                    else
+                        valNew=zeros(1,1);
+                    end
+                case 'meanValues';
+                    if nodeInputs>0
+                        M1 = ones( 1,1 );
+                        M2 = mean(valOld,2);
+                        for jj = 1:size(M1,1)
+                           M1(jj,:) = M1(jj,:)*M2(jj); 
+                        end
+                        valNew = M1; %ones( size(valOld,1),nodeInputs )*mean(valOld,2);
+                    else
+                        valNew=zeros(1,1);
+                    end
+                case 'random';
+                    if nodeInputs>0
+                        valNew = randn( 1,1 );
+                    else
+                        valNew=zeros(1,1);
+                    end
+                case 'preserve';
+                    if nodeInputs>0
+                        if size( valOld,2 ) < nodeInputs
+                            valNew = [valOld ones(size(valOld,1),nodeInputs-1)];
+                        elseif 1 > nodeInputs
+                            valNew = valOld(:,1:nodeInputs);
+                        end
+                    else
+                        valNew=zeros(1,1);
+                    end
+            end
+            % wrap 'valNew' into correct format for writing the values into
+            % simulink blocks
+            str = '[';
+            for jj = 1:size(valNew,1) % for each line of 'valNew'
+                str = [str num2str(valNew(jj,:)) ';']; %#ok<AGROW>
+            end
+            str(end) = ']';
+            data.templates{ii,2}.set{tempRow,tempCol+1} = str;
+        end
+    end
+end
+
+setappdata(handles.figure1,'appData',data);
+
+
+% --------------------------------------------------------------------
+function export_graph_Callback(hObject, eventdata, handles)
+% hObject    handle to export_graph (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = getappdata(handles.figure1,'appData');
+
+if isempty(matrix(data.g))
+    warndlg('There are no vertices or edges to export.','Export Error')
+    return
+end
+
+export_graph
+
+% global graph_handle
+%  matlab2tikz('figurehandle',graph_handle,'test.tikz');
+
+
+% --------------------------------------------------------------------
+

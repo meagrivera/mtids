@@ -99,15 +99,72 @@ if flagParamsFeasible
     try
         % Adapt "/Mux" according to specified inputs
 %         Vars = regexp( get(handles.TextField1InputSpecs,'String'), '[a-zA-Z0-9/]','match');
+        
+        %Gathers Data Regarding 'Linear depending input parameters' text
+        %box'.
         Vars = regexp( get(handles.TextField1InputSpecs,'String'), ',|\s','split');
         Vars = Vars(~cellfun(@isempty,Vars));
         noOfIntInputs = str2double( get(handles.TextField2InputSpecs,'string') );
+        
+        %Gathers Data Regarding 'Linear depending output parameters' text
+        %box'. (PDK)
+        VarsOutput = regexp( get(handles.TextOutputspecs1,'String'), ',|\s','split');
+        VarsOutput = VarsOutput(~cellfun(@isempty,VarsOutput));
+        noOfIntOutputs = str2double( get(handles.TextOutputspecs2,'string') );
+        
+        % Initial step on how to modify the two selectors. (PDK)
         if ~isempty( Vars )
-            Vars = Vars{1}; %strcat(Vars{1:end});
-%             noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
-            noOfInputsToMux = size( getNumericValue( Vars,handles ),2 ) - noOfIntInputs;
-            set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
-                num2str(noOfInputsToMux) );
+            Vars = Vars{1};
+            %This check dictates whether or not both selectors will be
+            %dynamically regarding input size and indices
+            if ~isempty( VarsOutput )   % If both text boxes have inputs
+                VarsOutput = VarsOutput{1};
+                states_vector = size( getNumericValue( Vars,handles ),2 );
+                outputs_vector = size(getNumericValue(VarsOutput,handles),2);
+                noOfInputsToMux =  outputs_vector + states_vector...
+                     - noOfIntInputs - noOfIntOutputs;
+                set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
+                   num2str(noOfInputsToMux) );
+                %Adapts selectors xj and yj with respect to the column
+                %length of Linear Dependent input/output paramters
+                initial_index = 1;
+                end_index = states_vector;
+                for ii = 1 : size(Data,1)
+                    if regexp(Data{ii,1},'Selector') > 0
+                        set_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'InputPortWidth',num2str(noOfInputsToMux) )                  
+                        set_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'Indices', strcat('','[',num2str(initial_index:end_index),']','') )
+                        %Troubleshooting:
+%                         InputSize = get_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'InputPortWidth')
+%                         Indices = get_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'Indices')
+                        initial_index = end_index + 1;
+                        end_index = initial_index + outputs_vector - 1;
+                    end
+                end
+                
+                
+            %This 'else' occurs only when there is -only- 'Linear depending
+            %input paramters'.
+            else             
+                %Vars = Vars{1}; %strcat(Vars{1:end});
+    %             noOfInputsToMux = size( getNumericValue( Vars{1},handles ),2 ) - noOfIntInputs;
+                noOfInputsToMux = size( getNumericValue( Vars,handles ),2 ) - noOfIntInputs;
+                set_param([handles.sysname '_tempCopy/Mux'],'Inputs',...
+                    num2str(noOfInputsToMux) );
+                states_vector = size( getNumericValue( Vars,handles ),2 );
+                initial_index = 1;
+                end_index = states_vector;
+                for ii = 1 : size(Data,1)
+                    if regexp(Data{ii,1},'Selector') > 0
+                        set_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'Indices', strcat('','[',num2str(1:1),']','') )
+                        set_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'InputPortWidth',num2str(noOfInputsToMux) )
+                        set_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'Indices', strcat('','[',num2str(initial_index:end_index),']','') )
+                        %For debugging:
+%                         InputSize = get_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'InputPortWidth')
+%                         Indices = get_param([handles.sysname '_tempCopy/' Data{ii,1} ], 'Indices')
+                    end
+                end
+               
+            end
         end
         
         % set_param([template '/Mux'],'Inputs',num2str(nodeNumber));#
@@ -117,7 +174,8 @@ if flagParamsFeasible
             'OutputSaveName','youtNew');
         warning('on','all');
         dimension.states = size( simout.get('xoutNew'),2 );
-        dimension.outputs = size( simout.get('youtNew'),2 );
+        dimension.outputs = size( simout.get('youtNew'),2 ) - size( simout.get('xoutNew'),2 );
+        dimension.template_outputs = size( simout.get('youtNew'),2 );
         if ~isempty( simout )
             if ask4choice
                 title = 'Testing suceeded';
