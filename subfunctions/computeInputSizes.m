@@ -18,7 +18,7 @@ if nv(data.g) == 0
     return
 end
 for ii = 1:nv(data.g)
-    [dontuseA dontuseB temp] = checkNodeInput(ii,data); %#ok<ASGLU>
+    [~, ~, temp] = checkNodeInput(ii,data); % #ok<ASGLU>
     data.templates{ii,2}.nodeInputs = temp;
 end
 setappdata(handles.figure1,'appData',data);

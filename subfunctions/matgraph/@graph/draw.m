@@ -136,7 +136,16 @@ for v=1:n
              'EdgeColor', nodeEdgeColor{v}, ...
              'FaceColor', nodeFillColor{v} );
     end
+    
 end
+
+% Obtain the handle to the current graph and set it to a global variable
+% (PDK)
+
+global graph_handle
+graph_handle = gcf;
+global graph_axes
+graph_axes = gca;
 
 
 

@@ -21,18 +21,18 @@ else
 end
 data = getappdata(handles.figure1,'appData');
 if nv(data.g) ~= 0
-    isCorrect = zeros( nv(data.g),1 );
+    isCorrectStates = zeros( nv(data.g),1 );
     error = cell( nv(data.g),1 );
     for kk = 1:nv(data.g)
-       [isCorrect(kk) error{kk}] = checkNodeInput(kk,data);  
+       [isCorrectStates(kk) error{kk}] = checkNodeInput(kk,data);  %(PDK) 
     end
-    if any( ~isCorrect )
+    if any( ~isCorrectStates )
         check = 0;
         % Display errors
         if plotBadNodes
             disp('Errors occured for node number...');
             for kk = 1:nv(data.g)
-                if ~isCorrect(kk)
+                if ~isCorrectStates(kk)
                     disp([num2str(kk) ', concerning the variables: ',...
                         error{kk}.DimMismatch   ]);
                 end
@@ -41,9 +41,45 @@ if nv(data.g) ~= 0
     else
         check = 1;
     end
+    
+% Debug States:
+% isCorrectStates
+    
+% Tests system consistency with output variables (PDK)
+
+    isCorrectOut = zeros( nv(data.g),1 );
+    error = cell( nv(data.g),1 );
+
+    for kk = 1:nv(data.g)
+       [~, ~, ~, isCorrectOut(kk) error{kk}] = checkNodeInput(kk,data);  
+    end
+    if any( ~isCorrectOut )
+        check = 0;
+        % Display errors
+        if plotBadNodes
+            disp('Errors occured for node number...');
+            for kk = 1:nv(data.g)
+                if ~isCorrectOut(kk)
+                    disp([num2str(kk) ', concerning the variables: ',...
+                        error{kk}.DimMismatch   ]);
+                end
+            end
+        end
+    else
+        check = 1;
+    end
+%   Debug Outputs:
+%   isCorrectOut
+    
+    isCorrect = isCorrectStates & isCorrectOut;
+    
+%-------------
+
 else
     check = 0;
     isCorrect = [];
 end
 varargout{1} = check;
 varargout{2} = isCorrect;
+varargout{3} = isCorrectStates;
+varargout{4} = isCorrectOut;

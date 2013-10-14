@@ -15,5 +15,13 @@ function varargout = templateHasDependingInputs( varargin )
 nodeIDX     = varargin{1}; %#ok<NASGU>
 template    = varargin{2};
 
-varargout{1} = any( ~cellfun( @isempty, ...
-    template{ 1,2 }.inputSpec.Vars ) );
+%Tests not only Linear depending INPUT parameters, but also Linear
+%depending OUTPUT parameters (PDK)
+
+if any( ~cellfun( @isempty, template{ 1,2 }.inputSpec.Vars ) )
+    varargout{1} = 1;
+elseif any( ~cellfun( @isempty, template{ 1,2 }.inputSpec.VarsOutput ) )
+    varargout{1} = 1;
+else
+    varargout{1} = 0;
+end

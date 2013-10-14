@@ -15,7 +15,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.13"
+    ComputedModelVersion    "1.19"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,7 +39,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [677.0, 137.0, 524.0, 454.0]
+      Location		      [1960.0, 115.0, 765.0, 809.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -48,7 +48,7 @@ Model {
 	DockPosition		"Left"
 	Width			[50]
 	Height			[50]
-	Filter			[8]
+	Filter			[9]
       }
       Object {
 	$PropName		"ExplorerBarInfo"
@@ -63,9 +63,9 @@ Model {
 	IsActive		[1]
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
-	Extents			[472.0, 271.0]
+	Extents			[727.0, 633.0]
 	ZoomFactor		[1.0]
-	Offset			[36.875524073839188, 4.0979735553264618]
+	Offset			[36.0, -82.210525125265121]
       }
     }
   }
@@ -73,11 +73,11 @@ Model {
   Creator		  "chepeadan"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "deroo"
+  LastModifiedBy	  "koehler"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Oct 24 13:56:59 2012"
-  RTWModifiedTimeStamp	  272890850
-  ModelVersionFormat	  "1.%<AutoIncrement:13>"
+  LastModifiedDate	  "Tue Sep 03 13:38:41 2013"
+  RTWModifiedTimeStamp	  300116216
+  ModelVersionFormat	  "1.%<AutoIncrement:19>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -776,6 +776,9 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      Ground
+    }
+    Block {
       BlockType		      Inport
       Port		      "1"
       OutputFunctionCall      off
@@ -834,6 +837,13 @@ Model {
       InitialOutput	      "[]"
     }
     Block {
+      BlockType		      Selector
+      NumberOfDimensions      "1"
+      IndexMode		      "One-based"
+      InputPortWidth	      "-1"
+      SampleTime	      "-1"
+    }
+    Block {
       BlockType		      Sum
       IconShape		      "rectangular"
       Inputs		      "++"
@@ -850,6 +860,9 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      Terminator
+    }
+    Block {
       BlockType		      ToWorkspace
       VariableName	      "simulink_output"
       MaxDataPoints	      "1000"
@@ -862,7 +875,7 @@ Model {
   }
   System {
     Name		    "LinearTimeInvariant"
-    Location		    [677, 137, 1201, 591]
+    Location		    [1960, 115, 2725, 924]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -876,7 +889,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "18"
+    SIDHighWatermark	    "23"
     Block {
       BlockType		      Inport
       Name		      "In1"
@@ -889,11 +902,12 @@ Model {
       BlockType		      Gain
       Name		      "Aii"
       SID		      "10"
-      Position		      [320, 115, 350, 145]
+      Position		      [390, 115, 420, 145]
       ZOrder		      4
       BlockMirror	      on
       NamePlacement	      "alternate"
       Gain		      "Aii"
+      Multiplication	      "Matrix(K*u)"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -902,9 +916,10 @@ Model {
       BlockType		      Gain
       Name		      "Aij"
       SID		      "8"
-      Position		      [190, 40, 220, 70]
+      Position		      [260, 40, 290, 70]
       ZOrder		      2
       Gain		      "Aij"
+      Multiplication	      "Matrix(K*u)"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -913,21 +928,29 @@ Model {
       BlockType		      Gain
       Name		      "Bi"
       SID		      "12"
-      Position		      [285, 175, 315, 205]
+      Position		      [355, 190, 385, 220]
       ZOrder		      6
       BlockMirror	      on
       NamePlacement	      "alternate"
       Gain		      "Bi"
+      Multiplication	      "Matrix(K*u)"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
+    }
+    Block {
+      BlockType		      Ground
+      Name		      "Ground_Outputs"
+      SID		      "23"
+      Position		      [470, 130, 490, 150]
+      ZOrder		      11
     }
     Block {
       BlockType		      Integrator
       Name		      "Integrator"
       SID		      "7"
       Ports		      [1, 1]
-      Position		      [320, 50, 350, 80]
+      Position		      [390, 50, 420, 80]
       ZOrder		      1
     }
     Block {
@@ -942,11 +965,46 @@ Model {
       DisplayOption	      "bar"
     }
     Block {
+      BlockType		      Mux
+      Name		      "Mux1"
+      SID		      "22"
+      Ports		      [2, 1]
+      Position		      [510, 56, 515, 94]
+      ZOrder		      10
+      ShowName		      off
+      Inputs		      "2"
+      DisplayOption	      "bar"
+    }
+    Block {
+      BlockType		      Selector
+      Name		      "Selector_xj"
+      SID		      "19"
+      Ports		      [1, 1]
+      Position		      [180, 36, 220, 74]
+      ZOrder		      7
+      InputPortWidth	      "2"
+      IndexOptions	      "Index vector (dialog)"
+      Indices		      "[1]"
+      OutputSizes	      "1"
+    }
+    Block {
+      BlockType		      Selector
+      Name		      "Selector_yj"
+      SID		      "20"
+      Ports		      [1, 1]
+      Position		      [180, 236, 220, 274]
+      ZOrder		      8
+      InputPortWidth	      "2"
+      IndexOptions	      "Index vector (dialog)"
+      Indices		      "[1]"
+      OutputSizes	      "1"
+    }
+    Block {
       BlockType		      Sum
       Name		      "Sum"
       SID		      "9"
       Ports		      [3, 1]
-      Position		      [260, 47, 290, 78]
+      Position		      [330, 67, 360, 108]
       ZOrder		      3
       ShowName		      off
       Inputs		      "|+|+|+"
@@ -955,11 +1013,18 @@ Model {
       SaturateOnIntegerOverflow	off
     }
     Block {
+      BlockType		      Terminator
+      Name		      "Terminator"
+      SID		      "21"
+      Position		      [270, 245, 290, 265]
+      ZOrder		      9
+    }
+    Block {
       BlockType		      ToWorkspace
       Name		      "To Workspace"
       SID		      "6"
       Ports		      [1]
-      Position		      [425, 125, 485, 155]
+      Position		      [545, 125, 605, 155]
       ZOrder		      -7
       VariableName	      "simout"
       MaxDataPoints	      "inf"
@@ -970,7 +1035,7 @@ Model {
       BlockType		      Constant
       Name		      "u_i"
       SID		      "11"
-      Position		      [360, 175, 390, 205]
+      Position		      [430, 190, 460, 220]
       ZOrder		      5
       BlockMirror	      on
       NamePlacement	      "alternate"
@@ -980,7 +1045,7 @@ Model {
       BlockType		      Outport
       Name		      "Out1"
       SID		      "5"
-      Position		      [440, 58, 470, 72]
+      Position		      [560, 58, 590, 72]
       ZOrder		      -8
       IconDisplay	      "Port number"
     }
@@ -995,28 +1060,14 @@ Model {
       SrcPort		      1
       Points		      [31, 0]
       Branch {
+	DstBlock		"Mux1"
+	DstPort			1
+      }
+      Branch {
 	Points			[0, 65]
 	DstBlock		"Aii"
 	DstPort			1
       }
-      Branch {
-	Points			[16, 0]
-	Branch {
-	  DstBlock		  "Out1"
-	  DstPort		  1
-	}
-	Branch {
-	  Points		  [0, 75]
-	  DstBlock		  "To Workspace"
-	  DstPort		  1
-	}
-      }
-    }
-    Line {
-      SrcBlock		      "Mux"
-      SrcPort		      1
-      DstBlock		      "Aij"
-      DstPort		      1
     }
     Line {
       SrcBlock		      "Aij"
@@ -1027,7 +1078,7 @@ Model {
     Line {
       SrcBlock		      "Aii"
       SrcPort		      1
-      Points		      [-82, 0; 0, -65]
+      Points		      [-82, 0; 0, -40]
       DstBlock		      "Sum"
       DstPort		      2
     }
@@ -1040,25 +1091,74 @@ Model {
     Line {
       SrcBlock		      "Bi"
       SrcPort		      1
-      Points		      [-60, 0; 0, -115]
+      Points		      [-60, 0; 0, -110]
       DstBlock		      "Sum"
       DstPort		      3
     }
     Line {
       SrcBlock		      "Sum"
       SrcPort		      1
+      Points		      [0, -25]
       DstBlock		      "Integrator"
       DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Mux"
+      SrcPort		      1
+      Points		      [19, 0]
+      Branch {
+	Points			[0, 200]
+	DstBlock		"Selector_yj"
+	DstPort			1
+      }
+      Branch {
+	DstBlock		"Selector_xj"
+	DstPort			1
+      }
+    }
+    Line {
+      SrcBlock		      "Selector_xj"
+      SrcPort		      1
+      DstBlock		      "Aij"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Selector_yj"
+      SrcPort		      1
+      DstBlock		      "Terminator"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Ground_Outputs"
+      SrcPort		      1
+      Points		      [5, 0; 0, -55]
+      DstBlock		      "Mux1"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Mux1"
+      SrcPort		      1
+      Points		      [17, 0]
+      Branch {
+	Points			[0, -10]
+	DstBlock		"Out1"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 65]
+	DstBlock		"To Workspace"
+	DstPort			1
+      }
     }
     Annotation {
       SID		      "18"
       Name		      "xdot"
-      Position		      [301, 58]
+      Position		      [371, 58]
     }
     Annotation {
       SID		      "17"
       Name		      "x"
-      Position		      [373, 45]
+      Position		      [443, 45]
     }
   }
 }

@@ -38,7 +38,7 @@ function varargout = manageParamSets(varargin)
 
 % Edit the above text to modify the response to help manageParamSets
 
-% Last Modified by GUIDE v2.5 26-Sep-2012 08:51:27
+% Last Modified by GUIDE v2.5 03-Sep-2013 15:13:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,6 +80,7 @@ handles.sys2Import = cell(0,2);
 handles.noChanges = 1;
 handles.newImportStarted = 0;
 handles.succTest = 0;
+handles.parameter_popup_contents = [];
 % initialize dropdown menues
 initDropdownMenuTemplates( handles );
 handles = popupmenu_template_Callback(handles.popupmenu_template, eventdata, handles);
@@ -87,6 +88,10 @@ setPanelModeActions( handles,hObject );
 setObjectPositions( handles );
 handles = loadTableFromStruct( handles.popupmenu_valueSet,handles );
 handles = handleOpenSystems( handles );
+set(handles.parameter_popup,'Value',1); %Select the first entry in pop up in Parameter Name under 
+                                        %Random Parameters Setup
+
+
 % Update handles structure
 guidata(hObject, handles);
 % UIWAIT makes manageParamSets wait for user response (see UIRESUME)
@@ -130,6 +135,10 @@ switch get(eventdata.NewValue,'Tag')
         else
             handles.mode = 'edit';
         end
+        set(handles.parameter_popup,'Visible','on'); %Allows parameter pop-up menu to be seen. (PDK)
+        
+
+   
     case 'radiobutton_newImport';
         if ~handles.noChanges
             choice = questdlg('Discard changes to current parameter set?', ...
@@ -147,6 +156,8 @@ switch get(eventdata.NewValue,'Tag')
         else
             handles.mode = 'import';
         end
+       
+       set(handles.parameter_popup,'Visible','off'); %Causes parameter pop-up menu to disappear when uploading new template (PDK)
 end
 setPanelModeActions( handles,hObject );
 handles = handleOpenSystems( handles );
@@ -227,7 +238,45 @@ for i=1:nrOfParamSets
         drop_string{i} = '<no name set>';
     end
 end
+
 set(handles.popupmenu_valueSet, 'String', drop_string,'Value',1);
+set(handles.parameter_popup,'Value',1);
+
+%Populates Parameter Name pop-up menu with the selected template parameters
+%names.
+
+idxSelectedTemplate = get(handles.popupmenu_template,'Value');
+idxSelectedSet = get(handles.popupmenu_valueSet,'Value');
+
+
+rowlength = length(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1));
+columnlength = zeros(1,rowlength);
+    
+x=1;
+for i = 1 : rowlength
+    while x<=size(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,:),2) && ~isempty(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set{i,x})
+            x = x + 1;
+    end
+    columnlength(i) = x-1;
+    x=1;
+end
+
+combinednames=cell(sum(floor(columnlength/2)),1);
+
+index=floor(columnlength/2);
+for i = 1 : rowlength
+    for j = 1 : index(i) %The vector columnlength's entries are the number of columns of each row
+        blocknames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,1);
+        parameternames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,j*2);
+        combinednames(sum(index(1:i-1))+j,1) = strcat(blocknames,'\',parameternames);
+    end
+end
+
+set(handles.parameter_popup,'String', combinednames);
+
+
+%end
+
 handles = handleOpenSystems( handles );
 handles = popupmenu_valueSet_Callback(hObject, eventdata, handles);
 guidata(handles.figure1, handles);
@@ -353,6 +402,7 @@ function pushbutton_save2File_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 disp('Saving parameter set to file...');
+lti_choice = [];
 if handles.succTest && isfield( handles, 'dimension')
     choice = 'yes';
     dimension = handles.dimension;
@@ -364,9 +414,13 @@ if strcmp( choice,'yes')
     handles.succTest = 1;
     templName = handles.templateNames{get(handles.popupmenu_template,'Value')};
     Data = get(handles.t,'Data');
+    
+    %Saves all inputted data within 'Input Specifications' (PDK)
     [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
-        handles.TextField2InputSpecs, templName, handles.edit_save2File,...
-        Data, dimension, handles.pathname,handles.togglebutton_setActive,1);
+        handles.TextField2InputSpecs, handles.TextOutputspecs1,handles.TextOutputspecs2,...
+        templName, handles.edit_save2File, Data, dimension, handles.pathname,...
+        lti_choice,handles.togglebutton_setActive,1);
+    
     if ~success
         disp('Parameter set not saved due to following reason:');
         if ~isempty(errMessage)
@@ -650,13 +704,19 @@ else
 end
 % In case of being successful, store parameters
 if strcmp(choice,'yes')
+
+    % Prompts the user to see if imported template is LTI system. (PDK)
+    lti_choice = questdlg('Is the imported system a variation of the LTI_Output template?','LTI Check');
+    
     Data = get(handles.t,'Data');
     answer(1) = regexp( handles.sys2Import{1}, '\w*(?=.mdl)','match' );
     pathname = [handles.pathname 'import' filesep];
     % copy also data=>use existing table
+    
     [success errMessage ] = saveParamSet2File(handles.TextField1InputSpecs,...
-        handles.TextField2InputSpecs, answer{1}, handles.edit_save2File,...
-        Data, dimension, pathname);
+        handles.TextField2InputSpecs, handles.TextOutputspecs1,handles.TextOutputspecs2,...
+        answer{1}, handles.edit_save2File, Data, dimension, pathname,lti_choice); %(PDK)
+    
     % close figure
     if success
         if ~exist( [answer{1} '_CHECKED.mdl'],'file')
@@ -834,6 +894,17 @@ if strcmp( handles.mode,'edit')
         inputStrg = [inputStrg ', ' handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.Vars{kk}]; %#ok<AGROW>
     end
     set(handles.TextField1InputSpecs,'String', inputStrg(3:end) );
+
+    % Place the Linear depending output parameters in corresponding text box (PDK)
+    set(handles.TextOutputspecs2,'String', ...
+        num2str( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.noOfIntOutputs ) );
+    outputStrg = [];
+    for kk = 1:length( handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.VarsOutput )
+        outputStrg = [outputStrg ', ' handles.templateSets{idxSelectedTemplate}(idxSelectedSet).inputSpec.VarsOutput{kk}];
+    end
+    set(handles.TextOutputspecs1,'String', outputStrg(3:end) );
+    
+    
     tableRowNames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1);
     tableData = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set;
     cnames = cell( size(tableData,2) , 1 );
@@ -856,7 +927,10 @@ else
     % clear table and according text fields
     set(handles.TextField2InputSpecs,'String', num2str(0) );
     set(handles.TextField1InputSpecs,'String', '' );
-    set(handles.t,'CellSelectionCallback',...
+    set(handles.TextOutputspecs2,'String', num2str(0) );    %Clears Linear depending output parameters (PDK)
+    set(handles.TextOutputspecs1,'String', '' );            %Clears corresponding Thereof internal inputs (PDK)
+
+set(handles.t,'CellSelectionCallback',...
         {@table_CellSelectionCallback,handles},'CellEditCallback',...
         {@table_CellEditCallbackFcn,handles},'RowName',{'1','2'},...
         'Data',{'','';'',''},'ColumnName',{'a','b'});
@@ -1014,3 +1088,388 @@ function TextField2InputSpecs_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of TextField2InputSpecs as a double
 handles.noChanges = 0;
 guidata(hObject,handles);
+
+
+% --- Executes on selection change in parameter_popup.
+function handles = parameter_popup_Callback(hObject, eventdata, handles)
+% hObject    handle to parameter_popup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+str = get(hObject,'String');
+val = get(hObject,'Value');
+
+handles.parameter_popup_contents = str{val};
+  
+% Hints: contents = cellstr(get(hObject,'String')) returns parameter_popup contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from parameter_popup
+guidata(hObject,handles);
+
+% --- Executes during object creation, after setting all properties.
+function parameter_popup_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to parameter_popup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes when entered data in editable cell(s) in t.
+function t_CellEditCallback(hObject, eventdata, handles)
+% hObject    handle to t (see GCBO)
+% eventdata  structure with the following fields (see UITABLE)
+%	Indices: row and column indices of the cell(s) edited
+%	PreviousData: previous data for the cell(s) edited
+%	EditData: string(s) entered by the user
+%	NewData: EditData or its converted form set on the Data property. Empty if Data was not changed
+%	Error: error string when failed to convert EditData to appropriate value for Data
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function text6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+
+function row_length_input_Callback(hObject, eventdata, handles)
+% hObject    handle to row_length_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of row_length_input as text
+%        str2double(get(hObject,'String')) returns contents of row_length_input as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function row_length_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to row_length_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function column_length_input_Callback(hObject, eventdata, handles)
+% hObject    handle to column_length_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of column_length_input as text
+%        str2double(get(hObject,'String')) returns contents of column_length_input as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function column_length_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to column_length_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton11.
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+%Determines if the Normal or Uniform distribution has been selected.
+randtype = get(handles.radiobutton_rand,'Value');
+
+%Obtains the input values in the Matrix Dimensions panel
+rowsize = str2num(get(handles.row_length_input,'String'));
+columnsize=str2num(get(handles.column_length_input,'String'));
+if isempty(rowsize) == 1 && isempty(columnsize) == 1
+    rowsize = 1;
+    columnsize = 1;
+elseif isempty(rowsize) == 0 && isempty(columnsize) == 1
+    warndlg('Please enter a column length value.','Input Error');
+    rowsize = [];
+    columnsize = [];
+elseif isempty(rowsize) == 1 && isempty(columnsize) == 0
+    warndlg('Please enter a row length value.','Input Error');
+    rowsize = [];
+    columnsize = [];
+else
+    rowsize = str2num(get(handles.row_length_input,'String'));
+    columnsize=str2num(get(handles.column_length_input,'String'));
+end
+
+%Obtains the input values in the Mean/Minimum and Standard
+%Deviation/Maximum text boxes. (PDK)
+mean=str2num(get(handles.various_input_1,'String'));
+standdev=str2num(get(handles.various_input_2,'String'));
+minimum=str2num(get(handles.various_input_1,'String'));
+maximum=str2num(get(handles.various_input_2,'String'));
+
+%Runs through and compares string in pop-up menu to table entries and when
+%a match is found, places the random valued matrix into its corresponding
+%value cell.
+
+idxSelectedTemplate = get(handles.popupmenu_template,'Value');
+idxSelectedSet = get(handles.popupmenu_valueSet,'Value');
+
+
+rowlength = length(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(:,1));
+columnlength = zeros(1,rowlength);
+    
+x=1;
+for i = 1 : rowlength
+    while x<=size(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,:),2) && ~isempty(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set{i,x})
+            x = x + 1;
+    end
+    columnlength(i) = x-1;
+    x=1;
+end
+
+initialnames = strcat(handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(1,1),'\',...
+    handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(1,2));
+
+index=floor(columnlength/2);
+
+for i = 1 : rowlength
+    for j = 1 : index(i) %The vector columnlength's entries are the number of columns of each row
+        blocknames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,1);
+        parameternames = handles.templateSets{idxSelectedTemplate}(idxSelectedSet).set(i,j*2);
+        combinednames = strcat(blocknames,'\',parameternames);
+        if isequal(handles.parameter_popup_contents,[])==0
+            comparednames{1,1} = handles.parameter_popup_contents;
+        else
+            comparednames = initialnames;
+        end
+        if isequal(combinednames,comparednames)>=1
+            buf=get(handles.t,'Data');
+            if  randtype >= 1
+                if  isempty(minimum)==1 && isempty(maximum)==1
+                    minimum = 0;
+                    maximum = 1;
+                elseif isempty(minimum)==0 && isempty(maximum)==1
+                    warndlg('Please enter a maximum value.','Input Error');
+                    minimum = [];
+                    maximum = [];
+                elseif isempty(minimum)==1 && isempty(maximum)==0
+                    warndlg('Please enter a minimum value.','Input Error');
+                    minimum = [];
+                    maximum = [];
+                end
+                randbuf = num2str(minimum + (maximum - minimum).*rand(rowsize,columnsize));
+                str = '[';
+                for jj = 1:size(randbuf,1) % for each line of 'randbuf'
+                    str = [str num2str(randbuf(jj,:)) ';']; %#ok<AGROW>
+                end
+                str(end) = ']';
+                if isempty(rowsize)==1 & isempty(columnsize)==1
+                    buf{i,j*2+1} = [];
+                elseif isempty(minimum)==1 & isempty(maximum)==1
+                    buf{i,j*2+1} = [];
+                else
+                    buf{i,j*2+1} = str;
+                end
+            else
+                if isempty(mean)==1 && isempty(standdev)==1
+                    mean = 0;
+                    standdev = 1;
+                elseif isempty(mean)==0 && isempty(standdev)==1
+                    standdev = 1;
+                elseif isempty(mean)==1 && isempty(standdev)==0
+                    mean = 0;
+                else
+                    mean=str2num(get(handles.various_input_1,'String'));
+                    standdev=str2num(get(handles.various_input_2,'String'));
+                end
+                randbuf = num2str(mean + standdev.*randn(rowsize,columnsize));
+                str = '[';
+                for jj = 1:size(randbuf,1) % for each line of 'valNew'
+                    str = [str num2str(randbuf(jj,:)) ';']; %#ok<AGROW>
+                end
+                str(end) = ']';
+                if isempty(rowsize)==1 && isempty(columnsize)==1
+                    buf{i,j*2+1} = [];
+                else
+                    buf{i,j*2+1} = str;
+                end
+
+            end           
+            set(handles.t,'Data',buf);
+        end
+    end
+end
+% Finish the modification of the Random Parameters Setup (PDK)
+
+
+
+% --- Executes when selected cell(s) is changed in t.
+function t_CellSelectionCallback(hObject, eventdata, handles)
+% hObject    handle to t (see GCBO)
+% eventdata  structure with the following fields (see UITABLE)
+%	Indices: row and column indices of the cell(s) currently selecteds
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function t_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to t (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function uipanel12_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes when selected object is changed in uipanel12.
+function uipanel12_SelectionChangeFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uipanel12 
+% eventdata  structure with the following fields (see UIBUTTONGROUP)
+%	EventName: string 'SelectionChanged' (read only)
+%	OldValue: handle of the previously selected object or empty if none was selected
+%	NewValue: handle of the currently selected object
+% handles    structure with handles and user data (see GUIDATA)
+switch get(eventdata.NewValue,'Tag')
+    case 'radiobutton_rand'
+        title = 'Uniform Distribution Properties';
+        input_1='Minimum';
+        input_2='Maximum';
+    case 'radiobutton_randn'
+        title = 'Normal Distribution Properties';
+        input_1='Mean';
+        input_2='Standard Deviation';
+        
+end
+set(handles.uipanel17,'Title',title);
+set(handles.input_1,'String',input_1);
+set(handles.input_2,'String',input_2);
+
+
+function various_input_1_Callback(hObject, eventdata, handles)
+% hObject    handle to various_input_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of various_input_1 as text
+%        str2double(get(hObject,'String')) returns contents of various_input_1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function various_input_1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to various_input_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function various_input_2_Callback(hObject, eventdata, handles)
+% hObject    handle to various_input_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of various_input_2 as text
+%        str2double(get(hObject,'String')) returns contents of various_input_2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function various_input_2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to various_input_2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function uipanel17_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel17 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+
+function TextField1InputSpecs_Callback(hObject, eventdata, handles)
+% hObject    handle to TextField1InputSpecs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of TextField1InputSpecs as text
+%        str2double(get(hObject,'String')) returns contents of TextField1InputSpecs as a double
+
+
+
+function TextOutputspecs1_Callback(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of TextOutputspecs1 as text
+%        str2double(get(hObject,'String')) returns contents of TextOutputspecs1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function TextOutputspecs1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function TextOutputspecs2_Callback(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of TextOutputspecs2 as text
+%        str2double(get(hObject,'String')) returns contents of TextOutputspecs2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function TextOutputspecs2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to TextOutputspecs2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function uipanel_mode_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to uipanel_mode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

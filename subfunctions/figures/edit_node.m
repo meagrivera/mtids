@@ -106,7 +106,7 @@ temp = data.printCell{1,1};
 data.templateSaved = 0;
 data.template = data.template{1,1};
 set(handles.edit_intStates,'String',num2str(data.oldTemplate{1,2}.dimension.states));
-set(handles.text_noOfOutputSignals,'String',num2str(data.oldTemplate{1,2}.dimension.outputs));
+set(handles.text_noOfOutputSignals,'String',num2str(data.oldTemplate{1,2}.dimension.template_outputs));
 if temp(1) == 1
     data.flagCheck1 = 1;
 else
@@ -147,7 +147,10 @@ function varargout = edit_node_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-compute_printVector(handles);
+
+compute_printVector(handles); 
+
+
 %load application data
 data = getappdata(handles.figure1,'appData');
 
@@ -239,6 +242,7 @@ n2 = 1; %find(strcmp(string4selectorParamSet,data.template_list{n1,4}.setName));
 set(handles.selector_paramSet,'Value',n2);
 % Call "selector_paramSet_Callback"
 selector_paramSet_Callback(handles.selector_paramSet, [], handles);
+data = getappdata(handles.figure1,'appData');
 setappdata(handles.figure1,'appData',data);
 
 % --- Executes during object creation, after setting all properties.
@@ -419,9 +423,9 @@ function edit_plotOutputSignals_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit_plotOutputSignals as a double
 data=getappdata(handles.figure1,'appData');
 if isfield(data,'newTemplate')
-    outputs = data.newTemplate{1,2}.dimension.outputs;
+    outputs = data.newTemplate{1,2}.dimension.template_outputs;
 else
-    outputs = data.oldTemplate{1,2}.dimension.outputs;
+    outputs = data.oldTemplate{1,2}.dimension.template_outputs;
 end
 if max( str2num( get(hObject,'String'))) >  outputs %#ok<*ST2NM>
     errordlg({'There are not as many output signals as selected.',...
@@ -687,13 +691,14 @@ function compute_printVector(handles)
 %TODO: case distinction for templates with only one internal state
 data = getappdata(handles.figure1,'appData');
 if handles.flagEditParams
-    outputDim = data.newTemplate{1,2}.dimension.outputs;
+    outputDim = data.newTemplate{1,2}.dimension.template_outputs;
     statesDim = data.newTemplate{1,2}.dimension.states;
 else
-    outputDim = data.oldTemplate{1,2}.dimension.outputs;
+    outputDim = data.oldTemplate{1,2}.dimension.template_outputs;
     statesDim = data.oldTemplate{1,2}.dimension.states;
 end
 data.printVector = zeros(1,outputDim+statesDim);
+
 %Read out manually the information about the states, which should be
 %plotted. Format is: "i j l", no brackets, just a spacer between the
 %numbers.
@@ -794,7 +799,7 @@ end
 if flagOkay
     data.newTemplate = newTemplate;
     set(handles.edit_intStates,'String',num2str(data.newTemplate{1,2}.dimension.states));
-    set(handles.text_noOfOutputSignals,'String',num2str(data.newTemplate{1,2}.dimension.outputs));
+    set(handles.text_noOfOutputSignals,'String',num2str(data.newTemplate{1,2}.dimension.template_outputs));
     setappdata(handles.figure1,'appData',data);
     handles.flagEditParams = 1;
     guidata(hObject, handles);
@@ -811,16 +816,49 @@ if handles.flagEditParams
 else
     templ = data.oldTemplate;
 end
-[isCorrect error]=checkNodeInput(data.nodenumber,data.handleMainFigure,templ);
-if ~isCorrect
-    errStrg = [];
-    for kk = 1:length( error.DimMismatch )
-        errStrg = [errStrg ', ' error.DimMismatch{kk}];
+
+if any( ~cellfun( @isempty, templ{ 1,2 }.inputSpec.Vars ) )
+    [isCorrect error]=checkNodeInput(data.nodenumber,data.handleMainFigure,templ);
+    if ~isCorrect
+        errStrg = [];
+        for kk = 1:length( error.DimMismatch )
+            errStrg = [errStrg ', ' error.DimMismatch{kk}];
+        end
+        errStrg = errStrg(3:end);
+        % Discriminates between whether or not there are more than one states
+        % variables. (PDK)
+        if ~isempty(strfind(errStrg,','))
+            disp(['For node ' num2str(data.nodenumber) ': States variables "' errStrg '" possess incorrect dimensions.']);
+        else
+            disp(['For node ' num2str(data.nodenumber) ': States variable "' errStrg '" possesses incorrect dimensions.']);
+        end
+    else
+        disp(['For node ' num2str(data.nodenumber) ': States variables are consistent.']);
+    end  
+end
+
+% Displays whether or not the output variables dimensions are consistent
+% (PDK)
+
+if any( ~cellfun( @isempty, templ{ 1,2 }.inputSpec.VarsOutput ) )
+    [~, ~, ~, isCorrect, error]=checkNodeInput(data.nodenumber,data.handleMainFigure,templ);
+%     consistency_display(isCorrect,error)
+    if ~isCorrect
+        errStrg = [];
+        for kk = 1:length( error.DimMismatch )
+            errStrg = [errStrg ', ' error.DimMismatch{kk}];
+        end
+        errStrg = errStrg(3:end);
+        % Discriminates between whether or not there are more than one outputs
+        % variables. (PDK)
+        if ~isempty(strfind(errStrg,','))
+            disp(['For node ' num2str(data.nodenumber) ': Output variables "' errStrg '" possess incorrect dimensions.']);
+        else
+            disp(['For node ' num2str(data.nodenumber) ': Output variable "' errStrg '" possesses incorrect dimensions.']);
+        end
+    else
+        disp(['For node ' num2str(data.nodenumber) ': Output variables are consistent.']);
     end
-    errStrg = errStrg(3:end);
-    disp(['For node ' num2str(data.nodenumber) ': Input variable(s) "' errStrg '" has (have) not correct dimension(s).']);
-else
-    disp(['For node ' num2str(data.nodenumber) ': Input variables are consistent.']);
 end
 
 
@@ -867,7 +905,7 @@ n_template=get(handles.selector_dynamics,'Value');
 data.newTemplate{1,1} = wholetemplatelist{n_template};
 data.newTemplate{1,2} = data.template_list{nTemp,4}(nSetTList);
 data.template =  wholetemplatelist{n_template};
-dimOut = data.template_list{nTemp,4}(nSetTList).dimension.outputs;
+dimOut = data.template_list{nTemp,4}(nSetTList).dimension.template_outputs;
 dimInt = data.template_list{nTemp,4}(nSetTList).dimension.states;
 if data.plotAllOutput
     data.printCell{1,1} = [ones(1,dimOut) zeros(1,dimInt)];
@@ -888,8 +926,11 @@ set(handles.edit_intStates,'String',num2str(dimInt));
 set_stringSelectedStates( data.printCell,handles );
 % edit_plotOutputSignals
 set_stringPlotOutputSignals( data.printCell,handles );
+% Sets the data structure to the result from set_stringPlotOutputsSignals
+% function (PDK)
 data = getappdata(handles.figure1,'appData');
 setappdata(handles.figure1,'appData',data);
+
 
 
 % --- Executes during object creation, after setting all properties.
