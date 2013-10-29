@@ -15,7 +15,7 @@ Model {
       Name		      "Out1"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.29"
+    ComputedModelVersion    "1.31"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,7 +39,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [1782.0, 24.0, 1176.0, 1046.0]
+      Location		      [1774.0, 24.0, 1192.0, 1082.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -63,7 +63,7 @@ Model {
 	IsActive		[1]
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
-	Extents			[1124.0, 863.0]
+	Extents			[1140.0, 899.0]
 	ZoomFactor		[1.0]
 	Offset			[33.416666666666742, 16.066666666666606]
       }
@@ -75,9 +75,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "koehler"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Oct 07 15:11:48 2013"
-  RTWModifiedTimeStamp	  303059490
-  ModelVersionFormat	  "1.%<AutoIncrement:29>"
+  LastModifiedDate	  "Mon Oct 21 11:15:50 2013"
+  RTWModifiedTimeStamp	  304254631
+  ModelVersionFormat	  "1.%<AutoIncrement:31>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -872,7 +872,7 @@ Model {
   }
   System {
     Name		    "LTI_Output"
-    Location		    [1782, 24, 2958, 1070]
+    Location		    [1774, 24, 2966, 1106]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -949,7 +949,7 @@ Model {
     }
     Block {
       BlockType		      Gain
-      Name		      "Cki"
+      Name		      "Cii"
       SID		      "20"
       Position		      [575, 200, 605, 230]
       ZOrder		      8
@@ -961,7 +961,7 @@ Model {
     }
     Block {
       BlockType		      Gain
-      Name		      "Ckj"
+      Name		      "Cij"
       SID		      "24"
       Position		      [575, 350, 605, 380]
       ZOrder		      12
@@ -973,7 +973,7 @@ Model {
     }
     Block {
       BlockType		      Gain
-      Name		      "Dk"
+      Name		      "Di"
       SID		      "21"
       Position		      [575, 270, 605, 300]
       ZOrder		      9
@@ -1052,7 +1052,7 @@ Model {
     }
     Block {
       BlockType		      Terminator
-      Name		      "Terminator"
+      Name		      "Terminator_yj"
       SID		      "26"
       Position		      [275, 415, 295, 435]
       ZOrder		      14
@@ -1106,7 +1106,7 @@ Model {
 	Points			[51, 0]
 	Branch {
 	  Points		  [0, 150]
-	  DstBlock		  "Cki"
+	  DstBlock		  "Cii"
 	  DstPort		  1
 	}
 	Branch {
@@ -1134,7 +1134,7 @@ Model {
       Points		      [-10, 0]
       Branch {
 	Points			[0, 95]
-	DstBlock		"Dk"
+	DstBlock		"Di"
 	DstPort			1
       }
       Branch {
@@ -1157,14 +1157,14 @@ Model {
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Cki"
+      SrcBlock		      "Cii"
       SrcPort		      1
       Points		      [15, 0; 0, 30]
       DstBlock		      "Add"
       DstPort		      1
     }
     Line {
-      SrcBlock		      "Dk"
+      SrcBlock		      "Di"
       SrcPort		      1
       Points		      [15, 0; 0, -30]
       DstBlock		      "Add"
@@ -1193,7 +1193,7 @@ Model {
       }
     }
     Line {
-      SrcBlock		      "Ckj"
+      SrcBlock		      "Cij"
       SrcPort		      1
       Points		      [24, 0; 0, -100]
       DstBlock		      "Add"
@@ -1219,7 +1219,7 @@ Model {
       Points		      [16, 0]
       Branch {
 	Points			[0, 310]
-	DstBlock		"Ckj"
+	DstBlock		"Cij"
 	DstPort			1
       }
       Branch {
@@ -1230,7 +1230,7 @@ Model {
     Line {
       SrcBlock		      "Selector_yj"
       SrcPort		      1
-      DstBlock		      "Terminator"
+      DstBlock		      "Terminator_yj"
       DstPort		      1
     }
     Annotation {
