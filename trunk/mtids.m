@@ -23,7 +23,7 @@ function varargout = mtids(varargin)
 %       A copy of the GNU GPL v2 Licence is available inside the LICENCE.txt
 %       file.
 %
-% Last Modified by GUIDE v2.5 07-Oct-2013 15:53:46
+% Last Modified by GUIDE v2.5 04-Jan-2014 16:26:47
 
 % Authors: Francisco Llobet, Jose Rivera
 % Editors: Ferdinand Trommsdorff (f.trommsdorff@gmail.com), 
@@ -106,7 +106,7 @@ addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with variou
 addpath(strcat(pwd,'/subfunctions/mtids_main'));
 addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
 addpath(strcat(pwd,'/subfunctions/figures'));
-
+addpath(strcat(pwd,'/subfunctions/User_guide'));
 %initialize graph
 graph_init;
 
@@ -844,7 +844,13 @@ function aboutmtids_Callback(hObject, eventdata, handles)
 % hObject    handle to aboutmtids (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-about_mtids();
+load User_guide
+x=1;
+save User_guide
+User_guide();
+
+
+
 
 
 % --------------------------------------------------------------------
@@ -1019,8 +1025,8 @@ switch modus
             set(handles.graph_heterogenity,'String', '0');
             set(handles.text19,'String', 'Algebraic connectivity:');
             set(handles.algebraic_connectivity,'String', '0');
-            set(handles.root_span_tree,'Visible','off');
-            set(handles.root_span_tree_result,'Visible','off');
+            set(handles.root_span_tree,'String','Isoperimetric number:');
+            set(handles.root_span_tree_result,'String','0');
         end
     case 'directed';
         dir = 1;
@@ -1046,8 +1052,8 @@ switch modus
             set(handles.graph_heterogenity,'String', '-');
             set(handles.text19,'String', 'Has cycles:');
             set(handles.algebraic_connectivity,'String', '-');
-            set(handles.root_span_tree,'Visible','on');
-            set(handles.root_span_tree_result,'Visible','on');
+            set(handles.root_span_tree,'String','Rooted spanning tree:');
+            set(handles.root_span_tree_result,'String','0');
         end    
 end
 % set node color
@@ -1246,7 +1252,11 @@ switch modus
         set(handles.algebraic_connectivity,'String', num2str(graph_connectivity));
         fiedler_vector   = Eigen_Matrix_L(:,null_L+1);
         estrada_connectivity = diag(exp(A));
-        estrada_graph_index  = trace(exp(A)); 
+        estrada_graph_index  = trace(exp(A));
+        
+        % Isoperimetric number
+        iso_numb = compute_iso_numb(N, D, A);
+        set(handles.root_span_tree_result,'String', num2str(iso_numb));
     case 'directed';
         C=mean(clustering_coef_bd(matrixOfGraph(g)));%CC for directed graphs
         set(handles.cluster,'String',num2str(C));
@@ -3535,3 +3545,40 @@ export_graph
 
 % --------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function pushbutton24_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pushbutton24 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+User_guide_NR=1;
+save User_guide_NR User_guide_NR
+
+
+% --------------------------------------------------------------------
+function Untitled_16_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_16 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton47.
+function pushbutton47_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton47 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+load User_guide
+x=1;
+save User_guide
+User_guide();
