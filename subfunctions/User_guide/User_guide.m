@@ -24,7 +24,7 @@ function varargout = User_guide(varargin)
 % Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
-% Last Modified by GUIDE v2.5 04-Jan-2014 02:24:11
+% Last Modified by GUIDE v2.5 18-Jan-2014 00:03:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -129,9 +129,9 @@ varargout{1} = handles.output;
 % The figure can be deleted now
 delete(handles.figure1);
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
+% --- Executes on button press in close.
+function close_Callback(hObject, eventdata, handles)
+% hObject    handle to close (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output = get(hObject,'String');
@@ -185,25 +185,19 @@ if isequal(get(hObject,'CurrentKey'),'return')
 end    
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
+
+% --- Executes on button press in Graph_theory.
+function Graph_theory_Callback(hObject, eventdata, handles)
+% hObject    handle to Graph_theory (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton4 (see GCBO)
+% hObject    handle to close (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% hObject    handle to pushbutton1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -213,79 +207,97 @@ delete(h7);
 delete(h8);
 delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
 
-x=20;
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 760],'visible','off')
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
 h1=text(0,0.5,'\underline{Graph theory:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'For modeling these interconnected systems a graph $ G $ is defined by a set of vertices $ V $ (also called nodes) and ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'a set of edges $ E $, [1], [3], [4]. Two vertices $i$ ang $j$ that are connected by an edge can be written in brackets ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'like (i,j).\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'There are two types of graphs, directed or undirected. In undirected graphs the nodes that are connected with an edge ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-axes('units','pixels','position',[40 110 30 720],'visible','off')
-h2=text(0,0.5,'There are many systems or networks from very different fields, which can be modeled by using the graph   ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 680],'visible','off')
-h3=text(0,0.5,'theory. They are also mentioned in [1]. Some technical examples are the Power system, including transformators, ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 640],'visible','off')
-h4=text(0,0.5,' loads and generators, the traffic system which ties to avoid jams and the internet which connects millions of computers.','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 600],'visible','off')
-h5=text(0,0.5,'In biology graph theory helps to reconstruct neuronal networks for brain studies or to model animal populations ','interpreter','latex',...
-    'horiz','left','vert','middle');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'communicate in both directions which is shown by a line. The nodes in directed graphs are connected with arcs that  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'means the information flow is not bidirectional. If two nodes communicate in both directions, they are connected via  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'two antiparallel arcs.\\' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-axes('units','pixels','position',[40 110 30 560],'visible','off')
-h6=text(0,0.5,'or little ecosystems. Another point of research is the flocking behavior of birds or fish. Other practical ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 520],'visible','off')
-h7=text(0,0.5,'applications are the economical or social networks.\\A networked control system is a spatially distributed ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 480],'visible','off')
-h8=text(0,0.5,'control system, where information is exchanged over a (digital) network, [3].\\' ,'interpreter' ,'latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 30 440],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 400],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h10=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 360],'visible','off')
-h11=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 500 220],'visible','off')
-h12=imshow('GraphTheory1.png'); 
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,'  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
-axes('units','pixels','position',[40 110 30 280],'visible','off')
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h13=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 240],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h14=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 200],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 200],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h15=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 160],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h16=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 120],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h17=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 80],'visible','off')
-h18=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 40],'visible','off')
-h19=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[270 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'Directed and undirected graph','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[120 110 480 300],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('dirgraphs.jpg'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
+% --- Executes on button press in Directed_graph_statistics.
+function Directed_graph_statistics_Callback(hObject, eventdata, handles)
+% hObject    handle to Directed_graph_statistics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output = get(hObject,'String');
@@ -306,179 +318,12 @@ Directed_graph_statistics();
 
 
 
-% --- Executes on button press in pushbutton6.
-function pushbutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton6 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% --- Executes on button press in pushbutton7.
-function pushbutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
 
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Connections:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of connections between the nodes of the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Independent Graphs:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of independent subgraphs that are not connected to each other.\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'In this example the nodes one and two form a subgraph and the nodes thre  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'and four form a subgraph. So there are two independent subgraphs.\\  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('IndependentGraph.png'); 
-
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton10.
-function pushbutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
+% --- Executes on button press in About_MITDS.
+function About_MITDS_Callback(hObject, eventdata, handles)
+% hObject    handle to About_MITDS (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 load User_guide
@@ -562,550 +407,32 @@ h19=text(0,0.5,'','interpreter','latex',...
 
 save User_guide
 
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
+
+
+
+% --- Executes on button press in Working_with_MTIDS.
+function Working_with_MTIDS_Callback(hObject, eventdata, handles)
+% hObject    handle to Working_with_MTIDS (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+handles.output = get(hObject,'String');
+% Update handles structure
+guidata(hObject, handles);
+% Use UIRESUME instead of delete because the OutputFcn needs
+% to get the updated handles structure.
+uiresume(handles.figure1);
+Working_with_MTIDS();
 
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Graph density:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
 
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The graph density is computed as follows:\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'\[\mbox{graph density} = mean(\mbox{degree vector})/(dim(\mbox{Laplacian})-1)\] \\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'The graph density is the mean of the degree of every node divided by the number of nodes minus one.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
 
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
-save User_guide
 
-% --- Executes on button press in pushbutton12.
-function pushbutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 760],'visible','off')
-h1=text(0,0.5,'\underline{Workflow with MTIDS:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 720],'visible','off')
-h2=text(0,0.5,'In this chapter a short plan to work with MTIDS is given. The first thing to do is  to generate the dynamics of the','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 680],'visible','off')
-h3=text(0,0.5,'individual subsystems. Therefore an empty SIMULINK template needs to be filled with any SIMULINK blocks to create','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 640],'visible','off')
-h4=text(0,0.5,'the dynamics. Then the desired subsystem dynamics has to be imported into MTIDS. In the  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 600],'visible','off')
-h5=text(0,0.5,'parameter set manager (PSM) the parameters can be set numerically by MTIDS or manually by the user. ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 560],'visible','off')
-h6=text(0,0.5,'Also some standard templates can be chosen.\\ The building of a graph is straight foreward by clicking the','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 520],'visible','off')
-h7=text(0,0.5,'buttons on the graphical surface of MTIDS where also the dynamics can be applied to the nodes. The graph ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 480],'visible','off')
-h8=text(0,0.5,'statistics are updated automatically.  Additionally it is possible to set the colour of a node.\\ To change the dynamics of ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 30 440],'visible','off')
-h9=text(0,0.5,'a node, a double-click on the node opens the settings. Some simulation and plot parameters can be varied, too.\\When the  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 400],'visible','off')
-h10=text(0,0.5,'graph with its dynamics and parameter settings is ready, the user can work with the system in MTIDS or export it ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 360],'visible','off')
-h11=text(0,0.5,'to SIMULINK for a simulation. The simulation parameters can be determined in MTIDS. The simulation data and results  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h12=text(0,0.5,'can be saved in *.mat files.\\ The letter [1] explains more details for the work with MTIDS and shows some examples.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 280],'visible','off')
-h13=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 240],'visible','off')
-h14=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 200],'visible','off')
-h15=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 160],'visible','off')
-h16=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 120],'visible','off')
-h17=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 80],'visible','off')
-h18=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 40],'visible','off')
-h19=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton13.
-function pushbutton13_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Algebraic connectivity:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The algebraic connectivity of a graph G is the second-smallest eigenvalue of the Laplacian matrix of G.','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'This eigenvalue is greater than zero if and only if G is a connected graph. This is a corollary to the fact  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,' that the number of times zero appears as an eigenvalue in the Laplacian matrix is the number of connected ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'components in the graph. The magnitude of this value reflects how well connected the overall graph is,','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'and has been used in analysing the robustness and synchronizability of networks.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-
-% --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Rooted spanning tree:}\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'This field says Yes if the graph can be built as a rooted spanning tree.  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'Otherwise it says No. As you can see in the figure every node is connected   ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'to the root node by one or more lines. There are no cirle.\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('rootedspanningtree.png'); 
-
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-
-
-% --- Executes on button press in pushbutton15.
-function pushbutton15_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton15 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Minimum degree:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The degree vector contains the diagonal elements of the Laplacian matrix. These elements are the degrees','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'of the nodes, which means number of edges leave or arrive in one node.\\ The Minimum degree shows the \\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'smallest degree of all nodes.','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton16.
-function pushbutton16_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton16 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton17.
-function pushbutton17_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton17 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton19.
-function pushbutton19_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton19 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton20.
-function pushbutton20_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton20 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton25.
-function pushbutton25_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton25 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-
-
-% --- Executes on button press in pushbutton26.
-function pushbutton26_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton26 (see GCBO)
+% --- Executes on button press in toolbox_statistics.
+function toolbox_statistics_Callback(hObject, eventdata, handles)
+% hObject    handle to toolbox_statistics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 load User_guide
@@ -1189,15 +516,15 @@ h19=text(0,0.5,'','interpreter','latex',...
 
 save User_guide
 
-% --- Executes on button press in pushbutton27.
-function pushbutton27_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton27 (see GCBO)
+% --- Executes on button press in References.
+function References_Callback(hObject, eventdata, handles)
+% hObject    handle to References (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -1206,80 +533,107 @@ delete(h6);
 delete(h7);
 delete(h8);
 delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 760],'visible','off')
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
 h1=text(0,0.5,'\underline{References:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'[1] F. Deroo and S. Hirche; A MATLAB Toolbox for Large-scale Networked Systems; ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[50 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'    at- Automatisierungstechnik, July 2013.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'[2] URL: https://code.google.com/p/mtids/','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'[3] Christopher D. Godsil and Gordon Royle; Algebraic graph theory. Graduate texts in mathematics. Springer, 2001.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-axes('units','pixels','position',[40 110 30 720],'visible','off')
-h2=text(0,0.5,'[1] F. Deroo and S. Hirche; A MATLAB Toolbox for Large-scale Networked Systems;','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 640],'visible','off')
-h3=text(0,0.5,'[2] URL: https://code.google.com/p/mtids/ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 600],'visible','off')
-h4=text(0,0.5,'[3] S. Hirche; slides of the course: networked control systems, SS13.  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 560],'visible','off')
-h5=text(0,0.5,'[4] Francisco Llobet, Jose Rivera; Numerical Test Rig for Large-Scale and Interconnected Dynamical Systems;','interpreter','latex',...
-    'horiz','left','vert','middle');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'[4] Dragoslav D. Siljak. Large-Scale Dynamic Systems: Stability and Structure. Dover Piblications, 2007.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-axes('units','pixels','position',[40 110 30 680],'visible','off')
-h6=text(0,0.5,'     at- Automatisierungstechnik, July 2013.','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 520],'visible','off')
-h7=text(0,0.5,'    at- Institude of Automatic Control Engineering, 2011.','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 480],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 30 440],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 400],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h10=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 360],'visible','off')
-h11=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h12=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 280],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,'  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h13=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 240],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h14=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 200],'visible','off')
-h15=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 160],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 200],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h16=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 120],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h17=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 80],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h18=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 40],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[170 110 330 600],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
 h19=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
 
-% --- Executes on button press in pushbutton28.
-function pushbutton28_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton28 (see GCBO)
+
+
+
+% --- Executes on button press in Graph_theory_page2.
+function Graph_theory_page2_Callback(hObject, eventdata, handles)
+% hObject    handle to Graph_theory_page2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
 load User_guide
 
 if x > 1
@@ -1301,102 +655,15 @@ h1=text(0,0.5,'\underline{Graph theory (2):}\\ ','interpreter','latex',...
 
 
 axes('units','pixels','position',[40 110 30 720],'visible','off')
-h2=text(0,0.5,'The benefits are higher flexibility and lower costs for cabling and installation. Many problems can be solved faster,','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 680],'visible','off')
-h3=text(0,0.5,' because they are split up in different little subproblems. All controlers are connected via communication paths. ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 640],'visible','off')
-h4=text(0,0.5,'The controlled systems could also be coupled. To model this networked control systems the graph theory is used. ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 600],'visible','off')
-h5=text(0,0.5,'The controlers become nodes and the communication paths become edges. One of the reasons why graph theory is ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 560],'visible','off')
-h6=text(0,0.5,'chosen is, that the systems can be easily analysed and it is simple to compute some statistics for the dynamical systems.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 520],'visible','off')
-h7=text(0,0.5,'For modeling these interconnected systems a graph $ G $ is defined by a set of vertices $ V $ (also called nodes) and a set ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 480],'visible','off')
-h8=text(0,0.5,'of edges $ E $, [1]. Two vertices that are connected by an edge can be written in brackets like (i,j).\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 30 440],'visible','off')
-h9=text(0,0.5,'There are two typs of graphs, directed or undirected. In undirected graphs the nodes that are connected ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 400],'visible','off')
-h10=text(0,0.5,'with an edge communicate in both directions which is shown by a line. The nodes in directed graphs are ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 360],'visible','off')
-h11=text(0,0.5,'connected with arrows that show the direction of the information flow.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h12=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 280],'visible','off')
-h13=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 240],'visible','off')
-h14=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[140 110 450 160],'visible','off')
-h15=imshow('GraphTheory2.png');  
-axes('units','pixels','position',[40 110 30 160],'visible','off')
-h16=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 120],'visible','off')
-h17=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 80],'visible','off')
-h18=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 40],'visible','off')
-h19=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-% --- Executes on button press in pushbutton29.
-function pushbutton29_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton29 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 760],'visible','off')
-h1=text(0,0.5,'\underline{Graph theory (3):}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 720],'visible','off')
 h2=text(0,0.5,'Three special undirected graphs can be found:\\','interpreter','latex',...
     'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 680],'visible','off')
+axes('units','pixels','position',[80 110 30 680],'visible','off')
 h3=text(0,0.5,'- The tree, where every node is connected by exactly one edge. It contains no cycles. \\ ','interpreter','latex',...
     'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 640],'visible','off')
+axes('units','pixels','position',[80 110 30 640],'visible','off')
 h4=text(0,0.5,'- The cycle in which the nodes are joined in a closed chain. ','interpreter','latex',...
     'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 600],'visible','off')
+axes('units','pixels','position',[80 110 30 600],'visible','off')
 h5=text(0,0.5,'- The complete graph, in which every node is connected to all the other nodes.','interpreter','latex',...
     'horiz','left','vert','middle');
 
@@ -1447,9 +714,94 @@ h19=text(0,0.5,'','interpreter','latex',...
 save User_guide
 
 
-% --- Executes on button press in pushbutton30.
-function pushbutton30_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton30 (see GCBO)
+% --- Executes on button press in Graph_theory_page3.
+function Graph_theory_page3_Callback(hObject, eventdata, handles)
+% hObject    handle to Graph_theory_page3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load User_guide
+
+if x > 1
+delete(h1);
+delete(h2);
+delete(h3);
+delete(h4);
+delete(h5);
+delete(h6);
+delete(h7);
+delete(h8);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+x=20;
+end
+x=20;
+axes('units','pixels','position',[40 110 30 760],'visible','off')
+h1=text(0,0.5,'\underline{Graph theory (3):}\\ ','interpreter','latex',...
+    'horiz','left','vert','middle');
+
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 680],'visible','off')
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[290 110 330 660],'visible','off')
+h4=imshow('GraphTheory_M_1.png');  
+axes('units','pixels','position',[40 110 30 600],'visible','off')
+h5=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+
+
+axes('units','pixels','position',[40 110 30 560],'visible','off')
+h6=text(0,0.5,'The \textit{incidence matrix} exits only for simple graphs that means, for graphs without self-loops.\\','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 520],'visible','off')
+h7=text(0,0.5,'The entries of \textit{adjacency matrix} are computed like this:','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 480],'visible','off')
+h8=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[240 110 430 440],'visible','off')
+h9=imshow('GraphTheory_M_2.png'); 
+axes('units','pixels','position',[40 110 30 400],'visible','off')
+h10=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 360],'visible','off')
+h11=text(0,0.5,'The matrix $ A $ is the binary directed or undirected connection matrix. Normally $ A $ has no diagonal elements,  ','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 320],'visible','off')
+h12=text(0,0.5,'because in most cases no edge starts and ends in the same node. The definition of the entries of the \textit{degree matrix} is: \\\\','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 280],'visible','off')
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[240 110 400 240],'visible','off')
+h14=imshow('GraphTheory_M_3.png'); 
+% axes('units','pixels','position',[100 110 850 360],'visible','off')
+% h9=imshow('GraphTheory4.png');
+axes('units','pixels','position',[300 110 30 40],'visible','off')
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 160],'visible','off')
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 120],'visible','off')
+h17=text(0,0.5,'D is a diagonal matrix. Its elements are the degrees of the nodes. The \textit{laplacian matrix} $ L $ is difference  ','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 80],'visible','off')
+h18=text(0,0.5,'between the \textit{adjacency matrix} $ A $ and the \textit{degree matrix} $ D $.\\','interpreter','latex',...
+    'horiz','left','vert','middle');
+axes('units','pixels','position',[300 110 30 40],'visible','off')
+h19=text(0,0.5,'L=D-A','interpreter','latex',...
+    'horiz','left','vert','middle');
+
+save User_guide
+
+
+% --- Executes on button press in Graph_theory_page4.
+function Graph_theory_page4_Callback(hObject, eventdata, handles)
+% hObject    handle to Graph_theory_page4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 load User_guide
@@ -1469,91 +821,6 @@ end
 x=20;
 axes('units','pixels','position',[40 110 30 760],'visible','off')
 h1=text(0,0.5,'\underline{Graph theory (4):}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 720],'visible','off')
-h2=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 680],'visible','off')
-h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[290 110 330 640],'visible','off')
-h4=imshow('GraphTheory_M_1.png');  
-axes('units','pixels','position',[40 110 30 600],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 30 560],'visible','off')
-h6=text(0,0.5,'The Incidence Matrix exits only for simple graphs that means, for graphs without self-loops.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 520],'visible','off')
-h7=text(0,0.5,'The entries of Adjacency Matrix are computed like this: \\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 480],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[240 110 430 440],'visible','off')
-h9=imshow('GraphTheory_M_2.png'); 
-axes('units','pixels','position',[40 110 30 400],'visible','off')
-h10=text(0,0.5,' ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 360],'visible','off')
-h11=text(0,0.5,'The matrix A is the binary directed or indirected connection matrix. Normally A has no diagonal elements, because ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h12=text(0,0.5,'in most cases no edge starts and ends in the same node.\\ The definition of the entries of the Degree Matrix is: \\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 280],'visible','off')
-h13=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[240 110 400 240],'visible','off')
-h14=imshow('GraphTheory_M_3.png'); 
-% axes('units','pixels','position',[100 110 850 360],'visible','off')
-% h9=imshow('GraphTheory4.png');
-axes('units','pixels','position',[300 110 30 40],'visible','off')
-h15=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 160],'visible','off')
-h16=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 120],'visible','off')
-h17=text(0,0.5,'D is a diagonal matrix. Its elements are the degrees of the nodes.\\The Laplacian matrix L is difference between ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 80],'visible','off')
-h18=text(0,0.5,'the adjacency matrix A and the degree matrix D.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[300 110 30 40],'visible','off')
-h19=text(0,0.5,'L=D-A','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-% --- Executes on button press in pushbutton31.
-function pushbutton31_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton31 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 760],'visible','off')
-h1=text(0,0.5,'\underline{Graph theory (5):}\\ ','interpreter','latex',...
     'horiz','left','vert','middle');
 
 
@@ -1578,7 +845,7 @@ axes('units','pixels','position',[40 110 30 480],'visible','off')
 h8=text(0,0.5,'','interpreter','latex',...
     'horiz','left','vert','middle');
 axes('units','pixels','position',[40 110 30 80],'visible','off')
-h9=text(0,0.5,'These problems are explained in greater detail in [1].\\','interpreter','latex',...
+h9=text(0,0.5,'','interpreter','latex',...
     'horiz','left','vert','middle');
 axes('units','pixels','position',[240 110 430 440],'visible','off')
 %h9=imshow('GraphTheory_M_2.png'); 
@@ -1603,24 +870,24 @@ h15=text(0,0.5,'','interpreter','latex',...
 % axes('units','pixels','position',[100 110 850 360],'visible','off')
 % h9=imshow('GraphTheory4.png');  
 axes('units','pixels','position',[40 110 30 240],'visible','off')
-h16=text(0,0.5,'For the eigenvalue $\lambda_2=0$, which is called algebraic connectivity or fiedler value, the graph is not connected. ','interpreter','latex',...
+h16=text(0,0.5,'If the eigenvalue $\lambda_2=0$, which is called algebraic connectivity or fiedler value, the graph is not connected.  ','interpreter','latex',...
     'horiz','left','vert','middle');
 axes('units','pixels','position',[40 110 30 200],'visible','off')
 h17=text(0,0.5,'It is a measure for connectivity. The greater $\lambda_2$ is, the better is the robustness of the graph.\\','interpreter','latex',...
     'horiz','left','vert','middle');
 axes('units','pixels','position',[40 110 30 160],'visible','off')
-h18=text(0,0.5,'Three problems of interconnected systems are often discussed:\\','interpreter','latex',...
+h18=text(0,0.5,'','interpreter','latex',...
     'horiz','left','vert','middle');
 axes('units','pixels','position',[40 110 30 120],'visible','off')
-h19=text(0,0.5,'1. Linear Time Invariant (LTI) systems 2. Consensus 3. Coupled oscillators','interpreter','latex',...
+h19=text(0,0.5,'','interpreter','latex',...
     'horiz','left','vert','middle');
 
 save User_guide
 
 
-% --- Executes on button press in pushbutton32.
-function pushbutton32_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton32 (see GCBO)
+% --- Executes on button press in Undirected_graph_statistics.
+function Undirected_graph_statistics_Callback(hObject, eventdata, handles)
+% hObject    handle to Undirected_graph_statistics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.output = get(hObject,'String');
@@ -1630,3 +897,111 @@ guidata(hObject, handles);
 % to get the updated handles structure.
 uiresume(handles.figure1);
 Undirected_graph_statistics();
+
+
+% --- Executes on button press in Introduction_to_MTIDS.
+function Introduction_to_MTIDS_Callback(hObject, eventdata, handles)
+% hObject    handle to Introduction_to_MTIDS (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
+delete(h2);
+delete(h3);
+delete(h4);
+delete(h5);
+delete(h6);
+delete(h7);
+delete(h8);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
+end
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'\underline{Introduction to MTIDS:}\\ ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'The MATLAB toolbox MTIDS is a tool for modelling and simulating systems that consist of several subsystems which  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'areconnected to each other either physically or via communication paths. These systems are also known as large-scale ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'interconnected systems, networked dynamical/control systems, multi-agent systems or distributed dynamical systems. ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'There is no other software tool that combines graph theory with simulation. Using MTIDS many systems or networks  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'from very different fields can be modeled. Some technical examples are the power system, including transformators, loads  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'and generators, the traffic system which tries to avoid jams and the internet which connects millions of computers.Even in ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'biology some interconnected systems can be found, like neuronal networks for brain studies, animal populations or little ' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'ecosystems. Another point of research is the flocking behavior of birds or fish.Other practical applications are ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'economic or social networks. In the next chapter some basic knowledge about the graph theory is stated, because ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,'MTIDS is based on graph theory.\\ ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 200],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[170 110 330 600],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 

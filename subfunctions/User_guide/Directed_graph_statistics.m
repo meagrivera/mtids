@@ -24,7 +24,7 @@ function varargout = Directed_graph_statistics(varargin)
 % Editor: Ferdinand Trommsdorff (f.trommsdorff@gmail.com)
 % Project: MTIDS (http://code.google.com/p/mtids/)
 
-% Last Modified by GUIDE v2.5 04-Jan-2014 01:43:52
+% Last Modified by GUIDE v2.5 20-Jan-2014 00:37:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -225,15 +225,15 @@ function pushbutton6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% --- Executes on button press in pushbutton7.
-function pushbutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton7 (see GCBO)
+% --- Executes on button press in Nodes.
+function Nodes_Callback(hObject, eventdata, handles)
+% hObject    handle to Nodes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -241,54 +241,106 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Nodes:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The number of nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Nodes:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The number of nodes that are given in the actual graph.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
 
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+
+% --- Executes on button press in weakly_connected_components.
+function weakly_connected_components_Callback(hObject, eventdata, handles)
+% hObject    handle to weakly_connected_components (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -296,224 +348,104 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Weak connected:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'This field shows the number of weak connected subgraphs or weak connected','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'components (WCC). A weak connected component constists of nodes that','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'are connected with one or more edges. A node which has no starting or ending','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('Weak Connected.png'); 
-
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'edge is also a WCC. For a strong connected subgraph the nodes must be connected','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'in both directions.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton9 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Strong connected:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'The field shows the number of strong connected subgraphs or strong ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'connected components (SCC). The nodes in a strong connected subgraph ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'are connected to each other in both directions.If a node is not strong ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('Strong Connected.png'); 
-
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'connected to any other node, it is counted as SCC itself. The smaller the ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'shown number, the less strong connected subgraph exist and the better the  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'whole graph is connected.A complete graph shows the number one. If there ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'are less sets of SCC as nodes in the graph, then there must be at least one cycle.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-
-
-save User_guide
-
-% --- Executes on button press in pushbutton10.
-function pushbutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Average clustering coefficient:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'The average clustering coefficient is the number of all existing triangles  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'divided by the number of all possible triangles. A triangle is a circle with ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'three nodes. In directed graphs, three nodes generate up to eight triangles  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('Avarage clustering.png'); 
-
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'(2*2*2 edges), because every node be connected to another node in two directions.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'To get the clustering vector the number of triangles are computed for every node  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'and put in a column vector. This means vector for the graph above is $ [8,0,8,8]^T $,','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'because the node two is not an element of a triangle. For calculating the maximal ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-
-
-
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-load User_guide
-
-if x > 1
-delete(h1);
-delete(h2);
-delete(h3);
-delete(h4);
-delete(h5);
-delete(h6);
-delete(h7);
-delete(h8);
-delete(h9);
-x=20;
-end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Average degree:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The average degree is the mean of the In-degrees of all nodes in the graph.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h3=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Weakly connected components:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'This field shows the number of weak connected subgraphs or weak connected components (WCC). A weak connected  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'componentconsists of nodes that are connected with one or more edges. A node which has no starting or ending edge  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'is also a WCC. For a strong connected subgraph the nodes must be connected in ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'both directions.\\ In this example node two is a weak connected subgraph and  ' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'then nodes one, three and four create a weak connected subgraph. Each node is  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'a strong connected component itself.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[530 110 190 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('Weak_Connected.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
-
-% --- Executes on button press in pushbutton12.
-function pushbutton12_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton12 (see GCBO)
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+% --- Executes on button press in Strong_connected_components.
+function Strong_connected_components_Callback(hObject, eventdata, handles)
+% hObject    handle to Strong_connected_components (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -521,52 +453,110 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Graph is balanced:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Strong connected components:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The field shows the number of strong connected subgraphs or strong connected components (SCC). The nodes in a strong ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'connected subgraph are connected to each other in both directions. If a node is not strong connected to any other node, ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'it is counted as SCC itself. The smaller the shown number, the less strong connected subgraph exist and the better ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'the whole graph is connected. A complete graph shows the number one. If there are less sets of SCC as nodes in the  ' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'graph, then there must be at least one cycle.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'Here the node number one and the node number two are strong connected subgraphs  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,'and the nodes three and four form together a strong connected subgraph. Two weak  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,'connected subgraphs can be seen.\\  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'A graph is balanced, if every node has the same In-Degree and the same ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'Out-Degree, this means the number of starting and arriving edges. This  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'property is fullfilled by a ring or a complete graph. Otherwise the answer is No.\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('Graph is balanced.png'); 
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[550 110 190 280],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('Strong_Connected.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
 
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
 
 save User_guide
-% --- Executes on button press in pushbutton13.
-function pushbutton13_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton13 (see GCBO)
+
+% --- Executes on button press in Avarage_clustering_coefficient.
+function Avarage_clustering_coefficient_Callback(hObject, eventdata, handles)
+% hObject    handle to Avarage_clustering_coefficient (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -574,55 +564,109 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Has cycles:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Average clustering coefficient:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The average clustering coefficient is the number of all existing triangles divided by the number of all possible triangles. ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'A triangle is a circle with three nodes. In directed graphs, three nodes generate up to eight triangles (2*2*2 edges), ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'because every node be connected to another node in two directions.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'To get the clustering vector the number of triangles are computed for every node and ' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'put in a column vector. This means vector for the graph above is $ [8,0,8,8]^T $, ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%F
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'because the node two is not an element of a triangle. For calculating the maximal ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,'possible number of triangles for every node, the number of all input and output edges ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,'are summed up in a degree vector $ [4,2,6,4]^T $. Since the node two is not element of a ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'The answer is Yes, if the graph contains cycles. Otherwise it is negated. ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'When you start in a node and travel along a path in the direction of the   ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'arrows until you return in the starting node, then you got a cycle.  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('hascyles.png'); 
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'triangle the second entry is set to $ \infty $. After computing the maximal number of','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'triangles for all pairs of nodes and subtracting wrong pairs the resulting  For  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 200],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'calculating vector is $ [8,\infty,24,8]^T $. So the vector of the clustering coefficients looks   ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'like $ [1,0,0.333,0]^T $. The average clustering coefficient is the mean value of the vector. ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'In this example the average clustering coefficient is $ 0.583 $.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[565 110 30 180],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'Undirected graph example ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[560 110 160 370],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('Avarage_clustering.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
 
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'The graph below shows a cycle with the nodes two, three and four.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[230 110 20 40],'visible','off')
-h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-save User_guide
 
 
 
-% --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton14 (see GCBO)
+% --- Executes on button press in Avarage_degree.
+function Avarage_degree_Callback(hObject, eventdata, handles)
+% hObject    handle to Avarage_degree (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
+load User_guide %Laden der Variablen der letzten Simulation
 
-if x > 1
-delete(h1);
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -630,55 +674,106 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[230 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Rooted spanning tree:}\\','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[230 110 10 280],'visible','off')
-h2=text(0,0.5,'This field says Yes if the graph can be built as a rooted spanning tree.  ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 240],'visible','off')
-h3=text(0,0.5,'Otherwise it says No. As you can see in the figure every node is connected   ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 200],'visible','off')
-h4=text(0,0.5,'to the root node by one or more lines. There are no cirle.\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 175 160],'visible','off')
-h5=imshow('rootedspanningtree.png'); 
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Average degree:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The average degree is the mean of the In-degrees of all nodes in the graph.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-
-axes('units','pixels','position',[230 110 10 160],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 120],'visible','off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'the figure every node is connected to the root node by one or more lines. There are no circles.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[230 110 10 80],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[230 110 20 40],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
 
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
-
-% --- Executes on button press in pushbutton15.
-function pushbutton15_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton15 (see GCBO)
+% --- Executes on button press in Graph_is_balanced.
+function Graph_is_balanced_Callback(hObject, eventdata, handles)
+% hObject    handle to Graph_is_balanced (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -686,53 +781,106 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Minimum In-degree:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The term In-degree refers to the number of edges that end in a node. The Minimum In-degree gives back ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'the smallest number of edges in the graph arriving in one node.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Graph is balanced:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'A graph is balanced, if every node has the same in-degree and the same out-degree, this means the number of starting ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'and arriving edges. This property is fulfilled by a ring or a complete graph. Otherwise the answer is "No".\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[240 110 30 170],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,'The example graph above is balanced.\\ ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[250 110 160 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('Graph_is_balanced.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
 save User_guide
-
-% --- Executes on button press in pushbutton16.
-function pushbutton16_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton16 (see GCBO)
+% --- Executes on button press in has_cycles.
+function has_cycles_Callback(hObject, eventdata, handles)
+% hObject    handle to has_cycles (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -740,45 +888,420 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Maximum:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'Maximum stands for the biggest number of edges that start in a node of the graph. The full ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'name is Maximum Out-Degree.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Has cycles:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The answer is "Yes", if the graph contains cycles. Otherwise it is negated. When you start in a node and travel along ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'a path in the direction of the arrows until you return in the starting node, then you got a cycle. The graph below ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'shows a cycle with the nodes two, three and four.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
-h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 20 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
 
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[260 110 160 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('hascyles.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+
+
+
+% --- Executes on button press in Rooted_spanning_Tree.
+function Rooted_spanning_Tree_Callback(hObject, eventdata, handles)
+% hObject    handle to Rooted_spanning_Tree (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
+delete(h2);
+delete(h3);
+delete(h4);
+delete(h5);
+delete(h6);
+delete(h7);
+delete(h8);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
+end
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Rooted Spanning Tree}\\:','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'This field says "Yes" if the graph can be built as a rooted spanning tree. Otherwise it says "No". As you can see in ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'the figure every node is connected to the root node by one or more lines. There are no circles.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'Rooted spanning tree','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('rootedspanningtree.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+
+
+
+
+% --- Executes on button press in Minimum_In_degree.
+function Minimum_In_degree_Callback(hObject, eventdata, handles)
+% hObject    handle to Minimum_In_degree (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
+delete(h2);
+delete(h3);
+delete(h4);
+delete(h5);
+delete(h6);
+delete(h7);
+delete(h8);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
+end
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Minimum In-degree:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The term in-degree refers to the number of edges that end in a node. The minimum in-degree gives back the smallest ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'number of edges in the graph arriving in one node.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+
+% --- Executes on button press in Maximum.
+function Maximum_Callback(hObject, eventdata, handles)
+% hObject    handle to Maximum (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
+delete(h2);
+delete(h3);
+delete(h4);
+delete(h5);
+delete(h6);
+delete(h7);
+delete(h8);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
+end
+x=x+1; %Laufvariable hochzählen. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Maximum}\\:','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'Maximum stands for the biggest number of edges that start in a node of the graph. The full name is maximum \\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'out-degree.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h9=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 % --- Executes on button press in pushbutton17.
 function pushbutton17_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton17 (see GCBO)
@@ -833,14 +1356,15 @@ h9=text(0,0.5,'','interpreter','latex',...
 
 save User_guide
 
-% --- Executes on button press in pushbutton19.
-function pushbutton19_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton19 (see GCBO)
+% --- Executes on button press in Maximum_In_degree.
+function Maximum_In_degree_Callback(hObject, eventdata, handles)
+% hObject    handle to Maximum_In_degree (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -848,45 +1372,96 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Maximum In-degree:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'The term In-degree refers to the number of edges that end in a node. The Maximum In-degree gives back ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'the highest number of edges in the graph arriving in one node.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Maximum In-degree}\\:','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The term in-degree refers to the number of edges that end in a node. The maximum in-degree gives back the highest ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'number of edges in the graph arriving in one node.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
 
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 % --- Executes on button press in pushbutton20.
 function pushbutton20_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton20 (see GCBO)
@@ -1020,14 +1595,15 @@ function pushbutton27_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton28.
-function pushbutton28_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton28 (see GCBO)
+% --- Executes on button press in Minimum.
+function Minimum_Callback(hObject, eventdata, handles)
+% hObject    handle to Minimum (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -1035,52 +1611,106 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Minimum:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 10 280],'visible','off')
-h2=text(0,0.5,'Minimum stands for the smallest number of edges that start in a node of the graph. The full ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 240],'visible','off')
-h3=text(0,0.5,'name is Minimum Out-Degree.\\','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 200],'visible','off')
-h4=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 10 160],'visible','off')
-h5=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Minimum}\\:','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'Minimum stands for the smallest number of edges that start in a node of the graph. The full name is minimum ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
-
-axes('units','pixels','position',[40 110 20 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 80],'visible','off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'outdegree.\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h7=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 20 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 20 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
 
-% --- Executes on button press in pushbutton29.
-function pushbutton29_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton29 (see GCBO)
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[290 110 30 170],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[210 110 260 360],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
+
+% --- Executes on button press in Avarage_path_length.
+function Avarage_path_length_Callback(hObject, eventdata, handles)
+% hObject    handle to Avarage_path_length (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load User_guide
-if x > 1
-delete(h1);
+load User_guide %Laden der Variablen der letzten Simulation
+
+if x > 1        %Laufvariable ist zu Beginn 1. Wenn diese größer als eins ist wird der Text von der vorherigen Funktion gelöscht. 
+delete(h1);     %Variablen löschen bzw. Text oder Figure aus .fig Datei löschen
 delete(h2);
 delete(h3);
 delete(h4);
@@ -1088,43 +1718,95 @@ delete(h5);
 delete(h6);
 delete(h7);
 delete(h8);
-delete(h9);
-x=20;
+delete(h9); delete(h10); delete(h11); delete(h12); delete(h13); delete(h14); delete(h15); delete(h16); delete(h17); delete(h18); delete(h19);
+
+
 end
-x=20;
-axes('units','pixels','position',[40 110 30 320],'visible','off')
-h1=text(0,0.5,'\underline{Average path length:}\\ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+x=x+1; %Laufvariable hochzählen. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 760],'visible','off') %Bestimmen der x und y Posiotion des folgenden Textes. 
+h1=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 30 280],'visible','off')
-h2=text(0,0.5,'The average path length is the sum of all path length divided by the number of nodes times .','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 240],'visible','off')
-h3=text(0,0.5,'the number of nodes minus one. The path length between two nodes is the smallest number ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 200],'visible','off')
-h4=text(0,0.5,'of connections between the two nodes. If the graph contains not connected subgraphs the ','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[40 110 30 160],'visible','off')
-h5=text(0,0.5,'average path length is $ Inf $ ','interpreter','latex',...
-    'horiz','left','vert','middle');
+axes('units','pixels','position',[40 110 30 720],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h2=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 680],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h3=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 640],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h4=text(0,0.5,'\underline{Average path length:}\\','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 600],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h5=text(0,0.5,'The average path length is the sum of all path length divided by the number of nodes times the number of nodes ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 560],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h6=text(0,0.5,'minus one. The path length between two nodes is the smallest number of connections between the two nodes. If the  ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 520],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h7=text(0,0.5,'graph contains not connected subgraphs the average path length is $ \infty $.','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 480],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h8=text(0,0.5,'' ,'interpreter' ,'latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-axes('units','pixels','position',[40 110 30 120],'visible','off')
-h6=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-axes('units','pixels','position',[240 110 360 80],'visible','off')
-h7=imshow('Avarage path length.png');
-axes('units','pixels','position',[40 110 30 40],'visible','off')
-h8=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
-
-axes('units','pixels','position',[40 110 30 1],'visible','off')
+axes('units','pixels','position',[40 110 30 440],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
 h9=text(0,0.5,'','interpreter','latex',...
-    'horiz','left','vert','middle');
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 400],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h10=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 360],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h11=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 320],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure. 
+h12=text(0,0.5,' ','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-save User_guide
+
+axes('units','pixels','position',[40 110 30 280],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h13=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 240],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h14=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 200],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h15=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 160],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h16=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 120],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h17=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[40 110 30 80],'visible','off')%Bestimmen der x und y Posiotion des folgenden Textes. 
+h18=text(0,0.5,'','interpreter','latex',...
+    'horiz','left','vert','middle');%Latex Code implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+axes('units','pixels','position',[160 110 370 400],'visible','off')%Bestimmen der x und y Posiotion der folgenden Figure.
+h19=imshow('Avarage_path_length.png'); %Bild implementieren
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+save User_guide %Vor beenden werden die Variablen h1 bis h19 sowohl die Laufvariablen gespeichert. 
 
 % --- Executes on button press in pushbutton30.
 function pushbutton30_Callback(hObject, eventdata, handles)
@@ -1186,3 +1868,24 @@ h9=text(0,0.5,'','interpreter','latex',...
     'horiz','left','vert','middle');
 
 save User_guide
+
+
+% --- Executes on button press in pushbutton35.
+function pushbutton35_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton35 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton33.
+function pushbutton33_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton33 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton32.
+function pushbutton32_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton32 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

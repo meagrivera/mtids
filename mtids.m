@@ -107,6 +107,9 @@ addpath(strcat(pwd,'/subfunctions/mtids_main'));
 addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
 addpath(strcat(pwd,'/subfunctions/figures'));
 addpath(strcat(pwd,'/subfunctions/User_guide'));
+addpath(strcat(pwd,'/subfunctions/User_guide/userpics'));
+
+
 %initialize graph
 graph_init;
 
