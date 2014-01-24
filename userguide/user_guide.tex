@@ -1,0 +1,1143 @@
+%user_guide for mtids
+
+\documentclass[12pt]{report}
+
+\usepackage{graphicx}
+\graphicspath{{userpics/}}
+
+\begin{document}
+\begin{center}
+{\LARGE User Guide for the MATLAB toolbox:} \\
+\end{center}
+\begin{center}
+{\LARGE MTIDS} \\
+\end{center}
+\begin{center}
+{\Large MATLAB Toolbox for Interconnected Dynamical Systems} \\
+\end{center}
+\chapter{Introduction to MTIDS}
+The MATLAB toolbox MTIDS is a tool for modelling and simulating systems that consist of several subsystems which are connected to each other either physically or via communication paths. These systems are also known as large-scale interconnected systems, networked dynamical/control systems, multi-agent systems or distributed dynamical systems. There is no other software tool that combines graph theory with simulation.
+Using MTIDS many systems or networks from very different fields can be modeled. Some technical examples are the power system, including transformators, loads and generators, the traffic system which tries to avoid jams and the internet which connects millions of computers.
+Even in biology some interconnected systems can be found, like neuronal networks for brain studies, animal populations or little ecosystems. Another point of research is the flocking behavior of birds or fish.
+Other practical applications are economic or social networks. In the next chapter some basic knowledge about the graph theory is stated, because MTIDS is based on graph theory.\\
+\\
+\newpage
+\chapter{Graph theory}
+\label{chap:graphtheory}
+%A networked control system is a spatially distributed control system,
+%where information is exchanged over a (digital) network, [3].\\
+%\\
+%\\
+%\begin{center} \setlength{\unitlength}{1in}
+%\begin{picture}(0,0)
+%	\put(-1.75,0.0){\dashbox{1.0}(.5,.5){$P$}}
+%	\put(-0.25,0.0){\dashbox{1.0}(.5,.5){$P$}}
+%	\put(1.25,0.0){\dashbox{1.0}(.5,.5){$P$}}
+%	\put(-1.75,-1){\dashbox{1.0}(.5,.5){$C$}}
+%	\put(-0.25,-1){\dashbox{1.0}(.5,.5){$C$}}
+%	\put(1.25,-1){\dashbox{1.0}(.5,.5){$C$}}
+%	\put(-1.25,0.25){\line(1,0){.25}}
+%	\put(-1.0,0.25){\line(0,-1){1.0}}
+%	\put(-1.0,-0.75){\vector(-1,0){.25}}
+%	\put(0.25,0.25){\line(1,0){.25}}
+%	\put(0.5,0.25){\line(0,-1){1.0}}
+%	\put(0.5,-0.75){\vector(-1,0){.25}}
+%	\put(1.75,0.25){\line(1,0){.25}}
+%	\put(2.0,0.25){\line(0,-1){1.0}}
+%	\put(2.0,-0.75){\vector(-1,0){.25}}
+%	\put(-1.75,-0.75){\line(-1,0){.25}}
+%	\put(-2.0,-0.75){\line(0,1){1.0}}
+%	\put(-2.0,0.25){\vector(1,0){.25}}
+%	\put(-0.25,-0.75){\line(-1,0){.25}}
+%	\put(-0.5,-0.75){\line(0,1){1.0}}
+%	\put(1.25,-0.75){\line(-1,0){.25}}
+%	\put(1.0,-0.75){\line(0,1){1.0}}
+%	\put(1.0,0.25){\vector(1,0){.25}}
+%	\put(-0.75,0.4){\vector(-1,0){.5}}
+%	\put(-0.75,0.4){\vector(1,0){.5}}
+%	\put(0.75,0.4){\vector(-1,0){.5}}
+%	\put(0.75,0.4){\vector(1,0){.5}}
+%	\put(-1.3,0.6){\mbox{physikal coupling}}
+%	\put(-0.75,-0.9){\vector(-1,0){.5}}
+%	\put(-0.75,-0.9){\vector(1,0){.5}}
+%	\put(0.75,-0.9){\vector(-1,0){.5}}
+%	\put(0.75,-0.9){\vector(1,0){.5}}
+%	\put(-1.3,-1.3){\mbox{communication network}}
+%	\put(-3,-1.5){\mbox{Figure 1: distributed control system}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+%The benefits are higher flexibility and lower costs for cabling and installation. Many problems can be solved faster, because they are split up in different little subproblems. All controllers are connected via communication paths. The controlled systems could also be coupled. To model this networked control systems the graph theory is used. The controllers become nodes and the communication paths become edges. One of the reasons why graph theory is chosen is, that the systems can be easily analyzed and it is simple to compute some statistics for the dynamical systems.\\
+For modeling these interconnected systems a graph $ G $ is defined by a set of vertices $ V $ (also called nodes) and a set of edges $ E $, [1], [3], [4]. Two vertices $i$ ang $j$ that are connected by an edge can be written in brackets like (i,j).\\
+\\
+There are two types of graphs, directed or undirected. In undirected graphs the nodes that are connected with an edge communicate in both directions which is shown by a line. The nodes in directed graphs are connected with arcs that means the information flow is not bidirectional. If two nodes communicate in both directions, they are connected via two antiparallel arcs.\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-4,-2){\circle{.4}} \put(-4.1,-2.1){4}
+%	\put(-4,0){\circle{.4}} \put(-4.1,-0.1){1}
+%	\put(-2,-2){\circle{.4}} \put(-2.1,-2.1){3}
+%	\put(-2,0){\circle{.4}} \put(-2.1,-0.1){2}
+%	\put(-3.8,0){\vector(1,0){1.6}}
+%	\put(-4,-0.2){\vector(0,-1){1.6}}
+%	\put(-3.8,-2){\vector(1,0){1.6}}
+%	\put(-3.88,-0.12){\vector(1,-1){1.76}}
+%	\put(-4,-3){\mbox{directed graph}}
+%	
+%	\put(4,-2){\circle{.4}} \put(3.9,-2.1){3}
+%	\put(4,0){\circle{.4}} \put(3.9,-0.1){2}
+%	\put(2,-2){\circle{.4}} \put(1.9,-2.1){4}
+%	\put(2,0){\circle{.4}} \put(1.9,-0.1){1}
+%	\put(2.2,0){\line(1,0){1.6}}
+%	\put(2,-0.2){\line(0,-1){1.6}}
+%	\put(2.2,-2){\line(1,0){1.6}}
+%	\put(2.12,-0.12){\line(1,-1){1.76}}
+%	\put(2,-3){\mbox{undirected graph}}
+%	\put(-3,-3.7){\mbox{Figure 1: directed and undirected graph}}
+%\end{picture}
+%\end{center} \vspace{1.8in}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{dirgraphs}
+\caption{Directed and undirected graph}
+\label{FIG:abb1}
+\end{figure}
+Three special undirected graphs can be found:
+\begin{itemize}
+	\item The tree, where every node is connected by exactly one edge. It contains no cycles.
+	\item The cycle in which the nodes are joined in a closed chain.
+	\item The complete graph, in which every node is connected to all the other nodes
+\end{itemize}
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-5,-2){\circle{.4}} \put(-5.1,-2.1){4}
+%	\put(-5,0){\circle{.4}} \put(-5.1,-0.1){1}
+%	\put(-3,-2){\circle{.4}} \put(-3.1,-2.1){3}
+%	\put(-3,0){\circle{.4}} \put(-3.1,-0.1){2}
+%	\put(-4.8,0){\line(1,0){1.6}}
+%	\put(-5,-0.2){\line(0,-1){1.6}}
+%	\put(-4.8,-2){\line(1,0){1.6}}
+%	\put(-5,-3){\mbox{tree}}
+%	
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(-0.8,0){\line(1,0){1.6}}
+%	\put(-1,-0.2){\line(0,-1){1.6}}
+%	\put(-0.8,-2){\line(1,0){1.6}}
+%	\put(1,-0.2){\line(0,-1){1.6}}
+%	\put(-1,-3){\mbox{cycle}}
+%	
+%	\put(5,-2){\circle{.4}} \put(4.9,-2.1){3}
+%	\put(5,0){\circle{.4}} \put(4.9,-0.1){2}
+%	\put(3,-2){\circle{.4}} \put(2.9,-2.1){4}
+%	\put(3,0){\circle{.4}} \put(2.9,-0.1){1}
+%	\put(3.2,0){\line(1,0){1.6}}
+%	\put(3,-0.2){\line(0,-1){1.6}}
+%	\put(3.2,-2){\line(1,0){1.6}}
+%	\put(5,-0.2){\line(0,-1){1.6}}
+%	\put(3.12,-0.12){\line(1,-1){1.76}}
+%	\put(4.88,-0.12){\line(-1,-1){1.76}}
+%	\put(3,-3){\mbox{complete graph}}
+%	\put(-3,-3.7){\mbox{Figure 2: three special graphs}}
+%\end{picture}
+%\end{center} \vspace{1.8in}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{specgraphs}
+\caption{Special graphs: tree, cycle and complete graph}
+\label{FIG:abb2}
+\end{figure}
+For the possibility of making some computations three important matrices are defined. The entries of the \textit{incidence matrix} of a directed graph are defined as follows: \\
+\begin{equation}
+C=(c_{ij})= \left\{ \begin{array}{rll}
+					1 & \mbox{if edge j enters node i} \\
+					-1 & \mbox{if edge j leaves node i} \\
+					0 & \mbox{otherwise}
+					\end{array}\right.
+					\label{EQ:gleichung1}
+\end{equation}
+The \textit{incidence matrix} exits only for simple graphs that means, for graphs without self-loops.\\
+The entries of \textit{adjacency matrix} are computed like this: \\
+\begin{equation}
+A=(a_{ij})= \left\{ \begin{array}{ll}
+					1 & \mbox{if }(i,j) \mbox{ is a member of the graph} \\
+					0 & \mbox{otherwise}
+					\end{array}\right.
+					\label{EQ:gleichung2}
+\end{equation}
+The matrix $ A $ is the binary directed or undirected connection matrix. Normally $ A $ has no diagonal elements, because in most cases no edge starts and ends in the same node.\\
+The definition of the entries of the \textit{degree matrix} is: \\
+\begin{equation}
+D=(d_{ij})= \left\{ \begin{array}{ll}
+					\mbox{deg}(i) = \sum_{k=1}^{N}a_{ik} & \mbox{if } i=j \\
+					0 & \mbox{otherwise}
+					\end{array}\right.
+					\label{EQ:gleichung3}
+\end{equation}
+D is a diagonal matrix. Its elements are the degrees of the nodes.\\
+The \textit{laplacian matrix} $ L $ is difference between the \textit{adjacency matrix} $ A $ and the \textit{degree matrix} $ D $.\\
+\begin{equation}
+L=D-A
+\label{EQ:gleichung4}
+\end{equation}
+The \textit{laplacian matrix} is symmetric, positive semi definite and diagonally dominant.\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(1,-0.2){\line(0,-1){1.6}}
+%	\put(-1,-0.2){\line(0,-1){1.6}}
+%	\put(-0.8,-2){\line(1,0){1.6}}
+%	\put(-0.88,-0.12){\line(1,-1){1.76}}
+%	\put(-3,-2.8){\mbox{Figure 3: undirected example graph}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph}
+\caption{Undirected example graph 1}
+\label{FIG:abb3}
+\end{figure}
+\\
+\noindent The matrices for this graph look like follows:\\
+\begin{equation}
+A= \left[ \begin{array}{rrrr}
+			0 & 0 & 1 & 1 \\
+			0 & 0 & 1 & 0 \\
+			1 & 1 & 0 & 1 \\
+			1 & 0 & 1 & 0
+			\end{array} \right]
+D= \left[ \begin{array}{rrrr}
+			2 & 0 & 0 & 0 \\
+			0 & 1 & 0 & 0 \\
+			0 & 0 & 3 & 0 \\
+			0 & 0 & 0 & 2
+			\end{array} \right] 
+L= \left[ \begin{array}{rrrr}
+			2 & 0 & -1 & -1 \\
+			0 & 1 & -1 & 0 \\
+			-1 & -1 & 3 & -1 \\
+			-1 & 0 & -1 & 2
+			\end{array} \right]
+			\label{EQ:gleichung5}
+\end{equation}
+\\
+\\
+If the graph is connected the eigenvalues of $ L $ increase starting with zero.\\
+\begin{equation}
+0=\lambda_1<\lambda_2\le\lambda_3\le\dots\le\lambda_N
+\end{equation}
+If the eigenvalue $\lambda_2=0$, which is called algebraic connectivity or fiedler value, the graph is not connected. It is a measure for connectivity. The greater $\lambda_2$ is, the better is the robustness of the graph.\\
+\\
+%Three problems of interconnected systems are often discussed:\\
+%\begin{itemize}
+%	\item Linear Time Invariant (LTI) systems
+%	\item Consensus
+%	\item Coupled oscillators
+%\end{itemize}
+%These problems are explained in greater detail in [1].\\
+%\\
+\chapter{Working with MTIDS}
+MTIDS is a MATLAB toolbox with an open-source license (GNU GPL v2). To download and install the toolbox the link in [2] is needed. In Downloads the actual version can be downloaded with a *.zip folder and extracted on the computer.\\
+Before starting the program, MATLAB has to be opened. After selecting the right folder the toolbox starts by running the file mtids.m. At first the following window appears:\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.0]{startwindow}
+\caption{Start window}
+\label{FIG:abb5}
+\end{figure}
+\\
+Here the user can choose whether to work with former settings or to begin a new graph. Then the main user panel opens.\\
+\\
+\section{User panel}
+\begin{figure}
+\centering
+\includegraphics[scale=.6]{user_panela3}
+\caption{User panel}
+\label{FIG:abb6}
+\end{figure}
+The picture above shows the user panel. It contains four main areas:\\
+\begin{itemize}
+	\item the menu bar on top
+	\item the graph window on the left
+	\item the statistics window on the right
+	\item the editing window on the bottom
+\end{itemize}
+\section{Menu bar}
+\label{sec:menubar}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{toolsa}
+\caption{Menu bar}
+\label{FIG:abb7}
+\end{figure}
+\noindent On top of the graph there are tools to manipulate the graph (red). After clicking on the loupe with the plus sign the user can zoom in. To zoom out of the graph the user has to select the loupe with the minus sign. If the hand-button is activated the whole graph can be moved. When a tool is selected the button stays pressed. To deactivate a tool the pressed button has to be clicked again.\\
+\\
+\subsection{File}
+Under the item File there are six elements:
+\begin{itemize}
+	\item New graph
+	\item Load\dots
+	\item Save as\dots
+	\item Export to workspace\dots
+	\item Export graph
+	\item Exit
+\end{itemize}
+With \textbf{File$\rightarrow$New graph} the existing graph is deleted. So the user can start to build a new one.\\
+With \textbf{File$\rightarrow$Load\dots} a stored graph can be loaded.\\
+With \textbf{File$\rightarrow$Save as\dots} the actual graph can be saved with a certain name in a *.mat-file.\\
+With \textbf{File$\rightarrow$Export to workspace\dots} a new window where the three important graph matrices can be stored to the workspace opens:\\
+\begin{figure}[here]
+\centering
+\includegraphics[scale=.6]{exportworkspace}
+\caption{Export graph matrix window}
+\label{FIG:abb8}
+\end{figure}
+\\
+Here the workspace name and the variable name can be changed. With the radio buttons, one of the three matrices can be selected:
+\begin{itemize}
+	\item Laplacian Matrix
+	\item Adjacency Matrix
+	\item Edge List
+\end{itemize}
+More informations about the matrices is written in the chapter \ref{chap:graphtheory}.\\
+With \textbf{File$\rightarrow$Export graph} the actual graph can be exported in the opened window.\\
+\begin{figure}[here]
+\centering
+\includegraphics[scale=.6]{exportgraph}
+\caption{Export graph window}
+\label{FIG:abb9}
+\end{figure}
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+To save the graph as a *.tikz-, *.eps-, *.jpg-, *.pdf-, *.png- or *.tiff-file with a certain name, click the 'Export'-button. Using the 'Close'-button, the window shuts.\\
+With \textbf{File$\rightarrow$Exit} the user can quit the program.\\
+\\
+\subsection{View}
+In the menu point 'View' the appearance of the nodes can be changed in three possible ways:\\
+\begin{itemize}
+	\item Label view
+	\item Number view
+	\item Blank view
+\end{itemize}
+Additionally the node color can be set in an external window by selecting \textbf{View$\rightarrow$Set node color}.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{setnodecolor}
+\caption{Set node color window}
+\label{FIG:abb10}
+\end{figure}
+%\\
+%For each template another node face color or node edge color can be chosen to distinguish the nodes in the graph. The templates and how to work with them is explained in the chapter 'Work flow'. The default settings are grey for the node face color and black for the node edge color. After a click on the a color-'button' the color window opens.\\
+%\begin{center}
+%\includegraphics[scale=.8]{color}
+%\end{center}
+%\\
+%Now the user can either select a color and exit by clicking the 'OK'-button or exit with the 'Cancel'-button. More possible colors are shown after selecting the 'More Colors...'-button. The new open window gives three different ways to get the right color.\\
+%\begin{center}
+%\includegraphics[scale=.8]{morecolors}
+%\end{center}
+%\\
+%In the menu point 'Muster' a bigger field of possibilities than in the former window is displayed.
+%\begin{center}
+%\includegraphics[scale=.8]{morecolors2}
+%\end{center}
+%\\
+%In 'HSB' the color can be chosen according to the HSB color space.
+%\begin{center}
+%\includegraphics[scale=.8]{morecolors3}
+%\end{center}
+%\\
+%Finally in the 'RGB'-mode the color can be mixed with the red, the green and the blue components. On the bottom of the window the color and its appearance are painted. The 'Zur\"{u}cksetzen'-button sets the three components back to the default value of 245. To close the window, select either the 'OK'-button or the 'Abbrechen'-button.\\
+%\\
+%When the color setting is finished click the 'Submit Color(s)'-button. When exiting with the 'Cancel'-button the new colors are not adopted.\\
+\\
+\\
+\\
+\\
+\\
+\subsection{Dynamics}
+\label{subsec:dynamics}
+In the segment 'Dynamics' in the menu bar the dynamics of the nodes can be handled under the following topics:
+\begin{itemize}
+	\item Create Dynamics Template
+	\item Manage Parameter Sets
+	\item LTI Analysis
+\end{itemize}
+The first thing to do when building an interconnected system is to create the subsystem dynamics which can be applied to the nodes of the graph. Therefore a SIMULINK model with a assigned frame of SIMULINK blocks called 'template' is provided. To use the templates, they have to be loaded in the parameter set manager (PSM) where the parameter sets of the template can be edited and saved. How to build templates and apply dynamics to a node is described in a more accurate way in the chapter \ref{sec:workflow}.\\
+\\
+\subsubsection{Create Dynamics Template}
+To create dynamics of all kind, an empty template as SIMULINK model is provided. By clicking \textbf{Dynamics$\rightarrow$Create Dynamics Template} the SIMULINK browser and a SIMULINK model called 'newtemplate' opens.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{template}
+\caption{SIMULINK model of an empty template}
+\label{FIG:abb11}
+\end{figure}
+\\
+In this model some SIMULINK blocks are already integrated. Please do not change them! This structure is important for exporting or importing the SIMULINK models to MTIDS.\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{template2}
+\caption{The space for putting in the system dynamics}
+\label{FIG:abb12}
+\end{figure}
+\\
+In the free space which is marked red in the figure above any SIMULINK block can be used to create the desired dynamical system.\\
+\\
+\subsubsection{Manage Parameter Sets}
+Under the menu point \textbf{Dynamics$\rightarrow$Manage Parameter Sets} the parameter settings window opens. Here, compared to the parameter setting window in the node settings after double-clicking on a node, the parameter can be managed in a more detailed manner.\\
+\begin{figure}
+\centering
+\includegraphics[scale=.7]{manageparaset2}
+\caption{Parameter set manager}
+\label{FIG:abb13}
+\end{figure}
+\\
+In the 'Managing mode' (red) it can be selected whether the parameter set of an old template is edited or a new template is imported to MTIDS and a new parameter set is made. The 'Managing modes' only differ in the upper part of the PSM (blue).\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{mode2}
+\caption{Parameter set manager when 'New template import' is selected}
+\label{FIG:abb14}
+\end{figure}
+\\
+In the 'New template import'-mode a template can be loaded by clicking the 'Load template'-button and choosing the new template. New blocks can be created with the 'Add Block'-button. In the appearing window the name of the wanted block has to be inserted, for example 'Gain'. With the 'Add Parameter'-button further parameters for new blocks can be created. The 'Test Value Set'-button tests the edited parameter set for compliance with the model to prevent unnecessary SIMULINK errors. With the 'Finish import'-button the import of the template is completed and the template with its parameter set is saved.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{mode1}
+\caption{Parameter set manager when 'Edit parameter sets' is selected}
+\label{FIG:abb15}
+\end{figure}
+\\
+In the 'Edit parameter sets'-mode an already imported template and an existing parameter set can be selected. Three standard templates are given and can be selected in the 'Choose parameter set' field.\\
+In this mode the parameter set can also be tested or deleted or saved in a new file. The 'Set is active'-button (green) controls whether the chosen parameter set can be used in the editing window to apply it to a node.\\
+\\
+The chosen parameter set can be seen in the 'template parameter value set'. There, it is also possible to change the parameters manually.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{tempparaset}
+\caption{Template parameter value set}
+\label{FIG:abb16}
+\end{figure}
+\\
+The 'Input Specifications' show linear depending state or output parameters and how much of the are internal inputs. The 'Close'-button quits the parameter set manager.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{inputspec}
+\caption{Input specifications}
+\label{FIG:abb17}
+\end{figure}
+\\
+In the 'Random Parameters Setup' a random value for the in the scroll bar with its name selected parameter can be set either in a uniform or a normal manner. For a normal distributed random value the mean and the standard deviation can be defined. The minimum and the maximum value are properties of the uniform distribution. According to the number of inputs and outputs the matrix dimensions have to be entered in the right way.\\
+\begin{figure}
+\centering
+\includegraphics[scale=.7]{randomparaset}
+\caption{Random parameter setup}
+\label{FIG:abb18}
+\end{figure}
+\\
+\subsubsection{LTI Analysis}
+With a click on \textbf{Dynamics$\rightarrow$LTI Analysis} test window appears. The LTI analysis is only possible, if the every node of the graph has LTI dynamics. The dynamics of a node can be chosen in the 'editing window' before clicking the 'Add node'-button or in the node settings.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.75]{ltiana}
+\caption{LTI analysis}
+\label{FIG:abb19}
+\end{figure}
+\\
+A press on the 'Test'-button checks whether the interconnected dynamical system is stable, observable and controllable. If not a pop-up window gives instructions to solve the LTI problems.\\
+With the 'Set'-button the program itself creates a stable states matrix for a node.\\
+\\
+\subsection{Simulation}
+\label{subsec:simulation}
+The element 'Simulation' in the menu bar serves the functions to run the interconnected systems made in MTIDS. In the chapter \ref{sec:workflow} is explained how to run simulations.\\
+\begin{itemize}
+	\item Export to Simulink
+	\item Disable Simulink Warnings
+	\item Run Simulation \& Plots
+	\item Plot all output
+	\item Show Simulink Model
+	\item Input parameter adaption
+	\item Integrator initial condition
+	\item Set simulation parameters
+\end{itemize}
+With \textbf{Simulation$\rightarrow$Export to Simulink} the whole graph is exported to a SIMULINK model for reasons of simulation.\\
+With \textbf{Simulation$\rightarrow$Disable Simulink Warnings} the user turns off all the warning messages generated by SIMULINK.\\
+With \textbf{Simulation$\rightarrow$Run Simulation \& Plots} the simulation starts in MTIDS with the user defined settings which can be changed in the edit node window after double-clicking on a node. If the plotting options are selected, MTIDS displays the plots after the simulation.\\
+If \textbf{Simulation$\rightarrow$Plot all output} is marked every output of the graph is plotted after the simulation.\\
+If \textbf{Simulation$\rightarrow$Show Simulink Model} is marked after starting the simulation the SIMULINK model is opened.\\
+When the user adds new edges to the graph, the input parameter matrix $A_{ij}$ of a template does not have the correct size anymore. This problem can be fixed automatically using \textbf{Simulation$\rightarrow$Input parameter adaption}.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.9]{inputpara}
+\caption{Input parameter adaption}
+\label{FIG:abb20}
+\end{figure}
+\\
+In the appearing window there are five different options how MTIDS should set these size-depending parameters.
+\begin{itemize}
+	\item Fill with a specific constant value the user can define.
+	\item Set for every entry 1/$n$, where $n$ is the number of incoming signals.
+	\item Average over the existing values if the parameter was set before.
+	\item Fill them with a random matrix.
+	\item Preserve the matrix if it was set already but concatenate with ones, or trim to the required size.
+\end{itemize}
+So there is no need to conform the parameters manually and further proceedings like simulations may follow quickly.\\
+With \textbf{Simulation$\rightarrow$Integrator initial condition} the initial conditions for all integrators in the entire system, which means for every SIMULINK integrator blocks of the used templates, can be set.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.9]{initialcond}
+\caption{Initial conditions for integrators}
+\label{FIG:abb21}
+\end{figure}
+\\
+The options are:
+\begin{itemize}
+	\item Choose a certain constant.
+	\item Average over the sum of the sizes of incoming signals.
+	\item Average over the existing values.
+	\item Take random values.
+	\item Preserve the matrix if it was set already but concatenate with ones, or trim to the required size.
+\end{itemize}
+With \textbf{Simulation$\rightarrow$Set simulation parameters} the simulation parameters window starts.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.9]{editsimpara}
+\caption{Edit simulation parameters}
+\label{FIG:abb22}
+\end{figure}
+\\
+In this window the most important SIMULINK simulation options can be set. They can also be found in the SIMULINK browser under \textbf{Simulation$\rightarrow$Configuration Parameters\dots}.\\
+In the 'Simulation Time' element the start time and the stop time can be insert. The solver type and certain solver can be selected in the 'Solver options'. It is feasible to set the maximal, the minimal and the initial step size. Other options are the relative tolerance, the absolute tolerance, the shape preservation and the number of consecutive min steps.\\
+\\
+\subsection{User guide}
+The User guide can be opened by clicking on the button in the statistics window or in the menu bar under the item \textbf{User guide$\rightarrow$Start User guide}.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{user_panela_ug}
+\caption{User panel with marked user guide buttons}
+\label{FIG:abb23}
+\end{figure}
+\\
+The user guide provides information to the graph theory and the statistics and it also describes the toolbox MTIDS and explains how to use it.\\
+\\
+\section{Graph window}
+\label{sec:graphwin}
+In the graph window the actual graph is presented. The nodes of the graph can be moved by a click and hold with the left mouse button. A node can be added by \texttt{<Shift>-<Left-click>} with the mouse. To build a connection a \texttt{<ctrl>-<Left-click>} has to be made on both nodes. Is there an existing connection, this connection will be deleted. After double-clicking on a node the 'edit node'-window appears.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{editnodea}
+\caption{Edit node window}
+\label{FIG:abb24}
+\end{figure}
+\\
+On top of the window is the 'Node information' element.\\
+\\
+\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{nodeinfo}
+\caption{Node information}
+\label{FIG:abb25}
+\end{figure}
+\\
+In this element the node number, the node label, the applied dynamics and the chosen parameter set can be seen. The name of the node can be changed by clicking in the labeling field. New dynamics and parameter sets can be selected by using the control bars.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{plotparameters}
+\caption{Plot parameters}
+\label{FIG:abb26}
+\end{figure}
+\\
+To edit the plot parameters the window shown in the picture above is important. By selecting 'Plot output signals' or 'Plot selected states' the program plots the defined outputs or states after a simulation is run. A click on the 'Edit Plot Parameters'-button leads to following window, where the Line Width, the Line Style, the Line Color, the Marker Edge Color and the Marker Face Color can be varied.\\
+\\
+\\
+\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.7]{editplot}
+\caption{Color selection for the plots}
+\label{FIG:abb27}
+\end{figure}
+\\
+The 'Submit Parameters'-button saves the parameters before closing the window, the 'Cancel'-button does not save them.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{incomingnodes}
+\caption{Incoming nodes and window buttons}
+\label{FIG:abb28}
+\end{figure}
+\\
+In the element 'Incoming nodes' connections can be generated by writing the starting nodes in the brackets. Putting in a node number which does not exist, causes fatal errors.\\
+The changes can be confirmed with the 'Apply Changes'-button. The node can be deleted with the 'Delete Node'-button. For closing the window without applying the changes the 'Cancel'-button can be used.\\
+In order to check the consistency of the applied parameter values the 'Consistency'-button can be used. The 'Edit params'-button opens a window where the parameter values of the dynamics can be changed.\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{editparaval}
+\caption{Edit parameter values}
+\label{FIG:abb29}
+\end{figure}
+\\
+The 'Parameter Values'-window shows parameters of the dynamics in the selected template. A template is a SIMULINK model of the dynamics of a node. It can be built under the point \textbf{'Dynamics$\rightarrow$Create Dynamics Template'} in the menu bar. There is also a frame where the name of the parameter set can be edited.\\
+In the 'Input Specifications' the Linear depending state parameters and there internal inputs are listed and also the Linear depending outputs with the number of internal outputs.\\
+To edit the parameter values the parameter set manager can be opened with \textbf{'Dynamics$\rightarrow$Manage Parameter Sets'}
+The settings are stored to an extra file with the 'Save to file'-button or saved to the actual template with the 'Save to template'-button. To leave the window without saving, click on the 'Cancel'-button.\\
+\\
+\section{Statistics window}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{statswin}
+\caption{Basic statistics}
+\label{FIG:abb30}
+\end{figure}
+\noindent The statistics window shows the basic statistics to the actual graph. To get informations about the statistics the user guide can be consulted by clicking the button. Also the chapter \ref{chap:toolbox} provides detailed informations for the user.\\
+\\
+\section{Editing window}
+\label{sec:editwin}
+In the editing window the graph, which is displayed in the graph window, is generated.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{editingwindowa}
+\caption{Editing window}
+\label{FIG:abb31}
+\end{figure}
+\\
+\subsubsection{Nodes}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{nodes2}
+\caption{Node creation}
+\label{FIG:abb32}
+\end{figure}
+A node is created by clicking on the 'Add node'-button or by \texttt{<Shift>} \texttt{-<Left-click>} with the mouse. In the white window next to the button the node can be labeled. The labels are only diplayed, when the 'Label view' under the menu point 'View' is active. It is also possible to add a user defined number of nodes with the 'Add multiple nodes'-button.\\
+In the Dynamics-window between three dynamics and some value sets can be chosen. More explanations for the dynamics follow in chapter \ref{sec:workflow}.
+With the 'Apply Dynamics to All Nodes'-button the selected dynamics are applied to every node.
+The 'Remove node'-button deletes the node with the user given number and all the connections starting or ending in the node.\\
+\\
+\subsubsection{Connections}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{connectionsa}
+\caption{Connections creation}
+\label{FIG:abb33}
+\end{figure}
+In the writing fields after 'From' and 'to node' the nodes that will be connected can be specified either with their label or their node number. The 'Add connection'-button generates the defined connection. If the user puts in a node number, which does not exist, a fatal error occurs. The 'Remove connection'-button deletes the connection and the 'Random connection'-button adds a random connection anywhere in the graph. Another way to link two nodes, is a \texttt{<Ctrl>-<Left-click>} on both. Is there an existing connection, this connection will be deleted.\\
+\\
+\subsubsection{Topologies}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{topo}
+\caption{Topologies}
+\label{FIG:abb34}
+\end{figure}
+The 'topologies'-window provides the ability to create some standard or random graphs.
+\begin{itemize}
+	\item \textbf{'Make ring'-button}: generates a circular graph
+	\item \textbf{'Complete graph'-button}: generates a complete graph
+	\item \textbf{'Clear connections'-button}: deletes all connections
+	\item \textbf{'Random graph'-button}: generates a random graph
+\end{itemize}
+In the control bar with the heading 'Special graphs' between following random graph generating methods can be chosen:
+\begin{itemize}
+	\item \textbf{Small world}
+	\item \textbf{Scale-free}
+	\item \textbf{Klemm-Eguiluz}
+	\item \textbf{Adjustable scale free}
+\end{itemize}
+\subsubsection{Modus}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.0]{modus}
+\caption{Modus selection}
+\label{FIG:abb35}
+\end{figure}
+In this segment the modus of the graph can be selected with a radio button. The difference between an undirected graph and a directed graph is that the direction of the information flow in a directed graph is shown by an arrow connection. An edge in an undirected graph has no arrows, because the information is always exchanged in both directions.\\
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=1.0]{moduscirc}
+%\caption{Circular visualization button}
+%\label{FIG:abb36}
+%\end{figure}
+\\
+The 'Circular visualization'-button, which is located under the modus choice, reorders the actual graph so that the nodes are arranged on a circle. The neighboring nodes have an equal distance.\\
+\\
+\section{Work flow}
+\label{sec:workflow}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{workflowmtids}
+\caption{Work flow in MTIDS}
+\label{FIG:abb37}
+\end{figure}
+The previous figure shows the general steps to work with MTIDS. After starting MTIDS the user panel which is the main interface to build interconnected systems and their graph structure appears.\\
+\\
+\subsection{Creation of the subsystem dynamics}
+The first thing to do is to build the subsystem dynamics for every subsystem that will be part of the whole interconnected system. Therefore either an empty template has to be filled with the desired dynamics or one of the three standard templates can be used. A template is a SIMULINK model with a predefined frame structure (blue) for reasons of converting it to MTIDS and a region where the user can implement his own dynamics (red). This frame structure should not be changed! The following picture presents an example template with LTI dynamics. The terminator blocks are needed to avoid SIMULINK errors if the signal is not used.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{templateltia}
+\caption{Template for a LTI system}
+\label{FIG:abb38}
+\end{figure}
+\\
+\subsubsection{Create a new template}
+With the command \textbf{Dynamics$\rightarrow$Create Dynamics Template} in the menu bar the SIMULINK browser starts and an empty template turns up. In the free, red marked space the user can put in any desired dynamics by using every SIMULINK block. So there are endless possibilities for new templates and new dynamics.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{template2}
+\caption{Empty template with red marked space for system dynamics}
+\label{FIG:abb39}
+\end{figure}
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\subsubsection{Use a provided template}
+Three standard dynamics are provided:
+\begin{itemize}
+	\item LTI (linear time invariant) system
+	\item Consensus problem
+	\item Kuramoto oscillator
+\end{itemize}
+The corresponding templates are shown in the figures. At first the LTI system template:\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.4]{templatelti}
+\caption{Template for a LTI system}
+\label{FIG:abb40}
+\end{figure}
+\\
+The input of the LTI system template is constant zero, but can be replaced by any controller that uses state information from local or even external systems.
+Below the Consensus problem template is shown:
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{templateconsensus}
+\caption{Template for a consensus problem}
+\label{FIG:abb41}
+\end{figure}
+\\
+\\
+\\
+\\
+\\
+\\
+The Figure \ref{FIG:abb42} displays the kuramoto oscillator template:
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.4]{templatekuramoto}
+\caption{Template for a kuramoto oscillator}
+\label{FIG:abb42}
+\end{figure}
+\\
+When the creation of the template is finished, in the next step the template has to be imported to MTIDS and the parameters can be chosen in the parameter set manager (PSM). To open the PSM click \textbf{Dynamics$\rightarrow$Manage Parameter Sets} in the menu bar. How to use the PSM is described in the chapter \ref{subsec:dynamics}.\\
+\\
+\subsection{Building an interconnected graph}
+The building of a graph is straight forward. At first the desired Dynamics with preferred parameter set have to be chosen in the editing window of the MTIDS user panel. After that the node can be created with a mouse-click or the right key combination. Easy like this, connections for directed or undirected graphs can be added. It is also possible to build certain topologies, a complete graph, a circular graph or a random graph. When new edges are generated the parameters of a template do not fit together anymore. This problem can be solved by using \textbf{Simulation$\rightarrow$Input parameter adaption}.\\
+The graph statistics are updated automatically. To get more informations look in the chapter \ref{subsec:simulation}.\\
+\\
+\subsection{Editing parameter settings}
+After double-clicking on a node the 'edit node'-window opens, where the name, the dynamics and the parameter set can be specified in the 'Node information'. In the 'Plot Parameters' it is possible to select whether the output and the states should be plotted after a simulation. More details are explained in the chapter \ref{sec:graphwin}.\\
+\\
+\subsection{Simulation and post processing}
+When the graph with its dynamics and parameter settings is ready, the user can work with the system in MTIDS or export it to SIMULINK for a simulation. For the export \textbf{Simulation$\rightarrow$Export to Simulink} builds a SIMULINK model. The simulation parameters can be determined in MTIDS under \textbf{Simulation$\rightarrow$Set simulation parameters}. The simulation data and results can be saved in *.mat files. Under \textbf{Simulation$\rightarrow$Run Simulation \& Plots} the simulation starts and predefined plots are made. With \textbf{File$\rightarrow$\dots} the graph can be saved or exported. More details in the chapter \ref{sec:menubar}.\\
+\\
+\chapter{Toolbox statistics}
+\label{chap:toolbox}
+%To improve the work with distributed networks and because of the complexity they can reach, the MATLAB toolbox MTIDS was built. This toolbox shows the important statistics that give information about the convergence, the connectivity and the robustness of the control system.\\
+This chapter includes the explanations for the statistics of the toolbox located in the window next to the picture of the actual graph. For the two typs of edges, either directed or undirected, there are two different versions of the graph statistics window.
+\\
+% new subchapter 1
+\section{Undirected graph}
+\underline{Nodes}\\
+\\
+The number of nodes that are given in the actual graph.\\
+\\
+\underline{Connections}\\
+\\
+The number of connections (edges) between the nodes of the actual graph. If a node has no edges, it can be considered as a subgraph.\\
+\\
+\underline{Independent Graphs}\\
+\\
+The number of independent subgraphs that are not connected to each other.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph2}
+\caption{Undirected example graph 2}
+\label{FIG:abb44}
+\end{figure}
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(-0.8,0){\line(1,0){1.6}}
+%	\put(-0.8,-2){\line(1,0){1.6}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\\
+\\
+\\
+\\
+In this example the nodes one and two form a subgraph and the nodes three and four form a subgraph. So there are two independent subgraphs.\\
+\\
+\underline{Average clustering coefficient}\\
+\\
+The average clustering coefficient is the number of all existing triangles divided by the number of all possible triangles. A triangle is a circle with three nodes. In directed graphs, three nodes generate up to eight triangles (2*2*2 edges), because every node be connected to another node in two directions.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph}
+\caption{Undirected example graph 1}
+\label{FIG:abb45}
+\end{figure}
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(1,-0.2){\line(0,-1){1.6}}
+%	\put(-1,-0.2){\line(0,-1){1.6}}
+%	\put(-0.8,-2){\line(1,0){1.6}}
+%	\put(-0.88,-0.12){\line(1,-1){1.76}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\\
+To get the clustering vector the number of triangles are computed for every node and put in a column vector. This means vector for the graph above is $ [8,0,8,8]^T $, because the node two is not an element of a triangle. For calculating the maximal possible number of triangles for every node, the number of all input and output edges are summed up in a degree vector $ [4,2,6,4]^T $. Since the node two is not element of a triangle the second entry is set to $ \infty $. After computing the maximal number of triangles for all pairs of nodes and subtracting wrong pairs the resulting vector is $ [8,\infty,24,8]^T $. So the vector of the clustering coefficients looks like $ [1,0,0.333,0]^T $. The average clustering coefficient is the mean value of the vector. In this example the average clustering coefficient is $ 0.583 $.\\
+\\
+\underline{Graph density}\\
+\\
+The graph density is computed as follows:\\
+\begin{equation}
+\mbox{graph density} = \mbox{mean}(\mbox{degree vector})/(\mbox{dim}(L)-1)
+\label{EQ:gleichung6}
+\end{equation}
+\\
+The graph density is the mean of the degree of every node divided by the number of nodes minus one. The degree of a node is the number of edges that are connected to the node. The Degree Matrix $ D $ contains the degrees of the nodes.\\
+\\
+\underline{Graph heterogeneity}\\
+\begin{equation}
+\mbox{graph heterogeneity} = \frac{\sqrt{\mbox{var}(\mbox{degree vector})}}{\mbox{mean}(\mbox{degree vector})}
+\label{EQ:gleichung7}
+\end{equation}
+The graph heterogeneity is the standard deviation divided by the mean of the degree vector. It says how much the number of connections differs from node to node. The degree vector is extracted from the Degree Matrix $ D $ mentioned in the chapter one.\\
+\\
+\underline{Algebraic connectivity}\\
+\\
+The algebraic connectivity of a graph G is the second-smallest eigenvalue of the Laplacian matrix of G. This eigenvalue is greater than zero if and only if G is a connected graph. This is a corollary to the fact that the number of times zero appears as an eigenvalue in the Laplacian matrix is the number of connected components in the graph. The magnitude of this value reflects how well connected the overall graph is, and has been used in analyzing the robustness and the ability of synchronization of networks.\\
+\\
+\\
+\underline{Rooted Spanning Tree}\\
+\\
+This field says 'Yes' if the graph can be built as a rooted spanning tree. Otherwise it says 'No'.
+As you can see in the figure every node is connected to the root node by one or more lines. There are no circles.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{rootspant}
+\caption{Rooted spanning tree}
+\label{FIG:abb46}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put( 0, 0){\circle*{.4}}
+%	\put(2,-2){\circle{.4}}
+%	\put(-1,-1){\circle{.4}}
+%	\put(1,-1){\circle{.4}}
+%	\put(-2,-2){\circle{.4}}
+%	\put(-1,-2){\circle{.4}}
+%	\put(0,-2){\circle{.4}}
+%	\put(0,0){\line(-1,-1){0.86}}
+%	\put(0,0){\line(1,-1){0.86}}
+%	\put(-1.13,-1.13){\line(-1,-1){0.74}}
+%	\put(-0.87,-1.13){\line(1,-1){0.75}}
+%	\put(-1.0,-1.18){\line(0,-1){0.62}}
+%	\put(1.13,-1.13){\line(1,-1){0.74}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\underline{Minimum degree}\\
+\\
+\begin{equation}
+\mbox{degree vector}=\mbox{diag}(L)
+\label{EQ:gleichung8}
+\end{equation}
+\\
+The degree vector contains the diagonal elements of the \textit{laplacian matrix} or the \textit{degree matrix}. These elements are the degrees of the nodes, which means the number of edges which leave or arrive in one node.\\
+The minimum degree shows the smallest degree of all nodes.\\
+\\
+\underline{Average degree}\\
+\\
+The average degree sums up the degrees of all nodes and divides it by the number of nodes. The degree of a node is the number of edges, which are connected to the node. It stands in the \textit{degree matrix}.\\
+\\
+\underline{Median degree}\\
+\\
+The median degree puts every degree of a node in an increasing row. If the number of the degrees is odd, it shows the value in the middle. If the number of the degrees is even, it shows the mean of two values in the middle. The degree of a node can be extracted from the \textit{degree matrix}.\\
+\\
+\underline{Maximum degree}\\
+\\
+The maximum degree is the highest value of all degrees of the nodes. This means the biggest number of edges one node in the graph is connected to.\\
+\\
+\underline{Average path length}\\
+\\
+The average path length is the sum of all path length divided by the number of nodes times the number of nodes minus one. The path length between two nodes is the smallest number of connections between the two nodes. If the graph contains not connected subgraphs the average path length is $ \infty $.
+\begin{equation}
+\mbox{average path length} = \frac{\sum_{i\in nodes}(\mbox{path length})_i}{(N(N-1))}
+\label{EQ:gleichung9}
+\end{equation}
+\\
+\underline{Isoperimetric number}\\
+\\
+This number gives knowledge about the robustness and the connectivity of the graph. $S$ and $S^c$ are subgraphs and $|S|$ and $|S^c|$ are the number of nodes in the subgraphs. $|\partial S|$ is the number of edges connecting the two subgraphs.\\
+\begin{equation}
+h_{G} = \min_{|S|\leq{N/2}} h_{G}(S) = \min_{|S|\leq{N/2}} \frac{|\partial S|}{\min{\{|S|,|S^c|\}}} 
+\label{EQ:gleichung10}
+\end{equation}
+A small isoperimetric number means that big subgraphs are connected via a small number of edges. In the case a connection gets damaged it has great influence on the system. So the graph is not very robust.\\
+\\
+\underline{Show degree distribution}\\
+\\
+The degree distribution shows the probability for a node in the graph to have a certain degree. The degrees of the nodes are known from the \textit{degree matrix}. The occurrence of a certain degree is compared to the others. A big number of a certain degree leads to a big probability for a node to have these certain degree.\\
+\\
+% new sub chapter 2
+\section{Directed graph}
+\underline{Nodes}\\
+\\
+The number of nodes that are given in the actual graph.\\
+\\
+\underline{Weakly connected components}\\
+\\
+This field shows the number of weak connected subgraphs or weak connected components (WCC). A weak connected component consists of nodes that are connected with one or more edges. A node which has no starting or ending edge is also a WCC. For a strong connected subgraph the nodes must be connected in both directions.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph3}
+\caption{Directed example graph 1}
+\label{FIG:abb47}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(-1,-0.2){\vector(0,-1){1.6}}
+%	\put(0.8,-2){\vector(-1,0){1.6}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+In this example node two is a weak connected subgraph and then nodes one, three and four create a weak connected subgraph. Each node is a strong connected component itself.\\
+\\
+\underline{Strong connected components}\\
+\\ 
+The field shows the number of strong connected subgraphs or strong connected components (SCC). The nodes in a strong connected subgraph are connected to each other in both directions. If a node is not strong connected to any other node, it is counted as SCC itself. The smaller the shown number, the less strong connected subgraph exist and the better the whole graph is connected. A complete graph shows the number one. If there are less sets of SCC as nodes in the graph, then there must be at least one cycle.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph4}
+\caption{Directed example graph 2}
+\label{FIG:abb48}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(-1,-0.2){\vector(0,-1){1.6}}
+%	\put(-0.87,-2.1){\vector(1,0){1.7}}
+%	\put(0.87,-1.9){\vector(-1,0){1.7}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+Here the node number one and the node number two are strong connected subgraphs and the nodes three and four form together a strong connected subgraph. Two weak connected subgraphs can be seen.\\
+\\
+\underline{Average clustering coefficient}\\
+\\
+The average clustering coefficient is the number of all existing triangles divided by the number of all possible triangles. A triangle is a circle with three nodes. In directed graphs, three nodes generate up to eight triangles (2*2*2 edges), because every node be connected to another node in two directions.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph}
+\caption{Undirected example graph 1}
+\label{FIG:abb49}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(1,-0.2){\line(0,-1){1.6}}
+%	\put(-1,-0.2){\line(0,-1){1.6}}
+%	\put(-0.8,-2){\line(1,0){1.6}}
+%	\put(-0.88,-0.12){\line(1,-1){1.76}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+To get the clustering vector the number of triangles are computed for every node and put in a column vector. This means vector for the graph above is $ [8,0,8,8]^T $, because the node two is not an element of a triangle. For calculating the maximal possible number of triangles for every node, the number of all input and output edges are summed up in a degree vector $ [4,2,6,4]^T $. Since the node two is not element of a triangle the second entry is set to $ \infty $. After computing the maximal number of triangles for all pairs of nodes and subtracting wrong pairs the resulting vector is $ [8,\infty,24,8]^T $. So the vector of the clustering coefficients looks like $ [1,0,0.333,0]^T $. The average clustering coefficient is the mean value of the vector. In this example the average clustering coefficient is $ 0.583 $.\\
+\\
+\underline{Average degree}\\
+\\
+The average degree is the mean of the In-degrees of all nodes in the graph.\\
+\\
+\underline{Graph is balanced}\\
+\\
+A graph is balanced, if every node has the same in-degree and the same out-degree, this means the number of starting and arriving edges. This property is fulfilled by a ring or a complete graph. Otherwise the answer is 'No'.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph6}
+\caption{Directed example graph 3}
+\label{FIG:abb50}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(1,-0.2){\vector(0,-1){1.6}}
+%	\put(-1,-0.2){\vector(0,-1){1.6}}
+%	\put(0.88,-1.88){\vector(-1,1){1.76}}
+%	\put(-0.88,-1.88){\vector(1,1){1.76}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+The example graph above is balanced.\\
+\\
+\underline{Has cycles}\\
+\\
+The answer is 'Yes', if the graph contains cycles. Otherwise it is negated. When you start in a node and travel along a path in the direction of the arrows until you return in the starting node, then you got a cycle. The graph below shows a cycle with the nodes two, three and four.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{graph7}
+\caption{Directed example graph 4}
+\label{FIG:abb51}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put(-1,-2){\circle{.4}} \put(-1.1,-2.1){4}
+%	\put(-1,0){\circle{.4}} \put(-1.1,-0.1){1}
+%	\put(1,-2){\circle{.4}} \put(0.9,-2.1){3}
+%	\put(1,0){\circle{.4}} \put(0.9,-0.1){2}
+%	\put(1,-0.2){\vector(0,-1){1.6}}
+%	\put(-1,-0.2){\vector(0,-1){1.6}}
+%	\put(0.8,-2){\vector(-1,0){1.6}}
+%	\put(-0.88,-1.88){\vector(1,1){1.76}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\underline{Rooted spanning tree}\\
+\\
+This field says 'Yes' if the graph can be built as a rooted spanning tree. Otherwise it says 'No'.
+As you can see in the figure every node is connected to the root node by one or more lines. There are no cirle.\\
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.6]{rootspant}
+\caption{Rooted spanning tree}
+\label{FIG:abb52}
+\end{figure}
+\\
+%\begin{center} \setlength{\unitlength}{0.5in}
+%\begin{picture}(0,0)
+%	\put( 0, 0){\circle*{.4}}
+%	\put(2,-2){\circle{.4}}
+%	\put(-1,-1){\circle{.4}}
+%	\put(1,-1){\circle{.4}}
+%	\put(-2,-2){\circle{.4}}
+%	\put(-1,-2){\circle{.4}}
+%	\put(0,-2){\circle{.4}}
+%	\put(0,0){\vector(-1,-1){0.86}}
+%	\put(0,0){\vector(1,-1){0.86}}
+%	\put(-1.13,-1.13){\vector(-1,-1){0.74}}
+%	\put(-0.87,-1.13){\vector(1,-1){0.75}}
+%	\put(-1.0,-1.18){\vector(0,-1){0.62}}
+%	\put(1.13,-1.13){\vector(1,-1){0.74}}
+%\end{picture}
+%\end{center} \vspace{1.5in}
+\underline{Minimum In-degree}\\
+\\
+The term in-degree refers to the number of edges that end in a node. The minimum in-degree gives back the smallest number of edges in the graph arriving in one node.\\
+\\
+\underline{Maximum In-degree}\\
+\\
+The term in-degree refers to the number of edges that end in a node. The maximum in-degree gives back the highest number of edges in the graph arriving in one node.\\
+\\
+\underline{Minimum}\\
+\\
+Minimum stands for the smallest number of edges that start in a node of the graph. The full name is minimum outdegree.\\
+\\
+\underline{Maximum}\\
+\\
+Maximum stands for the biggest number of edges that start in a node of the graph. The full name is maximum out-degree.\\
+\\
+\underline{Average path length}\\
+\\
+The average path length is the sum of all path length divided by the number of nodes times the number of nodes minus one. The path length between two nodes is the smallest number of connections between the two nodes. If the graph contains not connected subgraphs the average path length is $ \infty $.
+\begin{equation}
+\mbox{average path length} = \frac{\sum_{i\in nodes}(\mbox{path length})_i}{(N(N-1))}
+\label{EQ:gleichung11}
+\end{equation}	
+\\
+\newpage
+\begin{center}
+\end{center}
+{\Large References}
+\newline
+\newline
+[1] F. Deroo and S. Hirche; A MATLAB Toolbox for Large-scale Networked Systems; at- Automatisierungstechnik, July 2013.
+\newline
+[2] URL: https://code.google.com/p/mtids/
+\newline
+[3] Christopher D. Godsil and Gordon Royle; Algebraic graph theory. Graduate texts in mathematics. Springer, 2001.
+\newline
+[4] Dragoslav D. Siljak. Large-Scale Dynamic Systems: Stability and Structure. Dover Piblications, 2007.
+\end{document}
