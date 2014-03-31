@@ -59,17 +59,17 @@ function mtids_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to mtids (see VARARGIN)
 
 % DEBUG or PUBLISH (VERSION)
-vers = 'DEBUG';
-% vers = 'PUBLISH';
+% vers = 'DEBUG';
+vers = 'PUBLISH';
 
 
 
 disp(' ');
 switch vers
     case 'DEBUG';
-        disp('MTIDS 1.2 - DEBUG MODE');
+        disp('MTIDS 1.4 - DEBUG MODE');
     case 'PUBLISH';
-        disp('MTIDS 1.2');
+        disp('MTIDS 1.4');
 end
 disp('Test Rig for Large-Scale and Interconnected Dynamical Systems');
 disp('<a href="http://code.google.com/p/mtids">http://code.google.com/p/mtids</a>');
@@ -106,6 +106,8 @@ addpath(strcat(pwd,'/subfunctions/interface2Simulink'));    % Folder with variou
 addpath(strcat(pwd,'/subfunctions/mtids_main'));
 addpath(strcat(pwd,'/resources'));                          % Folder with resource files like manuals, graphics, etc.
 addpath(strcat(pwd,'/subfunctions/figures'));
+addpath(strcat(pwd,'/subfunctions/export_fig'));
+addpath(genpath(strcat(pwd,'/subfunctions/matlab2tikz_0.4.2')));
 addpath(strcat(pwd,'/subfunctions/User_guide'));
 addpath(strcat(pwd,'/subfunctions/User_guide/userpics'));
 
